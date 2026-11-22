@@ -185,10 +185,30 @@ Code written "for later" is dead code. Do not add it.
 - Colors, spacing, shapes, typography come from `FintrackTheme` tokens only (`08-design-system.md`).
 - Compose Rules for detekt are all enabled at their defaults.
 
-## 8. Comments & documentation
+## 8. Comments & documentation — doc IDs required (ADR-014)
 
-- Public API of `core:*`: KDoc required.
-- Reference requirement/rule IDs in KDoc where behaviour comes from a rule: `/** Applies BR-010. */`
+Comments are short and **start with the doc ID** they come from, so the owner can look it up directly.
+
+```kotlin
+/** BR-010: start of the period containing [date]. */
+fun periodStartOf(date: LocalDate, startDay: Int): LocalDate
+
+// BR-004: fee is deducted from the source wallet only.
+val sourceDelta = amount + feeAmount
+
+/** S-04: add/edit transaction sheet. FR-030, FR-031, FR-032. */
+@Composable
+internal fun EditTransactionScreen(...)
+```
+
+Rules:
+- **KDoc with an ID is required** on: every use case, validator, repository interface, DAO query with business
+  logic, parser, ViewModel, `Screen` composable, Worker and Service. Enforced by Konsist `DocReferenceTest`
+  (KDoc must match `(FR|NFR|BR|ADR)-\d{3}|S-\d{2}`).
+- Inline comments only where a rule is applied in a non-obvious way; format `// <ID>: <one line>`.
+- One line is the norm. Explain **why**, not what. No paragraphs — the doc holds the details.
+- Public API of `core:*`: KDoc required (with ID when behaviour comes from a rule).
+- Never invent an ID. If no ID fits, the behaviour is probably unspecified → ask the owner.
 - No commented-out code. No author tags, no dates in comments (git has that).
 
 ## 9. Protected files (AI must not modify without owner approval)

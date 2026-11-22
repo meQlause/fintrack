@@ -89,3 +89,10 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
   3. Screenshots in tests/docs use fake test data only.
   4. Secret scanning and Dependabot alerts enabled on GitHub.
 - **Consequences:** Anyone can read the code — which also supports the privacy promise (verifiable offline app).
+
+### ADR-014 — Doc IDs in commits, comments and tests
+- **Status:** Accepted (2026-11-22)
+- **Context:** The owner wants to go straight from a commit or a comment to the spec that explains it.
+- **Decision:** Commit headers end with `[IDs]` (12), behavioural comments/KDoc start with an ID (05 §8),
+  test names end with `(ID)` (06). Enforced by the `commit-msg` hook and Konsist `DocReferenceTest`.
+- **Consequences:** Every change must be traceable to the docs; unspecified behaviour surfaces early as a question.

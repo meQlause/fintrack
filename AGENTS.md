@@ -9,6 +9,8 @@ Instructions for any AI coding agent working in this repository.
 5. Strict limits: functions ≤ 30 lines, files ≤ 250 lines, lines ≤ 120 chars, every name ≥ 4 characters, zero dead code.
 6. Fully offline Android app: never add the INTERNET permission or any network library.
 7. Test first. Fakes, not mocks.
-8. Commits: Conventional Commits, author `meQlause <ardialbrian@gmail.com>`, **no `Co-Authored-By`, no AI attribution**. Commit only when the owner asks.
+8. Commits: Conventional Commits ending with doc IDs, e.g. `feat(parser): add BCA QRIS template [FR-083]`.
+   Author `meQlause <ardialbrian@gmail.com>`, **no `Co-Authored-By`, no AI attribution**. Commit only when the owner asks.
+   Comments/KDoc start with the doc ID they implement, one line: `// BR-004: fee is deducted from source only`.
 9. Code, docs and commits in English; all user-facing strings in Indonesian.
 10. Report back to the owner in Indonesian.

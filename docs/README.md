@@ -38,15 +38,23 @@ If code and docs disagree, the docs win — or the docs must be updated first (w
 
 ## Identifier conventions used across docs
 
-- `FR-xxx` — functional requirement (01-requirements.md)
-- `NFR-xxx` — non-functional requirement (01-requirements.md)
-- `BR-xxx` — business rule (02-domain-model.md)
-- `ADR-xxx` — architecture decision (16-decisions.md)
-- `Q-xxx` — open question (17-open-questions.md)
-- `P<n>` — roadmap phase (13-roadmap.md)
+| ID | Meaning | Defined in |
+|----|---------|-----------|
+| `FR-xxx` | Functional requirement | 01-requirements.md |
+| `NFR-xxx` | Non-functional requirement | 01-requirements.md |
+| `BR-xxx` | Business rule | 02-domain-model.md |
+| `S-xx` | Screen | 09-screens.md |
+| `ADR-xxx` | Architecture decision | 16-decisions.md |
+| `Q-xxx` | Open question | 17-open-questions.md |
+| `P<n>` | Roadmap phase | 13-roadmap.md |
+| `DOC-xx` | A whole document, by its file number (`DOC-05` = 05-coding-standards.md) | this folder |
 
-Code, tests and commits should reference these IDs where relevant, e.g. a test named
-`given transfer when saved then both wallet balances change (BR-004)`.
+**These IDs are mandatory references** (owner requirement, ADR-014):
+- every commit header ends with the IDs it relates to: `feat(parser): add BCA QRIS template [FR-083]` (12-git-workflow.md),
+- code comments and KDoc that explain behaviour start with the ID: `// BR-004: fee is deducted from source only` (05 §8),
+- test names end with the ID: `given transfer when saved then both balances change (BR-004)`.
+
+Search the codebase or history by ID: `git log --grep "FR-083"`, `grep -rn "BR-004" .`
 
 ## Changing documentation
 

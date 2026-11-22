@@ -39,38 +39,48 @@ AI agents: never pass `--author`, never add trailers, never change `git config` 
 
 Small changes may be committed directly to `main` by the owner. AI agents work on a branch unless told otherwise.
 
-## Commit messages — Conventional Commits (enforced)
+## Commit messages — Conventional Commits + doc IDs (enforced)
+
+Every commit header **must end with the doc IDs** it relates to (ADR-014), so the owner can jump straight
+from `git log` to the spec.
 
 ```
-<type>(<scope>): <subject>
+<type>(<scope>): <subject> [<ID>, <ID>]
 
-<body: what and why, wrapped at 72 chars>
-
-<footer: Refs: FR-030, BR-001>
+<body: optional, short — what and why, wrapped at 72 chars>
 ```
 
 | Rule | Value |
 |------|-------|
 | `type` | `feat`, `fix`, `refactor`, `test`, `docs`, `style`, `perf`, `build`, `ci`, `chore`, `revert` |
 | `scope` | module name without prefix: `parser`, `domain`, `database`, `transaction`, `inbox`, `designsystem`, ... or `deps`, `docs` |
-| subject | imperative mood, lowercase start, no period, ≤ 72 chars total header |
-| body | optional, explains **why** |
-| footer | `Refs:` requirement IDs when applicable; `BREAKING CHANGE:` if any |
+| subject | imperative mood, lowercase start, no period |
+| IDs | **required**, in `[...]` at the end, comma-separated, most specific first |
+| header length | ≤ 100 chars |
+| body | optional; keep it short. `BREAKING CHANGE:` footer if any |
+
+Allowed IDs (see docs/README.md): `FR-xxx`, `NFR-xxx`, `BR-xxx`, `S-xx`, `ADR-xxx`, `Q-xxx`, `P<n>`, `DOC-xx`.
+
+Which ID to use:
+
+| Change | Reference |
+|--------|-----------|
+| Feature / behaviour | the `FR`/`BR` it implements (+ `S-xx` for UI) |
+| Bug fix | the `FR`/`BR`/`NFR` that was violated |
+| Tooling, lint, CI, build setup | roadmap phase + doc: `[P1, DOC-05]` |
+| Dependency change | `[DOC-04]` |
+| Docs change | the doc(s) changed: `[DOC-12]` |
+| Decision change | the new ADR: `[ADR-015]` |
 
 Examples:
 
 ```
-feat(parser): add BCA QRIS debit template
-
-Refs: FR-083
-```
-
-```
-fix(domain): exclude transfer fees from transfer amount (BR-004)
-```
-
-```
-docs: add product and engineering specification
+feat(parser): add BCA QRIS debit template [FR-083]
+fix(domain): deduct transfer fee from source wallet only [BR-004]
+feat(transaction): add amount keypad to add sheet [FR-033, S-04]
+build: add detekt with strict limits [P1, DOC-05]
+build(deps): add vico chart library [DOC-04]
+docs: require doc ids in commits and comments [ADR-014, DOC-12]
 ```
 
 ## Commit rules
@@ -86,14 +96,16 @@ docs: add product and engineering specification
 | Hook | Does |
 |------|------|
 | `pre-commit` | `./gradlew spotlessCheck detekt` on changed modules (fast) |
-| `commit-msg` | Validates Conventional Commit header regex, rejects `Co-Authored-By`, AI attribution lines, and author ≠ meQlause |
+| `commit-msg` | Validates header regex (incl. doc IDs) and length ≤ 100, rejects `Co-Authored-By`, AI attribution lines, and author ≠ meQlause |
 | `pre-push` | `./gradlew check` |
 
-Header regex:
+Header regex (extended regex, one line):
 
 ```
-^(feat|fix|refactor|test|docs|style|perf|build|ci|chore|revert)(\([a-z0-9-]+\))?!?: [a-z].{0,70}[^.]$
+^(feat|fix|refactor|test|docs|style|perf|build|ci|chore|revert)(\([a-z0-9-]+\))?!?: [a-z][^][]*[^.[:space:]] \[((FR|NFR|BR|ADR|Q)-[0-9]{3}|S-[0-9]{2}|DOC-[0-9]{2}|P[0-9])(, ((FR|NFR|BR|ADR|Q)-[0-9]{3}|S-[0-9]{2}|DOC-[0-9]{2}|P[0-9]))*\]$
 ```
+
+The hook should also warn (not fail) if an ID does not exist in `docs/` (`grep -rq "<ID>" docs/`).
 
 ## CI (GitHub Actions, `.github/workflows/ci.yml`)
 

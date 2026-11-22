@@ -12,7 +12,9 @@ usable by small models: when a step says "do X", do X; when something is not cov
 5. **Small steps.** One exit criterion (13) or one requirement at a time.
 6. **Ask when unsure.** If a doc is ambiguous, contradictory or silent, stop and ask the owner. Add the question to `17-open-questions.md` if asked to.
 7. **Commit identity:** author `meQlause <ardialbrian@gmail.com>`, **no Co-Authored-By, no AI attribution** (12).
-8. **Offline only.** Never add networking code or libraries.
+   Commit header ends with doc IDs: `feat(parser): add BCA QRIS template [FR-083]`.
+8. **Comments start with a doc ID** and stay one line: `// BR-004: fee is deducted from source only` (05 §8).
+9. **Offline only.** Never add networking code or libraries.
 
 ## Before starting a task
 
@@ -104,6 +106,7 @@ Follow `07-notification-detection.md` → "Steps to add a new app". Fixtures fir
 ## Definition of Done (per task)
 
 - [ ] Behaviour matches the referenced FR/BR/screen spec exactly.
+- [ ] KDoc/comments carry the doc IDs (05 §8); commit header ends with `[IDs]` (12).
 - [ ] Tests written first, named with IDs, all passing.
 - [ ] Screens: all states previewed and screenshot-tested in light + dark.
 - [ ] `./gradlew check` green.

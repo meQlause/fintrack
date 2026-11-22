@@ -142,6 +142,7 @@ reference numbers (replace with `XXXX`), keep the structure exactly.
 | `ViewModelTest` | ViewModels expose only `StateFlow`, no `Context` constructor params |
 | `ComposableModifierTest` | public UI composables have `modifier: Modifier = Modifier` |
 | `NoHardcodedDesignValuesTest` | no `Color(0x` / raw `.dp` outside designsystem |
+| `DocReferenceTest` | required declarations (05 §8) have KDoc containing a doc ID |
 | `ManifestNoInternetTest` | merged release manifest has no `INTERNET` permission (NFR-001) |
 | `ForbiddenDependenciesTest` | no MockK/Mockito/Firebase/OkHttp in any configuration |
 
