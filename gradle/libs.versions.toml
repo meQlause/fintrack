@@ -87,6 +87,7 @@ assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref 
 konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
 roborazzi = { group = "io.github.takahirom.roborazzi", name = "roborazzi", version.ref = "roborazzi" }
 roborazzi-compose = { group = "io.github.takahirom.roborazzi", name = "roborazzi-compose", version.ref = "roborazzi" }
+detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 detekt-compose-rules = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "composeRules" }
 spotless-gradle-plugin = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter" }

@@ -125,7 +125,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `build: add spotless and ktlint [P1, DOC-05]`
 
 ### T1.7 — detekt (strict) + Compose rules
-- [ ] done
+- [x] done
 - Refs: DOC-05 §2–5, ADR-008
 - Read: 05 (all)
 - Create: `config/detekt/detekt.yml`, detekt wiring in `fintrack.quality`.

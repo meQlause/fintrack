@@ -1,0 +1,141 @@
+# DOC-05: strict detekt rules (05 sections 2-5). Protected (05 section 9): loosening a limit needs an ADR and owner approval.
+# Rule names checked against detekt 1.23.8. Compose rules run with their defaults (05 section 7).
+build:
+  maxIssues: 0
+
+comments:
+  UndocumentedPublicClass:
+    active: true
+    excludes: ['**/app/**', '**/feature/**', '**/core/designsystem/**', '**/core/ui/**', '**/core/testing/**']
+  UndocumentedPublicFunction:
+    active: true
+    excludes: ['**/app/**', '**/feature/**', '**/core/designsystem/**', '**/core/ui/**', '**/core/testing/**']
+
+complexity:
+  LongMethod:
+    active: true
+    threshold: 30
+  LargeClass:
+    active: true
+    threshold: 200
+  CyclomaticComplexMethod:
+    active: true
+    threshold: 10
+  CognitiveComplexMethod:
+    active: true
+    threshold: 15
+  NestedBlockDepth:
+    active: true
+    threshold: 3
+  LongParameterList:
+    active: true
+    functionThreshold: 5
+    constructorThreshold: 7
+    ignoreDefaultParameters: false
+    ignoreDataClasses: false
+    ignoreAnnotatedParameter: []
+  TooManyFunctions:
+    active: true
+    thresholdInFiles: 15
+    thresholdInClasses: 15
+    thresholdInInterfaces: 15
+    thresholdInObjects: 15
+    thresholdInEnums: 15
+  ComplexCondition:
+    active: true
+    threshold: 3
+  NestedScopeFunctions:
+    active: true
+    threshold: 3
+
+coroutines:
+  GlobalCoroutineUsage:
+    active: true
+
+exceptions:
+  SwallowedException:
+    active: true
+  TooGenericExceptionCaught:
+    active: true
+
+naming:
+  VariableMinLength:
+    active: true
+    minimumVariableNameLength: 4
+  FunctionMinLength:
+    active: true
+    minimumFunctionNameLength: 4
+  FunctionNaming:
+    active: true
+    excludes: ['**/test/**', '**/androidTest/**']
+    functionPattern: '[a-z][a-zA-Z0-9]*'
+    ignoreAnnotated: ['Composable']
+
+potential-bugs:
+  UnsafeCallOnNullableType:
+    active: true
+
+style:
+  ForbiddenSuppress:
+    active: true
+    rules:
+      - 'ForbiddenComment'
+      - 'MagicNumber'
+      - 'LongMethod'
+      - 'LongParameterList'
+      - 'LargeClass'
+      - 'UnsafeCallOnNullableType'
+      - 'TooManyFunctions'
+      - 'CyclomaticComplexMethod'
+      - 'NestedBlockDepth'
+      - 'MaxLineLength'
+      - 'ReturnCount'
+      - 'ComplexCondition'
+      - 'TooGenericExceptionCaught'
+      - 'SwallowedException'
+      - 'UnusedPrivateMember'
+  ForbiddenComment:
+    active: true
+  ForbiddenMethodCall:
+    active: true
+    methods:
+      - reason: 'println bypasses the logger and can leak financial data; use AppLogger (10)'
+        value: 'kotlin.io.println'
+      - reason: 'print bypasses the logger and can leak financial data; use AppLogger (10)'
+        value: 'kotlin.io.print'
+      - reason: 'System.out bypasses the logger; use AppLogger (10)'
+        value: 'java.lang.System.out'
+      - reason: 'printStackTrace bypasses the logger; use AppLogger (10)'
+        value: 'java.lang.Throwable.printStackTrace'
+      - reason: 'Thread.sleep blocks a thread; use a coroutine delay'
+        value: 'java.lang.Thread.sleep'
+      - reason: 'runBlocking blocks a thread in main code; use a suspend function'
+        value: 'kotlinx.coroutines.runBlocking'
+      - reason: 'Use the injected Clock (03 Threading, 05 section 5)'
+        value: 'java.lang.System.currentTimeMillis'
+      - reason: 'Use the injected Clock (05 section 5)'
+        value: 'java.time.Instant.now'
+      - reason: 'Use the injected Clock (05 section 5)'
+        value: 'java.time.LocalDate.now'
+      - reason: 'Destructive migrations lose financial data (05 section 5)'
+        value: 'androidx.room.RoomDatabase.Builder.fallbackToDestructiveMigration'
+  MagicNumber:
+    active: true
+    excludes: ['**/test/**', '**/androidTest/**', '**/*.kts']
+  MaxLineLength:
+    active: true
+    maxLineLength: 120
+  ReturnCount:
+    active: true
+    max: 2
+    excludeGuardClauses: true
+  UnusedImports:
+    active: true
+  UnusedParameter:
+    active: true
+  UnusedPrivateClass:
+    active: true
+  UnusedPrivateMember:
+    active: true
+  WildcardImport:
+    active: true

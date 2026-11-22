@@ -10,6 +10,7 @@ dependencies {
     implementation(libs.ksp.gradle.plugin)
     implementation(libs.hilt.gradle.plugin)
     implementation(libs.spotless.gradle.plugin)
+    implementation(libs.detekt.gradle.plugin)
 }
 
 val conventionPackage = "com.meqlause.fintrack.buildlogic"
