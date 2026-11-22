@@ -403,7 +403,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(dashboard): add home screen [P4, FR-040]`
 
 ### T4.11 — Settings basics (S-12)
-- [ ] done · Refs: FR-120, FR-121 · Commit: `feat(settings): add theme and period settings [P4, FR-120]`
+- [x] done · Refs: FR-120, FR-121 · Commit: `feat(settings): add theme and period settings [P4, FR-120]`
 
 ---
 

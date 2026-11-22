@@ -2,6 +2,7 @@ package com.meqlause.fintrack.core.designsystem.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
@@ -16,6 +17,7 @@ fun FintrackTabHeader(
     title: String,
     modifier: Modifier = Modifier,
     leading: @Composable () -> Unit,
+    trailing: @Composable () -> Unit = {},
 ) {
     Row(
         modifier = modifier.fillMaxWidth().height(FintrackTheme.sizes.tabHeaderHeight),
@@ -28,5 +30,7 @@ fun FintrackTabHeader(
             style = FintrackTheme.typography.tabTitle,
             color = FintrackTheme.colors.texts.onSurface,
         )
+        Spacer(modifier = Modifier.weight(1f))
+        trailing()
     }
 }
