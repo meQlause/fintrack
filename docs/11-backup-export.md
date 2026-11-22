@@ -41,6 +41,8 @@ offset  size  content
   "merchantRules":  [ ... ],
   "monitoredApps":  [ ... ],
   "inboxItems":     [ ... only PENDING items, raw text included ],
+  "installmentPlans": [ ... ],
+  "loans":          [ ... ],
   "settings":       { "themeMode": "DARK", "periodStartDay": 25, "...": "non-secret settings only" }
 }
 ```
@@ -86,6 +88,9 @@ offset  size  content
 - Settings → "Ekspor CSV" → date range (default current period) → SAF create document `fintrack-2026-11.csv`.
 - UTF-8 **with BOM** (so Excel opens Indonesian text correctly), separator `,`, RFC 4180 quoting, CRLF line endings.
 - Columns:
+
+`jenis` values: Pengeluaran, Pemasukan, Transfer, Pinjamkan, Pinjam, Terima cicilan pinjaman, Bayar pinjaman.
+For loan rows, `kategori` holds the person name.
 
 ```
 tanggal,waktu,jenis,jumlah,kategori,dompet,dompet_tujuan,biaya,catatan,merchant,sumber

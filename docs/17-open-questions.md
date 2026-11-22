@@ -25,3 +25,11 @@ Agents: if your task depends on an **open** question, stop and ask the owner. Wh
 | Q-007 | Gradle dependency verification when? | After P1 is stable (add as first task of P2) | 2026-11-22 |
 | Q-008 | PIN length? | **6 digits** | 2026-11-22 |
 | Q-009 | "Copy sample" button for unsupported notifications? | **Yes**, copies anonymized text to clipboard only (no network) | 2026-11-22 |
+| Q-010 | When does an instalment purchase count as spending? | **Full amount at purchase** (ADR-015); "Cicilan bulan ini" shown separately | 2026-11-22 |
+| Q-011 | Support pay-later (SPayLater, GoPayLater, Kredivo)? | **Yes**, wallet type PAYLATER, same model as credit cards | 2026-11-22 |
+| Q-012 | Track minimum payment? | **No**; assume full payment, partial payments allowed | 2026-11-22 |
+| Q-013 | Bill/loan reminder timing? | **D−3 and D−1 at 09:00** (BR-045) | 2026-11-22 |
+| Q-014 | Interest / fees? | **No interest**; optional one-off admin fee on instalments (BR-038) | 2026-11-22 |
+| Q-015 | Investment detail level? | **Simple**: per account, money put in vs manually entered value (ADR-017) | 2026-11-22 |
+| Q-016 | Count investment gains as income? | **No**, investment screens only (BR-052) | 2026-11-22 |
+| Q-017 | Investment reminder? | **Optional monthly "update nilai" reminder**, default off (BR-055) | 2026-11-22 |

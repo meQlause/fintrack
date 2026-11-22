@@ -227,6 +227,16 @@ Steps to add a new app:
 - Our own notifications use channels: `inbox_prompt` (high importance), `budget_alert` (default), `backup_reminder` (low).
 - Requires `POST_NOTIFICATIONS` runtime permission on Android 13+ for our own prompts.
 
+## Credit cards & pay-later (FR-165)
+
+- `ParsedTransaction` gains `instrumentHint: InstrumentHint` (`ACCOUNT`, `CARD`, `PAYLATER`) and `cardLast4: String`
+  ("" if absent). Parsers set it from keywords: "kartu kredit", "credit card", "CC" → CARD; "PayLater", "Paylater", "Kredivo" → PAYLATER.
+- Wallet mapping: `(packageName, instrumentHint, cardLast4)` → wallet, configured per monitored app in S-13
+  ("Kartu ••1234 → BCA Card"). Falls back to the app's default wallet.
+- A debit from a bank account + a payment-received notification on a card/pay-later of the same amount within 10 minutes
+  is suggested as a bill-payment TRANSFER (extends FR-091).
+- Fixtures must mask card numbers except the last 4 digits; the last 4 are replaced by `0000` in committed fixtures (ADR-013).
+
 ## Privacy guarantees
 
 - Only notifications from **enabled monitored apps** are even read beyond `packageName`.

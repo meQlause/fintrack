@@ -57,6 +57,12 @@ app wires core:data into the graph via Hilt. Features never see core:data.
 | `feature:statistics` | Android library | FR-060..064 | same |
 | `feature:settings` | Android library | FR-100..124 UI | same |
 | `feature:lock` | Android library | PIN/biometric lock screen | same + security |
+| `feature:credit` | Android library | Credit wallets, statements, bill payment, instalments (FR-130..146) | domain, model, ui, designsystem |
+| `feature:loan` | Android library | Hutang & piutang (FR-150..157) | domain, model, ui, designsystem |
+| `feature:investment` | Android library | Investment accounts, valuations (FR-170..177) | domain, model, ui, designsystem |
+
+Statement and instalment math (BR-032 … BR-037) lives in `core:domain/credit/` as pure functions (`StatementCalculator`,
+`InstallmentScheduler`) so it can be tested exhaustively without Android. Reminders (BR-045) are a daily WorkManager job in `core:notification`.
 
 Test-only dependency: every module may use `core:testing` in `testImplementation` / `androidTestImplementation`.
 

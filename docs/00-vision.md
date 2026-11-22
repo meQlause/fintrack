@@ -54,7 +54,7 @@ These are explicitly **out of scope**. Do not implement them unless the roadmap 
 - Any network feature: cloud sync, login, analytics, crash reporting to a server, ads, remote config.
 - Multi-currency (IDR only).
 - Shared wallets between users.
-- Investments, stocks, crypto tracking.
+- ~~Investments, stocks, crypto tracking.~~ Superseded by ADR-017: **simple** investment tracking (money put in vs manually entered value) is in scope; live prices and per-holding tracking remain out of scope.
 - Reading SMS (notifications only).
 - Bank API integration / open banking.
 - AI/LLM features (may come later, must also be on-device).

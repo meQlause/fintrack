@@ -9,7 +9,9 @@ UI text shown here is the **Indonesian string** to put in `strings.xml`.
 [Splash] ─► (first launch?) ─► Onboarding ─► Dashboard
         └─► (PIN set & locked?) ─► Lock ─► Dashboard
 
-Bottom bar:  Beranda | Riwayat | (+) | Statistik | Dompet
+Bottom bar:  Beranda | Riwayat | (+) | Investasi | Dompet
+             (Statistics live inside Riwayat as the "Statistik" view; the Investasi tab is S-08.)
+Every tab header: 40px row, 32px icon tile + 20px/700 title (Beranda uses the Fintrack logo, others a soft-teal tile with the tab icon).
 
 Dashboard ─► Settings (top-bar gear)
           ─► Inbox (top-bar bell with badge / banner)
@@ -103,6 +105,10 @@ Actions: "Ubah" (opens S-04 edit), "Catat lagi" (FR-038), "Hapus".
 
 States: Loading, Empty ("Semua beres! ✨" / "Belum ada transaksi baru terdeteksi"), Access-off ("Deteksi notifikasi belum aktif" + "Aktifkan" button), Success.
 
+> **Change (2026-11-22):** the content below is now the **"Statistik" view inside S-05 Riwayat** (segmented "Daftar | Statistik"
+> under the month strip; it follows the selected month). The S-08 tab is now **Investasi**: total value, gain, allocation by kind,
+> account list (→ S-20), recent investment activity, "+" to add an investment account, empty state "Belum ada investasi".
+
 ## S-08 Statistics / Statistik (`feature:statistics`) — FR-060..064
 
 1. Month selector (same as S-05).
@@ -152,6 +158,82 @@ app name, switch (enabled), "Dompet default" picker, "Terakhir diterima: 2 jam l
 Section "Belum didukung?" explaining how to send sample notifications to the developer. Button "Salin contoh"
 copies the latest unrecognized notification text from that app to the clipboard, with digits of account/reference
 numbers masked as `XXXX` (Q-009). Offline only; the user shares it manually.
+
+## Credit, instalments & loans additions
+
+Flows and examples: `18-credit-installments-loans.md`.
+
+### Home simplification (2026-11-22, supersedes the hero line and donut card below)
+- Hero: "Saldo" + balance, then a single pill **"+1,5jt bulan ini ›"** (net of the period). Tap → **Ringkasan** drawer:
+  Kekayaan bersih on top; rows Pemasukan, Pengeluaran, Saldo, Investasi, Piutang, Utang kartu, Hutang; action "Lihat dompet".
+- Category card: tappable card "Pengeluaran Nov" + total + `›`, one slim stacked bar, top 3 categories with %.
+  Tap → **Kategori** drawer: every category (icon, %, number of transactions, amount); action "Buka statistik".
+
+### Changes to existing screens
+- **S-03 Beranda:** hero label "Saldo" (BR-043). If non-zero, one line under it: "Utang kartu Rp3,5jt · Piutang Rp300rb · Hutang Rp500rb".
+  New **"Tagihan"** card (FR-137) after the inbox row: nearest bill (card name, amount, "jatuh tempo 3 hari", status colour),
+  "Cicilan bulan ini Rp1,5jt", and receivable/debt totals; tapping opens the relevant screen. Overdue → error colour (FR-136).
+- **S-04 Add sheet:** type tabs become **Keluar · Masuk · Transfer · Pinjaman**.
+  - **Keluar** shows one **"Bayar pakai · <group>"** row (icon, wallet name, balance or remaining limit, ⌄). Tapping it opens the
+    **wallet picker drawer** (S-18). **Masuk** uses the same row labelled "Masuk ke" (non-credit wallets only).
+  - **Transfer** is laid out left to right: **[Dari] ⇄ [Ke]** cards with a swap button; tapping a side opens the drawer for that side;
+    the source can never be a credit wallet (BR-039) and the wallet chosen on the other side is shown as "Sudah dipilih".
+  - **Pinjaman** has a "Jatuh tempo" row (FR-158) and a wallet row, both opening drawers.
+
+### Shortcuts (FR-039)
+- **S-03 Beranda:** "Catat cepat" row under the hero — horizontal tiles (category icon, title, amount) + a dashed "Baru" tile; "Atur" opens the shortcut manager drawer.
+- **S-04 Add sheet:** a "⚡ Pintasan" button in the sheet header opens the **shortcut drawer**: a 3-column grid of tiles (icon, title, amount, wallet);
+  picking one fills the sheet and closes the drawer (still editable). "Atur pintasan" at the bottom switches the drawer to the manage/delete list.
+  A "Simpan sebagai pintasan" checkbox above "Simpan" (hidden when editing or when a shortcut was applied).
+
+### S-20 Investment detail (`feature:investment`) — FR-173
+Push screen: header (name + kind badge); "Nilai sekarang" large; gain line "+Rp80.000 (+4,0%)" (income/expense colour);
+"Terakhir update 20 Nov"; 2 stats (Modal, Untung/Rugi); actions **Update nilai** (keypad sheet, prefilled with current value) ·
+**Tambah dana** (TRANSFER into it, prefilled) · **Tarik** (TRANSFER out to a bank); timeline of transfers and valuations.
+Dompet tab gets an **"Investasi"** group (value + gain %); the net-worth breakdown becomes a list: Saldo · Investasi · Piutang · Utang kartu · Hutang.
+
+### S-19 Wallet detail (`feature:wallet`) — FR-017
+Push screen: header (name + type badge); icon + balance; 3-column stats (Masuk / Keluar / Transaksi this period);
+two quick actions **Pakai** (EXPENSE with this wallet pre-selected) · **Transfer** (from this wallet); "Keluar per hari" mini bars
+for the period (today highlighted, future dimmed); "Terbaru" list (8 rows) with **"Lihat semua (N)"** that expands the full list
+in place (toggle "Ringkas") — it never navigates away to the Riwayat tab.
+
+### S-18 Wallet picker drawer (shared component in `core:ui`)
+A second, smaller bottom sheet stacked above the current sheet. Sections in this order, each with an icon header:
+**Tunai** · **Debit (bank & e-wallet)** · **Kartu kredit** · **Paylater** (credit sections hidden where not allowed).
+Rows: icon, name, balance (or "Sisa limit" for credit), radio indicator. Picking closes the drawer.
+The same drawer has two other modes: a **1–28 day grid** (statement/due day, FR-138) and an **options list** (loan due date, FR-158).
+  - When the selected wallet is a credit wallet (Keluar): a **"Cicilan"** switch appears; on → tenor chips `3 · 6 · 12 · Lainnya`
+    and an optional "Biaya admin" field; a preview line "Rp500.000 × 6 bulan · mulai tagihan Nov" (FR-140).
+  - **Pinjaman** tab: segmented "Saya meminjamkan" / "Saya meminjam", person name field with suggestions (FR-157),
+    wallet chips, optional due date chip (FR-150, FR-151).
+- **S-05 Riwayat:** loan transactions show a person icon and label ("Pinjamkan ke Andi", "Andi bayar"); card payments show "Bayar BCA Card".
+- **S-09 Dompet:** header shows **Kekayaan bersih** with a 4-part breakdown (FR-161). New group **"Kredit"** (credit wallets:
+  outstanding, thin available-limit bar, "jatuh tempo 10 Des") and a **"Pinjaman"** row → S-17.
+
+### S-14 Credit wallet detail (`feature:credit`) — FR-131 … FR-136
+1. Header: card name + type badge (Kartu kredit / Paylater).
+2. **Bill card:** "Tagihan Nov" amount (remainingDue), due date + countdown, status chip (Belum terbit / Belum dibayar / Lunas / Terlambat),
+   primary button **"Bayar tagihan"** → S-15.
+3. **Limit:** outstanding / limit with a bar; "Sisa limit Rp6,5jt" (or "Melebihi limit").
+4. **Siklus:** "Tutup buku · Tanggal 15 (tiap bulan)" and "Jatuh tempo · Tanggal 1 (bulan berikutnya)" rows → day grid drawer (FR-138).
+5. **Cicilan aktif:** compact list (title, "2/6", portion) → S-16.
+5. **Transaksi:** this cycle's purchases (since last cut-off).
+6. **Riwayat tagihan** (S): last 6 statements.
+States: NOT_ISSUED (first cycle), DUE, PAID, OVERDUE.
+
+### S-15 Pay bill sheet — FR-132, FR-133
+Amount (prefilled remainingDue, editable with keypad), "Dari" wallet chips (non-credit only), quick chips "Lunas" / "Sebagian".
+Save → TRANSFER; success toast "Tagihan dibayar"; if remainingDue becomes 0, the bill card animates to "Lunas" with a check.
+
+### S-16 Instalments (`feature:credit`) — FR-142 … FR-146
+List of plans: title, card, "Rp500.000/bln", progress ring "2/6", remaining principal, next billing month. Filter: Aktif / Selesai.
+Detail: schedule (each portion with statement month and Lunas/Belum), actions "Lunasi sekarang" (FR-144) and "Hapus" (FR-145).
+
+### S-17 Loans (`feature:loan`) — FR-150 … FR-157
+Tabs **Piutang** (they owe me) / **Hutang** (I owe). Summary total at top. Rows grouped by person: name avatar (initial),
+outstanding, progress bar, due date (red if overdue). Detail: timeline of transactions, buttons **"Catat pembayaran"**
+(amount ≤ outstanding) and, for Piutang, **"Ikhlaskan"** (confirm dialog). Settled loans move to a collapsed "Selesai" section.
 
 ## Global UI behaviours
 

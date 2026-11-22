@@ -33,6 +33,7 @@ AC FR-001..004:
 | FR-014 | M | Show each wallet's current balance and the total balance of all non-archived wallets. |
 | FR-015 | S | Reorder wallets by drag and drop. |
 | FR-016 | S | Exclude a wallet from the total balance (e.g. a savings wallet). |
+| FR-017 | M | Tapping a wallet (Home or Dompet tab) opens a **wallet detail screen** (S-19): balance, this period's in/out/count, daily outflow bars, quick actions (Catat with this wallet, Transfer from it, Riwayat filtered), recent transactions. Credit wallets open S-14 instead. |
 
 ### Categories
 
@@ -56,6 +57,7 @@ AC FR-001..004:
 | FR-036 | M | Transaction history grouped by day, newest first, with daily totals. |
 | FR-037 | M | Filter history by: month, type, wallet, category. Search by note and merchant text. |
 | FR-038 | S | Duplicate a transaction ("Catat lagi") with today's date. |
+| FR-039 | M | **Shortcuts (pintasan):** saved EXPENSE/INCOME templates (title, amount, category, wallet). One tap on a shortcut (Home "Catat cepat" row or chips in the add sheet) opens the add sheet **pre-filled and still editable**; nothing is saved until "Simpan". Create via "Simpan sebagai pintasan" checkbox; delete in the "Atur" drawer (undo). |
 
 AC FR-030..033:
 - Amount must be > 0 and ≤ 999,999,999,999 (BR-001).
@@ -151,6 +153,76 @@ Full design in `11-backup-export.md`.
 | FR-122 | M | Manage wallets, categories, budgets, monitored apps, security, backup. |
 | FR-123 | M | About: version, licenses, privacy statement ("Data tidak pernah meninggalkan perangkat ini"). |
 | FR-124 | S | Hide amounts by default on the Dashboard. |
+
+### Credit cards & pay-later
+
+Overview and examples: `18-credit-installments-loans.md`.
+
+| ID | Pri | Requirement |
+|----|-----|-------------|
+| FR-130 | M | Create a credit wallet (type CREDIT_CARD or PAYLATER) with: name, credit limit, statement day (1–28), due day (1–28), current outstanding. |
+| FR-131 | M | Credit wallet summary: outstanding, available limit (bar), current statement amount, due date countdown, status (BR-034). |
+| FR-132 | M | "Bayar tagihan": prefilled TRANSFER from a non-credit wallet to the card for the remaining due amount. |
+| FR-133 | M | Partial and over-payments are allowed; remaining due updates immediately. |
+| FR-134 | S | Statement history: last 6 statements with amount, paid, status. |
+| FR-135 | M | Reminder notifications at D−3 and D−1 (09:00) when remaining due > 0. |
+| FR-136 | M | Overdue statements are highlighted on Home and in the wallet. |
+| FR-137 | M | Home "Tagihan" card: nearest due bill, total instalments due this period, open receivables and debts. |
+| FR-138 | M | Statement day ("tutup buku") and due day ("jatuh tempo") are editable at any time from the credit wallet screen (day grid 1–28); bills recalculate immediately. |
+| FR-139 | M | Creating a wallet offers types Kartu kredit and Paylater with limit, current debt, statement day and due day. A new credit wallet shows "Belum terbit" until its first statement day (BR-034). |
+
+AC FR-131..133:
+- Statement amount follows BR-033 exactly (unbilled instalment principal excluded).
+- Paying a bill never creates an EXPENSE (BR-039).
+
+### Instalments (cicilan 0%)
+
+| ID | Pri | Requirement |
+|----|-----|-------------|
+| FR-140 | M | When the add sheet's wallet is a credit wallet, a "Cicilan" toggle allows tenor 3/6/12 or custom 2–36 months and an optional admin fee. |
+| FR-141 | S | Convert an existing credit-wallet expense into an instalment plan. |
+| FR-142 | M | Instalment list: title, monthly portion, progress "k/n", remaining principal, next billing month. |
+| FR-143 | M | Portions are billed on statements per BR-036 and included in the statement amount. |
+| FR-144 | M | Early payoff bills all remaining portions on the next statement (BR-037). |
+| FR-145 | M | Deleting the purchase transaction deletes its plan after confirmation. |
+| FR-146 | M | "Cicilan bulan ini" total = Σ portions billed on statements due in the current period. |
+
+### Loans (hutang & piutang)
+
+| ID | Pri | Requirement |
+|----|-----|-------------|
+| FR-150 | M | Record lending money (piutang): person, amount, wallet, date, optional due date, note. |
+| FR-151 | M | Record borrowing money (hutang): same fields. |
+| FR-152 | M | Record partial or full repayments into/out of any wallet; reject amounts above outstanding. |
+| FR-153 | M | Loan list grouped by direction, then person, with outstanding and progress. |
+| FR-154 | M | Due-date reminders at D−3 and D−1 for open loans with a due date. |
+| FR-155 | M | Loans settle automatically at outstanding 0; LENT loans can be written off ("Ikhlaskan"). |
+| FR-156 | M | Loan transactions appear in History but never in income/expense statistics. |
+| FR-157 | S | Person name suggestions from previous loans. |
+| FR-158 | M | Loan due date: choose when recording (none, 1 week, 2 weeks, 1/2/3 months) and change or clear it later from the loan detail. |
+
+### Investments (simple mode)
+
+Overview: `19-investments.md`.
+
+| ID | Pri | Requirement |
+|----|-----|-------------|
+| FR-170 | M | Create an investment wallet: name, kind (Reksa dana, Saham, Emas, Deposito, Kripto, Lainnya), initial invested amount. |
+| FR-171 | M | Put money in / take money out via TRANSFER to/from the investment wallet (wallet picker shows an "Investasi" section for transfers only). |
+| FR-172 | M | "Update nilai": enter the current value with the keypad; stored as a valuation dated today. |
+| FR-173 | M | Investment screen (S-20): current value, modal, gain (Rp and %), last update date, actions (Update nilai, Tambah dana, Tarik), timeline of transfers and valuations. |
+| FR-174 | M | Dompet tab: "Investasi" group with value and gain % per account; Kekayaan bersih includes investments (BR-053). |
+| FR-175 | M | Gains never appear in income/expense statistics or budgets (BR-052). |
+| FR-176 | S | Optional monthly reminder to update values (default off). |
+| FR-177 | S | Home hero secondary line shows total investment value when non-zero. |
+
+### Net worth
+
+| ID | Pri | Requirement |
+|----|-----|-------------|
+| FR-160 | M | Home hero shows **Saldo** (non-credit wallets); a line below shows Utang kartu and Piutang/Hutang when non-zero. |
+| FR-161 | M | Wallets tab shows **Kekayaan bersih** with a breakdown (BR-043). |
+| FR-165 | S | Detect credit card / pay-later transaction notifications and map them to the right credit wallet (07). |
 
 ---
 

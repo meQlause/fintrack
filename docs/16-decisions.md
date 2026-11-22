@@ -96,3 +96,26 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
 - **Decision:** Commit headers end with `[IDs]` (12), behavioural comments/KDoc start with an ID (05 §8),
   test names end with `(ID)` (06). Enforced by the `commit-msg` hook and Konsist `DocReferenceTest`.
 - **Consequences:** Every change must be traceable to the docs; unspecified behaviour surfaces early as a question.
+
+### ADR-015 — Spending recognised at purchase; bill payments are transfers
+- **Status:** Accepted (2026-11-22)
+- **Context:** Credit cards, pay-later and instalments separate the moment of buying from the moment of paying.
+  Counting both double-counts spending.
+- **Decision:** An EXPENSE is recorded once, at purchase, on the credit wallet (full principal for instalments).
+  Paying a bill is a TRANSFER. Statement amounts exclude unbilled instalment portions (BR-033). No interest or late fees;
+  an optional one-off admin fee is a normal expense (BR-038).
+- **Consequences:** Statistics show what was bought, when. Cash-flow views ("Cicilan bulan ini", bill amounts) are computed separately.
+
+### ADR-016 — Loans as transaction types linked to a Loan entity
+- **Status:** Accepted (2026-11-22)
+- **Context:** Lending/borrowing moves real money between wallets but is neither income nor expense.
+- **Decision:** New transaction types LEND, BORROW, COLLECT, REPAY with a required `loanId`; a Loan row holds person,
+  direction, due date and status. Balances use the single transaction table; statistics exclude these types (BR-040).
+- **Consequences:** One balance formula for everything; history shows loan movements; no separate payments table.
+
+### ADR-017 — Simple investment tracking with manual valuations
+- **Status:** Accepted (2026-11-22). Supersedes the "no investments" non-goal in 00-vision.
+- **Context:** Owner wants investments visible in net worth. The app is offline, so no live prices.
+- **Decision:** INVESTMENT wallet type; money in/out via transfers; current value entered manually as ValuationEntry;
+  gains shown only on investment screens (not income). Optional monthly "update nilai" reminder, default off.
+- **Consequences:** Accurate enough for net worth without per-holding complexity; a detailed per-holding mode can be added later.

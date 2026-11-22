@@ -10,6 +10,18 @@ dp values or font sizes outside this module (Konsist-enforced).
 3. **Fast paths are obvious.** The add button is always reachable; the most likely choice is preselected.
 4. **Dark mode is first-class.** Designed and screenshot-tested in both themes.
 5. **Delight in motion.** Short, purposeful animations and haptic feedback on save/confirm.
+6. **Choices live in drawers, not chip piles.** Any selection from a list (wallet, wallet type, investment kind, tenor, due date,
+   shortcut, day of month…) is shown in a form as **one compact row** (`Label ……… Value ›`) that opens the shared picker drawer (S-18):
+   one option per line with icon, name, a short hint and a radio. Exceptions: 2–4 mutually exclusive modes use a **segmented control**
+   (e.g. Keluar/Masuk/Transfer/Pinjaman, Daftar/Statistik); category selection keeps its icon carousel.
+7. **Simple surface, details on tap.** Home shows one headline number per block. Anything with more than ~3 figures is reached by
+   tapping a clearly tappable element (pill or card with a `›` chevron and a press state) that opens an info drawer with the full
+   breakdown and one primary action.
+
+## Logo
+
+`design/assets/fintrack-logo.svg`: a 32×32 rounded square (radius 10) in `primary`, with an "F" drawn as two strokes and a coin dot
+in `onPrimary` (stroke 2.6, round caps). Used at 32 dp in the Beranda header and as the base for the launcher icon (adaptive icon foreground).
 
 ## Color tokens
 
@@ -56,6 +68,7 @@ Each key has a light and dark variant (dark = lighter tint). Used for category i
 | green | `#16A34A` | `#4ADE80` |
 | teal | `#0D9488` | `#2DD4BF` |
 | amber | `#D97706` | `#FBBF24` |
+| slate | `#475569` | `#A3B1C2` |
 | gray | `#64748B` | `#94A3B8` |
 
 ## Typography

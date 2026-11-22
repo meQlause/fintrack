@@ -19,7 +19,7 @@
 | Transfer / Pindah dana | Transfer | Money between own wallets (TransactionType.TRANSFER) |
 | Biaya admin | Fee (`feeAmount`) | Transfer fee |
 | Saldo | Balance | Current amount in a wallet |
-| Total saldo | Total balance | Sum of included wallets (BR-014) |
+| Saldo | Balance (liquid) | Sum of non-credit included wallets (BR-043) |
 | Saldo awal | Initial balance | Wallet balance when created |
 | Selisih | Net | Income − expense |
 | Anggaran | Budget | Monthly spending limit |
@@ -38,6 +38,24 @@
 | Catatan | Note | Free-text note on a transaction |
 | Merchant / Toko | Merchant | Where the money went/came from |
 | Diarsipkan | Archived | Hidden but kept (`isArchived`) |
+| Paylater | Pay-later | Wallet type PAYLATER (SPayLater, GoPayLater, Kredivo, …) |
+| Limit | Credit limit | `creditLimit` of a credit wallet |
+| Sisa limit | Available limit | BR-044 |
+| Tagihan | Statement / bill | Amount due for a statement cycle (BR-033) |
+| Tanggal cetak | Statement day | `statementDay` |
+| Jatuh tempo | Due date | `dueDay` / statement due date |
+| Lunas | Paid / settled | StatementStatus.PAID, LoanStatus.SETTLED |
+| Terlambat | Overdue | StatementStatus.OVERDUE |
+| Cicilan | Instalment plan | InstallmentPlan |
+| Tenor | Tenor | `tenorMonths` |
+| Biaya admin | Admin fee | One-off instalment fee (BR-038) |
+| Utang kartu | Card debt | Σ outstanding of credit wallets |
+| Piutang | Receivable | Loan with direction LENT |
+| Hutang | Debt | Loan with direction BORROWED |
+| Pinjamkan / Pinjam | Lend / Borrow | Transaction types LEND / BORROW |
+| Catat pembayaran | Record repayment | COLLECT (for piutang) / REPAY (for hutang) |
+| Ikhlaskan | Write off | LoanStatus.WRITTEN_OFF (BR-042) |
+| Kekayaan bersih | Net worth | BR-043 |
 
 ## Technical terms
 
