@@ -177,7 +177,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `build: add kover coverage thresholds [P1, DOC-06]`
 
 ### T1.13 — Screenshot tests (Roborazzi)
-- [ ] done
+- [x] done
 - Refs: DOC-06 (Screenshot tests)
 - Create: Roborazzi in `fintrack.android.feature` and for `core:designsystem`; one test `ThemeSwatchScreenshotTest` that renders a placeholder composable in light and dark.
 - Done when: `./gradlew recordRoborazziDebug` then `./gradlew verifyRoborazziDebug` pass.

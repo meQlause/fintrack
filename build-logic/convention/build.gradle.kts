@@ -12,6 +12,7 @@ dependencies {
     implementation(libs.spotless.gradle.plugin)
     implementation(libs.detekt.gradle.plugin)
     implementation(libs.kover.gradle.plugin)
+    implementation(libs.roborazzi.gradle.plugin)
     implementation(libs.dependency.analysis.gradle.plugin)
 }
 
