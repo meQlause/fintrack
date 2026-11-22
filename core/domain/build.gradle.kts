@@ -4,6 +4,9 @@ plugins {
 }
 
 dependencies {
+    api(project(":core:model"))
+    api(libs.coroutines.core)
+
     testImplementation(platform(libs.junit5.bom))
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter)
