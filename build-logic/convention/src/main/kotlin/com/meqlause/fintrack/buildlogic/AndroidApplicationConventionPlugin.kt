@@ -18,6 +18,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     checkDependencies = true
                     lintConfig = rootProject.file("config/lint/lint.xml")
                 }
+                testOptions {
+                    unitTests.isIncludeAndroidResources = true
+                }
                 compileSdk {
                     version =
                         release(FintrackConfig.COMPILE_SDK) {

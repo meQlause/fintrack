@@ -33,6 +33,10 @@ class QualityConventionPlugin : Plugin<Project> {
             dependencies {
                 add("detektPlugins", library("detekt-compose-rules"))
             }
+            configureKover()
+            if (this == rootProject) {
+                configureKoverAggregate()
+            }
         }
     }
 }

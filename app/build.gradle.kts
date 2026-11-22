@@ -24,6 +24,12 @@ dependencies {
 dependencies {
     testImplementation(libs.konsist)
     testImplementation(libs.junit4)
+    testImplementation(libs.robolectric)
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.compose.ui.test.junit4)
+    debugRuntimeOnly(libs.compose.ui.test.manifest)
+    testImplementation(libs.compose.ui.test)
+    testImplementation(libs.androidx.test.ext.junit)
 }
 
 // DOC-10: the manifest test reads the merged release manifest

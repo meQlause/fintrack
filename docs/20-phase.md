@@ -170,7 +170,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `test: add konsist architecture tests [P1, DOC-06]`
 
 ### T1.12 — Coverage (Kover)
-- [ ] done
+- [x] done
 - Refs: DOC-06 (Coverage)
 - Steps: Kover in `fintrack.quality`; thresholds per module group from 06; exclusions from 06; `koverVerify` in `check`.
 - Done when: `./gradlew koverVerify` passes (empty modules are excluded until they have code).
