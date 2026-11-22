@@ -7,4 +7,6 @@ public data class Preferences(
     public val periodStartDay: Int = 1,
     public val hideAmountsByDefault: Boolean = false,
     public val headsUpForInbox: Boolean = true,
+    public val investReminder: Boolean = false,
+    public val histView: HistoryView = HistoryView.LIST,
 )

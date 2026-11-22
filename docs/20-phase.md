@@ -330,7 +330,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(database): add wallet balance query [P3, BR-004]`
 
 ### T3.7 — Settings (DataStore)
-- [ ] done
+- [x] done
 - Refs: DOC-02 (Settings)
 - Create in `core:datastore`: `SettingsDataSource` with every key/default from 02 (+ `investReminder` false, `histView`).
 - Tests: defaults; write/read round trip.
