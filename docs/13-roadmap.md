@@ -1,5 +1,8 @@
 # 13 — Roadmap
 
+> **For execution use `20-phase.md`** — it breaks every phase below into single-session tasks with files, tests, checks and commit messages.
+> This file stays as the high-level summary; tick a phase's boxes here when all its tasks in 20 are done.
+
 Work phase by phase. Inside a phase, take exit criteria top to bottom. A phase is complete when **every**
 checkbox is ticked and `./gradlew check` is green. Tick boxes in the same commit that satisfies them.
 
@@ -76,7 +79,24 @@ Goal: an empty app where **every rule in 05/06 is already enforced** before any 
 - [ ] Statistics S-08 (FR-060..064).
 - [ ] Budgets S-11 + dashboard warnings + alerts (FR-070..074, FR-045).
 
-## P7 — Security & data safety
+## P7 — Credit, instalments & loans
+
+- [ ] `PAYLATER` wallet type and credit wallet fields; migration + test (02).
+- [ ] `StatementCalculator` (BR-032 … BR-034) with tests for every row of the worked example in 18, month/year boundaries, statementDay ≥ dueDay and ≤ dueDay.
+- [ ] `InstallmentScheduler` (BR-035 … BR-037) with tests: rounding, tenor 2 and 36, early payoff, edit/delete.
+- [ ] Credit wallet detail S-14 + pay bill S-15 (FR-130 … FR-136).
+- [ ] Instalment toggle in S-04 + S-16 (FR-140 … FR-146).
+- [ ] Loan entity, LEND/BORROW/COLLECT/REPAY transactions, S-17, Pinjaman tab in S-04 (FR-150 … FR-157).
+- [ ] Saldo / Kekayaan bersih (BR-043) on S-03 and S-09; Tagihan card (FR-137).
+- [ ] Bill and loan reminders (BR-045, FR-135, FR-154).
+- [ ] Statistics and budgets ignore loan transactions and bill payments (BR-039, BR-040) — regression tests.
+- [ ] Backup DTOs + validation for installment plans and loans (11).
+- [ ] Credit/pay-later notification hints and wallet mapping (FR-165).
+- [ ] Investments simple mode: INVESTMENT wallet type, ValuationEntry + migration, `InvestmentCalculator` (BR-051) tests, S-20, Dompet group, net worth (FR-170 … FR-177).
+- [ ] Shortcuts: QuickEntry entity, Home "Catat cepat", shortcut drawer, "Simpan sebagai pintasan" (FR-039, BR-047).
+- [ ] Wallet detail screen S-19 (FR-017).
+
+## P8 — Security & data safety
 
 - [ ] PIN + lock screen + throttling (FR-100, FR-102, FR-103).
 - [ ] Biometric unlock (FR-101), hide from recents (FR-104).
@@ -84,7 +104,7 @@ Goal: an empty app where **every rule in 05/06 is already enforced** before any 
 - [ ] Backup reminder (FR-112), CSV export (FR-113).
 - [ ] About screen with privacy statement and licenses (FR-123).
 
-## P8 — Polish & release to friends
+## P9 — Polish & release to friends
 
 - [ ] Baseline profile; cold start < 1.5 s measured (NFR-004).
 - [ ] 10,000-transaction scroll performance check (NFR-005).

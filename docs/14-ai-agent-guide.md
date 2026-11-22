@@ -18,7 +18,8 @@ usable by small models: when a step says "do X", do X; when something is not cov
 
 ## Before starting a task
 
-1. Read `13-roadmap.md`, find the earliest phase with unticked boxes. That is your task unless the owner said otherwise.
+1. Read `20-phase.md` and take the **first unchecked task** of the earliest phase. That is your task unless the owner said otherwise.
+   (`13-roadmap.md` is only the high-level summary.)
 2. Read the docs referenced by that criterion (requirements → domain → architecture → screens).
 3. Check `17-open-questions.md`: if your task depends on an open question, stop and ask.
 4. Identify the module(s) you will touch (03 → Module list). If a new module seems needed, stop and ask.
@@ -117,7 +118,7 @@ Follow `07-notification-detection.md` → "Steps to add a new app". Fixtures fir
 
 ## Reporting back to the owner
 
-End each task with a short summary in Indonesian:
+End each task with a short summary in English:
 - what was done (requirement IDs),
 - which files/modules changed,
 - test/check result (paste the failing output if anything failed),

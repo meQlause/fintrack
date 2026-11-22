@@ -35,6 +35,9 @@ If code and docs disagree, the docs win — or the docs must be updated first (w
 | 15 | [15-glossary.md](15-glossary.md) | Terms, Indonesian ↔ English mapping | When a word is unclear |
 | 16 | [16-decisions.md](16-decisions.md) | Architecture Decision Records (ADR-xxx) | Before questioning a decision |
 | 17 | [17-open-questions.md](17-open-questions.md) | Things not yet decided | Before assuming anything |
+| 18 | [18-credit-installments-loans.md](18-credit-installments-loans.md) | Credit cards, pay-later, instalments, loans — flows & examples | Credit / loan work |
+| 19 | [19-investments.md](19-investments.md) | Investment accounts, simple mode (manual value) | Investment work |
+| 20 | [20-phase.md](20-phase.md) | **Execution checklist**: one task at a time, with files, tests, checks and commit message | **Every development session** |
 
 ## Identifier conventions used across docs
 
