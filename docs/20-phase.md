@@ -218,7 +218,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `build: enable gradle dependency verification [P2, DOC-10]`
 
 ### T2.2 — Sync design tokens doc with the prototype
-- [ ] done
+- [x] done
 - Refs: DOC-08
 - Read: 08, prototype CSS (`.app.light` / `.app.dark` variables and `this.COLORS` in `design/project/Main.dc.html`)
 - Steps: update the colour table in 08 to the **final** prototype palette below (docs-only commit):

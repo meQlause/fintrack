@@ -30,46 +30,48 @@ optional toggle in Settings could come later.
 
 | Token | Light | Dark | Use |
 |-------|-------|------|-----|
-| `primary` | `#0D9488` | `#2DD4BF` | Accent, FAB, selected states |
-| `onPrimary` | `#FFFFFF` | `#042F2E` | Content on primary |
-| `primaryContainer` | `#CCFBF1` | `#134E4A` | Tinted chips, selected cards |
-| `onPrimaryContainer` | `#042F2E` | `#CCFBF1` | |
-| `background` | `#F6F7F9` | `#0B0F14` | Screen background |
-| `surface` | `#FFFFFF` | `#141A21` | Cards, sheets |
-| `surfaceVariant` | `#EEF1F4` | `#1C232C` | Inputs, keypad keys |
-| `onSurface` | `#0F172A` | `#E6EAF0` | Primary text |
-| `onSurfaceVariant` | `#64748B` | `#94A3B8` | Secondary text |
-| `outline` | `#E2E8F0` | `#2A333E` | Dividers, borders |
-| `income` | `#16A34A` | `#4ADE80` | Income amounts |
-| `expense` | `#E11D48` | `#FB7185` | Expense amounts |
-| `transfer` | `#2563EB` | `#60A5FA` | Transfer amounts |
-| `warning` | `#D97706` | `#FBBF24` | Budget 80–99% |
-| `error` | `#DC2626` | `#F87171` | Budget exceeded, errors |
+| `background` | `#F6F6F3` | `#0E1013` | Screen background |
+| `surface` | `#FFFFFF` | `#16191E` | Cards, sheets |
+| `surfaceVariant` | `#F1F1EE` | `#1E2228` | Inputs, keypad keys |
+| `onSurface` | `#18181B` | `#ECEDEF` | Primary text |
+| `onSurfaceVariant` | `#71717A` | `#9BA1AA` | Secondary text (muted) |
+| `faint` | `#A1A1AA` | `#6B7280` | Faint text (tertiary) |
+| `outline` | `#E8E8E4` | `#262A31` | Dividers, card hairline border |
+| `primary` | `#0B7F74` | `#34D1BF` | Accent, FAB, selected states |
+| `onPrimary` | `#FFFFFF` | `#062A26` | Content on primary |
+| `primaryContainer` | `#E3F4F1` | `#11332F` | Tinted chips, selected cards |
+| `onPrimaryContainer` | `#0B5F57` | `#B9F3EA` | Content on primary container |
+| `income` | `#15803D` | `#4ADE80` | Income amounts |
+| `expense` | `#D6325A` | `#FB7A95` | Expense amounts |
+| `transfer` | `#2563EB` | `#7AB3FF` | Transfer amounts |
+| `warning` | `#B45309` | `#FBBF24` | Budget 80–99% |
+| `error` | `#C2410C` | `#FB923C` | Budget exceeded, errors |
+
+Values are the final prototype palette (`design/project/Main.dc.html`, `.app.light` / `.app.dark`).
 
 Custom tokens (`income`, `expense`, `transfer`, `warning`) are provided through a `FintrackColors`
 `CompositionLocal`, accessed as `FintrackTheme.colors.income`.
 
-### Category / wallet color catalog (`colorKey`)
+### Category colour catalogue (`colorKey`)
 
-Each key has a light and dark variant (dark = lighter tint). Used for category icons (icon on a 16%-alpha circle of the color).
+Copied from `this.COLORS` in the prototype (`design/project/Main.dc.html`): light = first value, dark = second. Used for category icons (icon on a 16%-alpha circle of the color).
 
 | key | Light | Dark |
 |-----|-------|------|
-| orange | `#EA580C` | `#FB923C` |
-| blue | `#2563EB` | `#60A5FA` |
-| pink | `#DB2777` | `#F472B6` |
-| purple | `#9333EA` | `#C084FC` |
-| violet | `#7C3AED` | `#A78BFA` |
-| red | `#DC2626` | `#F87171` |
-| indigo | `#4F46E5` | `#818CF8` |
-| brown | `#92400E` | `#D6A36A` |
-| cyan | `#0891B2` | `#22D3EE` |
-| rose | `#E11D48` | `#FB7185` |
-| green | `#16A34A` | `#4ADE80` |
-| teal | `#0D9488` | `#2DD4BF` |
-| amber | `#D97706` | `#FBBF24` |
+| orange | `#E8833A` | `#F5A66B` |
+| blue | `#3B7BEA` | `#7FAAF5` |
+| pink | `#DD5C9B` | `#F08DBE` |
+| purple | `#9466DB` | `#B99BEC` |
+| violet | `#6E66DE` | `#A19CF0` |
+| red | `#DE5656` | `#F08A8A` |
+| cyan | `#1FA2BF` | `#62C9DE` |
+| rose | `#E0567A` | `#F28AA5` |
+| green | `#2E9F62` | `#6CCB95` |
+| teal | `#14A394` | `#5ED3C5` |
+| gray | `#9CA3AF` | `#8B929C` |
+| indigo | `#5A6BDB` | `#919DEB` |
+| amber | `#D99A2B` | `#F0BE63` |
 | slate | `#475569` | `#A3B1C2` |
-| gray | `#64748B` | `#94A3B8` |
 
 ## Typography
 
@@ -103,8 +105,8 @@ Screen horizontal padding: `lg` (16). Card internal padding: `lg`. Gap between c
 
 ## Elevation
 
-Flat design: cards use `surface` color on `background` with **no shadow** in dark mode and a very soft shadow
-(1 dp) in light mode. Bottom sheet and FAB: 3 dp.
+Flat design: cards use `surface` color on `background` with a **1 dp hairline border in `outline`** and **no shadow**,
+in both light and dark mode. Bottom sheet and FAB: 3 dp.
 
 ## Motion
 
