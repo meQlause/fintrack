@@ -299,7 +299,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(common): add clock, dispatchers and logger [P3, DOC-03]`
 
 ### T3.3 — Period calculator
-- [ ] done
+- [x] done
 - Refs: BR-010, FR-050
 - Create: `core:domain/period/PeriodCalculator.kt`.
 - Tests: start day 1, 25, 28; February; year boundary; date equal to start day.
