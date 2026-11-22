@@ -263,7 +263,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(designsystem): add base components [P2, DOC-08]`
 
 ### T2.5 — Formatters and shared rows (core:ui)
-- [ ] done
+- [x] done
 - Refs: DOC-08 (Formatting rules), NFR-011
 - Create: `MoneyFormatter` (`Rp1.250.000`, signs with U+2212, compact: `<10rb` → one decimal `4,5rb`, `≥10rb` → `25rb`, `≥1jt` → `1,3jt`), `DateFormatter` (Hari ini, Kemarin, `Sen, 18 Nov`, `HH:mm`), `MoneyText`, `TransactionRow`.
 - Tests: table-driven `MoneyFormatterTest` with every example in 08 and the prototype (`4500 → 4,5rb`, `25000 → 25rb`, `1250000 → 1,3jt`), `DateFormatterTest` with a `FakeClock`.

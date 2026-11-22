@@ -22,6 +22,7 @@ object FintrackTheme {
     internal val localShapes = staticCompositionLocalOf { FintrackShapes() }
     internal val localMotion = staticCompositionLocalOf { FintrackMotion() }
     internal val localSizes = staticCompositionLocalOf { FintrackSizes() }
+    internal val localAlphas = staticCompositionLocalOf { FintrackAlphas() }
 
     val colors: FintrackColors
         @Composable
@@ -53,6 +54,11 @@ object FintrackTheme {
         @ReadOnlyComposable
         get() = localSizes.current
 
+    val alphas: FintrackAlphas
+        @Composable
+        @ReadOnlyComposable
+        get() = localAlphas.current
+
     // DOC-08: the theme entry point; the operator keeps the FintrackTheme(darkTheme) { } call shape
     @Composable
     operator fun invoke(
@@ -66,6 +72,7 @@ object FintrackTheme {
         val durationScale = systemAnimatorScale()
         val motion = remember(durationScale) { FintrackMotion(durationScale = durationScale) }
         val sizes = remember { FintrackSizes() }
+        val alphas = remember { FintrackAlphas() }
         CompositionLocalProvider(
             localColors provides colors,
             localTypography provides typography,
@@ -73,6 +80,7 @@ object FintrackTheme {
             localShapes provides shapes,
             localMotion provides motion,
             localSizes provides sizes,
+            localAlphas provides alphas,
         ) {
             MaterialTheme(
                 colorScheme = colors.toColorScheme(isDark = darkTheme),

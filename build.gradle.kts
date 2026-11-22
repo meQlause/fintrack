@@ -15,7 +15,6 @@ val emptyAndroidModules =
         ":core:notification",
         ":core:security",
         ":core:testing",
-        ":core:ui",
         ":feature:budget",
         ":feature:category",
         ":feature:credit",

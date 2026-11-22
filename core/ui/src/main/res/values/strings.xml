@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-08 / NFR-011: copy for previews and screenshot tests only; production rows receive their text from the caller -->
+<resources>
+    <string name="sample_row_expense_title">Makan siang</string>
+    <string name="sample_row_expense_subtitle">Tunai  ·  12:40</string>
+    <string name="sample_row_income_title">Gaji</string>
+    <string name="sample_row_income_subtitle">BCA  ·  08:03</string>
+</resources>
