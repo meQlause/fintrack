@@ -328,7 +328,7 @@ EXPENSE:
 | Hiburan | entertainment | violet |
 | Kesehatan | health | red |
 | Pendidikan | education | indigo |
-| Rumah | home | brown |
+| Rumah | home | amber |
 | Pulsa & Internet | phone | cyan |
 | Sosial & Kondangan | gift | rose |
 | Donasi & Zakat | charity | green |
