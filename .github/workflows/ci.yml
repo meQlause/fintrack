@@ -53,3 +53,6 @@ jobs:
         uses: JetBrains/qodana-action@v2026.3.1
         with:
           pr-mode: ${{ github.event_name == 'pull_request' }}
+          # DOC-12: restored IDE/Gradle caches from earlier commits left new modules unresolved (Kotlin sanity
+          # errors); a clean run of the same image reports 0 problems, so Qodana always starts from scratch
+          use-caches: false
