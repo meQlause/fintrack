@@ -365,7 +365,7 @@ Wallet 1 ──< InstallmentPlan (credit wallets only)
 Loan 1 ──< Transaction (loanId: opening LEND/BORROW + COLLECT/REPAY repayments)
 ```
 
-Foreign keys use `onDelete = RESTRICT` (deletion is guarded by BR-008), except `BudgetAlertLog → Budget` which is `CASCADE`.
+Foreign keys use `onDelete = RESTRICT` (deletion is guarded by BR-008), except `BudgetAlertLog → Budget` and `ValuationEntry → Wallet`, which are `CASCADE`.
 
 ## Database
 

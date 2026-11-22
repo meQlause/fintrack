@@ -13,7 +13,8 @@ import androidx.room.PrimaryKey
             entity = WalletEntity::class,
             parentColumns = ["walletId"],
             childColumns = ["walletId"],
-            onDelete = ForeignKey.RESTRICT,
+            // DOC-02: valuation history belongs to its investment wallet and is deleted with it
+            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [Index(value = ["walletId"])],
