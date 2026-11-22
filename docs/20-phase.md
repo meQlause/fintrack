@@ -62,7 +62,7 @@ Conventions used below: `<root>` = `com/meqlause/fintrack` (package `com.meqlaus
 Goal: an empty app where **every rule in 05 and 06 is enforced** before any feature exists.
 
 ### T1.1 — Environment check
-- [ ] done
+- [x] done
 - Refs: DOC-04
 - Read: 04-tech-stack.md
 - Steps:
