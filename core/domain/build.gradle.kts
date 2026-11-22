@@ -6,6 +6,7 @@ plugins {
 dependencies {
     api(project(":core:model"))
     api(libs.coroutines.core)
+    api(libs.javax.inject)
 
     testImplementation(platform(libs.junit5.bom))
     testImplementation(libs.junit.jupiter.api)

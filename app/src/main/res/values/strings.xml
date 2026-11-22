@@ -7,4 +7,24 @@
     <string name="tab_history">Riwayat</string>
     <string name="tab_investment">Investasi</string>
     <string name="tab_wallet">Dompet</string>
+    <!-- DOC-02, FR-004: default expense categories, seeded on first launch -->
+    <string name="category_food_and_drink">Makanan &amp; Minuman</string>
+    <string name="category_transport">Transportasi</string>
+    <string name="category_shopping">Belanja</string>
+    <string name="category_bill">Tagihan</string>
+    <string name="category_entertainment">Hiburan</string>
+    <string name="category_health">Kesehatan</string>
+    <string name="category_education">Pendidikan</string>
+    <string name="category_home">Rumah</string>
+    <string name="category_phone_and_internet">Pulsa &amp; Internet</string>
+    <string name="category_social_and_events">Sosial &amp; Kondangan</string>
+    <string name="category_donation_and_zakat">Donasi &amp; Zakat</string>
+    <string name="category_fees_and_admin">Biaya &amp; Admin</string>
+    <string name="category_other_expense">Lainnya</string>
+    <!-- DOC-02, FR-004: default income categories, seeded on first launch -->
+    <string name="category_salary">Gaji</string>
+    <string name="category_bonus">Bonus</string>
+    <string name="category_business">Usaha / Freelance</string>
+    <string name="category_gift_income">Hadiah</string>
+    <string name="category_other_income">Lainnya</string>
 </resources>

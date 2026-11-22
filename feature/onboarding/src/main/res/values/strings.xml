@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-09 S-01, DOC-01 FR-001..FR-004: onboarding copy, Indonesian; new copy is for owner review, see the commit body -->
+<resources>
+    <string name="onboarding_skip">Lewati</string>
+    <string name="onboarding_next">Lanjut</string>
+    <string name="onboarding_start">Mulai</string>
+    <string name="onboarding_later">Nanti saja</string>
+    <string name="onboarding_welcome_title">Catat keuangan tanpa ribet</string>
+    <string name="onboarding_welcome_body">Semua data tersimpan hanya di HP kamu. Tanpa akun, tanpa internet.</string>
+    <string name="onboarding_wallet_title">Dompet pertamamu</string>
+    <string name="onboarding_wallet_body">Dompet adalah tempat uangmu disimpan, misalnya uang tunai, rekening bank, atau e-wallet.</string>
+    <string name="onboarding_wallet_name_label">Nama dompet</string>
+    <string name="onboarding_wallet_name_error_blank">Nama dompet belum diisi</string>
+    <string name="onboarding_wallet_name_error_long">Nama dompet maksimal 30 karakter</string>
+    <string name="onboarding_wallet_type_label">Jenis</string>
+    <string name="onboarding_wallet_type_cash">Tunai</string>
+    <string name="onboarding_wallet_type_bank">Bank</string>
+    <string name="onboarding_wallet_type_ewallet">E-Wallet</string>
+    <string name="onboarding_balance_label">Saldo awal</string>
+    <string name="onboarding_notification_title">Catat otomatis dari notifikasi</string>
+    <string name="onboarding_notification_body">Fintrack bisa membaca notifikasi transaksi dari aplikasi bank dan e-wallet, lalu menunggu konfirmasimu sebelum mencatatnya.</string>
+    <string name="onboarding_notification_granted">Akses notifikasi sudah aktif</string>
+    <string name="onboarding_notification_not_granted">Akses notifikasi belum aktif</string>
+    <string name="onboarding_notification_enable">Aktifkan</string>
+    <string name="onboarding_security_title">Kunci dengan PIN?</string>
+    <string name="onboarding_security_body">Tambahkan PIN 6 digit agar catatan keuanganmu aman saat HP dipakai orang lain.</string>
+    <string name="onboarding_pin_setup">Kunci dengan PIN</string>
+</resources>
