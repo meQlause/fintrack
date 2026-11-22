@@ -323,7 +323,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(database): add room schema v1 [P3, DOC-02]`
 
 ### T3.6 — Balance query
-- [ ] done
+- [x] done
 - Refs: DOC-02 (Wallet balance formula), BR-004, BR-040
 - Create: `WalletDao.observeBalances()` — one SQL query covering EXPENSE, INCOME, TRANSFER (+fee), LEND, BORROW, COLLECT, REPAY.
 - Tests: one test per transaction type + a mixed scenario; transfer fee deducted from source only.

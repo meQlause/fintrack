@@ -27,9 +27,12 @@ import com.meqlause.fintrack.core.model.WalletType
 // DOC-02: minimal valid rows for the DAO tests; ids of 0 let Room assign them
 private const val SAMPLE_TIME = 1_700_000_000_000L
 
-internal fun sampleWallet(name: String = "Dompet"): WalletEntity =
+internal fun sampleWallet(
+    name: String = "Dompet",
+    initialBalance: Long = 0L,
+): WalletEntity =
     WalletEntity(
-        identity = WalletEntity.Identity(name, WalletType.CASH, 0L),
+        identity = WalletEntity.Identity(name, WalletType.CASH, initialBalance),
         appearance = AppearanceColumns("wallet", "teal"),
         audit = AuditColumns(SAMPLE_TIME, SAMPLE_TIME),
     )
@@ -115,5 +118,18 @@ internal fun sampleQuickEntry(
         title = "Kopi pagi",
         sortOrder = 0,
         target = QuickEntryEntity.Target(TransactionType.EXPENSE, 18_000L, categoryId, walletId),
+        audit = AuditColumns(SAMPLE_TIME, SAMPLE_TIME),
+    )
+
+internal fun sampleMovement(
+    type: TransactionType,
+    accounts: TransactionEntity.Accounts,
+    figures: TransactionEntity.Amounts,
+): TransactionEntity =
+    TransactionEntity(
+        figures = figures,
+        accounts = accounts,
+        details = TransactionEntity.Details(type, occurredAt = SAMPLE_TIME),
+        origin = TransactionEntity.Origin(TransactionSource.MANUAL),
         audit = AuditColumns(SAMPLE_TIME, SAMPLE_TIME),
     )
