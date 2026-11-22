@@ -1,3 +1,4 @@
 # DOC-12: Qodana runs the Community Android linter (unused symbols) with a pinned image
 version: "1.0"
 linter: jetbrains/qodana-jvm-android:2026.2
+projectJDK: 21
