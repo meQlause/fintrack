@@ -211,7 +211,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 ## P2 — Design system & app shell
 
 ### T2.1 — Dependency verification
-- [ ] done
+- [x] done
 - Refs: Q-007, DOC-10
 - Steps: `./gradlew --write-verification-metadata sha256 help`; commit `gradle/verification-metadata.xml`.
 - Done when: `./gradlew check` passes with verification on.
