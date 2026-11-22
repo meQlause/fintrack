@@ -315,7 +315,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(security): add database key provider [P3, NFR-003]`
 
 ### T3.5 — Room database (schema v1, all tables)
-- [ ] done
+- [x] done
 - Refs: DOC-02 (Database), NFR-009, ADR-016, ADR-017
 - Create in `core:database`: entities for every table in 02 (incl. installment_plan, loan, valuation_entry, quick_entry), TypeConverters (enums by name), DAOs, `FintrackDatabase` with SQLCipher factory, exported schema in `core/database/schemas/`.
 - Tests: in-memory DAO tests for insert/query of each table; FK RESTRICT behaviour (BR-008).

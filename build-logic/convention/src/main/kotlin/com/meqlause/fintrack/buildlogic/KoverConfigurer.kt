@@ -13,9 +13,19 @@ internal data class CoverageTarget(
     val branch: Int,
 )
 
-// DOC-06 exclusions: generated Hilt and factory code, modules, R and BuildConfig, and @Preview functions
+// DOC-06 exclusions: generated Hilt, factory and Room (*_Impl) code, modules, R, BuildConfig, @Preview
 private val EXCLUDED_CLASSES =
-    listOf("*_Factory", "*_HiltModules*", "*Module", "*_MembersInjector", "*.R", "*.R\$*", "*BuildConfig")
+    listOf(
+        "*_Factory",
+        "*_HiltModules*",
+        "*Module",
+        "*_MembersInjector",
+        "*.R",
+        "*.R\$*",
+        "*BuildConfig",
+        "*_Impl",
+        "*_Impl\$*",
+    )
 private const val PREVIEW_ANNOTATION = "androidx.compose.ui.tooling.preview.Preview"
 
 internal fun Project.coverageTarget(): CoverageTarget? =
