@@ -1,6 +1,8 @@
 package com.meqlause.fintrack.core.designsystem.component
 
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onRoot
+import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,11 +20,13 @@ class FintrackSwitchScreenshotTest {
     // DOC-08 principle 4: every core component is designed and screenshot-tested in light and dark
     @Test
     fun `given light theme when rendered then the switch matches the reference (DOC-08)`() {
-        composeRule.captureComponent(name = "FintrackSwitch", darkTheme = false) { FintrackSwitchSample() }
+        composeRule.setContent { FintrackSwitchLightPreview() }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/FintrackSwitch_light.png")
     }
 
     @Test
     fun `given dark theme when rendered then the switch matches the reference (DOC-08)`() {
-        composeRule.captureComponent(name = "FintrackSwitch", darkTheme = true) { FintrackSwitchSample() }
+        composeRule.setContent { FintrackSwitchDarkPreview() }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/FintrackSwitch_dark.png")
     }
 }

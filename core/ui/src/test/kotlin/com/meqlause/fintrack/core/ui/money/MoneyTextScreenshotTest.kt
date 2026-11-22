@@ -1,7 +1,8 @@
 package com.meqlause.fintrack.core.ui.money
 
 import androidx.compose.ui.test.junit4.v2.createComposeRule
-import com.meqlause.fintrack.core.ui.captureUi
+import androidx.compose.ui.test.onRoot
+import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,11 +20,13 @@ class MoneyTextScreenshotTest {
     // DOC-08: money is coloured by direction and shown with its sign, in light and dark themes
     @Test
     fun `given light theme when rendered then the money text matches the reference (DOC-08)`() {
-        composeRule.captureUi(name = "MoneyText", darkTheme = false) { MoneyTextSample() }
+        composeRule.setContent { MoneyTextLightPreview() }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/MoneyText_light.png")
     }
 
     @Test
     fun `given dark theme when rendered then the money text matches the reference (DOC-08)`() {
-        composeRule.captureUi(name = "MoneyText", darkTheme = true) { MoneyTextSample() }
+        composeRule.setContent { MoneyTextDarkPreview() }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/MoneyText_dark.png")
     }
 }
