@@ -6,7 +6,9 @@ usable by small models: when a step says "do X", do X; when something is not cov
 ## Golden rules
 
 1. **Docs are the spec.** Read the relevant docs before coding. Do not invent requirements, screens, fields or libraries.
-2. **`./gradlew check` must be green** before you say a task is done and before every commit.
+2. **Changed modules green locally, full `check` green in CI.** Before every commit run `./gradlew :<module>:check` for
+   each module you changed (and `:app:testDebugUnitTest` for the architecture tests). CI runs `./gradlew check` on push;
+   a task is done only when that CI run is green.
 3. **Never weaken the rules.** Do not edit protected files (05 §9), do not add `@Suppress`, baselines, `--no-verify`, or lower limits/coverage.
 4. **Test first.** Write a failing test, then the minimum code to pass it, then refactor.
 5. **Small steps.** One exit criterion (13) or one requirement at a time.
@@ -33,7 +35,7 @@ usable by small models: when a step says "do X", do X; when something is not cov
 4. Run the module tests → PASS.
 5. Refactor: keep functions ≤ 30 lines, files ≤ 250 lines, names ≥ 4 chars.
 6. ./gradlew spotlessApply
-7. ./gradlew check
+7. ./gradlew :<changed-module>:check  (+ :app:testDebugUnitTest); CI runs the full check after push
 8. Fix every failure by changing the code (never the rules).
 9. Tick the roadmap checkbox if the criterion is fully done.
 10. Commit (12) — only when the owner asked you to commit.
@@ -110,7 +112,7 @@ Follow `07-notification-detection.md` → "Steps to add a new app". Fixtures fir
 - [ ] KDoc/comments carry the doc IDs (05 §8); commit header ends with `[IDs]` (12).
 - [ ] Tests written first, named with IDs, all passing.
 - [ ] Screens: all states previewed and screenshot-tested in light + dark.
-- [ ] `./gradlew check` green.
+- [ ] Changed modules' `check` green locally; CI `check` green after push.
 - [ ] No new open questions left unasked.
 - [ ] Docs updated if behaviour or structure changed (with owner approval for decisions).
 - [ ] Roadmap checkbox ticked (if a criterion was completed).

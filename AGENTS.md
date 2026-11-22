@@ -5,7 +5,9 @@ Instructions for any AI coding agent working in this repository.
 1. **Read `docs/14-ai-agent-guide.md` first.** Then `docs/README.md` for the index.
    Your work queue is **`docs/20-phase.md`**: take the first unchecked task, do only that task, tick it, commit, stop.
 2. The documents in `docs/` are the specification. Do not invent anything they do not say — ask the owner.
-3. `./gradlew check` must be green before a task is done or committed.
+3. Before committing, run the checks of the modules you changed (`./gradlew :<module>:check`, plus
+   `./gradlew :app:testDebugUnitTest` for the architecture tests). CI runs the full `./gradlew check` on every push
+   and must be green; a red CI is fixed before the next task starts (owner decision, 2026-11-23).
 4. Never weaken quality rules: no `@Suppress`, no baselines, no `--no-verify`, no edits to protected files (`docs/05-coding-standards.md` §9).
 5. Strict limits: functions ≤ 30 lines, files ≤ 250 lines, lines ≤ 120 chars, every name ≥ 4 characters, zero dead code.
 6. Fully offline Android app: never add the INTERNET permission or any network library.
