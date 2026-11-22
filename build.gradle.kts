@@ -10,10 +10,8 @@ val emptyAndroidModules =
     listOf(
         ":core:backup",
         ":core:data",
-        ":core:database",
         ":core:datastore",
         ":core:notification",
-        ":core:security",
         ":core:testing",
         ":feature:budget",
         ":feature:category",

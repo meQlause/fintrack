@@ -307,7 +307,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(domain): add period calculator [P3, BR-010]`
 
 ### T3.4 — Keystore key + SQLCipher passphrase
-- [ ] done
+- [x] done
 - Refs: NFR-003, ADR-009
 - Read: 10 (Database encryption)
 - Create in `core:security`: `DatabaseKeyProvider` (generates 32 random bytes once, wraps with an AES-GCM Keystore key, stores in `files/db_key.bin`).
@@ -315,7 +315,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(security): add database key provider [P3, NFR-003]`
 
 ### T3.5 — Room database (schema v1, all tables)
-- [ ] done
+- [x] done
 - Refs: DOC-02 (Database), NFR-009, ADR-016, ADR-017
 - Create in `core:database`: entities for every table in 02 (incl. installment_plan, loan, valuation_entry, quick_entry), TypeConverters (enums by name), DAOs, `FintrackDatabase` with SQLCipher factory, exported schema in `core/database/schemas/`.
 - Tests: in-memory DAO tests for insert/query of each table; FK RESTRICT behaviour (BR-008).
