@@ -29,7 +29,6 @@ private fun StoredPreferences.readPreferences(): Preferences {
         hideAmountsByDefault = this[SettingsKeys.hideAmountsByDefault] ?: base.hideAmountsByDefault,
         headsUpForInbox = this[SettingsKeys.headsUpForInbox] ?: base.headsUpForInbox,
         investReminder = this[SettingsKeys.investReminder] ?: base.investReminder,
-        histView = this[SettingsKeys.histView].toEnumOr(base.histView),
     )
 }
 
@@ -38,6 +37,7 @@ private fun StoredPreferences.toLastUsed(): LastUsed {
     return LastUsed(
         walletId = this[SettingsKeys.lastUsedWalletId]?.let(::WalletId),
         transactionType = this[SettingsKeys.lastUsedTransactionType].toEnumOr(base.transactionType),
+        histView = this[SettingsKeys.histView].toEnumOr(base.histView),
     )
 }
 

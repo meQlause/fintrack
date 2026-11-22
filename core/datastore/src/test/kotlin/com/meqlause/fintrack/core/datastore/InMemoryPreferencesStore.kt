@@ -16,7 +16,7 @@ internal class InMemoryPreferencesStore : DataStore<Preferences> {
 
     override val data: Flow<Preferences> = state
 
-    override suspend fun updateData(transform: suspend (t: Preferences) -> Preferences): Preferences =
+    override suspend fun updateData(transform: suspend (current: Preferences) -> Preferences): Preferences =
         writeLock.withLock {
             val next = transform(state.value)
             state.value = next

@@ -337,7 +337,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(datastore): add settings data source [P3, DOC-02]`
 
 ### T3.8 — Repositories, fakes and contract tests
-- [ ] done
+- [x] done
 - Refs: DOC-03 (core:domain, core:data), ADR-007, DOC-06 (Fakes)
 - Create: repository interfaces in `core:domain/repository/` (Wallet, Category, Transaction, Budget, Inbox, MerchantRule, MonitoredApp, InstallmentPlan, Loan, Valuation, QuickEntry, Settings); `Local*Repository` in `core:data`; `Fake*Repository` in `core:testing`; abstract `*RepositoryContractTest` run against both.
 - Done when: `./gradlew check` passes; coverage thresholds met.

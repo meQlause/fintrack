@@ -24,12 +24,12 @@ private fun MutablePreferences.writePreferences(value: Preferences) {
     this[SettingsKeys.hideAmountsByDefault] = value.hideAmountsByDefault
     this[SettingsKeys.headsUpForInbox] = value.headsUpForInbox
     this[SettingsKeys.investReminder] = value.investReminder
-    this[SettingsKeys.histView] = value.histView.name
 }
 
 private fun MutablePreferences.writeLastUsed(value: LastUsed) {
     putOrRemove(SettingsKeys.lastUsedWalletId, value.walletId?.value)
     this[SettingsKeys.lastUsedTransactionType] = value.transactionType.name
+    this[SettingsKeys.histView] = value.histView.name
 }
 
 private fun MutablePreferences.writeSecurity(value: Security) {

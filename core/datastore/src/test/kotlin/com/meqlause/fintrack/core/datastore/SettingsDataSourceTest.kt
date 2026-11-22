@@ -45,7 +45,7 @@ class SettingsDataSourceTest {
             assertThat(settings.preferences.hideAmountsByDefault).isEqualTo(false)
             assertThat(settings.preferences.headsUpForInbox).isEqualTo(true)
             assertThat(settings.preferences.investReminder).isEqualTo(false)
-            assertThat(settings.preferences.histView).isEqualTo(HistoryView.LIST)
+            assertThat(settings.lastUsed.histView).isEqualTo(HistoryView.LIST)
             assertThat(settings.lastUsed.walletId).isNull()
             assertThat(settings.lastUsed.transactionType).isEqualTo(TransactionType.EXPENSE)
             assertThat(settings.security.pinLock.pinHash).isNull()
@@ -98,7 +98,7 @@ class SettingsDataSourceTest {
 
             assertThat(settings.preferences.themeMode).isEqualTo(ThemeMode.SYSTEM)
             assertThat(settings.lastUsed.transactionType).isEqualTo(TransactionType.EXPENSE)
-            assertThat(settings.preferences.histView).isEqualTo(HistoryView.LIST)
+            assertThat(settings.lastUsed.histView).isEqualTo(HistoryView.LIST)
         }
 
     /** DOC-02: an out-of-range period start day falls back to the default day 1. */
@@ -123,9 +123,8 @@ class SettingsDataSourceTest {
                     hideAmountsByDefault = true,
                     headsUpForInbox = false,
                     investReminder = true,
-                    histView = HistoryView.STATISTICS,
                 ),
-            lastUsed = LastUsed(walletId = WalletId(42L), transactionType = TransactionType.TRANSFER),
+            lastUsed = populatedLastUsed(),
             security =
                 Security(
                     pinLock =
@@ -146,5 +145,12 @@ class SettingsDataSourceTest {
         PreferenceDataStoreFactory.create(
             scope = scope,
             produceFile = { File(folder.root, "settings.preferences_pb") },
+        )
+
+    private fun populatedLastUsed(): LastUsed =
+        LastUsed(
+            walletId = WalletId(42L),
+            transactionType = TransactionType.TRANSFER,
+            histView = HistoryView.STATISTICS,
         )
 }

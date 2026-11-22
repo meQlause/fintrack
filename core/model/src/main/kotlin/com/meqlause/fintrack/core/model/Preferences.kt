@@ -8,5 +8,4 @@ public data class Preferences(
     public val hideAmountsByDefault: Boolean = false,
     public val headsUpForInbox: Boolean = true,
     public val investReminder: Boolean = false,
-    public val histView: HistoryView = HistoryView.LIST,
 )

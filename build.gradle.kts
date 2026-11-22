@@ -9,7 +9,6 @@ plugins {
 val emptyAndroidModules =
     listOf(
         ":core:backup",
-        ":core:data",
         ":core:notification",
         ":core:testing",
         ":feature:budget",
