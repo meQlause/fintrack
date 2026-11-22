@@ -72,7 +72,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `chore: verify development environment [P1, DOC-04]`
 
 ### T1.2 — Gradle root, wrapper and version catalog
-- [ ] done
+- [x] done
 - Refs: DOC-03, DOC-04
 - Read: 03 (Build logic), 04
 - Create: `settings.gradle.kts`, `build.gradle.kts`, `gradle.properties`, `gradle/wrapper/*`, `gradlew`, `gradlew.bat`, `gradle/libs.versions.toml`
