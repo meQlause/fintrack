@@ -153,7 +153,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `build: enforce dependency and module graph rules [P1, DOC-03]`
 
 ### T1.10 — Test infrastructure + core:testing basics
-- [ ] done
+- [x] done
 - Refs: DOC-06, ADR-007
 - Read: 06
 - Create in `core:testing`: `time/FakeClock.kt`, `coroutine/MainDispatcherExtension.kt` (JUnit 5), `coroutine/MainDispatcherRule.kt` (JUnit 4). Configure JUnit 5 for JVM modules, JUnit 4 + Robolectric for Android modules, AssertK, Turbine, coroutines-test.

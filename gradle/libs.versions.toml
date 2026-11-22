@@ -87,6 +87,7 @@ core-splashscreen = { group = "androidx.core", name = "core-splashscreen", versi
 baselineprofile-benchmark = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmarkMacro" }
 junit5-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit5" }
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
+junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExt" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
