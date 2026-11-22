@@ -20,6 +20,12 @@ public class LocalCategoryRepository(
 
     override suspend fun insert(category: Category): CategoryId = CategoryId(categoryDao.insert(category.toEntity()))
 
+    override suspend fun update(category: Category) {
+        categoryDao.update(category.toEntity())
+    }
+
+    override suspend fun isInUse(categoryId: CategoryId): Boolean = categoryDao.isInUse(categoryId.value)
+
     override suspend fun delete(category: Category) {
         categoryDao.delete(category.toEntity())
     }

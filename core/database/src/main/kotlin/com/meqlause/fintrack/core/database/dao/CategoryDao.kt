@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.meqlause.fintrack.core.database.entity.CategoryEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -13,6 +14,17 @@ interface CategoryDao {
     /** DOC-02: inserts a category and returns its generated id. */
     @Insert
     suspend fun insert(category: CategoryEntity): Long
+
+    /** FR-021, FR-023: replaces the stored row with the same categoryId. */
+    @Update
+    suspend fun update(category: CategoryEntity)
+
+    /** BR-008: true while a transaction or a budget refers to the category. */
+    @Query(
+        "SELECT EXISTS(SELECT 1 FROM `transaction` WHERE categoryId = :categoryId) " +
+            "OR EXISTS(SELECT 1 FROM budget WHERE categoryId = :categoryId)",
+    )
+    suspend fun isInUse(categoryId: Long): Boolean
 
     /** BR-008: fails with a constraint violation while any row still references the category. */
     @Delete

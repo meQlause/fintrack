@@ -27,6 +27,11 @@ internal class RowStore<T : Any>(
         return lastId
     }
 
+    // FR-021: replaces the row with the same id; an unknown id is ignored
+    fun replace(record: T) {
+        rows.update { list -> list.map { if (idOf(it) == idOf(record)) record else it } }
+    }
+
     fun remove(rowId: Long) {
         rows.update { list -> list.filterNot { idOf(it) == rowId } }
     }

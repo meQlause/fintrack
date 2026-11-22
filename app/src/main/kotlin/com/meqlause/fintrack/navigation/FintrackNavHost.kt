@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.meqlause.fintrack.feature.category.navigation.categoryDestination
 import com.meqlause.fintrack.tab.PlaceholderTabScreen
 
 // DOC-03: app owns the NavHost; each tab is a type-safe route and Beranda is the start destination
@@ -18,5 +19,7 @@ internal fun FintrackNavHost(
         composable<HistoryRoute> { PlaceholderTabScreen(mainTab = MainTab.HISTORY) }
         composable<InvestmentRoute> { PlaceholderTabScreen(mainTab = MainTab.INVESTMENT) }
         composable<WalletRoute> { PlaceholderTabScreen(mainTab = MainTab.WALLET) }
+        // DOC-09, FR-020: Kategori is reached from Settings > Data, which has no screen yet
+        categoryDestination(onBack = { navController.popBackStack() })
     }
 }

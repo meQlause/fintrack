@@ -14,9 +14,22 @@ public class FakeCategoryRepository : CategoryRepository {
             order = compareBy { it.profile.sortOrder },
         )
 
+    private val inUse = mutableSetOf<Long>()
+
     override fun observeAll(): Flow<List<Category>> = store.observe()
 
     override suspend fun insert(category: Category): CategoryId = CategoryId(store.append(category))
+
+    override suspend fun update(category: Category) {
+        store.replace(category)
+    }
+
+    override suspend fun isInUse(categoryId: CategoryId): Boolean = categoryId.value in inUse
+
+    /** BR-008: lets a test mark a category as referenced by a transaction or budget. */
+    fun markInUse(categoryId: CategoryId) {
+        inUse += categoryId.value
+    }
 
     override suspend fun delete(category: Category) {
         store.remove(category.categoryId.value)
