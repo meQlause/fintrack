@@ -32,6 +32,7 @@ espresso = "3.7.0"
 robolectric = "4.18.1"
 turbine = "1.2.1"
 assertk = "0.28.1"
+javaxInject = "1"
 konsist = "0.18.1"
 roborazzi = "1.79.0"
 spotless = "8.12.0"
@@ -97,6 +98,7 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
+javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javaxInject" }
 konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
 roborazzi = { group = "io.github.takahirom.roborazzi", name = "roborazzi", version.ref = "roborazzi" }
 roborazzi-core = { group = "io.github.takahirom.roborazzi", name = "roborazzi-core", version.ref = "roborazzi" }
@@ -112,6 +114,8 @@ detekt-compose-rules = { group = "io.nlopez.compose.rules", name = "detekt", ver
 spotless-gradle-plugin = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter" }
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
+junit-platform-commons = { group = "org.junit.platform", name = "junit-platform-commons" }
+opentest4j = { group = "org.opentest4j", name = "opentest4j" }
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 compose-compiler-gradle-plugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }

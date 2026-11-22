@@ -5,7 +5,8 @@ plugins {
 
 dependencies {
     testImplementation(platform(libs.junit5.bom))
-    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.assertk)
 }

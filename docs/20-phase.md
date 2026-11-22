@@ -292,7 +292,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(model): add domain entities [P3, DOC-02]`
 
 ### T3.2 — Common: clock, dispatchers, logger
-- [ ] done
+- [x] done
 - Refs: DOC-03 (Threading), DOC-10 (Logging)
 - Create in `core:common`: `ClockProvider`, `@IoDispatcher`, `@DefaultDispatcher`, `@ApplicationScope`, `AppLogger` (no-op in release; never logs amounts/merchants/notification text).
 - Done when: `./gradlew :core:common:check` passes.
