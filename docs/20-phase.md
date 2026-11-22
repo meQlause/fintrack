@@ -357,7 +357,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 Each screen task: UiState (all states from 09) → ViewModel + tests → stateless Screen with previews (light/dark) → Route → navigation → screenshot tests → UI test of the main interaction. Copy Indonesian strings from the prototype into `strings.xml`.
 
 ### T4.1 — Onboarding (S-01)
-- [ ] done · Refs: FR-001 … FR-004 · Commit: `feat(onboarding): add onboarding flow [P4, FR-001]`
+- [x] done · Refs: FR-001 … FR-004 · Commit: `feat(onboarding): add onboarding flow [P4, FR-001]`
 
 ### T4.2 — Wallet picker drawer (S-18)
 - [ ] done
