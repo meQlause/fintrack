@@ -29,11 +29,11 @@ public object PeriodCalculator {
     public fun nextPeriod(
         period: Period,
         startDay: Int,
-    ): Period = periodContaining(period.end.plusDays(1), startDay)
+    ): Period = periodContaining(period.endDate.plusDays(1), startDay)
 
     /** BR-010, FR-062: the period that precedes [period], used for comparison with the current one. */
     public fun previousPeriod(
         period: Period,
         startDay: Int,
-    ): Period = periodContaining(period.start.minusDays(1), startDay)
+    ): Period = periodContaining(period.startDate.minusDays(1), startDay)
 }
