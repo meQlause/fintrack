@@ -14,9 +14,10 @@ dependencies {
     api(libs.compose.animation.core)
     implementation(libs.compose.runtime.annotation)
     implementation(libs.coroutines.core)
-    implementation(libs.compose.foundation.layout)
+    api(libs.compose.foundation.layout)
     implementation(libs.compose.ui.unit)
     implementation(libs.compose.material3)
+    implementation(libs.compose.ui.tooling.preview)
 
     testImplementation(platform(libs.compose.bom))
     testImplementation(libs.compose.ui.test)
@@ -26,5 +27,6 @@ dependencies {
     testImplementation(libs.robolectric.annotations)
     testImplementation(libs.roborazzi)
     testImplementation(libs.roborazzi.core)
+    debugImplementation(libs.compose.ui.tooling)
     debugRuntimeOnly(libs.compose.ui.test.manifest)
 }

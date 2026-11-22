@@ -255,7 +255,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(designsystem): add fintrack theme tokens [P2, DOC-08]`
 
 ### T2.4 — Base components
-- [ ] done
+- [x] done
 - Refs: DOC-08 (Core components, principles 6–7)
 - Create in `core:designsystem/component/`: `FintrackCard`, `FintrackButton`, `FintrackChip`, `SegmentedControl` (sliding pill), `FormRow` (`Label …… Value ›`, prototype class `frow`), `IconTile`, `FintrackSwitch`, `NumericKeypad` (1–9, 000, 0, backspace), `EmptyState`, `FintrackBottomSheet`, `PickerDrawer` (S-18 shell: fixed header, scrollable body), `UndoSnackbar`.
 - Tests: one `@Preview` + screenshot test per component (light/dark); `SegmentedControlTest` click changes selection.

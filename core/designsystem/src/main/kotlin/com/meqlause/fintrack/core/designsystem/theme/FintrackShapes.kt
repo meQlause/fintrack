@@ -13,5 +13,6 @@ class FintrackShapes {
     val small: CornerBasedShape = RoundedCornerShape(size = Dp(value = 8f))
     val medium: CornerBasedShape = RoundedCornerShape(size = Dp(value = 16f))
     val large: CornerBasedShape = RoundedCornerShape(size = Dp(value = 24f))
+    val sheet: Shape = RoundedCornerShape(topStart = Dp(value = 24f), topEnd = Dp(value = 24f))
     val full: Shape = CircleShape
 }

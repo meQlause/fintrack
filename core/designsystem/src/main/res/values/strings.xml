@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- DOC-08: sample text for the token swatch only; the brand name is not translated -->
+<!-- DOC-08: component copy; the brand name is not translated -->
 <resources>
     <string name="token_sample_amount">Rp1.250.000</string>
     <string name="token_sample_brand">Fintrack</string>
@@ -8,4 +8,21 @@
     <string name="token_motion_medium">Sedang</string>
     <string name="token_motion_slow">Lambat</string>
     <string name="token_motion_duration">%1$d ms</string>
+    <string name="component_close">Tutup</string>
+    <string name="component_keypad_backspace">Hapus angka</string>
+    <string name="component_undo">Urungkan</string>
+    <!-- DOC-08: sample copy used only by @Preview and screenshot tests -->
+    <string name="sample_balance_label">Total Saldo</string>
+    <string name="sample_wallet_label">Dompet</string>
+    <string name="sample_wallet_value">Tunai</string>
+    <string name="sample_save">Simpan</string>
+    <string name="sample_chip_all">Semua</string>
+    <string name="sample_type_out">Keluar</string>
+    <string name="sample_type_in">Masuk</string>
+    <string name="sample_type_transfer">Transfer</string>
+    <string name="sample_empty_title">Belum ada transaksi</string>
+    <string name="sample_empty_body">Tekan + untuk mencatat transaksi pertamamu</string>
+    <string name="sample_drawer_title">Pilih dompet</string>
+    <string name="sample_section_debit">Debit (bank &amp; e-wallet)</string>
+    <string name="sample_undo_message">Dihapus</string>
 </resources>
