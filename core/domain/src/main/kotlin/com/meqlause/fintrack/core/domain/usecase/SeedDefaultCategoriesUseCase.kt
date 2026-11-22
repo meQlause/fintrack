@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.core.domain.usecase
 
+import com.meqlause.fintrack.core.domain.category.DefaultCategory
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Audit
@@ -11,10 +12,13 @@ import kotlinx.coroutines.flow.first
 import java.time.Clock
 import java.time.Instant
 
-/** DOC-02, FR-004: seeds the default categories on first launch, exactly once. */
+/**
+ * DOC-02, FR-004: seeds the default categories on first launch, exactly once. [nameOf] supplies the Indonesian
+ * display names, which the platform reads from string resources (core:domain cannot read Android resources).
+ */
 public class SeedDefaultCategoriesUseCase(
     private val categories: CategoryRepository,
-    private val names: DefaultCategoryNames,
+    private val nameOf: (DefaultCategory) -> String,
     private val clock: Clock,
 ) {
     /**
@@ -37,7 +41,7 @@ public class SeedDefaultCategoriesUseCase(
             categoryId = CategoryId(0L),
             profile =
                 CategoryProfile(
-                    name = names.nameOf(this),
+                    name = nameOf(this),
                     kind = kind,
                     appearance = Appearance(iconKey = iconKey, colorKey = colorKey),
                     sortOrder = sortOrder,

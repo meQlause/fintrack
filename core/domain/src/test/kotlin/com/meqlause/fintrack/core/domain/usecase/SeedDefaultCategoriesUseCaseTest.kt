@@ -3,6 +3,7 @@ package com.meqlause.fintrack.core.domain.usecase
 import assertk.assertThat
 import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
+import com.meqlause.fintrack.core.domain.category.DefaultCategory
 import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Audit
 import com.meqlause.fintrack.core.model.Category
@@ -21,8 +22,8 @@ import java.time.ZoneOffset
 class SeedDefaultCategoriesUseCaseTest {
     private val repository = InMemoryCategoryRepository()
     private val clock = Clock.fixed(Instant.parse("2026-11-23T00:00:00Z"), ZoneOffset.UTC)
-    private val names = FixedDefaultCategoryNames(TABLE.associate { (category, expected) -> category to expected.name })
-    private val seed = SeedDefaultCategoriesUseCase(repository, names, clock)
+    private val names = TABLE.associate { (category, expected) -> category to expected.name }
+    private val seed = SeedDefaultCategoriesUseCase(repository, { category -> checkNotNull(names[category]) }, clock)
 
     /** FR-004: an empty category table receives every default with its name, kind and keys. */
     @Test
@@ -86,12 +87,6 @@ class SeedDefaultCategoriesUseCaseTest {
         val iconKey: String,
         val colorKey: String,
     )
-
-    private class FixedDefaultCategoryNames(
-        private val names: Map<DefaultCategory, String>,
-    ) : DefaultCategoryNames {
-        override fun nameOf(category: DefaultCategory): String = checkNotNull(names[category])
-    }
 
     private companion object {
         // DOC-02, FR-004: the default categories table, in manual order
