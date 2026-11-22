@@ -410,7 +410,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 ## P5 — Notification detection
 
 ### T5.1 — Parser utilities
-- [ ] done
+- [x] done
 - Refs: DOC-07 (Parsing rules), FR-085
 - Create in `core:parser`: models, `IndonesianAmountParser`, `IgnoreClassifier`, `DirectionClassifier`, `MerchantNormalizer`, fixture loader + parameterised fixture test.
 - Tests: every row of the amount table and keyword tables in 07.
@@ -456,13 +456,13 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 ## P7 — Credit, instalments, loans, investments
 
 ### T7.1 — StatementCalculator
-- [ ] done
+- [x] done
 - Refs: BR-031 … BR-034, BR-036 (purchase-date rule), BR-044
 - Tests: every line of the worked example in 18; NOT_ISSUED for a new wallet (since date); OVERDUE; partial payment; statementDay ≥ / < dueDay; year boundary.
 - Commit: `feat(domain): add credit statement calculator [P7, BR-033]`
 
 ### T7.2 — InstallmentScheduler
-- [ ] done · Refs: BR-035 … BR-038 · Tests: rounding (1.000.000 / 3), tenor 2 and 36, early payoff, purchase after cut-off.
+- [x] done · Refs: BR-035 … BR-038 · Tests: rounding (1.000.000 / 3), tenor 2 and 36, early payoff, purchase after cut-off.
 - Commit: `feat(domain): add instalment scheduler [P7, BR-036]`
 
 ### T7.3 — Credit wallet screens (S-14, S-15)

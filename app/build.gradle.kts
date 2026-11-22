@@ -43,4 +43,14 @@ dependencies {
 // DOC-10: the manifest test reads the merged release manifest
 tasks.matching { it.name == "testDebugUnitTest" }.configureEach {
     dependsOn("processReleaseMainManifest")
+    // DOC-06: the Konsist architecture tests read every module's sources, so those files are inputs of this
+    // task; without them Gradle reuses a cached result after a change in another module
+    inputs
+        .files(
+            rootProject.fileTree(rootDir) {
+                include("**/src/**/*.kt", "**/*.gradle.kts", "**/libs.versions.toml")
+                exclude("**/build/**", ".gradle/**", ".claude/**")
+            },
+        ).withPropertyName("architectureSources")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
 }

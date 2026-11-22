@@ -1,4 +1,4 @@
-package com.meqlause.fintrack.core.domain.usecase
+package com.meqlause.fintrack.core.domain.category
 
 import com.meqlause.fintrack.core.model.CategoryKind
 import com.meqlause.fintrack.core.model.CategoryKind.EXPENSE
@@ -6,7 +6,7 @@ import com.meqlause.fintrack.core.model.CategoryKind.INCOME
 
 /**
  * DOC-02, FR-004: the seeded categories with their kind and catalog keys.
- * Declaration order is the manual sort order; display names come from [DefaultCategoryNames].
+ * Declaration order is the manual sort order; names come from SeedDefaultCategoriesUseCase.nameOf.
  */
 public enum class DefaultCategory(
     public val kind: CategoryKind,
