@@ -21,4 +21,30 @@ interface WalletDao {
     /** DOC-02: every wallet in manual order, archived ones included. */
     @Query("SELECT * FROM wallet ORDER BY sortOrder")
     fun observeAll(): Flow<List<WalletEntity>>
+
+    /**
+     * DOC-02, BR-004, BR-040: the balance of every wallet, archived ones included, in manual order.
+     * One statement applies the formula in 02: opening balance, plus incoming INCOME, TRANSFER targets,
+     * BORROW and COLLECT, minus outgoing EXPENSE, TRANSFER sources (amount and fee), LEND and REPAY.
+     */
+    @Query(WALLET_BALANCE_SQL)
+    fun observeBalances(): Flow<List<WalletBalance>>
 }
+
+// DOC-02, BR-004, BR-040: each sum is a correlated subquery over the transaction table
+private const val WALLET_BALANCE_SQL =
+    "SELECT w.walletId AS walletId, " +
+        "w.initialBalance " +
+        "+ (SELECT COALESCE(SUM(t.amount), 0) FROM `transaction` t " +
+        "WHERE t.walletId = w.walletId AND t.type = 'INCOME') " +
+        "- (SELECT COALESCE(SUM(t.amount), 0) FROM `transaction` t " +
+        "WHERE t.walletId = w.walletId AND t.type = 'EXPENSE') " +
+        "- (SELECT COALESCE(SUM(t.amount + t.feeAmount), 0) FROM `transaction` t " +
+        "WHERE t.walletId = w.walletId AND t.type = 'TRANSFER') " +
+        "+ (SELECT COALESCE(SUM(t.amount), 0) FROM `transaction` t " +
+        "WHERE t.targetWalletId = w.walletId AND t.type = 'TRANSFER') " +
+        "- (SELECT COALESCE(SUM(t.amount), 0) FROM `transaction` t " +
+        "WHERE t.walletId = w.walletId AND t.type IN ('LEND', 'REPAY')) " +
+        "+ (SELECT COALESCE(SUM(t.amount), 0) FROM `transaction` t " +
+        "WHERE t.walletId = w.walletId AND t.type IN ('BORROW', 'COLLECT')) AS balance " +
+        "FROM wallet w ORDER BY w.sortOrder"
