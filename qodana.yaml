@@ -3,7 +3,7 @@ version: "1.0"
 linter: jetbrains/qodana-jvm-android:2026.3
 projectJDK: 21
 profile:
-  name: qodana.recommended
+  name: qodana.starter
 include:
   - name: UnusedSymbol
 failThreshold: 0

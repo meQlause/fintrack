@@ -156,7 +156,7 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
   latest stable AGP, which is 9.5.2.
 - **Decision:** Pin AGP to 9.4.1, the newest 9.4.x release. Disable only the `AndroidGradlePluginVersion` lint check
   for `com.android.application`, `com.android.library` and `com.android.tools.build:gradle` at 9.4.1 in
-  `config/lint/lint.xml`. Qodana uses the recommended profile with the unused-symbol inspection and
-  `failThreshold: 0`, so any finding fails CI.
+  `config/lint/lint.xml`. Qodana uses the minimal `qodana.starter` profile plus only the `UnusedSymbol` inspection,
+  with `failThreshold: 0`, so any unused-symbol finding fails CI.
 - **Consequences:** One known version lag. Upgrade AGP in a dedicated `build:` commit once a Qodana image supports
   AGP 9.5.
