@@ -198,7 +198,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `ci: add github actions workflow [P1, DOC-12]`
 
 ### T1.16 — Prove the gates + root README
-- [ ] done
+- [x] done
 - Refs: DOC-05, DOC-06, ADR-008
 - Steps:
   1. Temporarily add, one at a time: a 40-line function, a variable `val id = 1`, a `!!`, an `@Suppress`, an unused private function, `import android.*` in core:domain, a `Text("hardcoded")` in a feature module. Confirm `./gradlew check` fails for each. Remove all.
