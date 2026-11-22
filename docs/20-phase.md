@@ -271,7 +271,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(ui): add money and date formatters [P2, DOC-08]`
 
 ### T2.6 — App shell: navigation + liquid bottom bar
-- [ ] done
+- [x] done
 - Refs: DOC-09 (Navigation map), DOC-03 (Navigation)
 - Read: 09 navigation map; prototype `LIQUID BOTTOM BAR`, `.navbar`, `.navblob`, `.fab`
 - Create: type-safe routes for 4 tabs (Beranda, Riwayat, Investasi, Dompet) + overlay routes; `FintrackBottomBar` (floating capsule, notch that follows a spring-animated bubble, droplet + ripple, centre FAB with squish/spin/burst); placeholder screens with the shared tab header (32 dp tile + 20 sp title; Beranda uses the logo).

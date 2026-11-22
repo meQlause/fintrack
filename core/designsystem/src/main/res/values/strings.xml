@@ -25,4 +25,9 @@
     <string name="sample_drawer_title">Pilih dompet</string>
     <string name="sample_section_debit">Debit (bank &amp; e-wallet)</string>
     <string name="sample_undo_message">Dihapus</string>
+    <string name="component_bottom_bar_add">Tambah transaksi</string>
+    <string name="sample_tab_home">Beranda</string>
+    <string name="sample_tab_history">Riwayat</string>
+    <string name="sample_tab_investment">Investasi</string>
+    <string name="sample_tab_wallet">Dompet</string>
 </resources>

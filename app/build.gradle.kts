@@ -2,19 +2,26 @@
 plugins {
     id("fintrack.android.application")
     id("fintrack.android.hilt")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 dependencies {
+    implementation(project(":core:designsystem"))
+    implementation(libs.navigation.compose)
+    implementation(libs.navigation.runtime)
+    implementation(libs.navigation.common)
+    implementation(libs.serialization.core)
+    implementation(libs.compose.animation)
+    implementation(libs.compose.foundation.layout)
+    implementation(libs.compose.ui.graphics)
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
-    implementation(libs.compose.material3)
     implementation(libs.activity.compose)
     implementation(libs.activity)
     implementation(libs.fragment)
     implementation(libs.lifecycle.viewmodel.savedstate)
     implementation(libs.compose.runtime)
     implementation(libs.compose.foundation)
-    implementation(libs.compose.ui.text)
     implementation(libs.dagger)
     implementation(libs.hilt.core)
     implementation(libs.hilt.android)

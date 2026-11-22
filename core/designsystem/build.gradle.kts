@@ -12,6 +12,8 @@ dependencies {
     api(libs.compose.ui.graphics)
     api(libs.compose.ui.text)
     api(libs.compose.animation.core)
+    implementation(libs.compose.animation)
+    implementation(libs.compose.ui.geometry)
     implementation(libs.compose.runtime.annotation)
     implementation(libs.coroutines.core)
     api(libs.compose.foundation.layout)
