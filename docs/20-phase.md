@@ -456,7 +456,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 ## P7 — Credit, instalments, loans, investments
 
 ### T7.1 — StatementCalculator
-- [ ] done
+- [x] done
 - Refs: BR-031 … BR-034, BR-036 (purchase-date rule), BR-044
 - Tests: every line of the worked example in 18; NOT_ISSUED for a new wallet (since date); OVERDUE; partial payment; statementDay ≥ / < dueDay; year boundary.
 - Commit: `feat(domain): add credit statement calculator [P7, BR-033]`
