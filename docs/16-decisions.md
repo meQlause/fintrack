@@ -119,3 +119,22 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
 - **Decision:** INVESTMENT wallet type; money in/out via transfers; current value entered manually as ValuationEntry;
   gains shown only on investment screens (not income). Optional monthly "update nilai" reminder, default off.
 - **Consequences:** Accurate enough for net worth without per-holding complexity; a detailed per-holding mode can be added later.
+
+### ADR-018 — Portrait-only app; lint orientation check disabled
+- **Status:** Accepted (2026-11-22), approved by the owner.
+- **Context:** The app is portrait-only (10, T1.5). Lint's `LockedOrientationActivity` (error) asks for `unspecified` or
+  `fullSensor` so that Chrome OS and large screens can rotate; that conflicts with the product rule.
+- **Decision:** Keep `android:screenOrientation="portrait"`. Disable only the `LockedOrientationActivity` issue and the
+  `DiscouragedApi` warning on `app/src/main/AndroidManifest.xml` (the same portrait setting) in `config/lint/lint.xml`.
+  All other lint errors stay fatal.
+- **Consequences:** The app does not rotate on tablets or Chrome OS. Revisit only if the product rule changes.
+
+### ADR-019 — Kotlin pinned to 2.3.21 until KSP supports 2.4
+- **Status:** Accepted (2026-11-22), approved by the owner.
+- **Context:** Room and Hilt need KSP. KSP has no release for Kotlin 2.4 yet (latest is 2.3.14). Kapt does not work with
+  AGP 9's built-in Kotlin; the legacy path needs AGP's old DSL, which the convention plugins do not use.
+- **Decision:** Pin Kotlin 2.3.21 and KSP 2.3.14 (04 "latest stable" applies to the latest that works with KSP). Disable
+  only the version-lag lint checks for Kotlin artifacts at 2.3.21 in `config/lint/lint.xml`: `NewerVersionAvailable`
+  (Kotlin and the Kotlin Android plugin) and `GradleDependency` for `org.jetbrains.kotlin:*`.
+  Upgrade to Kotlin 2.4.x in a dedicated `build:` commit once KSP ships for 2.4.
+- **Consequences:** One known version lag. The upgrade is tracked as a follow-up, not hidden.

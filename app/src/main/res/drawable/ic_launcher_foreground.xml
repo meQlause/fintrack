@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-08: launcher foreground, the "F" mark and coin dot from design/assets/fintrack-logo.svg, scaled into the adaptive safe zone -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+    <group
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:translateX="6.4"
+        android:translateY="6.4">
+        <path
+            android:pathData="M11.5,9.5h9M11.5,9.5v13M11.5,15.8h6"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="2.6" />
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M21,19.2a2.3,2.3 0 1,0 0,4.6a2.3,2.3 0 1,0 0,-4.6z" />
+    </group>
+</vector>

@@ -12,6 +12,12 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             pluginManager.apply("com.android.library")
             extensions.configure<LibraryExtension> {
                 namespace = FintrackConfig.ROOT_PACKAGE + path.replace(':', '.')
+                lint {
+                    warningsAsErrors = true
+                    abortOnError = true
+                    checkDependencies = true
+                    lintConfig = rootProject.file("config/lint/lint.xml")
+                }
                 compileSdk {
                     version =
                         release(FintrackConfig.COMPILE_SDK) {

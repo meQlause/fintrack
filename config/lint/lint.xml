@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-05: Android Lint is strict; unused resources and hard-coded text fail the build (NFR-011) -->
+<lint>
+    <issue id="UnusedResources" severity="error" />
+    <issue id="HardcodedText" severity="error" />
+
+    <!-- ADR-018: the app is portrait-only by product rule (10, T1.5); the Chrome OS orientation check does not apply -->
+    <issue id="LockedOrientationActivity">
+        <ignore regexp="." />
+    </issue>
+    <issue id="DiscouragedApi">
+        <ignore path="**/app/src/main/AndroidManifest.xml" />
+    </issue>
+
+    <!-- ADR-019: Kotlin stays on 2.3.21 until KSP supports 2.4; Room and Hilt need KSP -->
+    <issue id="NewerVersionAvailable">
+        <ignore regexp="org.jetbrains.kotlin.* than 2.3.21 is available" />
+    </issue>
+    <issue id="GradleDependency">
+        <ignore regexp="org.jetbrains.kotlin:.* than 2.3.21 is available" />
+    </issue>
+</lint>

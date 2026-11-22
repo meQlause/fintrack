@@ -12,6 +12,12 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             pluginManager.apply("com.android.application")
             extensions.configure<ApplicationExtension> {
                 namespace = FintrackConfig.ROOT_PACKAGE
+                lint {
+                    warningsAsErrors = true
+                    abortOnError = true
+                    checkDependencies = true
+                    lintConfig = rootProject.file("config/lint/lint.xml")
+                }
                 compileSdk {
                     version =
                         release(FintrackConfig.COMPILE_SDK) {

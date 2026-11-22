@@ -139,7 +139,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `build: add strict detekt config [P1, DOC-05]`
 
 ### T1.8 — Android Lint
-- [ ] done
+- [x] done
 - Refs: DOC-05, NFR-011
 - Create: `config/lint/lint.xml`; lint options in convention plugins: `warningsAsErrors = true`, `abortOnError = true`, `checkDependencies = true`, `UnusedResources` and `HardcodedText` = error.
 - Done when: `./gradlew lint` passes.
