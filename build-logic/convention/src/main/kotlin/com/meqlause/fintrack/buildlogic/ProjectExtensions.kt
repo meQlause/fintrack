@@ -3,16 +3,15 @@ package com.meqlause.fintrack.buildlogic
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
-import org.gradle.api.provider.Provider
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 // DOC-03: every convention plugin reads versions from the one catalog in gradle/libs.versions.toml
-internal fun Project.versionCatalog(): VersionCatalog =
-    extensions.getByType<VersionCatalogsExtension>().named("libs")
+internal fun Project.versionCatalog(): VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 internal fun Project.library(alias: String): Provider<MinimalExternalModuleDependency> =
     versionCatalog().findLibrary(alias).orElseThrow { GradleException("Missing catalog library: $alias") }

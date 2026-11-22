@@ -1,1 +1,4 @@
-// DOC-03: root build has no code; plugins are applied by the convention plugins (T1.3)
+// DOC-05: root formatting gate, applied through the same quality plugin as every module
+plugins {
+    id("fintrack.quality")
+}

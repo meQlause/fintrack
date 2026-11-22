@@ -34,6 +34,7 @@ assertk = "0.28.1"
 konsist = "0.18.1"
 roborazzi = "1.79.0"
 spotless = "8.12.0"
+ktlint = "1.8.0"
 detekt = "1.23.8"
 composeRules = "0.6.8"
 dependencyAnalysis = "3.20.4"
@@ -87,6 +88,7 @@ konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist"
 roborazzi = { group = "io.github.takahirom.roborazzi", name = "roborazzi", version.ref = "roborazzi" }
 roborazzi-compose = { group = "io.github.takahirom.roborazzi", name = "roborazzi-compose", version.ref = "roborazzi" }
 detekt-compose-rules = { group = "io.nlopez.compose.rules", name = "detekt", version.ref = "composeRules" }
+spotless-gradle-plugin = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter" }
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }

@@ -117,7 +117,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(app): add entry point with privacy-safe manifest [P1, NFR-001]`
 
 ### T1.6 — Formatting (Spotless + ktlint + .editorconfig)
-- [ ] done
+- [x] done
 - Refs: DOC-05 §1
 - Read: 05 §1
 - Create: `.editorconfig` (exactly as 05 §1), Spotless config in `fintrack.quality`.

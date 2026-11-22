@@ -13,9 +13,10 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             extensions.configure<LibraryExtension> {
                 namespace = FintrackConfig.ROOT_PACKAGE + path.replace(':', '.')
                 compileSdk {
-                    version = release(FintrackConfig.COMPILE_SDK) {
-                        minorApiLevel = FintrackConfig.COMPILE_SDK_MINOR
-                    }
+                    version =
+                        release(FintrackConfig.COMPILE_SDK) {
+                            minorApiLevel = FintrackConfig.COMPILE_SDK_MINOR
+                        }
                 }
                 defaultConfig {
                     minSdk = FintrackConfig.MIN_SDK

@@ -13,9 +13,10 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             extensions.configure<ApplicationExtension> {
                 namespace = FintrackConfig.ROOT_PACKAGE
                 compileSdk {
-                    version = release(FintrackConfig.COMPILE_SDK) {
-                        minorApiLevel = FintrackConfig.COMPILE_SDK_MINOR
-                    }
+                    version =
+                        release(FintrackConfig.COMPILE_SDK) {
+                            minorApiLevel = FintrackConfig.COMPILE_SDK_MINOR
+                        }
                 }
                 defaultConfig {
                     minSdk = FintrackConfig.MIN_SDK
