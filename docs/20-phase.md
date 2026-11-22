@@ -85,7 +85,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `build: add gradle wrapper and version catalog [P1, DOC-04]`
 
 ### T1.3 — Convention plugins (build-logic)
-- [ ] done
+- [x] done
 - Refs: DOC-03 (Build logic)
 - Read: 03
 - Create: `build-logic/settings.gradle.kts`, `build-logic/convention/build.gradle.kts`, `build-logic/convention/src/main/kotlin/` with plugins:

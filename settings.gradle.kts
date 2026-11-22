@@ -1,5 +1,6 @@
 // DOC-03: root settings; repositories are declared here only (FAIL_ON_PROJECT_REPOS)
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
