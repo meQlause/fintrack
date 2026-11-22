@@ -191,7 +191,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `build: add git hooks for format, lint and commit rules [P1, ADR-014]`
 
 ### T1.15 — CI (GitHub Actions)
-- [ ] done
+- [x] done
 - Refs: DOC-12 (CI)
 - Create: `.github/workflows/ci.yml` — JDK 21, Gradle cache, `./gradlew check`, `./gradlew assembleRelease`, upload reports on failure. Qodana job (JetBrains Qodana for Android, community) with unused-symbol inspection.
 - Done when: the workflow file passes `actionlint` (if available) and the owner confirms a green run after push (**OWNER** pushes).
