@@ -4,9 +4,7 @@ plugins {
 }
 
 dependencies {
-    api(platform(libs.junit5.bom))
     api(libs.junit4)
-    api(libs.junit.jupiter.api)
     api(libs.coroutines.core)
     implementation(libs.coroutines.test)
     testImplementation(libs.assertk)

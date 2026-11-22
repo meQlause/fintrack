@@ -1,9 +1,14 @@
-# DOC-12: Qodana runs the Community Android linter with a pinned image; unused symbols gate the build (ADR-021)
+# DOC-12: Qodana gates unused symbols only (05 section 4); pinned image needs AGP 9.4 (ADR-021)
 version: "1.0"
 linter: jetbrains/qodana-jvm-android:2026.3
 projectJDK: 21
 profile:
-  name: qodana.starter
+  name: empty
 include:
   - name: UnusedSymbol
+exclude:
+  - name: All
+    paths:
+      # Convention plugins are referenced by class-name strings in gradlePlugin {}, which Qodana cannot see
+      - build-logic
 failThreshold: 0
