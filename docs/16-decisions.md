@@ -138,3 +138,13 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
   (Kotlin and the Kotlin Android plugin) and `GradleDependency` for `org.jetbrains.kotlin:*`.
   Upgrade to Kotlin 2.4.x in a dedicated `build:` commit once KSP ships for 2.4.
 - **Consequences:** One known version lag. The upgrade is tracked as a follow-up, not hidden.
+
+### ADR-020 — Empty Android modules exempt from the "should be a JVM project" advice
+- **Status:** Accepted (2026-11-22), owner's standing instruction to follow the recommendation.
+- **Context:** Doc 03 makes several modules Android libraries (database, security, notification, designsystem, and others)
+  that have no Android code yet. The dependency-analysis plugin flags them as "should be a JVM project".
+- **Decision:** Exempt only that advice, only for the Android modules listed in the root `build.gradle.kts`. Every other
+  dependency-analysis issue stays fatal. A module leaves the list in the task that adds its first Android file.
+  The list must be empty by the end of P4.
+- **Consequences:** Modules keep their 03 types. Modules declare only the dependencies their code uses, so the 03 table
+  defines the allowed edges, and `assertModuleGraph` enforces them.

@@ -5,9 +5,8 @@ import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.dependencies
 
-// DOC-08: fintrack.android.compose — Compose for application, feature, designsystem and ui modules only
+// DOC-08: fintrack.android.compose — enables Compose and its compiler; modules declare the Compose libraries they use
 class AndroidComposeConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
@@ -21,13 +20,6 @@ class AndroidComposeConventionPlugin : Plugin<Project> {
                 extensions.configure<LibraryExtension> {
                     buildFeatures { compose = true }
                 }
-            }
-            dependencies {
-                add("implementation", platform(library("compose-bom")))
-                add("implementation", library("compose-ui"))
-                add("implementation", library("compose-material3"))
-                add("implementation", library("compose-ui-tooling-preview"))
-                add("debugImplementation", library("compose-ui-tooling"))
             }
         }
     }

@@ -2,7 +2,3 @@
 plugins {
     id("fintrack.android.feature")
 }
-
-dependencies {
-    implementation(project(":core:security"))
-}

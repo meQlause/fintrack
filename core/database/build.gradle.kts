@@ -3,7 +3,3 @@ plugins {
     id("fintrack.android.library")
     id("fintrack.android.room")
 }
-
-dependencies {
-    implementation(project(":core:model"))
-}

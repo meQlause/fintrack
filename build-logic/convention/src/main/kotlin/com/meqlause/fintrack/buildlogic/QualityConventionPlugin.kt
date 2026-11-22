@@ -13,6 +13,7 @@ class QualityConventionPlugin : Plugin<Project> {
         with(target) {
             pluginManager.apply("com.diffplug.spotless")
             pluginManager.apply("io.gitlab.arturbosch.detekt")
+            pluginManager.apply("com.autonomousapps.dependency-analysis")
             val ktlintVersion = versionCatalog().findVersion("ktlint").get().requiredVersion
             extensions.configure<SpotlessExtension> {
                 kotlin {

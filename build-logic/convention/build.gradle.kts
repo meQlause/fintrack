@@ -11,6 +11,7 @@ dependencies {
     implementation(libs.hilt.gradle.plugin)
     implementation(libs.spotless.gradle.plugin)
     implementation(libs.detekt.gradle.plugin)
+    implementation(libs.dependency.analysis.gradle.plugin)
 }
 
 val conventionPackage = "com.meqlause.fintrack.buildlogic"

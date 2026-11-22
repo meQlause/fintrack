@@ -1,4 +1,64 @@
-// DOC-05: root formatting gate, applied through the same quality plugin as every module
+// DOC-03: root project enforces dependency hygiene and the module graph for every module
 plugins {
     id("fintrack.quality")
+    alias(libs.plugins.module.graph.assertion)
+}
+
+// ADR-020: empty Android modules may be flagged as "should be a JVM project" until their first Android file lands.
+// Remove a module from this list in the task that adds its first Android code.
+val emptyAndroidModules =
+    listOf(
+        ":core:backup",
+        ":core:data",
+        ":core:database",
+        ":core:datastore",
+        ":core:designsystem",
+        ":core:notification",
+        ":core:security",
+        ":core:testing",
+        ":core:ui",
+        ":feature:budget",
+        ":feature:category",
+        ":feature:credit",
+        ":feature:dashboard",
+        ":feature:inbox",
+        ":feature:investment",
+        ":feature:loan",
+        ":feature:lock",
+        ":feature:onboarding",
+        ":feature:settings",
+        ":feature:statistics",
+        ":feature:transaction",
+        ":feature:wallet",
+    )
+
+dependencyAnalysis {
+    issues {
+        all {
+            onAny {
+                severity("fail")
+            }
+        }
+        emptyAndroidModules.forEach { modulePath ->
+            project(modulePath) {
+                onModuleStructure {
+                    severity("ignore")
+                }
+            }
+        }
+    }
+}
+
+moduleGraphAssert {
+    restricted =
+        arrayOf(
+            // DOC-03 rule 1: feature modules never depend on other feature modules
+            ":feature:.* -X> :feature:.*",
+            // DOC-03 rule 2: feature modules never depend on data, database or datastore
+            ":feature:.* -X> :core:(data|database|datastore)",
+        )
+}
+
+tasks.named("check") {
+    dependsOn("buildHealth", "assertModuleGraph")
 }

@@ -2,7 +2,3 @@
 plugins {
     id("fintrack.android.library")
 }
-
-dependencies {
-    implementation(project(":core:common"))
-}

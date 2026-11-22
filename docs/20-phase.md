@@ -146,7 +146,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `build: make android lint strict [P1, DOC-05]`
 
 ### T1.9 — Dependency hygiene and module graph rules
-- [ ] done
+- [x] done
 - Refs: DOC-03 (Dependency rules), DOC-04
 - Steps: apply `com.autonomousapps.dependency-analysis` (fail on any issue) and `com.jraska.module.graph.assertion` with: feature ↛ feature, feature ↛ data/database/datastore, no cycles. Wire `buildHealth` and `assertModuleGraph` into `check`.
 - Done when: `./gradlew buildHealth assertModuleGraph` pass.
