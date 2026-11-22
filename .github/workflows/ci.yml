@@ -1,0 +1,55 @@
+# DOC-12: CI runs the same gates as pre-push, plus a release build and Qodana (unused symbols)
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-java@v6.3.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      - name: Quality gate
+        run: ./gradlew check --no-daemon
+      - name: Release build
+        run: ./gradlew assembleRelease --no-daemon
+      - name: Upload reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: reports
+          path: |
+            **/build/reports/
+            **/build/test-results/
+          if-no-files-found: ignore
+
+  qodana:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Qodana (unused symbols)
+        uses: JetBrains/qodana-action@v2026.3.1
+        with:
+          pr-mode: ${{ github.event_name == 'pull_request' }}
