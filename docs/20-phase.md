@@ -284,7 +284,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 ## P3 — Data foundation
 
 ### T3.1 — Domain model
-- [ ] done
+- [x] done
 - Refs: DOC-02 (all entities and enums)
 - Create in `core:model`: value classes, enums, data classes for Wallet, Category, Transaction, Budget, BudgetAlertLog, InboxItem, MerchantRule, MonitoredApp, InstallmentPlan, Loan, ValuationEntry, QuickEntry, Settings.
 - Tests: `MoneyTest` (plus/minus/compare, BR-001 bounds helper).
@@ -292,14 +292,14 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(model): add domain entities [P3, DOC-02]`
 
 ### T3.2 — Common: clock, dispatchers, logger
-- [ ] done
+- [x] done
 - Refs: DOC-03 (Threading), DOC-10 (Logging)
 - Create in `core:common`: `ClockProvider`, `@IoDispatcher`, `@DefaultDispatcher`, `@ApplicationScope`, `AppLogger` (no-op in release; never logs amounts/merchants/notification text).
 - Done when: `./gradlew :core:common:check` passes.
 - Commit: `feat(common): add clock, dispatchers and logger [P3, DOC-03]`
 
 ### T3.3 — Period calculator
-- [ ] done
+- [x] done
 - Refs: BR-010, FR-050
 - Create: `core:domain/period/PeriodCalculator.kt`.
 - Tests: start day 1, 25, 28; February; year boundary; date equal to start day.
