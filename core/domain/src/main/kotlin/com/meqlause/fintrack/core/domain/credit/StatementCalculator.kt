@@ -4,7 +4,6 @@ import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.StatementStatus
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.temporal.ChronoUnit
 
 /** BR-031 to BR-034, BR-036, BR-044: statement amounts, status and available limit. Pure; callers pass today. */
 public object StatementCalculator {
@@ -34,10 +33,10 @@ public object StatementCalculator {
         account: CreditAccount,
         month: YearMonth,
     ): Money {
-        val cutOff = StatementDates.cutOff(month, account.terms.statementDay)
-        return account.instalments
-            .filter { !it.purchaseDate.isAfter(cutOff) }
-            .fold(Money(0L)) { total, plan -> total + unbilledOf(plan, month) }
+        val statementDay = account.terms.statementDay
+        return account.instalments.fold(Money(0L)) { total, plan ->
+            total + InstallmentScheduler.unbilledAtCutOff(plan, month, statementDay)
+        }
     }
 
     /** BR-032, BR-033, BR-034: the statement for [month] as seen on [today]. */
@@ -99,16 +98,4 @@ public object StatementCalculator {
         account.entries
             .filter { it.isTransferIn && it.date.isAfter(cutOff) && !it.date.isAfter(today) }
             .fold(Money(0L)) { total, entry -> total + entry.delta }
-
-    /** BR-035, BR-036: portions 1..tenor-1 are the base amount and the last one takes the remainder. */
-    private fun unbilledOf(
-        plan: CreditInstalment,
-        month: YearMonth,
-    ): Money {
-        val principal = plan.principal.rupiah
-        val base = principal / plan.tenorMonths
-        val billedPortions = plan.firstStatementMonth.until(month, ChronoUnit.MONTHS) + 1
-        val billed = if (billedPortions >= plan.tenorMonths) principal else base * maxOf(0L, billedPortions)
-        return Money(principal - billed)
-    }
 }

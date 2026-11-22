@@ -462,7 +462,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(domain): add credit statement calculator [P7, BR-033]`
 
 ### T7.2 — InstallmentScheduler
-- [ ] done · Refs: BR-035 … BR-038 · Tests: rounding (1.000.000 / 3), tenor 2 and 36, early payoff, purchase after cut-off.
+- [x] done · Refs: BR-035 … BR-038 · Tests: rounding (1.000.000 / 3), tenor 2 and 36, early payoff, purchase after cut-off.
 - Commit: `feat(domain): add instalment scheduler [P7, BR-036]`
 
 ### T7.3 — Credit wallet screens (S-14, S-15)
