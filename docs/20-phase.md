@@ -344,7 +344,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(data): add repositories with fakes and contract tests [P3, ADR-007]`
 
 ### T3.9 — Default categories seeding
-- [ ] done
+- [x] done
 - Refs: FR-004, DOC-02 (Default categories, incl. "Biaya & Admin")
 - Create: `SeedDefaultCategoriesUseCase`; names from `strings.xml`.
 - Tests: seeds once; second run does nothing; kinds correct.
