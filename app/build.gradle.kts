@@ -20,3 +20,13 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 }
+
+dependencies {
+    testImplementation(libs.konsist)
+    testImplementation(libs.junit4)
+}
+
+// DOC-10: the manifest test reads the merged release manifest
+tasks.matching { it.name == "testDebugUnitTest" }.configureEach {
+    dependsOn("processReleaseMainManifest")
+}

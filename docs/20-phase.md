@@ -162,7 +162,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `test: add test infrastructure and fake clock [P1, DOC-06]`
 
 ### T1.11 — Konsist architecture tests
-- [ ] done
+- [x] done
 - Refs: DOC-06 (Architecture tests), DOC-05 §3–§8, NFR-001
 - Create: `app/src/test/kotlin/<root>/architecture/` with every test in the 06 list (ModuleDependency, PureKotlin, NamingSuffix, NamingLength, FileLength 250, OneTopLevelDeclaration, NoSuppress, NoBaseline, MoneyType, ViewModel, ComposableModifier, NoHardcodedDesignValues, DocReference, ManifestNoInternet, ForbiddenDependencies).
 - Steps: `ManifestNoInternetTest` reads the merged release manifest (make `test` depend on `processReleaseMainManifest`).
