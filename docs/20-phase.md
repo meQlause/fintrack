@@ -307,7 +307,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `feat(domain): add period calculator [P3, BR-010]`
 
 ### T3.4 — Keystore key + SQLCipher passphrase
-- [ ] done
+- [x] done
 - Refs: NFR-003, ADR-009
 - Read: 10 (Database encryption)
 - Create in `core:security`: `DatabaseKeyProvider` (generates 32 random bytes once, wraps with an AES-GCM Keystore key, stores in `files/db_key.bin`).
