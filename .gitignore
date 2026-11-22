@@ -23,3 +23,6 @@ keystore.properties
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# DOC-12: isolated worktrees used by parallel agents
+.claude/worktrees/
