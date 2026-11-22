@@ -1,0 +1,25 @@
+# Gradle / build
+.gradle/
+build/
+**/build/
+.kotlin/
+captures/
+*.apk
+*.aab
+
+# IDE
+.idea/
+!.idea/codeStyles/
+*.iml
+.DS_Store
+
+# Local config & secrets (never commit — public repo, ADR-013)
+local.properties
+keystore.properties
+*.jks
+*.keystore
+.env
+.env.*
+
+# Claude Code local settings
+.claude/settings.local.json
