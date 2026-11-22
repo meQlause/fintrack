@@ -2,3 +2,10 @@
 plugins {
     id("fintrack.jvm.library")
 }
+
+dependencies {
+    testImplementation(platform(libs.junit5.bom))
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testImplementation(libs.assertk)
+}

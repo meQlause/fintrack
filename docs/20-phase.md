@@ -284,7 +284,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 ## P3 — Data foundation
 
 ### T3.1 — Domain model
-- [ ] done
+- [x] done
 - Refs: DOC-02 (all entities and enums)
 - Create in `core:model`: value classes, enums, data classes for Wallet, Category, Transaction, Budget, BudgetAlertLog, InboxItem, MerchantRule, MonitoredApp, InstallmentPlan, Loan, ValuationEntry, QuickEntry, Settings.
 - Tests: `MoneyTest` (plus/minus/compare, BR-001 bounds helper).
