@@ -1,6 +1,6 @@
 # DOC-04: exact latest-stable versions, no dynamic versions. Upgrades happen in dedicated build: commits.
 [versions]
-agp = "9.5.2"
+agp = "9.4.1"
 kotlin = "2.3.21"
 activity = "1.13.0"
 fragment = "1.9.1"

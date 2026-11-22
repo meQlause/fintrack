@@ -19,4 +19,9 @@
     <issue id="GradleDependency">
         <ignore regexp="org.jetbrains.kotlin:.* than 2.3.21 is available" />
     </issue>
+
+    <!-- ADR-021: AGP stays on 9.4.1 until a Qodana Android image supports AGP 9.5 -->
+    <issue id="AndroidGradlePluginVersion">
+        <ignore regexp="com\.android\.(application|library|tools\.build:gradle) than 9\.4\.1 is available" />
+    </issue>
 </lint>

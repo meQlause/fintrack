@@ -148,3 +148,15 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
   The list must be empty by the end of P4.
 - **Consequences:** Modules keep their 03 types. Modules declare only the dependencies their code uses, so the 03 table
   defines the allowed edges, and `assertModuleGraph` enforces them.
+
+### ADR-021 — AGP pinned to 9.4.1 so Qodana can run
+- **Status:** Accepted (2026-11-22), approved by the owner.
+- **Context:** The owner requires Qodana in CI (12). Qodana's Android linter 2026.3 (the newest image) supports the
+  AGP 9.4 line (it reports 9.4.0 as the latest it knows) and refuses to open a project on AGP 9.5.x. 04 asks for the
+  latest stable AGP, which is 9.5.2.
+- **Decision:** Pin AGP to 9.4.1, the newest 9.4.x release. Disable only the `AndroidGradlePluginVersion` lint check
+  for `com.android.application`, `com.android.library` and `com.android.tools.build:gradle` at 9.4.1 in
+  `config/lint/lint.xml`. Qodana uses the recommended profile with the unused-symbol inspection and
+  `failThreshold: 0`, so any finding fails CI.
+- **Consequences:** One known version lag. Upgrade AGP in a dedicated `build:` commit once a Qodana image supports
+  AGP 9.5.

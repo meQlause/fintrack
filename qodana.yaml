@@ -1,4 +1,9 @@
-# DOC-12: Qodana runs the Community Android linter (unused symbols) with a pinned image
+# DOC-12: Qodana runs the Community Android linter with a pinned image; unused symbols gate the build (ADR-021)
 version: "1.0"
 linter: jetbrains/qodana-jvm-android:2026.3
 projectJDK: 21
+profile:
+  name: qodana.recommended
+include:
+  - name: UnusedSymbol
+failThreshold: 0
