@@ -4,8 +4,10 @@ plugins {
 }
 
 dependencies {
+    api(project(":core:model"))
+    api(project(":core:domain"))
     api(libs.junit4)
     api(libs.coroutines.core)
     implementation(libs.coroutines.test)
-    testImplementation(libs.assertk)
+    implementation(libs.assertk)
 }
