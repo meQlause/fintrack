@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.meqlause.fintrack.feature.category.navigation.categoryDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.tab.PlaceholderTabScreen
@@ -43,4 +44,6 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     composable<HistoryRoute> { PlaceholderTabScreen(mainTab = MainTab.HISTORY) }
     composable<InvestmentRoute> { PlaceholderTabScreen(mainTab = MainTab.INVESTMENT) }
     composable<WalletRoute> { PlaceholderTabScreen(mainTab = MainTab.WALLET) }
+    // DOC-09, FR-020: Kategori is reached from Settings > Data (T4.11 adds the entry point)
+    categoryDestination(onBack = { navController.popBackStack() })
 }

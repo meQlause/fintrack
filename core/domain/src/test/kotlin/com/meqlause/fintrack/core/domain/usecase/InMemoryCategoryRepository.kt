@@ -21,6 +21,12 @@ internal class InMemoryCategoryRepository : CategoryRepository {
         return stored.categoryId
     }
 
+    override suspend fun update(category: Category) {
+        rows.value = rows.value.map { if (it.categoryId == category.categoryId) category else it }
+    }
+
+    override suspend fun isInUse(categoryId: CategoryId): Boolean = false
+
     override suspend fun delete(category: Category) {
         rows.value = rows.value.filterNot { it.categoryId == category.categoryId }
     }

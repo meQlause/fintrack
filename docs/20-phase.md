@@ -374,7 +374,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(wallet): add wallet detail screen [P4, FR-017]`
 
 ### T4.5 — Categories (S-10)
-- [ ] done · Refs: FR-020 … FR-023, BR-008 · Commit: `feat(category): add category management [P4, FR-020]`
+- [x] done · Refs: FR-020 … FR-023, BR-008 · Commit: `feat(category): add category management [P4, FR-020]`
 
 ### T4.6 — Add / edit transaction sheet (S-04)
 - [ ] done
