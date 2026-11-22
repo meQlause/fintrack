@@ -1,0 +1,30 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-11-22T09:00:00Z" },
+  "title": "Fintrack Prototype",
+  "launch": { "view": "focused", "file": "Main.dc.html" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Fintrack — prototipe interaktif",
+      "is_interactive": true,
+      "radius": 44
+    }
+  },
+  "order": ["Main.dc.html"],
+  "notes": {
+    "howto": {
+      "x": 470,
+      "y": 0,
+      "w": 340,
+      "fill": "teal",
+      "size": "m",
+      "text": "Cara mencoba (tekan Play):\n\n• Tombol + : catat transaksi (keypad, kategori, dompet, transfer)\n• Lonceng : Kotak Masuk hasil deteksi notifikasi. Geser kartu ke kanan = catat, ke kiri = abaikan\n• 'Uji notifikasi' : simulasi notifikasi bank/e-wallet masuk\n• Ketuk transaksi : detail, ubah, catat lagi, hapus (bisa diurungkan)\n• Statistik : ganti bulan & jenis, ketuk batang harian / kategori\n• Dompet : ketuk dompet untuk riwayatnya, tambah dompet baru\n• Ikon bulan/matahari : mode gelap/terang\n• Ikon mata : sembunyikan saldo\n\nData contoh: 22 Nov 2026. Semua data hanya ada selama halaman terbuka."
+    }
+  },
+  "designSystems": []
+}
