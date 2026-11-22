@@ -108,7 +108,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `build: create module structure [P1, DOC-03]`
 
 ### T1.5 — App entry point, manifest and privacy settings
-- [ ] done
+- [x] done
 - Refs: NFR-001, NFR-008, DOC-10
 - Read: 10 (Offline guarantee, Permissions)
 - Create: `app/src/main/AndroidManifest.xml`, `FintrackApplication.kt` (`@HiltAndroidApp`), `MainActivity.kt` (shows text "Fintrack" via `stringResource`), `res/values/strings.xml`, `res/xml/data_extraction_rules.xml`, `res/xml/backup_rules.xml`.

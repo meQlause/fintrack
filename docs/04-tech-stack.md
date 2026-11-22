@@ -37,6 +37,7 @@ Upgrades happen in dedicated `build:` commits, one library group at a time, with
 | Collections | kotlinx-collections-immutable | stable types for Compose |
 | Startup perf | Baseline Profiles (androidx.baselineprofile) + ProfileInstaller | NFR-004 |
 | Splash | androidx.core:core-splashscreen | |
+| Activity host | androidx.activity:activity-compose | Hosts Compose in `MainActivity`; added in T1.5, owner to confirm |
 
 ## Testing
 

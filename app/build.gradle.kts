@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.activity.compose)
     implementation(project(":core:model"))
     implementation(project(":core:common"))
     implementation(project(":core:domain"))
