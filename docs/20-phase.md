@@ -99,7 +99,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `build: add convention plugins [P1, DOC-03]`
 
 ### T1.4 — Create all modules
-- [ ] done
+- [x] done
 - Refs: DOC-03 (Module list), ADR-006
 - Read: 03
 - Create: every module of 03 (core:model, common, domain, parser, database, datastore, data, notification, security, backup, designsystem, ui, testing; feature:onboarding, dashboard, transaction, inbox, wallet, category, budget, statistics, settings, lock, credit, loan, investment; app) with a `build.gradle.kts` applying the matching convention plugin and the `<root>` package folder.

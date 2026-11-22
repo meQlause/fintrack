@@ -1,13 +1,14 @@
-// DOC-03: convention plugins; Gradle plugin artifacts are compileOnly and versioned in the catalog
+// DOC-03: convention plugins; Gradle plugin artifacts are on the runtime classpath and versioned in the catalog
 plugins {
     `kotlin-dsl`
 }
 
 dependencies {
-    compileOnly(libs.android.gradle.plugin)
-    compileOnly(libs.kotlin.gradle.plugin)
-    compileOnly(libs.ksp.gradle.plugin)
-    compileOnly(libs.hilt.gradle.plugin)
+    implementation(libs.android.gradle.plugin)
+    implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.compose.compiler.gradle.plugin)
+    implementation(libs.ksp.gradle.plugin)
+    implementation(libs.hilt.gradle.plugin)
 }
 
 val conventionPackage = "com.meqlause.fintrack.buildlogic"

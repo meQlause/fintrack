@@ -11,13 +11,14 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         with(target) {
             pluginManager.apply("com.android.library")
             extensions.configure<LibraryExtension> {
-                compileSdk = FintrackConfig.COMPILE_SDK
+                namespace = FintrackConfig.ROOT_PACKAGE + path.replace(':', '.')
+                compileSdk {
+                    version = release(FintrackConfig.COMPILE_SDK) {
+                        minorApiLevel = FintrackConfig.COMPILE_SDK_MINOR
+                    }
+                }
                 defaultConfig {
                     minSdk = FintrackConfig.MIN_SDK
-                }
-                compileOptions {
-                    sourceCompatibility = FintrackConfig.JAVA_VERSION
-                    targetCompatibility = FintrackConfig.JAVA_VERSION
                 }
             }
             configureKotlin()

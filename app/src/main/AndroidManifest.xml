@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-10: minimal manifest so the module builds; T1.5 adds the entry point and privacy settings -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application />
+</manifest>
