@@ -1,0 +1,48 @@
+#!/bin/sh
+# DOC-12: commit-msg gate. Usage: commit-msg <message-file>
+# Enforces header format and length, forbidden AI attribution, and the owner author.
+# Warns (does not fail) when a doc ID in the header is not found under docs/.
+
+msg_file="$1"
+status=0
+header=$(sed -n '1p' "$msg_file")
+
+regex='^(feat|fix|refactor|test|docs|style|perf|build|ci|chore|revert)(\([a-z0-9-]+\))?!?: [a-z][^][]*[^.[:space:]] \[((FR|NFR|BR|ADR|Q)-[0-9]{3}|S-[0-9]{2}|DOC-[0-9]{2}|P[0-9])(, ((FR|NFR|BR|ADR|Q)-[0-9]{3}|S-[0-9]{2}|DOC-[0-9]{2}|P[0-9]))*\]$'
+
+fail() {
+	echo "commit-msg: error: $1" >&2
+	status=1
+}
+
+length=$(printf '%s' "$header" | wc -c | tr -d ' ')
+if [ "$length" -gt 100 ]; then
+	fail "header is $length characters, maximum is 100"
+fi
+if ! printf '%s\n' "$header" | grep -Eq "$regex"; then
+	fail "header must match 'type(scope)?: subject [DOC-ID, ...]', got: $header"
+fi
+
+# Ignore git comment lines and anything after the verbose-diff scissors line.
+message=$(sed '/^# -* >8 -*$/,$d' "$msg_file" | grep -v '^#')
+
+if printf '%s\n' "$message" | grep -Eiq 'co-authored-by:|generated with|claude'; then
+	fail "AI attribution is not allowed (Co-Authored-By, 'Generated with', 'Claude')"
+fi
+robot=$(printf '\360\237\244\226')
+if printf '%s\n' "$message" | grep -q "$robot"; then
+	fail "the robot emoji is not allowed in commit messages"
+fi
+
+author=$(git var GIT_AUTHOR_IDENT 2>/dev/null | sed 's/ [0-9]* [+-][0-9]*$//')
+if [ "$author" != "meQlause <ardialbrian@gmail.com>" ]; then
+	fail "author must be meQlause <ardialbrian@gmail.com>, got: $author"
+fi
+
+ids=$(printf '%s\n' "$header" | sed -n 's/.*\[\([^]]*\)\]$/\1/p' | tr ',' '\n' | sed 's/^ *//;s/ *$//')
+for id in $ids; do
+	if ! grep -rqF -- "$id" docs/; then
+		echo "commit-msg: warning: doc ID $id not found in docs/" >&2
+	fi
+done
+
+exit $status

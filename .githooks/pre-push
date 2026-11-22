@@ -1,0 +1,3 @@
+#!/bin/sh
+# DOC-12: pre-push runs the full quality gate.
+exec ./gradlew check

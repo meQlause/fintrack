@@ -184,7 +184,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `test: add roborazzi screenshot testing [P1, DOC-06]`
 
 ### T1.14 — Git hooks
-- [ ] done
+- [x] done
 - Refs: DOC-12 (Hooks), ADR-012, ADR-014
 - Create: `.githooks/pre-commit` (`spotlessCheck detekt`), `.githooks/commit-msg` (header regex from 12, max 100 chars, rejects `Co-Authored-By`, "Claude", "Generated with", 🤖, author ≠ meQlause), `.githooks/pre-push` (`check`). Make them executable; document `git config core.hooksPath .githooks` in README.
 - Done when: a commit with header `feat: test` is rejected; a header with `Co-Authored-By` in the body is rejected; a valid header passes.
