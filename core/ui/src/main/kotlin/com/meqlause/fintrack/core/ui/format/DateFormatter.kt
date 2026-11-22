@@ -18,14 +18,14 @@ object DateFormatter {
 
     /** DOC-08: relative label against the clock's date, otherwise weekday, day and short month in Indonesian. */
     fun dayLabel(
-        day: LocalDate,
+        date: LocalDate,
         clock: Clock,
     ): String {
         val today = LocalDate.now(clock)
-        return when (day) {
+        return when (date) {
             today -> TODAY_LABEL
             today.minusDays(1L) -> YESTERDAY_LABEL
-            else -> "${weekdayShort(day)}, ${day.dayOfMonth} ${monthShort(day)}"
+            else -> "${weekdayShort(date)}, ${date.dayOfMonth} ${monthShort(date)}"
         }
     }
 
@@ -33,7 +33,7 @@ object DateFormatter {
     fun timeLabel(time: LocalTime): String = time.format(timeFormat)
 
     // ISO weekdays run Monday = 1 to Sunday = 7, so Sunday maps to index 0 of the Indonesian list
-    private fun weekdayShort(day: LocalDate): String = weekdaysId[day.dayOfWeek.value % SUNDAY_INDEX]
+    private fun weekdayShort(date: LocalDate): String = weekdaysId[date.dayOfWeek.value % SUNDAY_INDEX]
 
-    private fun monthShort(day: LocalDate): String = monthsId[day.monthValue - 1]
+    private fun monthShort(date: LocalDate): String = monthsId[date.monthValue - 1]
 }
