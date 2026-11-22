@@ -410,7 +410,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 ## P5 — Notification detection
 
 ### T5.1 — Parser utilities
-- [ ] done
+- [x] done
 - Refs: DOC-07 (Parsing rules), FR-085
 - Create in `core:parser`: models, `IndonesianAmountParser`, `IgnoreClassifier`, `DirectionClassifier`, `MerchantNormalizer`, fixture loader + parameterised fixture test.
 - Tests: every row of the amount table and keyword tables in 07.

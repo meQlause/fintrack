@@ -1,0 +1,13 @@
+{
+  "description": "SYNTHETIC QRIS payment built from the DOC-07 example. Not a real bank notification.",
+  "packageName": "synthetic.test.app",
+  "title": "Transaksi Berhasil",
+  "text": "Pembayaran QRIS Rp25.000,00 ke INDOMARET CABANG X berhasil.",
+  "postedAt": "2026-11-20T10:15:00+07:00",
+  "expected": {
+    "kind": "TRANSACTION",
+    "amount": 25000,
+    "direction": "DEBIT",
+    "merchant": "INDOMARET CABANG X"
+  }
+}
