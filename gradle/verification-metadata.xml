@@ -3,6 +3,10 @@
    <configuration>
       <verify-metadata>true</verify-metadata>
       <verify-signatures>false</verify-signatures>
+      <trusted-artifacts>
+         <trust file=".*-javadoc[.]jar" regex="true" reason="ADR-022: IDE documentation only, never on a build classpath"/>
+         <trust file=".*-sources[.]jar" regex="true" reason="ADR-022: IDE navigation only, never on a build classpath"/>
+      </trusted-artifacts>
    </configuration>
    <components>
       <component group="androidx.activity" name="activity" version="1.13.0">

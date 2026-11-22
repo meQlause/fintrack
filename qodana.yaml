@@ -2,6 +2,9 @@
 version: "1.0"
 linter: jetbrains/qodana-jvm-android:2026.3
 projectJDK: 21
+# DOC-12: the image ships only android-33; without compileSdk 37.2 the IDE cannot index the modules and
+# reports tests and @Preview functions as unused
+bootstrap: yes | /opt/android-sdk/cmdline-tools/tools/bin/sdkmanager --sdk_root=/opt/android-sdk "platforms;android-37.2" "build-tools;37.0.0" > /dev/null
 profile:
   name: empty
 include:

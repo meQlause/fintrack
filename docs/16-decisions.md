@@ -160,3 +160,13 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
   with `failThreshold: 0`, so any unused-symbol finding fails CI.
 - **Consequences:** One known version lag. Upgrade AGP in a dedicated `build:` commit once a Qodana image supports
   AGP 9.5.
+
+### ADR-022 — Sources and javadoc jars are trusted in dependency verification
+- **Status:** Accepted (2026-11-23), owner's standing instruction to follow the recommendation.
+- **Context:** Gradle dependency verification (T2.1) checks every artifact. IDE syncs (Android Studio and the Qodana
+  container) also download `-sources.jar` and `-javadoc.jar` files for navigation. They are not in the metadata, so a
+  sync fails ("158 artifacts failed verification"). These files are never on a compile or runtime classpath.
+- **Decision:** `gradle/verification-metadata.xml` trusts only `.*-sources[.]jar` and `.*-javadoc[.]jar` (Gradle's
+  documented recommendation for IDE use). Every library, plugin and pom the build resolves stays checksum-verified.
+- **Consequences:** IDE syncs work on every machine and in CI. A tampered sources jar could mislead a reader in the IDE
+  but cannot change the built app.
