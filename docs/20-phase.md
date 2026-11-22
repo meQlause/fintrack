@@ -360,7 +360,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - [x] done · Refs: FR-001 … FR-004 · Commit: `feat(onboarding): add onboarding flow [P4, FR-001]`
 
 ### T4.2 — Wallet picker drawer (S-18)
-- [ ] done
+- [x] done
 - Refs: DOC-09 S-18, DOC-08 principle 6
 - Create in `core:ui`: `WalletPickerDrawer` (sections Tunai · Debit · Kartu kredit · Paylater · Investasi, filters per use, "Sudah dipilih", radio), `DayGridDrawer` (1–28), `OptionsDrawer`.
 - Commit: `feat(ui): add shared picker drawers [P4, DOC-09]`
