@@ -170,3 +170,8 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
   documented recommendation for IDE use). Every library, plugin and pom the build resolves stays checksum-verified.
 - **Consequences:** IDE syncs work on every machine and in CI. A tampered sources jar could mislead a reader in the IDE
   but cannot change the built app.
+- **Addendum (2026-11-23):** the IDE sync in the Qodana container also resolves IDE-only configurations (e.g. androidTest
+  tooling such as kotlinx-coroutines-bom 1.7.3) that the command-line build never resolves, so the sync stopped and
+  Qodana reported the whole codebase as unresolved. Inside that analysis container only, `qodana.yaml` bootstrap sets
+  `org.gradle.dependency.verification=lenient` (failures are logged, not fatal). The CI `check` job and release builds
+  keep strict verification; nothing Qodana resolves is shipped.

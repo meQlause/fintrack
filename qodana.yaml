@@ -2,9 +2,17 @@
 version: "1.0"
 linter: jetbrains/qodana-jvm-android:2026.3
 projectJDK: 21
-# DOC-12: the image ships only android-33; without compileSdk 37.2 the IDE cannot index the modules and
-# reports tests and @Preview functions as unused
-bootstrap: yes | /opt/android-sdk/cmdline-tools/tools/bin/sdkmanager --sdk_root=/opt/android-sdk "platforms;android-37.2" "build-tools;37.0.0" > /dev/null
+# DOC-12: bootstrap prepares the container before the IDE imports the Gradle project:
+# 1. the image ships only android-33; compileSdk 37.2 must exist or modules are not indexed;
+# 2. ADR-022: the IDE sync resolves extra IDE-only configurations (e.g. androidTest tooling) that the CLI build
+#    never touches, so dependency verification is lenient for this analysis container only. The CI check and
+#    release builds stay strict.
+bootstrap: >-
+  yes | /opt/android-sdk/cmdline-tools/tools/bin/sdkmanager --sdk_root=/opt/android-sdk
+  "platforms;android-37.2" "build-tools;37.0.0" > /dev/null &&
+  mkdir -p /data/cache/gradle &&
+  (grep -qs '^org.gradle.dependency.verification=' /data/cache/gradle/gradle.properties ||
+  echo 'org.gradle.dependency.verification=lenient' >> /data/cache/gradle/gradle.properties)
 profile:
   name: empty
 include:
