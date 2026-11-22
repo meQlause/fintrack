@@ -12,7 +12,6 @@ val emptyAndroidModules =
         ":core:data",
         ":core:database",
         ":core:datastore",
-        ":core:designsystem",
         ":core:notification",
         ":core:security",
         ":core:testing",

@@ -247,7 +247,7 @@ Goal: an empty app where **every rule in 05 and 06 is enforced** before any feat
 - Commit: `docs: sync design tokens with final prototype [P2, DOC-08]`
 
 ### T2.3 — Theme: colours, typography, spacing, shapes, motion
-- [ ] done
+- [x] done
 - Refs: DOC-08, NFR-010
 - Create in `core:designsystem`: `theme/FintrackColors.kt`, `theme/FintrackTypography.kt` (Plus Jakarta Sans 400–700 bundled in `res/font`, tabular numbers for amount styles), `theme/FintrackSpacing.kt`, `theme/FintrackShapes.kt`, `theme/FintrackMotion.kt`, `theme/FintrackTheme.kt` (CompositionLocals, light/dark).
 - Tests: screenshot test of a token swatch (light, dark, font scale 2.0).

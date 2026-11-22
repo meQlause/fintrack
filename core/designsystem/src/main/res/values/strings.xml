@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-08: sample text for the token swatch only; the brand name is not translated -->
+<resources>
+    <string name="token_sample_amount">Rp1.250.000</string>
+    <string name="token_sample_brand">Fintrack</string>
+    <string name="token_sample_digits">0123456789</string>
+    <string name="token_motion_quick">Cepat</string>
+    <string name="token_motion_medium">Sedang</string>
+    <string name="token_motion_slow">Lambat</string>
+    <string name="token_motion_duration">%1$d ms</string>
+</resources>

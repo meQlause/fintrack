@@ -53,6 +53,8 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
+compose-runtime-annotation = { group = "androidx.compose.runtime", name = "runtime-annotation" }
+compose-animation-core = { group = "androidx.compose.animation", name = "animation-core" }
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 compose-ui-text = { group = "androidx.compose.ui", name = "ui-text" }
 dagger = { group = "com.google.dagger", name = "dagger", version.ref = "hilt" }
