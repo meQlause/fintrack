@@ -12,5 +12,5 @@ internal fun failureOf(block: () -> Unit): BackupFailure {
         return error.failure
     }
     fail("expected a BackupException")
-    throw IllegalStateException("unreachable")
+    error("unreachable")
 }
