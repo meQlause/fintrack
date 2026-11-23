@@ -27,6 +27,10 @@ class FintrackTypography {
     val numberHero: TextStyle = typeStyle(size = 40f, lineHeight = 48f, weight = 800, tabular = true)
     val numberLarge: TextStyle = typeStyle(size = 28f, lineHeight = 36f, weight = 700, tabular = true)
     val numberMedium: TextStyle = typeStyle(size = 18f, lineHeight = 24f, weight = 700, tabular = true)
+    // DOC-09: prototype wallet chip balance, 15 px bold
+    val numberSmall: TextStyle = typeStyle(size = 15f, lineHeight = 20f, weight = 700, tabular = true)
+    // DOC-09: the prototype .row amount, 14 px semibold with tabular figures
+    val numberRow: TextStyle = typeStyle(size = 14f, lineHeight = 20f, weight = 600, tabular = true)
     val headlineSmall: TextStyle = typeStyle(size = 24f, lineHeight = 32f, weight = 700)
 
     // DOC-09: 20 sp bold title of every tab header (prototype: 20px / 700)

@@ -15,4 +15,7 @@ class FintrackShapes {
     val large: CornerBasedShape = RoundedCornerShape(size = Dp(value = 24f))
     val sheet: Shape = RoundedCornerShape(topStart = Dp(value = 24f), topEnd = Dp(value = 24f))
     val full: Shape = CircleShape
+
+    // DOC-09: category icon box corner from the prototype (12 px), not a circle
+    val categoryIcon: CornerBasedShape = RoundedCornerShape(size = Dp(value = 12f))
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -20,6 +21,7 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 fun FintrackCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
+    contentPadding: PaddingValues = PaddingValues(all = FintrackTheme.spacing.large),
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val shape = FintrackTheme.shapes.medium
@@ -31,7 +33,7 @@ fun FintrackCard(
                 .background(FintrackTheme.colors.surfaces.surface)
                 .border(FintrackTheme.sizes.hairline, FintrackTheme.colors.surfaces.outline, shape)
                 .then(pressModifier)
-                .padding(FintrackTheme.spacing.large),
+                .padding(contentPadding),
         content = content,
     )
 }
