@@ -23,14 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.transaction.R
 import java.time.YearMonth
-
-private val PillWidth: Dp = 64.dp
-private val PillHeight: Dp = 36.dp
 
 // BR-010, FR-036, S-05: the twelve months of the picked year in one row; a pill slides under the selected month
 @Composable
@@ -42,7 +37,7 @@ internal fun HistoryMonthStrip(
     val selectedIndex = month.monthValue - 1
     val motion = FintrackTheme.motion.medium
     val indicatorOffset by animateDpAsState(
-        targetValue = PillWidth * selectedIndex.toFloat(),
+        targetValue = FintrackTheme.sizes.touchTarget * selectedIndex.toFloat(),
         animationSpec = tween(durationMillis = motion.durationMillis, easing = motion.easing),
         label = "history-month-indicator",
     )
@@ -58,7 +53,7 @@ internal fun HistoryMonthStrip(
             modifier =
                 Modifier
                     .offset(x = indicatorOffset)
-                    .size(width = PillWidth, height = PillHeight)
+                    .size(width = FintrackTheme.sizes.touchTarget, height = FintrackTheme.sizes.chipHeight)
                     .clip(FintrackTheme.shapes.full)
                     .background(FintrackTheme.colors.brands.primaryContainer),
         )
@@ -84,8 +79,8 @@ private fun MonthPill(
     Box(
         modifier =
             Modifier
-                .width(PillWidth)
-                .height(PillHeight)
+                .width(FintrackTheme.sizes.touchTarget)
+                .height(FintrackTheme.sizes.chipHeight)
                 .selectable(selected = selected, role = Role.Tab, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {

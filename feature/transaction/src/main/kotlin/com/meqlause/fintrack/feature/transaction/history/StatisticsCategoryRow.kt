@@ -18,15 +18,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.domain.statistics.CategoryChange
 import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.transaction.R
 
-private val DOT_SIZE = 10.dp
-private val SHARE_BAR_HEIGHT = 4.dp
 private const val WHOLE_PERCENT = 100f
 
 // FR-060, FR-062, S-08: one ranked category with its colour, name, share bar, amount and change against last period
@@ -46,7 +43,7 @@ internal fun StatisticsCategoryRow(
                 .clickable(enabled = onClick != null) { onClick?.invoke() },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(modifier = Modifier.size(DOT_SIZE).clip(FintrackTheme.shapes.full).background(color))
+        Box(modifier = Modifier.size(FintrackTheme.spacing.small).clip(FintrackTheme.shapes.full).background(color))
         Column(modifier = Modifier.weight(1f).padding(start = FintrackTheme.spacing.small)) {
             Text(
                 text = name,
@@ -82,7 +79,7 @@ private fun ShareBar(
             Modifier
                 .padding(top = FintrackTheme.spacing.xxSmall)
                 .fillMaxWidth()
-                .height(SHARE_BAR_HEIGHT)
+                .height(FintrackTheme.spacing.xSmall)
                 .clip(FintrackTheme.shapes.full)
                 .background(FintrackTheme.colors.surfaces.outline),
     ) {

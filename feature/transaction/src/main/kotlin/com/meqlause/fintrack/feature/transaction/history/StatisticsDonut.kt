@@ -7,12 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.unit.dp
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
 
-private val DONUT_SIZE = 184.dp
-private val DONUT_STROKE = 26.dp
 private const val FULL_TURN = 360f
 private const val TOP_OF_CIRCLE = -90f
 
@@ -23,8 +20,9 @@ internal fun StatisticsDonut(
     modifier: Modifier = Modifier,
 ) {
     val palette = statisticsPalette(FintrackTheme.colors)
-    Canvas(modifier = modifier.size(DONUT_SIZE)) {
-        val strokePx = DONUT_STROKE.toPx()
+    val donutStroke = FintrackTheme.sizes.switchHeight
+    Canvas(modifier = modifier.size(FintrackTheme.sizes.shortcutTileWidth)) {
+        val strokePx = donutStroke.toPx()
         val inset = strokePx / 2f
         val arcSize = Size(size.width - strokePx, size.height - strokePx)
         var start = TOP_OF_CIRCLE

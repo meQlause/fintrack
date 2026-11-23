@@ -8,11 +8,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.transaction.R
-
-private val SwipeThreshold: Dp = 64.dp
 
 // FR-036, S-05: a horizontal drag past the threshold moves to the previous or next month; the list never slides sideways
 @Composable
@@ -22,13 +19,14 @@ internal fun Modifier.historyMonthSwipe(
 ): Modifier {
     val previousLabel = stringResource(R.string.history_month_previous)
     val nextLabel = stringResource(R.string.history_month_next)
+    val swipeThreshold = FintrackTheme.spacing.xxxLarge
     return pointerInput(Unit) {
         var travel = 0f
         detectHorizontalDragGestures(
             onDragStart = { travel = 0f },
             onHorizontalDrag = { _, amount -> travel += amount },
             onDragEnd = {
-                val threshold = SwipeThreshold.toPx()
+                val threshold = swipeThreshold.toPx()
                 when {
                     travel <= -threshold -> onNext()
                     travel >= threshold -> onPrevious()

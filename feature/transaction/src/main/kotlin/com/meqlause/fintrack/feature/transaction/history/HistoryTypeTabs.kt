@@ -23,12 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-
-private val IndicatorWidth: Dp = 28.dp
-private val IndicatorHeight: Dp = 2.dp
 
 // FR-037, S-05: the Semua, Pengeluaran, Pemasukan and Transfer tabs; the underline slides to the selected one
 @Composable
@@ -48,7 +43,7 @@ internal fun HistoryTypeTabs(
     ) {
         val tabWidth = maxWidth / types.size
         val indicatorOffset by animateDpAsState(
-            targetValue = tabWidth * types.indexOf(selected).toFloat() + (tabWidth - IndicatorWidth) / 2,
+            targetValue = tabWidth * types.indexOf(selected).toFloat() + (tabWidth - FintrackTheme.spacing.xxLarge) / 2,
             animationSpec = tween(durationMillis = motion.durationMillis, easing = motion.easing),
             label = "history-type-indicator",
         )
@@ -82,8 +77,8 @@ internal fun HistoryTypeTabs(
                 Modifier
                     .align(Alignment.BottomStart)
                     .offset(x = indicatorOffset)
-                    .width(IndicatorWidth)
-                    .height(IndicatorHeight)
+                    .width(FintrackTheme.spacing.xxLarge)
+                    .height(FintrackTheme.spacing.xxSmall)
                     .clip(FintrackTheme.shapes.full)
                     .background(FintrackTheme.colors.texts.onSurface),
         )

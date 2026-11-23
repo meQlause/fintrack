@@ -14,12 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
 import com.meqlause.fintrack.feature.transaction.R
 
-private val BAR_AREA_HEIGHT = 120.dp
 private const val BAR_WIDTH_RATIO = 0.6f
 
 // FR-061, S-08: one bar per day of the period, scaled to the busiest day; days without money stay as a hairline
@@ -38,7 +36,7 @@ internal fun StatisticsDailyBars(statistics: PeriodStatistics) {
                 Modifier
                     .fillMaxWidth()
                     .padding(top = FintrackTheme.spacing.small)
-                    .height(BAR_AREA_HEIGHT),
+                    .height(FintrackTheme.sizes.shortcutTileWidth),
         ) {
             drawDailyBars(
                 amounts = statistics.dailyTotals.map { it.rupiah },
