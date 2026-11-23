@@ -12,7 +12,9 @@ import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.SettingsDestination
 import com.meqlause.fintrack.feature.settings.navigation.settingsDestination
+import com.meqlause.fintrack.feature.wallet.navigation.WalletDetailDestination
 import com.meqlause.fintrack.feature.wallet.navigation.walletDestination
+import com.meqlause.fintrack.feature.wallet.navigation.walletDetailDestination
 import com.meqlause.fintrack.tab.PlaceholderTabScreen
 
 // DOC-03: app owns the NavHost; onboarding (FR-001) starts when it is needed, otherwise Beranda is the start
@@ -52,7 +54,13 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     }
     composable<HistoryRoute> { PlaceholderTabScreen(mainTab = MainTab.HISTORY) }
     composable<InvestmentRoute> { PlaceholderTabScreen(mainTab = MainTab.INVESTMENT) }
-    walletDestination()
+    walletDestination(onOpenDetail = { navController.navigate(WalletDetailDestination(it.value)) })
+    // FR-017, S-19: Pakai and Transfer are wired to no-ops until the transaction editor (T4.6) is on main
+    walletDetailDestination(
+        onBack = { navController.popBackStack() },
+        onUse = {},
+        onTransfer = {},
+    )
     // DOC-09, S-12: Pengaturan is opened from the Beranda header; its Kategori row leads to S-10 (FR-020)
     settingsDestination(
         onBack = { navController.popBackStack() },

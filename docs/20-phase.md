@@ -370,7 +370,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(wallet): add wallet list and editor [P4, FR-010]`
 
 ### T4.4 — Wallet detail (S-19)
-- [ ] done · Refs: FR-017 · Actions Pakai / Transfer; "Lihat semua (N)" expands in place.
+- [x] done · Refs: FR-017 · Actions Pakai / Transfer; "Lihat semua (N)" expands in place.
 - Commit: `feat(wallet): add wallet detail screen [P4, FR-017]`
 
 ### T4.5 — Categories (S-10)

@@ -1,9 +1,11 @@
 package com.meqlause.fintrack.feature.wallet.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,14 +18,15 @@ import com.meqlause.fintrack.feature.wallet.R
 import com.meqlause.fintrack.feature.wallet.WalletItem
 import com.meqlause.fintrack.feature.wallet.WalletLabels
 
-// FR-014, S-09: one wallet card with its type and its computed balance; tapping it opens the editor
+// FR-014, FR-017, S-09: one wallet card; tapping it opens S-19, the Ubah label opens the editor
 @Composable
 internal fun WalletItemCard(
     item: WalletItem,
-    onClick: () -> Unit,
+    onOpen: () -> Unit,
+    onEdit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    FintrackCard(modifier = modifier, onClick = onClick) {
+    FintrackCard(modifier = modifier, onClick = onOpen) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -41,11 +44,19 @@ internal fun WalletItemCard(
                     color = FintrackTheme.colors.texts.onSurfaceVariant,
                 )
             }
-            Text(
-                text = MoneyFormatter.format(item.balance),
-                style = FintrackTheme.typography.numberMedium,
-                color = FintrackTheme.colors.texts.onSurface,
-            )
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = MoneyFormatter.format(item.balance),
+                    style = FintrackTheme.typography.numberMedium,
+                    color = FintrackTheme.colors.texts.onSurface,
+                )
+                Text(
+                    text = stringResource(R.string.wallet_edit_action),
+                    style = FintrackTheme.typography.labelLarge,
+                    color = FintrackTheme.colors.brands.primary,
+                    modifier = Modifier.clickable(onClick = onEdit).padding(top = FintrackTheme.spacing.small),
+                )
+            }
         }
     }
 }

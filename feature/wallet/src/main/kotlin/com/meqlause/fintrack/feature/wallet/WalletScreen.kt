@@ -99,7 +99,11 @@ private fun WalletList(
         state.sections.forEach { section ->
             item(key = "group-${section.group.name}") { GroupHeading(group = section.group) }
             items(section.items, key = { it.wallet.walletId.value }) { row ->
-                WalletItemCard(item = row, onClick = { callbacks.onEdit(row) })
+                WalletItemCard(
+                    item = row,
+                    onOpen = { callbacks.onOpenDetail(row.wallet.walletId) },
+                    onEdit = { callbacks.onEdit(row) },
+                )
             }
         }
         archivedItems(state = state, callbacks = callbacks)
@@ -117,7 +121,11 @@ private fun LazyListScope.archivedItems(
     }
     if (state.archivedExpanded) {
         items(state.archived, key = { it.wallet.walletId.value }) { row ->
-            WalletItemCard(item = row, onClick = { callbacks.onEdit(row) })
+            WalletItemCard(
+                item = row,
+                onOpen = { callbacks.onOpenDetail(row.wallet.walletId) },
+                onEdit = { callbacks.onEdit(row) },
+            )
         }
     }
 }

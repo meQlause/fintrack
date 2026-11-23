@@ -56,4 +56,16 @@
     <string name="wallet_picker_invest_title">Jenis investasi</string>
     <string name="wallet_picker_statement_title">Tanggal tutup buku</string>
     <string name="wallet_picker_due_title">Tanggal jatuh tempo</string>
+    <string name="wallet_edit_action">Ubah</string>
+
+    <string name="wallet_detail_back">Kembali</string>
+    <string name="wallet_detail_balance_label">Saldo</string>
+    <string name="wallet_detail_use">Pakai</string>
+    <string name="wallet_detail_transfer">Transfer</string>
+    <string name="wallet_detail_recent">Terbaru</string>
+    <string name="wallet_detail_show_all">Lihat semua (%1$d)</string>
+    <string name="wallet_detail_collapse">Ringkas</string>
+    <string name="wallet_detail_untitled">Transaksi</string>
+    <string name="wallet_detail_empty">Belum ada transaksi di dompet ini.</string>
+    <string name="wallet_detail_missing">Dompet tidak ditemukan.</string>
 </resources>
