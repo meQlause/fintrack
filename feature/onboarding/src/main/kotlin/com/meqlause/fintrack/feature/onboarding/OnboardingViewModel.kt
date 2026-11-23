@@ -36,7 +36,7 @@ internal class OnboardingViewModel
         /** S-01: the state the screen renders, built from the page, the wallet form and the saving state. */
         val uiState: StateFlow<OnboardingUiState> =
             combine(page, form, notificationGranted, isSaving, isCompleted) { pageNow, formNow, grant, busy, done ->
-                toUiState(pageNow, formNow, grant, busy, done)
+                if (done) OnboardingUiState.Completed else toPageState(pageNow, formNow, grant, busy)
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), OnboardingUiState.Welcome)
 
         /** S-01, FR-001..FR-004: applies a user action from the screen. */
@@ -94,22 +94,17 @@ internal class OnboardingViewModel
         private companion object {
             const val STOP_TIMEOUT_MS = 5_000L
 
-            fun toUiState(
+            fun toPageState(
                 currentPage: OnboardingPage,
                 currentForm: FirstWalletForm,
                 granted: Boolean,
                 saving: Boolean,
-                done: Boolean,
             ): OnboardingUiState =
-                if (done) {
-                    OnboardingUiState.Completed
-                } else {
-                    when (currentPage) {
-                        OnboardingPage.WELCOME -> OnboardingUiState.Welcome
-                        OnboardingPage.WALLET -> OnboardingUiState.FirstWallet(currentForm)
-                        OnboardingPage.NOTIFICATION -> OnboardingUiState.NotificationAccess(granted)
-                        OnboardingPage.SECURITY -> OnboardingUiState.Security(isSaving = saving)
-                    }
+                when (currentPage) {
+                    OnboardingPage.WELCOME -> OnboardingUiState.Welcome
+                    OnboardingPage.WALLET -> OnboardingUiState.FirstWallet(currentForm)
+                    OnboardingPage.NOTIFICATION -> OnboardingUiState.NotificationAccess(granted)
+                    OnboardingPage.SECURITY -> OnboardingUiState.Security(isSaving = saving)
                 }
         }
     }

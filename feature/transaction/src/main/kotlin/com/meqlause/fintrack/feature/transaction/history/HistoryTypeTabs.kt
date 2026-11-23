@@ -43,7 +43,8 @@ internal fun HistoryTypeTabs(
     ) {
         val tabWidth = maxWidth / types.size
         val indicatorOffset by animateDpAsState(
-            targetValue = tabWidth * types.indexOf(selected).toFloat() + (tabWidth - FintrackTheme.spacing.xxLarge) / 2,
+            targetValue =
+                tabWidth * types.indexOf(selected).toFloat() + (tabWidth - FintrackTheme.sizes.tabIndicatorWidth) / 2,
             animationSpec = tween(durationMillis = motion.durationMillis, easing = motion.easing),
             label = "history-type-indicator",
         )
@@ -77,8 +78,8 @@ internal fun HistoryTypeTabs(
                 Modifier
                     .align(Alignment.BottomStart)
                     .offset(x = indicatorOffset)
-                    .width(FintrackTheme.spacing.xxLarge)
-                    .height(FintrackTheme.spacing.xxSmall)
+                    .width(FintrackTheme.sizes.tabIndicatorWidth)
+                    .height(FintrackTheme.sizes.tabIndicatorHeight)
                     .clip(FintrackTheme.shapes.full)
                     .background(FintrackTheme.colors.texts.onSurface),
         )

@@ -68,8 +68,8 @@ internal class InvestmentViewModel
             val kind = open.kind ?: return
             viewModelScope.launch {
                 val money = KeypadDigits.toMoney(open.invested)
-                val id = createInvestment(open.name, kind, money, clock.instant())
-                if (id == null) {
+                val createdId = createInvestment(open.name, kind, money, clock.instant())
+                if (createdId == null) {
                     draft.update { it?.copy(nameRejected = true) }
                 } else {
                     draft.value = null

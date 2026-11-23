@@ -75,17 +75,27 @@ private fun BudgetBody(
         }
 
         else -> {
-            LazyColumn(
-                modifier = modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-            ) {
-                overall?.let { row ->
-                    item(key = "overall") { BudgetRowCard(row, callbacks) }
-                }
-                items(state.rows, key = { it.target.categoryId?.value ?: 0L }) { row ->
-                    BudgetRowCard(row, callbacks)
-                }
-            }
+            BudgetRows(state = state, callbacks = callbacks, modifier = modifier)
+        }
+    }
+}
+
+// FR-071: the overall line first, then one line per category budget
+@Composable
+private fun BudgetRows(
+    state: BudgetUiState,
+    callbacks: BudgetCallbacks,
+    modifier: Modifier,
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+    ) {
+        state.overall?.let { row ->
+            item(key = "overall") { BudgetRowCard(row, callbacks) }
+        }
+        items(state.rows, key = { it.target.categoryId?.value ?: 0L }) { row ->
+            BudgetRowCard(row, callbacks)
         }
     }
 }

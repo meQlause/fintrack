@@ -32,8 +32,7 @@ fun LockRoute(
     }
     LockScreen(
         state = state,
-        onDigit = viewModel::onDigit,
-        onBackspace = viewModel::onBackspace,
+        keypad = PinKeypadCallbacks(onDigit = viewModel::onDigit, onBackspace = viewModel::onBackspace),
         onBiometric = showPrompt,
         modifier = modifier,
     )

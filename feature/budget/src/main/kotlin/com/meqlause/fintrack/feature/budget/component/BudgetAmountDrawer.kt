@@ -21,16 +21,16 @@ internal fun BudgetAmountDrawer(
 ) {
     val title = editor.target.categoryName ?: stringResource(R.string.budget_overall)
     val amount = Money(editor.digits.toLongOrNull() ?: 0L)
-    PickerDrawer(title = title, onClose = callbacks.onDismissEditor) {
+    PickerDrawer(title = title, onClose = callbacks.editor.onDismissEditor) {
         Text(
             text = MoneyFormatter.format(amount),
             style = FintrackTheme.typography.titleMedium,
             color = FintrackTheme.colors.texts.onSurface,
         )
-        NumericKeypad(onDigit = callbacks.onDigit, onBackspace = callbacks.onBackspace)
+        NumericKeypad(onDigit = callbacks.editor.onDigit, onBackspace = callbacks.editor.onBackspace)
         FintrackButton(
             text = stringResource(R.string.budget_save),
-            onClick = callbacks.onSave,
+            onClick = callbacks.editor.onSave,
             enabled = amount.isTransactionAmount(),
         )
     }

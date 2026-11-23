@@ -17,6 +17,9 @@ import java.time.Instant
 // S-10: previews of every state, light and dark
 private val previewAudit = Audit(createdAt = Instant.EPOCH, updatedAt = Instant.EPOCH)
 
+private const val ARCHIVED_ID = 2L
+private const val OFFER_ID = 3L
+
 private fun previewCategory(
     itemId: Long,
     name: String,
@@ -51,9 +54,13 @@ private fun SuccessSample() {
     PreviewBody(
         CategoryUiState.Success(
             kind = CategoryKind.EXPENSE,
-            categories = listOf(previewCategory(1, "Makanan"), previewCategory(2, "Transportasi", archived = true)),
+            categories =
+                listOf(
+                    previewCategory(1L, "Makanan"),
+                    previewCategory(ARCHIVED_ID, "Transportasi", archived = true),
+                ),
             editor = null,
-            archiveOffer = previewCategory(3, "Tagihan"),
+            archiveOffer = previewCategory(OFFER_ID, "Tagihan"),
         ),
     )
 }

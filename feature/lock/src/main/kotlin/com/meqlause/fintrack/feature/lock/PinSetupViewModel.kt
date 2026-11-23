@@ -118,8 +118,7 @@ internal class PinSetupViewModel
             remainingSeconds: Long,
         ): PinSetupUiState =
             PinSetupUiState(
-                mode = mode,
-                step = step,
+                prompt = PinSetupPrompt(mode = mode, step = step),
                 digits = digits,
                 notice = notice,
                 remainingSeconds = remainingSeconds,

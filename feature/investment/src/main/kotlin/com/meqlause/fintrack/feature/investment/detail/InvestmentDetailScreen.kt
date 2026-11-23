@@ -25,6 +25,7 @@ import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.domain.investment.InvestmentAccount
 import com.meqlause.fintrack.core.domain.investment.InvestmentDetail
+import com.meqlause.fintrack.core.domain.investment.InvestmentValuation
 import com.meqlause.fintrack.core.ui.format.AmountSign
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.investment.InvestmentDates
@@ -43,7 +44,6 @@ internal fun InvestmentDetailScreen(
     callbacks: InvestmentDetailCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    val detail = state.detail
     Column(
         modifier =
             modifier
@@ -54,7 +54,7 @@ internal fun InvestmentDetailScreen(
     ) {
         FintrackTabHeader(
             title =
-                detail
+                state.detail
                     ?.account
                     ?.wallet
                     ?.profile
@@ -62,20 +62,25 @@ internal fun InvestmentDetailScreen(
                     .orEmpty(),
             leading = { BackButton(onBack = callbacks.onBack) },
         )
-        when {
-            !state.loaded -> Unit
-            detail == null -> MissingBody(modifier = Modifier.weight(1f))
-            else -> DetailList(detail = detail, callbacks = callbacks, modifier = Modifier.weight(1f))
-        }
+        DetailContent(state = state, callbacks = callbacks, modifier = Modifier.weight(1f))
     }
     state.valuation?.let { digits ->
-        ValuationDrawer(
-            digits = digits,
-            onDigit = callbacks.onDigit,
-            onBackspace = callbacks.onBackspace,
-            onSave = callbacks.onSaveValuation,
-            onClose = callbacks.onDismissValuation,
-        )
+        ValuationDrawer(digits = digits, callbacks = callbacks.valuation)
+    }
+}
+
+// S-20: nothing while loading, the missing state when the account is gone, otherwise the detail list
+@Composable
+private fun DetailContent(
+    state: InvestmentDetailUiState,
+    callbacks: InvestmentDetailCallbacks,
+    modifier: Modifier,
+) {
+    val detail = state.detail
+    when {
+        !state.loaded -> Unit
+        detail == null -> MissingBody(modifier = modifier)
+        else -> DetailList(detail = detail, callbacks = callbacks, modifier = modifier)
     }
 }
 
@@ -141,38 +146,50 @@ private fun ValueSummary(
             style = typography.labelMedium,
             color = colors.texts.onSurfaceVariant,
         )
-        Row(modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium)) {
-            StatColumn(
-                label = stringResource(R.string.investment_modal_label),
-                value = MoneyFormatter.format(valuation.modal),
-                modifier = Modifier.weight(1f),
-            )
-            StatColumn(
-                label = stringResource(R.string.investment_gain_label),
-                value = MoneyFormatter.formatSigned(valuation.gain, AmountSign.PLUS),
-                modifier = Modifier.weight(1f),
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium),
-            horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-        ) {
-            FintrackButton(
-                text = stringResource(R.string.investment_action_update),
-                onClick = callbacks.onOpenValuation,
-                modifier = Modifier.weight(1f),
-            )
-            FintrackButton(
-                text = stringResource(R.string.investment_action_add),
-                onClick = callbacks.onTransfer,
-                modifier = Modifier.weight(1f),
-            )
-            FintrackButton(
-                text = stringResource(R.string.investment_action_withdraw),
-                onClick = callbacks.onTransfer,
-                modifier = Modifier.weight(1f),
-            )
-        }
+        StatsRow(valuation = valuation)
+        ActionRow(callbacks = callbacks)
+    }
+}
+
+// S-20: the modal and the gain side by side
+@Composable
+private fun StatsRow(valuation: InvestmentValuation) {
+    Row(modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium)) {
+        StatColumn(
+            label = stringResource(R.string.investment_modal_label),
+            value = MoneyFormatter.format(valuation.modal),
+            modifier = Modifier.weight(1f),
+        )
+        StatColumn(
+            label = stringResource(R.string.investment_gain_label),
+            value = MoneyFormatter.formatSigned(valuation.gain, AmountSign.PLUS),
+            modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+// S-20: the update, add and withdraw actions
+@Composable
+private fun ActionRow(callbacks: InvestmentDetailCallbacks) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium),
+        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+    ) {
+        FintrackButton(
+            text = stringResource(R.string.investment_action_update),
+            onClick = callbacks.onOpenValuation,
+            modifier = Modifier.weight(1f),
+        )
+        FintrackButton(
+            text = stringResource(R.string.investment_action_add),
+            onClick = callbacks.onTransfer,
+            modifier = Modifier.weight(1f),
+        )
+        FintrackButton(
+            text = stringResource(R.string.investment_action_withdraw),
+            onClick = callbacks.onTransfer,
+            modifier = Modifier.weight(1f),
+        )
     }
 }
 

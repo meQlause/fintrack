@@ -24,7 +24,7 @@ internal data class CategoryEditor(
             )
 
         // FR-021: a draft that starts from the stored name, icon and colour of [category]
-        fun of(category: Category): CategoryEditor =
+        fun draftOf(category: Category): CategoryEditor =
             CategoryEditor(
                 categoryId = category.categoryId,
                 kind = category.profile.kind,

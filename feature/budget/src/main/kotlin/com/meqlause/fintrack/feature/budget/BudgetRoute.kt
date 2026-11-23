@@ -23,10 +23,13 @@ public fun BudgetRoute(
                 onAdd = viewModel::startAdd,
                 onEdit = viewModel::startEdit,
                 onPick = viewModel::pick,
-                onDigit = viewModel::typeDigit,
-                onBackspace = viewModel::backspace,
-                onSave = viewModel::save,
-                onDismissEditor = viewModel::dismissEditor,
+                editor =
+                    BudgetEditorCallbacks(
+                        onDigit = viewModel::typeDigit,
+                        onBackspace = viewModel::backspace,
+                        onSave = viewModel::save,
+                        onDismissEditor = viewModel::dismissEditor,
+                    ),
             ),
     )
 }

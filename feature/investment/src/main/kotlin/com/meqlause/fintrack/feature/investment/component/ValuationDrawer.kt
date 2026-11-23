@@ -11,6 +11,7 @@ import com.meqlause.fintrack.core.designsystem.component.NumericKeypad
 import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
+import com.meqlause.fintrack.feature.investment.AmountSheetCallbacks
 import com.meqlause.fintrack.feature.investment.KeypadDigits
 import com.meqlause.fintrack.feature.investment.R
 
@@ -18,13 +19,10 @@ import com.meqlause.fintrack.feature.investment.R
 @Composable
 internal fun ValuationDrawer(
     digits: String,
-    onDigit: (String) -> Unit,
-    onBackspace: () -> Unit,
-    onSave: () -> Unit,
-    onClose: () -> Unit,
+    callbacks: AmountSheetCallbacks,
 ) {
     val typography = FintrackTheme.typography
-    PickerDrawer(title = stringResource(R.string.investment_value_title), onClose = onClose) {
+    PickerDrawer(title = stringResource(R.string.investment_value_title), onClose = callbacks.onDismiss) {
         Column {
             Text(
                 text = stringResource(R.string.investment_value_hint),
@@ -36,10 +34,10 @@ internal fun ValuationDrawer(
                 style = typography.numberLarge,
                 color = FintrackTheme.colors.texts.onSurface,
             )
-            NumericKeypad(onDigit = onDigit, onBackspace = onBackspace)
+            NumericKeypad(onDigit = callbacks.onDigit, onBackspace = callbacks.onBackspace)
             FintrackButton(
                 text = stringResource(R.string.investment_save),
-                onClick = onSave,
+                onClick = callbacks.onSave,
                 modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
             )
         }

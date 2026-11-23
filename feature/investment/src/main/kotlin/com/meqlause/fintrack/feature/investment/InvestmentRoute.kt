@@ -24,10 +24,13 @@ public fun InvestmentRoute(
                 onNameChange = viewModel::changeName,
                 onOpenKindPicker = viewModel::openKindPicker,
                 onPickKind = viewModel::pickKind,
-                onDigit = viewModel::typeDigit,
-                onBackspace = viewModel::backspace,
-                onSave = viewModel::save,
-                onDismiss = viewModel::dismissDraft,
+                sheet =
+                    AmountSheetCallbacks(
+                        onDigit = viewModel::typeDigit,
+                        onBackspace = viewModel::backspace,
+                        onSave = viewModel::save,
+                        onDismiss = viewModel::dismissDraft,
+                    ),
             ),
         modifier = modifier,
     )

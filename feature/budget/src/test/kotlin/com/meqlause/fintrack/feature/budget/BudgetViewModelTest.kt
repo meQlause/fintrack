@@ -60,18 +60,18 @@ class BudgetViewModelTest {
     fun `given no budget when the screen opens then it is loaded and has no overall card (FR-074)`() =
         runTest(dispatcher) {
             val viewModel = newViewModel()
-            val job = launch { viewModel.state.collect {} }
+            val collector = launch { viewModel.state.collect {} }
             advanceUntilIdle()
             assertThat(viewModel.state.value.loaded).isTrue()
             assertThat(viewModel.state.value.overall).isNull()
-            job.cancel()
+            collector.cancel()
         }
 
     @Test
     fun `given the keypad when 500000 is typed and saved then the overall limit is stored (FR-070)`() =
         runTest(dispatcher) {
             val viewModel = newViewModel()
-            val job = launch { viewModel.state.collect {} }
+            val collector = launch { viewModel.state.collect {} }
             viewModel.startAdd()
             viewModel.pick(BudgetTarget(categoryId = null, categoryName = null))
             listOf("5", "0", "0", "0", "0", "0").forEach(viewModel::typeDigit)
@@ -84,20 +84,20 @@ class BudgetViewModelTest {
                     ?.limitAmount,
             ).isEqualTo(Money(500_000L))
             assertThat(viewModel.state.value.editor).isNull()
-            job.cancel()
+            collector.cancel()
         }
 
     @Test
     fun `given a zero amount when saved then nothing is stored and the keypad stays open (BR-001)`() =
         runTest(dispatcher) {
             val viewModel = newViewModel()
-            val job = launch { viewModel.state.collect {} }
+            val collector = launch { viewModel.state.collect {} }
             viewModel.pick(BudgetTarget(CategoryId(CATEGORY_ID), "Makanan"))
             viewModel.save()
             advanceUntilIdle()
             assertThat(budgets.observeAll().first()).isEmpty()
             assertThat(viewModel.state.value.editor).isNotNull()
-            job.cancel()
+            collector.cancel()
         }
 
     private companion object {

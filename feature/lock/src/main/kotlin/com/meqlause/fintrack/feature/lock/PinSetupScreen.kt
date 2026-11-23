@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.meqlause.fintrack.core.designsystem.component.NumericKeypad
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.lock.navigation.PinSetupMode
 
@@ -25,8 +24,7 @@ import com.meqlause.fintrack.feature.lock.navigation.PinSetupMode
 @Composable
 internal fun PinSetupScreen(
     state: PinSetupUiState,
-    onDigit: (String) -> Unit,
-    onBackspace: () -> Unit,
+    keypad: PinKeypadCallbacks,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -41,12 +39,7 @@ internal fun PinSetupScreen(
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         SetupPrompt(state = state, dotOffset = shake.value.dp, onCancel = onCancel)
-        NumericKeypad(
-            onDigit = onDigit,
-            onBackspace = onBackspace,
-            showTripleZero = false,
-            modifier = Modifier.fillMaxWidth().padding(bottom = FintrackTheme.spacing.xxLarge),
-        )
+        PinKeypad(callbacks = keypad)
     }
 }
 
@@ -66,7 +59,7 @@ private fun SetupPrompt(
         )
         Spacer(modifier = Modifier.height(FintrackTheme.spacing.xxxLarge))
         Text(
-            text = stepTitle(state.mode, state.step),
+            text = stepTitle(state.prompt.mode, state.prompt.step),
             style = FintrackTheme.typography.headlineSmall,
             color = FintrackTheme.colors.texts.onSurface,
         )
@@ -74,7 +67,7 @@ private fun SetupPrompt(
         PinDots(filled = state.digits.length, modifier = Modifier.offset(x = dotOffset))
         Spacer(modifier = Modifier.height(FintrackTheme.spacing.medium))
         PinNoticeText(notice = state.notice, remainingSeconds = state.remainingSeconds)
-        if (state.step == PinStep.NEW) {
+        if (state.prompt.step == PinStep.NEW) {
             Spacer(modifier = Modifier.height(FintrackTheme.spacing.medium))
             Text(
                 text = stringResource(R.string.pin_setup_warning),

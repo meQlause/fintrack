@@ -19,8 +19,7 @@ internal fun PinSetupRoute(
     }
     PinSetupScreen(
         state = state,
-        onDigit = viewModel::onDigit,
-        onBackspace = viewModel::onBackspace,
+        keypad = PinKeypadCallbacks(onDigit = viewModel::onDigit, onBackspace = viewModel::onBackspace),
         onCancel = onCancel,
     )
 }

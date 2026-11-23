@@ -20,7 +20,6 @@ import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
 import com.meqlause.fintrack.core.designsystem.component.SegmentedControl
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.CategoryKind
-import com.meqlause.fintrack.feature.category.R
 import com.meqlause.fintrack.feature.category.component.ArchiveOfferCard
 import com.meqlause.fintrack.feature.category.component.CategoryEditorSheet
 import com.meqlause.fintrack.feature.category.component.CategoryListItem
@@ -87,23 +86,33 @@ private fun CategoryBody(
         }
 
         is CategoryUiState.Success -> {
-            LazyColumn(
-                modifier = modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-            ) {
-                state.archiveOffer?.let { offer ->
-                    item(key = "archive-offer") {
-                        ArchiveOfferCard(
-                            categoryName = offer.profile.name,
-                            onConfirm = callbacks.onArchiveOfferConfirm,
-                            onDismiss = callbacks.onArchiveOfferDismiss,
-                        )
-                    }
-                }
-                items(state.categories, key = { it.categoryId.value }) { category ->
-                    CategoryListItem(category = category, callbacks = callbacks)
-                }
+            CategoryList(state = state, callbacks = callbacks, modifier = modifier)
+        }
+    }
+}
+
+// S-10: the archive offer first, then one row per category of the selected kind
+@Composable
+private fun CategoryList(
+    state: CategoryUiState.Success,
+    callbacks: CategoryCallbacks,
+    modifier: Modifier,
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+    ) {
+        state.archiveOffer?.let { offer ->
+            item(key = "archive-offer") {
+                ArchiveOfferCard(
+                    categoryName = offer.profile.name,
+                    onConfirm = callbacks.archiveOffer.onConfirm,
+                    onDismiss = callbacks.archiveOffer.onDismiss,
+                )
             }
+        }
+        items(state.categories, key = { it.categoryId.value }) { category ->
+            CategoryListItem(category = category, callbacks = callbacks)
         }
     }
 }

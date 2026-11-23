@@ -6,8 +6,5 @@ internal data class BudgetCallbacks(
     val onAdd: () -> Unit = {},
     val onEdit: (BudgetRow) -> Unit = {},
     val onPick: (BudgetTarget) -> Unit = {},
-    val onDigit: (String) -> Unit = {},
-    val onBackspace: () -> Unit = {},
-    val onSave: () -> Unit = {},
-    val onDismissEditor: () -> Unit = {},
+    val editor: BudgetEditorCallbacks = BudgetEditorCallbacks(),
 )

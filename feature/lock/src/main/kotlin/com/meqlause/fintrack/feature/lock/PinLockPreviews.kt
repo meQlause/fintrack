@@ -11,8 +11,7 @@ internal fun LockPreviewScreen(darkTheme: Boolean) {
     FintrackTheme(darkTheme = darkTheme) {
         LockScreen(
             state = LockUiState(digits = "1234", notice = PinNotice.WRONG, shakeCount = 0),
-            onDigit = {},
-            onBackspace = {},
+            keypad = PinKeypadCallbacks(),
             onBiometric = {},
         )
     }
@@ -23,9 +22,8 @@ internal fun LockPreviewScreen(darkTheme: Boolean) {
 internal fun PinSetupPreviewScreen(darkTheme: Boolean) {
     FintrackTheme(darkTheme = darkTheme) {
         PinSetupScreen(
-            state = PinSetupUiState(mode = PinSetupMode.SET, step = PinStep.NEW, digits = "12"),
-            onDigit = {},
-            onBackspace = {},
+            state = PinSetupUiState(prompt = PinSetupPrompt(PinSetupMode.SET, PinStep.NEW), digits = "12"),
+            keypad = PinKeypadCallbacks(),
             onCancel = {},
         )
     }
@@ -33,12 +31,12 @@ internal fun PinSetupPreviewScreen(darkTheme: Boolean) {
 
 @Preview(name = "Lock light", showBackground = true)
 @Composable
-private fun LockLightPreview() {
+internal fun LockLightPreview() {
     LockPreviewScreen(darkTheme = false)
 }
 
 @Preview(name = "Lock dark", showBackground = true)
 @Composable
-private fun LockDarkPreview() {
+internal fun LockDarkPreview() {
     LockPreviewScreen(darkTheme = true)
 }

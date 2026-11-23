@@ -1,7 +1,6 @@
 package com.meqlause.fintrack.feature.category.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -26,45 +25,52 @@ internal fun CategoryEditorSheet(
 ) {
     FintrackBottomSheet(modifier = modifier) {
         Text(
-            text =
-                stringResource(
-                    if (draft.categoryId ==
-                        null
-                    ) {
-                        R.string.category_editor_new
-                    } else {
-                        R.string.category_editor_edit
-                    },
-                ),
+            text = stringResource(titleRes(draft)),
             style = FintrackTheme.typography.titleMedium,
             color = FintrackTheme.colors.texts.onSurface,
         )
-        TextField(
-            value = draft.name,
-            onValueChange = callbacks.onNameChange,
-            label = { Text(text = stringResource(R.string.category_editor_name)) },
-            singleLine = true,
-        )
-        Text(text = stringResource(R.string.category_editor_icon), style = FintrackTheme.typography.labelLarge)
-        ChoiceRow(
-            keys = CategoryAppearance.iconKeys,
-            selected = draft.iconKey,
-            labelRes = R.string.category_icon_option,
-            onSelect = callbacks.onIconChange,
-        )
-        Text(text = stringResource(R.string.category_editor_color), style = FintrackTheme.typography.labelLarge)
-        ChoiceRow(
-            keys = CategoryAppearance.colorKeys,
-            selected = draft.colorKey,
-            labelRes = R.string.category_color_option,
-            onSelect = callbacks.onColorChange,
-        )
+        CategoryEditorFields(draft = draft, callbacks = callbacks)
         Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-            FintrackButton(text = stringResource(R.string.category_editor_save), onClick = callbacks.onSave)
-            FintrackButton(text = stringResource(R.string.category_editor_cancel), onClick = callbacks.onDismissEditor)
+            FintrackButton(text = stringResource(R.string.category_editor_save), onClick = callbacks.editor.onSave)
+            FintrackButton(
+                text = stringResource(R.string.category_editor_cancel),
+                onClick = callbacks.editor.onDismissEditor,
+            )
         }
     }
 }
+
+// FR-021: the name field and the icon and colour choices of the draft
+@Composable
+private fun CategoryEditorFields(
+    draft: CategoryEditor,
+    callbacks: CategoryCallbacks,
+) {
+    TextField(
+        value = draft.name,
+        onValueChange = callbacks.editor.onNameChange,
+        label = { Text(text = stringResource(R.string.category_editor_name)) },
+        singleLine = true,
+    )
+    Text(text = stringResource(R.string.category_editor_icon), style = FintrackTheme.typography.labelLarge)
+    ChoiceRow(
+        keys = CategoryAppearance.iconKeys,
+        selected = draft.iconKey,
+        labelRes = R.string.category_icon_option,
+        onSelect = callbacks.editor.onIconChange,
+    )
+    Text(text = stringResource(R.string.category_editor_color), style = FintrackTheme.typography.labelLarge)
+    ChoiceRow(
+        keys = CategoryAppearance.colorKeys,
+        selected = draft.colorKey,
+        labelRes = R.string.category_color_option,
+        onSelect = callbacks.editor.onColorChange,
+    )
+}
+
+// FR-021: the heading says whether the draft creates a new category or edits a stored one
+private fun titleRes(draft: CategoryEditor): Int =
+    if (draft.categoryId == null) R.string.category_editor_new else R.string.category_editor_edit
 
 // FR-021: a wrapping-free row of chips; each chip is labelled by its position in the catalogue
 @Composable

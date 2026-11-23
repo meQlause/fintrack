@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.meqlause.fintrack.feature.investment.AmountSheetCallbacks
 
 // DOC-03, FR-173: stateful entry of S-20; the only composable that touches InvestmentDetailViewModel
 @Composable
@@ -21,11 +22,14 @@ public fun InvestmentDetailRoute(
             InvestmentDetailCallbacks(
                 onBack = onBack,
                 onOpenValuation = viewModel::openValuation,
-                onDigit = viewModel::typeDigit,
-                onBackspace = viewModel::backspace,
-                onSaveValuation = viewModel::save,
-                onDismissValuation = viewModel::dismissValuation,
                 onTransfer = onTransfer,
+                valuation =
+                    AmountSheetCallbacks(
+                        onDigit = viewModel::typeDigit,
+                        onBackspace = viewModel::backspace,
+                        onSave = viewModel::save,
+                        onDismiss = viewModel::dismissValuation,
+                    ),
             ),
         modifier = modifier,
     )
