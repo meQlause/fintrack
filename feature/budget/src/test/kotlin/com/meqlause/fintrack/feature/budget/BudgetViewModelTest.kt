@@ -1,6 +1,7 @@
 package com.meqlause.fintrack.feature.budget
 
 import assertk.assertThat
+import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
@@ -8,7 +9,13 @@ import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import com.meqlause.fintrack.core.domain.usecase.ObserveBudgetStatusUseCase
 import com.meqlause.fintrack.core.domain.usecase.SetBudgetLimitUseCase
+import com.meqlause.fintrack.core.model.Appearance
+import com.meqlause.fintrack.core.model.Audit
+import com.meqlause.fintrack.core.model.Category
 import com.meqlause.fintrack.core.model.CategoryId
+import com.meqlause.fintrack.core.model.CategoryKind
+import com.meqlause.fintrack.core.model.CategoryProfile
+import com.meqlause.fintrack.core.model.CategoryState
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.testing.repository.FakeBudgetRepository
 import com.meqlause.fintrack.core.testing.repository.FakeCategoryRepository
@@ -100,7 +107,102 @@ class BudgetViewModelTest {
             collector.cancel()
         }
 
+    /** FR-070: editing an existing budget opens the keypad with its limit already typed. */
+    @Test
+    fun `given a stored limit when it is edited then the keypad starts with its digits (FR-070)`() =
+        runTest(dispatcher) {
+            val viewModel = newViewModel()
+            val collector = launch { viewModel.state.collect {} }
+            viewModel.pick(BudgetTarget(categoryId = null, categoryName = null))
+            "250000".forEach { viewModel.typeDigit(it.toString()) }
+            viewModel.save()
+            advanceUntilIdle()
+            val overall = requireNotNull(viewModel.state.value.overall)
+            viewModel.startEdit(overall)
+            advanceUntilIdle()
+            val editor = viewModel.state.value.editor as BudgetEditor.Amount
+            assertThat(editor.digits).isEqualTo("250000")
+            collector.cancel()
+        }
+
+    /** FR-070: backspace erases the last digit, and digits stop at the twelve of BR-001. */
+    @Test
+    fun `given the keypad when digits are erased and overflowed then the amount stays within bounds (BR-001)`() =
+        runTest(dispatcher) {
+            val viewModel = newViewModel()
+            val collector = launch { viewModel.state.collect {} }
+            viewModel.pick(BudgetTarget(categoryId = null, categoryName = null))
+            "1234".forEach { viewModel.typeDigit(it.toString()) }
+            viewModel.backspace()
+            advanceUntilIdle()
+            assertThat((viewModel.state.value.editor as BudgetEditor.Amount).digits).isEqualTo("123")
+            repeat(MORE_THAN_MAX) { viewModel.typeDigit("9") }
+            advanceUntilIdle()
+            assertThat((viewModel.state.value.editor as BudgetEditor.Amount).digits.length).isEqualTo(MAX_DIGITS)
+            collector.cancel()
+        }
+
+    /** FR-070: digits, backspace and save do nothing before an amount keypad is open. */
+    @Test
+    fun `given no amount keypad when keys are pressed then nothing changes and dismiss closes the picker (FR-070)`() =
+        runTest(dispatcher) {
+            val viewModel = newViewModel()
+            val collector = launch { viewModel.state.collect {} }
+            viewModel.typeDigit("5")
+            viewModel.backspace()
+            viewModel.save()
+            advanceUntilIdle()
+            assertThat(viewModel.state.value.editor).isNull()
+            viewModel.startAdd()
+            viewModel.typeDigit("5")
+            viewModel.backspace()
+            advanceUntilIdle()
+            assertThat(viewModel.state.value.editor).isEqualTo(BudgetEditor.Pick)
+            viewModel.dismissEditor()
+            advanceUntilIdle()
+            assertThat(viewModel.state.value.editor).isNull()
+            collector.cancel()
+        }
+
+    /** FR-072: a category limit is listed by the category name; the picker offers live expense categories only. */
+    @Test
+    fun `given categories when a limit is stored then rows carry names and the picker hides others (FR-072)`() =
+        runTest(dispatcher) {
+            val food = categories.insert(category("Makanan", CategoryKind.EXPENSE))
+            categories.insert(category("Gaji", CategoryKind.INCOME))
+            categories.insert(category("Lama", CategoryKind.EXPENSE, archived = true))
+            val viewModel = newViewModel()
+            val collector = launch { viewModel.state.collect {} }
+            viewModel.pick(BudgetTarget(food, "Makanan"))
+            "100000".forEach { viewModel.typeDigit(it.toString()) }
+            viewModel.save()
+            advanceUntilIdle()
+            val state = viewModel.state.value
+            assertThat(state.rows).hasSize(1)
+            assertThat(
+                state.rows
+                    .single()
+                    .target.categoryName,
+            ).isEqualTo("Makanan")
+            assertThat(state.categories).hasSize(1)
+            collector.cancel()
+        }
+
+    private fun category(
+        name: String,
+        kind: CategoryKind,
+        archived: Boolean = false,
+    ): Category =
+        Category(
+            categoryId = CategoryId(0L),
+            profile = CategoryProfile(name, kind, Appearance("food", "orange"), sortOrder = 0),
+            state = CategoryState(isDefault = false, isArchived = archived),
+            audit = Audit(Instant.EPOCH, Instant.EPOCH),
+        )
+
     private companion object {
         const val CATEGORY_ID = 10L
+        const val MAX_DIGITS = 12
+        const val MORE_THAN_MAX = 20
     }
 }
