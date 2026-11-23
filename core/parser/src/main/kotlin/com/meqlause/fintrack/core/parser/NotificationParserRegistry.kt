@@ -1,5 +1,7 @@
 package com.meqlause.fintrack.core.parser
 
+import com.meqlause.fintrack.core.model.RawNotification
+
 /** FR-083, DOC-07: routes a notification to the parsers registered for its package, in registration order. */
 public class NotificationParserRegistry(
     private val parsers: List<NotificationParser>,

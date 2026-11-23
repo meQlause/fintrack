@@ -1,5 +1,7 @@
 package com.meqlause.fintrack.core.parser
 
+import com.meqlause.fintrack.core.model.ParsedTransaction
+
 /** FR-083, FR-085, DOC-07: the outcome of parsing one notification. */
 public sealed interface ParseResult {
     /** FR-083: the notification describes a transaction. */

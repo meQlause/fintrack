@@ -1,4 +1,4 @@
-package com.meqlause.fintrack.core.parser
+package com.meqlause.fintrack.core.model
 
 import java.time.Instant
 

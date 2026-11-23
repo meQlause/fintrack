@@ -1,7 +1,7 @@
 package com.meqlause.fintrack.core.domain.detection
 
-import com.meqlause.fintrack.core.parser.ParsedTransaction
-import com.meqlause.fintrack.core.parser.RawNotification
+import com.meqlause.fintrack.core.model.ParsedTransaction
+import com.meqlause.fintrack.core.model.RawNotification
 import java.security.MessageDigest
 
 /** FR-086, DOC-07: the dedup key of a detected payment, so a reposted notification yields the same key. */

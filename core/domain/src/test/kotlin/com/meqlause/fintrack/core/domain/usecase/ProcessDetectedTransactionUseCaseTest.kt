@@ -6,7 +6,6 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.isNull
 import com.meqlause.fintrack.core.domain.detection.DetectedItemFactory
 import com.meqlause.fintrack.core.domain.detection.ProcessNotificationResult
-import com.meqlause.fintrack.core.domain.detection.StubNotificationParser
 import com.meqlause.fintrack.core.model.Audit
 import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.InboxItem
@@ -17,11 +16,9 @@ import com.meqlause.fintrack.core.model.MerchantRuleId
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.MoneyDirection
 import com.meqlause.fintrack.core.model.MonitoredApp
+import com.meqlause.fintrack.core.model.ParsedTransaction
+import com.meqlause.fintrack.core.model.RawNotification
 import com.meqlause.fintrack.core.model.WalletId
-import com.meqlause.fintrack.core.parser.IgnoreReason
-import com.meqlause.fintrack.core.parser.NotificationParserRegistry
-import com.meqlause.fintrack.core.parser.ParseResult
-import com.meqlause.fintrack.core.parser.ParsedTransaction
 import com.meqlause.fintrack.core.testing.repository.FakeInboxRepository
 import com.meqlause.fintrack.core.testing.repository.FakeMerchantRuleRepository
 import com.meqlause.fintrack.core.testing.repository.FakeMonitoredAppRepository
@@ -32,7 +29,7 @@ import org.junit.jupiter.api.Test
 import java.time.Instant
 
 // FR-084, FR-086, FR-088, FR-091: detected payments are stored as PENDING, deduplicated and paired
-class ProcessNotificationUseCaseTest {
+class ProcessDetectedTransactionUseCaseTest {
     private val start: Instant = Instant.parse("2026-11-23T10:00:00Z")
     private val clock = FakeClock(start)
     private val inbox = FakeInboxRepository()
@@ -44,10 +41,10 @@ class ProcessNotificationUseCaseTest {
     fun `given a stored payment when the same notification is reposted then it is discarded (FR-086)`() =
         runBlocking {
             registerApps()
-            val useCase = useCase(debitParser(merchant = "INDOMARET KEMANG 12"))
+            val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
 
-            useCase(BCA, "Pembayaran", "Pembayaran Rp25.000 di INDOMARET KEMANG 12", start)
-            val repost = useCase(BCA, "Pembayaran", "Pembayaran Rp25.000 di INDOMARET KEMANG 12", start)
+            useCase(received(BCA, "Pembayaran Rp25.000 di INDOMARET KEMANG 12"), payment(DEBIT_MERCHANT))
+            val repost = useCase(received(BCA, "Pembayaran Rp25.000 di INDOMARET KEMANG 12"), payment(DEBIT_MERCHANT))
 
             assertThat(repost).isEqualTo(ProcessNotificationResult.Duplicate)
             assertThat(inbox.observeAll().first().size).isEqualTo(1)
@@ -57,26 +54,26 @@ class ProcessNotificationUseCaseTest {
     fun `given a detected payment then it is stored as PENDING with the app default wallet (FR-084, FR-082)`() =
         runBlocking {
             registerApps()
-            val useCase = useCase(debitParser(merchant = "INDOMARET KEMANG 12"))
+            val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
 
-            val result = useCase(BCA, "Pembayaran", "Pembayaran Rp25.000 di INDOMARET KEMANG 12", start)
+            val result = useCase(received(BCA, "Pembayaran"), payment(DEBIT_MERCHANT))
 
             assertThat(result).isInstanceOf(ProcessNotificationResult.Stored::class)
             val item = inbox.observeAll().first().single()
             assertThat(item.resolution.status).isEqualTo(InboxStatus.PENDING)
             assertThat(item.suggestion.suggestedWalletId).isEqualTo(bcaDefaultWallet)
             assertThat(item.suggestion.suggestedCategoryId).isNull()
-            assertThat(item.parsed.merchant).isEqualTo("INDOMARET KEMANG 12")
+            assertThat(item.parsed.merchant).isEqualTo(DEBIT_MERCHANT)
         }
 
     @Test
     fun `given a remembered merchant then its category and wallet are suggested (FR-088)`() =
         runBlocking {
             registerApps()
-            rules.insert(rule(key = "indomaret kemang", category = CategoryId(3), wallet = WalletId(9)))
-            val useCase = useCase(debitParser(merchant = "INDOMARET KEMANG 12"))
+            rules.insert(rule(key = "indomaret kemang 12", category = CategoryId(3), wallet = WalletId(9)))
+            val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
 
-            useCase(BCA, "Pembayaran", "Pembayaran Rp25.000 di INDOMARET KEMANG 12", start)
+            useCase(received(BCA, "Pembayaran"), payment(DEBIT_MERCHANT))
 
             val item = inbox.observeAll().first().single()
             assertThat(item.suggestion.suggestedCategoryId).isEqualTo(CategoryId(3))
@@ -87,9 +84,13 @@ class ProcessNotificationUseCaseTest {
     fun `given a debit and a credit of one amount from two apps within 10 minutes then they are paired (FR-091)`() =
         runBlocking {
             registerApps()
-            val useCase = useCase(debitParser(merchant = "GOPAY TOPUP"), creditParser())
-            val first = useCase(BCA, "Transfer", "Transfer ke GoPay Rp100.000", start)
-            val second = useCase(GOPAY, "Transfer", "Transfer dari BCA Rp100.000", start.plusSeconds(300))
+            val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
+            val first = useCase(received(BCA, "Transfer ke GoPay"), payment("GOPAY TOPUP"))
+            val second =
+                useCase(
+                    received(GOPAY, "Transfer dari BCA", start.plusSeconds(300)),
+                    payment("BCA", MoneyDirection.CREDIT, start.plusSeconds(300)),
+                )
 
             val firstId = (first as ProcessNotificationResult.Stored).inboxItemId
             val stored = second as ProcessNotificationResult.Stored
@@ -102,32 +103,24 @@ class ProcessNotificationUseCaseTest {
     fun `given one amount more than 10 minutes apart then no pair is suggested (FR-091)`() =
         runBlocking {
             registerApps()
-            val useCase = useCase(debitParser(merchant = "GOPAY TOPUP"), creditParser())
-            useCase(BCA, "Transfer", "Transfer ke GoPay Rp100.000", start)
-            val later = useCase(GOPAY, "Transfer", "Transfer dari BCA Rp100.000", start.plusSeconds(660))
+            val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
+            useCase(received(BCA, "Transfer ke GoPay"), payment("GOPAY TOPUP"))
+            val later =
+                useCase(
+                    received(GOPAY, "Transfer dari BCA", start.plusSeconds(660)),
+                    payment("BCA", MoneyDirection.CREDIT, start.plusSeconds(660)),
+                )
 
             assertThat((later as ProcessNotificationResult.Stored).pairedWith).isNull()
         }
 
     @Test
-    fun `given an ignored notification then nothing is stored (FR-085)`() =
+    fun `given a notification from an app that is not monitored then nothing is stored (FR-090)`() =
         runBlocking {
             registerApps()
-            val useCase = useCase(ignoringParser())
+            val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
 
-            val result = useCase(BCA, "OTP", "Kode OTP Anda 123456", start)
-
-            assertThat(result).isEqualTo(ProcessNotificationResult.NotTransaction)
-            assertThat(inbox.observeAll().first().isEmpty()).isEqualTo(true)
-        }
-
-    @Test
-    fun `given a notification from an app that is not monitored then nothing is read (FR-090)`() =
-        runBlocking {
-            registerApps()
-            val useCase = useCase(debitParser(merchant = "INDOMARET"))
-
-            val result = useCase("com.unknown.app", "Pembayaran", "Pembayaran Rp25.000", start)
+            val result = useCase(received("com.unknown.app", "Pembayaran"), payment(DEBIT_MERCHANT))
 
             assertThat(result).isEqualTo(ProcessNotificationResult.NotMonitored)
             assertThat(inbox.observeAll().first().isEmpty()).isEqualTo(true)
@@ -137,9 +130,9 @@ class ProcessNotificationUseCaseTest {
     fun `given a disabled monitored app then nothing is stored (FR-090)`() =
         runBlocking {
             apps.insert(app(BCA, enabled = false))
-            val useCase = useCase(debitParser(merchant = "INDOMARET"))
+            val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
 
-            val result = useCase(BCA, "Pembayaran", "Pembayaran Rp25.000", start)
+            val result = useCase(received(BCA, "Pembayaran"), payment(DEBIT_MERCHANT))
 
             assertThat(result).isEqualTo(ProcessNotificationResult.NotMonitored)
             assertThat(inbox.observeAll().first().isEmpty()).isEqualTo(true)
@@ -153,12 +146,34 @@ class ProcessNotificationUseCaseTest {
     private suspend fun itemById(id: InboxItemId): InboxItem =
         inbox.observeAll().first().single { it.inboxItemId == id }
 
-    private fun useCase(vararg parsers: StubNotificationParser): ProcessNotificationUseCase =
-        ProcessNotificationUseCase(
-            parsers = NotificationParserRegistry(parsers.toList()),
-            monitoredApps = apps,
-            inbox = inbox,
-            factory = DetectedItemFactory(rules, clock),
+    private fun factory(): DetectedItemFactory = DetectedItemFactory(rules, clock)
+
+    private fun received(
+        packageName: String,
+        text: String,
+        postedAt: Instant = start,
+    ): RawNotification =
+        RawNotification(
+            packageName = packageName,
+            title = "Notifikasi",
+            text = text,
+            bigText = "",
+            postedAt = postedAt,
+            notificationKey = "",
+        )
+
+    private fun payment(
+        merchant: String,
+        direction: MoneyDirection = MoneyDirection.DEBIT,
+        occurredAt: Instant = start,
+    ): ParsedTransaction =
+        ParsedTransaction(
+            amount = Money(100_000),
+            direction = direction,
+            merchant = merchant,
+            merchantKey = merchant.lowercase(),
+            occurredAt = occurredAt,
+            parserId = "test.fixture.v1",
         )
 
     private fun app(
@@ -187,31 +202,9 @@ class ProcessNotificationUseCaseTest {
             audit = Audit(createdAt = start, updatedAt = start),
         )
 
-    private fun debitParser(merchant: String): StubNotificationParser =
-        StubNotificationParser(setOf(BCA)) { transaction(MoneyDirection.DEBIT, merchant) }
-
-    private fun creditParser(): StubNotificationParser =
-        StubNotificationParser(setOf(GOPAY)) { transaction(MoneyDirection.CREDIT, "BCA") }
-
-    private fun ignoringParser(): StubNotificationParser =
-        StubNotificationParser(setOf(BCA)) { ParseResult.Ignored(IgnoreReason.OTP) }
-
-    private fun transaction(
-        direction: MoneyDirection,
-        merchant: String,
-    ): ParseResult.Transaction =
-        ParseResult.Transaction(
-            ParsedTransaction(
-                amount = Money(100_000),
-                direction = direction,
-                merchant = merchant,
-                occurredAt = start,
-                parserId = "test.stub.v1",
-            ),
-        )
-
     private companion object {
         const val BCA = "com.bca"
         const val GOPAY = "com.gojek.gopay"
+        const val DEBIT_MERCHANT = "INDOMARET KEMANG 12"
     }
 }

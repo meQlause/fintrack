@@ -6,6 +6,8 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEqualTo
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.MoneyDirection
+import com.meqlause.fintrack.core.model.ParsedTransaction
+import com.meqlause.fintrack.core.model.RawNotification
 import org.junit.jupiter.api.Test
 import java.time.Instant
 
@@ -17,6 +19,7 @@ class ParserModelsTest {
             amount = Money(25000L),
             direction = MoneyDirection.DEBIT,
             merchant = "INDOMARET",
+            merchantKey = "indomaret",
             occurredAt = postedAt,
             parserId = "synthetic.v1",
         )

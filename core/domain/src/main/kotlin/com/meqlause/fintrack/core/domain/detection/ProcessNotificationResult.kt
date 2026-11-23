@@ -13,9 +13,6 @@ public sealed interface ProcessNotificationResult {
     /** FR-086: the same notification was already stored; it is discarded. */
     public data object Duplicate : ProcessNotificationResult
 
-    /** FR-085: the notification is not a transaction (ignored or unrecognized); nothing is kept. */
-    public data object NotTransaction : ProcessNotificationResult
-
     /** FR-090: the app is not a monitored, enabled app; nothing is read. */
     public data object NotMonitored : ProcessNotificationResult
 }

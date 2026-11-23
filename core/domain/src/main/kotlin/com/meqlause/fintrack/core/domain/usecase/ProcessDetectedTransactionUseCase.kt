@@ -8,36 +8,25 @@ import com.meqlause.fintrack.core.domain.repository.InboxRepository
 import com.meqlause.fintrack.core.domain.repository.MonitoredAppRepository
 import com.meqlause.fintrack.core.model.InboxItem
 import com.meqlause.fintrack.core.model.MonitoredApp
-import com.meqlause.fintrack.core.parser.NotificationParserRegistry
-import com.meqlause.fintrack.core.parser.ParseResult
-import com.meqlause.fintrack.core.parser.ParsedTransaction
-import com.meqlause.fintrack.core.parser.RawNotification
-import java.time.Instant
+import com.meqlause.fintrack.core.model.ParsedTransaction
+import com.meqlause.fintrack.core.model.RawNotification
 import javax.inject.Inject
 
-/** FR-084 … FR-091: the single entry point of the detection pipeline, called by the notification listener. */
-public class ProcessNotificationUseCase
+/** FR-084 … FR-091: the detection pipeline step after parsing, called once per detected transaction. */
+public class ProcessDetectedTransactionUseCase
     @Inject
     constructor(
-        private val parsers: NotificationParserRegistry,
         private val monitoredApps: MonitoredAppRepository,
         private val inbox: InboxRepository,
         private val factory: DetectedItemFactory,
     ) {
-        /** FR-084: stores a detected payment as PENDING; other notifications store nothing. */
+        /** FR-084, FR-090: stores a detected payment as PENDING; an app that is not monitored and enabled stores nothing. */
         public suspend operator fun invoke(
-            packageName: String,
-            title: String,
-            text: String,
-            postedAt: Instant,
-            bigText: String = "",
+            raw: RawNotification,
+            parsed: ParsedTransaction,
         ): ProcessNotificationResult {
-            val monitored = monitoredApps.find(packageName)
+            val monitored = monitoredApps.find(raw.packageName)
             if (monitored == null || !monitored.isEnabled) return ProcessNotificationResult.NotMonitored
-            val raw = RawNotification(packageName, title, text, bigText, postedAt, notificationKey = "")
-            val parsed =
-                (parsers.parse(raw) as? ParseResult.Transaction)?.parsed
-                    ?: return ProcessNotificationResult.NotTransaction
             return store(raw, parsed, monitored)
         }
 

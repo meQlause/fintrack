@@ -1,5 +1,7 @@
 package com.meqlause.fintrack.core.parser
 
+import com.meqlause.fintrack.core.model.RawNotification
+
 /** FR-083, DOC-07: one app-specific parser; it must never throw and returns Unrecognized for unexpected input. */
 public interface NotificationParser {
     /** DOC-07: stable identifier stored on each inbox item, e.g. "bca.v1". */

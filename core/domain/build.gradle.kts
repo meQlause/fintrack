@@ -5,7 +5,6 @@ plugins {
 
 dependencies {
     api(project(":core:model"))
-    api(project(":core:parser"))
     api(libs.coroutines.core)
     api(libs.javax.inject)
 
