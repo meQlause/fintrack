@@ -8,6 +8,8 @@ import com.meqlause.fintrack.core.data.repository.LocalQuickEntryRepository
 import com.meqlause.fintrack.core.data.repository.LocalSettingsRepository
 import com.meqlause.fintrack.core.data.repository.LocalTransactionRepository
 import com.meqlause.fintrack.core.data.repository.LocalWalletRepository
+import com.meqlause.fintrack.core.data.repository.RoomAtomicRunner
+import com.meqlause.fintrack.core.database.FintrackDatabase
 import com.meqlause.fintrack.core.database.dao.CategoryDao
 import com.meqlause.fintrack.core.database.dao.InboxItemDao
 import com.meqlause.fintrack.core.database.dao.MerchantRuleDao
@@ -16,6 +18,7 @@ import com.meqlause.fintrack.core.database.dao.QuickEntryDao
 import com.meqlause.fintrack.core.database.dao.TransactionDao
 import com.meqlause.fintrack.core.database.dao.WalletDao
 import com.meqlause.fintrack.core.datastore.SettingsDataSource
+import com.meqlause.fintrack.core.domain.repository.AtomicRunner
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.InboxRepository
 import com.meqlause.fintrack.core.domain.repository.MerchantRuleRepository
@@ -71,4 +74,9 @@ object RepositoryModule {
     @Singleton
     fun provideMonitoredAppRepository(monitoredAppDao: MonitoredAppDao): MonitoredAppRepository =
         LocalMonitoredAppRepository(monitoredAppDao)
+
+    // BR-011: a confirmed item writes its transaction and status in one Room transaction
+    @Provides
+    @Singleton
+    fun provideAtomicRunner(database: FintrackDatabase): AtomicRunner = RoomAtomicRunner(database)
 }

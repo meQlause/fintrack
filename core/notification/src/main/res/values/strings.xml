@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FR-089: texts of the heads-up prompt from our app, in Indonesian -->
+<resources>
+    <string name="inbox_channel_name">Kotak masuk</string>
+    <string name="inbox_prompt_title">%1$s di %2$s — Konfirmasi?</string>
+    <string name="inbox_prompt_title_unknown">%1$s terdeteksi — Konfirmasi?</string>
+    <string name="inbox_prompt_text">Ketuk untuk meninjau di Kotak masuk</string>
+    <string name="inbox_action_confirm">Konfirmasi</string>
+    <string name="inbox_action_dismiss">Abaikan</string>
+</resources>

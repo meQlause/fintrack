@@ -13,6 +13,7 @@ import com.meqlause.fintrack.core.model.WalletId
 @Composable
 internal fun HomeRoute(
     onOpenSettings: () -> Unit,
+    onOpenInbox: () -> Unit,
     onOpenWallet: (WalletId) -> Unit,
     onOpenWallets: () -> Unit,
     onOpenHistory: () -> Unit,
@@ -28,6 +29,7 @@ internal fun HomeRoute(
         callbacks =
             HomeCallbacks(
                 onOpenSettings = onOpenSettings,
+                onOpenInbox = onOpenInbox,
                 onToggleHidden = viewModel::toggleHidden,
                 onOpenSummary = viewModel::openSummary,
                 onOpenCategories = viewModel::openCategories,

@@ -26,7 +26,7 @@ internal fun HomeScreen(
                 .padding(horizontal = FintrackTheme.spacing.large, vertical = FintrackTheme.spacing.large),
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
-        HomeHeader(onSettingsClick = callbacks.onOpenSettings)
+        HomeHeader(onSettingsClick = callbacks.onOpenSettings, onInboxClick = callbacks.onOpenInbox)
         when (state) {
             HomeUiState.Loading -> HomeSkeleton(modifier = Modifier.weight(1f))
             is HomeUiState.Success -> HomeBody(state = state, callbacks = callbacks, modifier = Modifier.weight(1f))

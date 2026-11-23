@@ -434,7 +434,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(domain): add detected transaction pipeline [P5, FR-084]`
 
 ### T5.6 — Inbox (S-07)
-- [ ] done · Refs: FR-087, FR-089 · swipe right/left, category/wallet change, pair card, heads-up prompt with action.
+- [x] done · Refs: FR-087, FR-089 · swipe right/left, category/wallet change, pair card, heads-up prompt with action.
 - Commit: `feat(inbox): add detected transactions inbox [P5, FR-087]`
 
 ### T5.7 — Raw text purge job

@@ -3,6 +3,7 @@ package com.meqlause.fintrack.core.database.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.meqlause.fintrack.core.database.entity.MerchantRuleEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -20,4 +21,8 @@ interface MerchantRuleDao {
     /** DOC-02: every merchant rule, by normalized key. */
     @Query("SELECT * FROM merchant_rule ORDER BY merchantKey")
     fun observeAll(): Flow<List<MerchantRuleEntity>>
+
+    /** BR-012, FR-088: replaces the merchant rule with the same id when the merchant is confirmed again. */
+    @Update
+    suspend fun update(rule: MerchantRuleEntity)
 }

@@ -2,6 +2,7 @@ package com.meqlause.fintrack.core.domain.repository
 
 import com.meqlause.fintrack.core.model.InboxItem
 import com.meqlause.fintrack.core.model.InboxItemId
+import com.meqlause.fintrack.core.model.Resolution
 import kotlinx.coroutines.flow.Flow
 
 /** DOC-03, FR-090: access to notifications detected as payments and waiting for review (FR-091). */
@@ -22,5 +23,14 @@ public interface InboxRepository {
     public suspend fun linkPair(
         first: InboxItemId,
         second: InboxItemId,
+    )
+
+    /** FR-087: the inbox item with this id, or null when it does not exist. */
+    public suspend fun findById(inboxItemId: InboxItemId): InboxItem?
+
+    /** BR-011, FR-087: stores the review status, the created transaction and the resolution time of an item. */
+    public suspend fun resolve(
+        inboxItemId: InboxItemId,
+        resolution: Resolution,
     )
 }

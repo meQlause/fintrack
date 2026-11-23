@@ -3,6 +3,7 @@
 <resources>
     <string name="home_title">Fintrack</string>
     <string name="home_settings_description">Buka pengaturan</string>
+    <string name="home_inbox_description">Buka kotak masuk</string>
     <string name="home_balance_label">Saldo</string>
     <string name="home_hide_amounts">Sembunyikan saldo</string>
     <string name="home_show_amounts">Tampilkan saldo</string>

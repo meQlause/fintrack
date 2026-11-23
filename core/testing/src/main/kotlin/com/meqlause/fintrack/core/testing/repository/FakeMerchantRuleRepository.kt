@@ -21,4 +21,8 @@ public class FakeMerchantRuleRepository : MerchantRuleRepository {
 
     override suspend fun findByKey(merchantKey: String): MerchantRule? =
         store.all().firstOrNull { it.merchantKey == merchantKey }
+
+    override suspend fun update(rule: MerchantRule) {
+        store.replace(rule)
+    }
 }

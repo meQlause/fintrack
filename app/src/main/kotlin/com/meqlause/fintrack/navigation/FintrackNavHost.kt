@@ -10,6 +10,8 @@ import com.meqlause.fintrack.feature.category.navigation.CategoryDestination
 import com.meqlause.fintrack.feature.category.navigation.categoryDestination
 import com.meqlause.fintrack.feature.dashboard.navigation.HomeDestination
 import com.meqlause.fintrack.feature.dashboard.navigation.homeDestination
+import com.meqlause.fintrack.feature.inbox.navigation.InboxDestination
+import com.meqlause.fintrack.feature.inbox.navigation.inboxDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.MonitoredAppsDestination
@@ -58,6 +60,7 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     // DOC-09, FR-040..043: Beranda (S-03); Catat cepat opens the add sheet, a row opens its S-06 detail
     homeDestination(
         onOpenSettings = { navController.navigate(SettingsDestination) },
+        onOpenInbox = { navController.navigate(InboxDestination) },
         onOpenWallet = { navController.navigate(WalletDetailDestination(it.value)) },
         onOpenWallets = { MainTab.WALLET.navigateFrom(navController) },
         onOpenHistory = { MainTab.HISTORY.navigateFrom(navController) },
@@ -86,6 +89,8 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     // FR-081, FR-082, FR-090: Aplikasi dipantau (S-13) is opened from the Deteksi otomatis group of Pengaturan
     monitoredAppsDestination(onBack = { navController.popBackStack() })
     categoryDestination(onBack = { navController.popBackStack() })
+    // FR-084 … FR-091, S-07: Kotak Masuk is opened from the bell in the Beranda header
+    inboxDestination(onBack = { navController.popBackStack() })
     // FR-034, S-06: the detail leaves on delete or duplicate; Ubah opens the S-04 sheet above it
     transactionDetailDestination(
         onBack = { navController.popBackStack() },

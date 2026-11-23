@@ -5,13 +5,17 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import com.meqlause.fintrack.core.common.coroutines.ApplicationScope
 import com.meqlause.fintrack.core.domain.detection.DetectionCounters
+import com.meqlause.fintrack.core.domain.detection.ProcessNotificationResult
+import com.meqlause.fintrack.core.domain.repository.InboxRepository
 import com.meqlause.fintrack.core.domain.repository.MonitoredAppRepository
+import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.domain.usecase.ProcessDetectedTransactionUseCase
 import com.meqlause.fintrack.core.parser.NotificationParserRegistry
 import com.meqlause.fintrack.core.parser.ParseResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,6 +29,12 @@ public class FintrackNotificationListener : NotificationListenerService() {
     @Inject public lateinit var detectTransaction: ProcessDetectedTransactionUseCase
 
     @Inject public lateinit var counters: DetectionCounters
+
+    @Inject public lateinit var inbox: InboxRepository
+
+    @Inject public lateinit var settings: SettingsRepository
+
+    @Inject public lateinit var notifier: InboxNotifier
 
     @Inject @ApplicationScope
     public lateinit var appScope: CoroutineScope
@@ -45,9 +55,22 @@ public class FintrackNotificationListener : NotificationListenerService() {
         val raw = posted.toRawNotification()
         monitoredApps.recordNotification(raw.packageName, raw.postedAt)
         when (val result = parsers.parse(raw)) {
-            is ParseResult.Transaction -> detectTransaction(raw, result.parsed)
+            is ParseResult.Transaction -> promptIfStored(detectTransaction(raw, result.parsed))
             is ParseResult.Ignored -> counters.countIgnored()
             ParseResult.Unrecognized -> counters.countUnrecognized()
         }
+    }
+
+    // FR-089: the heads-up prompt is optional and only announces an item that was really stored
+    private suspend fun promptIfStored(result: ProcessNotificationResult) {
+        if (result !is ProcessNotificationResult.Stored) return
+        if (!settings
+                .observe()
+                .first()
+                .preferences.headsUpForInbox
+        ) {
+            return
+        }
+        notifier.showConfirmPrompt(inbox.findById(result.inboxItemId) ?: return)
     }
 }

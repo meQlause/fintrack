@@ -1,0 +1,99 @@
+package com.meqlause.fintrack.feature.inbox
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.model.TransactionType
+import com.meqlause.fintrack.core.ui.picker.OptionsDrawer
+import com.meqlause.fintrack.core.ui.picker.PickerOption
+
+// S-07: which chip is open; the id is the inbox item whose wallet or category changes
+internal data class InboxPicker(
+    val itemId: Long,
+    val kind: PickKind,
+)
+
+internal enum class PickKind {
+    WALLET,
+    TARGET_WALLET,
+    CATEGORY,
+}
+
+// S-07, FR-087: one drawer for the wallet or category chip; the choice is applied to the card or pair side
+@Composable
+internal fun InboxPickerDrawer(
+    picker: InboxPicker,
+    state: InboxUiState,
+    actions: InboxActions,
+    onClose: () -> Unit,
+) {
+    val options = optionsFor(picker, state)
+    val selected = selectedKey(picker, state)
+    OptionsDrawer(
+        title = titleFor(picker.kind),
+        options = options,
+        selectedKey = selected,
+        onPick = { option ->
+            onPicked(picker, option, actions)
+            onClose()
+        },
+        onClose = onClose,
+    )
+}
+
+@Composable
+private fun titleFor(kind: PickKind): String =
+    when (kind) {
+        PickKind.WALLET -> stringResource(R.string.inbox_picker_wallet)
+        PickKind.TARGET_WALLET -> stringResource(R.string.inbox_picker_target)
+        PickKind.CATEGORY -> stringResource(R.string.inbox_picker_category)
+    }
+
+private fun optionsFor(
+    picker: InboxPicker,
+    state: InboxUiState,
+): List<PickerOption> =
+    when (picker.kind) {
+        PickKind.WALLET, PickKind.TARGET_WALLET -> {
+            state.walletOptions
+        }
+
+        PickKind.CATEGORY -> {
+            if (typeOf(picker.itemId, state) ==
+                TransactionType.INCOME
+            ) {
+                state.incomeOptions
+            } else {
+                state.expenseOptions
+            }
+        }
+    }
+
+private fun selectedKey(
+    picker: InboxPicker,
+    state: InboxUiState,
+): String? {
+    val card = state.cards.firstOrNull { it.itemId == picker.itemId }
+    val pair = state.pairs.firstOrNull { it.fromItemId == picker.itemId || it.toItemId == picker.itemId }
+    return when (picker.kind) {
+        PickKind.CATEGORY -> card?.categoryId?.toString()
+        PickKind.WALLET -> card?.walletId?.toString() ?: pair?.fromWalletId?.toString()
+        PickKind.TARGET_WALLET -> pair?.toWalletId?.toString()
+    }
+}
+
+private fun typeOf(
+    itemId: Long,
+    state: InboxUiState,
+): TransactionType? = state.cards.firstOrNull { it.itemId == itemId }?.type
+
+private fun onPicked(
+    picker: InboxPicker,
+    option: PickerOption,
+    actions: InboxActions,
+) {
+    val id = option.key.toLong()
+    when (picker.kind) {
+        PickKind.CATEGORY -> actions.onChooseCategory(picker.itemId, id)
+        PickKind.WALLET, PickKind.TARGET_WALLET -> actions.onChooseWallet(picker.itemId, id)
+    }
+}

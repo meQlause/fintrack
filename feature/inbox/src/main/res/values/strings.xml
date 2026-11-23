@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-08, FR-084..FR-091: Indonesian copy of S-07 Kotak Masuk -->
+<resources>
+    <string name="inbox_title">Kotak Masuk</string>
+    <string name="inbox_dismiss_all">Abaikan semua</string>
+    <string name="inbox_info_text">Transaksi dari notifikasi bank &amp; e-wallet muncul di sini. Geser kanan untuk catat, kiri untuk abaikan.</string>
+    <string name="inbox_info_dismiss">Mengerti</string>
+    <string name="inbox_resolved_title">Selesai</string>
+    <string name="inbox_resolved_confirmed">Dicatat</string>
+    <string name="inbox_resolved_dismissed">Diabaikan</string>
+    <string name="inbox_empty_title">Semua beres! ✨</string>
+    <string name="inbox_empty_body">Belum ada transaksi baru terdeteksi</string>
+    <string name="inbox_access_title">Deteksi notifikasi belum aktif</string>
+    <string name="inbox_access_body">Aktifkan akses notifikasi agar transaksi dari aplikasi bank dan e-wallet terbaca otomatis.</string>
+    <string name="inbox_access_action">Aktifkan</string>
+    <string name="inbox_confirm">Catat</string>
+    <string name="inbox_dismiss">Abaikan</string>
+    <string name="inbox_pick_category">Pilih kategori</string>
+    <string name="inbox_pick_wallet">Pilih dompet</string>
+    <string name="inbox_pair_title">Transfer %1$s → %2$s</string>
+    <string name="inbox_pair_confirm">Catat sebagai Transfer</string>
+    <string name="inbox_pair_split">Catat terpisah</string>
+    <string name="inbox_undo_message">Transaksi diabaikan</string>
+    <string name="inbox_undo_action">Batalkan</string>
+    <string name="inbox_back_description">Kembali</string>
+    <string name="inbox_picker_wallet">Pilih dompet</string>
+    <string name="inbox_picker_target">Pilih dompet tujuan</string>
+    <string name="inbox_picker_category">Pilih kategori</string>
+    <string name="inbox_swipe_confirm">Catat</string>
+    <string name="inbox_swipe_dismiss">Abaikan</string>
+</resources>

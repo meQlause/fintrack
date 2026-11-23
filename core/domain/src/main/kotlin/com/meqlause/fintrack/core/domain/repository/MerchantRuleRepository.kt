@@ -14,4 +14,7 @@ public interface MerchantRuleRepository {
 
     /** FR-088: the rule remembered for a normalized merchant key, or null when there is none. */
     public suspend fun findByKey(merchantKey: String): MerchantRule?
+
+    /** BR-012, FR-088: replaces the stored rule with the same id; used when a merchant is confirmed again. */
+    public suspend fun update(rule: MerchantRule)
 }

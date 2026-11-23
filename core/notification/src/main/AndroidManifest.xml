@@ -2,6 +2,8 @@
 <!-- FR-081, FR-080: the listener service; no INTERNET permission anywhere in the app (NFR-001) -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <queries>
         <package android:name="com.bca.mybca.omni.android" />
         <package android:name="com.bca" />
@@ -23,5 +25,9 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+        <!-- FR-089: handles the Konfirmasi and Abaikan actions of the heads-up prompt; app-private -->
+        <receiver
+            android:name="com.meqlause.fintrack.core.notification.InboxActionReceiver"
+            android:exported="false" />
     </application>
 </manifest>

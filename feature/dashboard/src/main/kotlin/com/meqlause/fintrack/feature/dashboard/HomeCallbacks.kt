@@ -7,6 +7,7 @@ import com.meqlause.fintrack.core.model.WalletId
 // DOC-09, S-03: every action of Beranda; the defaults keep previews and tests free of wiring
 internal data class HomeCallbacks(
     val onOpenSettings: () -> Unit = {},
+    val onOpenInbox: () -> Unit = {},
     val onToggleHidden: () -> Unit = {},
     val onOpenSummary: () -> Unit = {},
     val onOpenCategories: () -> Unit = {},

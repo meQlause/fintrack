@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:category"))
     implementation(project(":feature:dashboard"))
+    implementation(project(":feature:inbox"))
     implementation(project(":feature:wallet"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:transaction"))

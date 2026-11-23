@@ -9,6 +9,7 @@ dependencies {
     api(project(":core:database"))
     api(project(":core:datastore"))
     api(libs.coroutines.core)
+    implementation(libs.room.ktx)
 
     testImplementation(project(":core:testing"))
     testImplementation(libs.junit4)

@@ -4,6 +4,7 @@ import com.meqlause.fintrack.core.domain.repository.InboxRepository
 import com.meqlause.fintrack.core.model.InboxItem
 import com.meqlause.fintrack.core.model.InboxItemId
 import com.meqlause.fintrack.core.model.InboxStatus
+import com.meqlause.fintrack.core.model.Resolution
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
@@ -47,4 +48,18 @@ public class FakeInboxRepository : InboxRepository {
             second -> first
             else -> null
         }
+
+    override suspend fun findById(inboxItemId: InboxItemId): InboxItem? =
+        store.all().firstOrNull { it.inboxItemId == inboxItemId }
+
+    override suspend fun resolve(
+        inboxItemId: InboxItemId,
+        resolution: Resolution,
+    ) {
+        store.all().firstOrNull { it.inboxItemId == inboxItemId }?.let {
+            store.replace(
+                it.copy(resolution = resolution),
+            )
+        }
+    }
 }

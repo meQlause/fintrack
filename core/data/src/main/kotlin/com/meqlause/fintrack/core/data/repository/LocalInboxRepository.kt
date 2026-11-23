@@ -6,6 +6,7 @@ import com.meqlause.fintrack.core.database.dao.InboxItemDao
 import com.meqlause.fintrack.core.domain.repository.InboxRepository
 import com.meqlause.fintrack.core.model.InboxItem
 import com.meqlause.fintrack.core.model.InboxItemId
+import com.meqlause.fintrack.core.model.Resolution
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -27,5 +28,23 @@ public class LocalInboxRepository(
         second: InboxItemId,
     ) {
         inboxItemDao.linkPair(first.value, second.value)
+    }
+
+    override suspend fun findById(inboxItemId: InboxItemId): InboxItem? =
+        inboxItemDao.findById(inboxItemId.value)?.toInboxItem()
+
+    override suspend fun resolve(
+        inboxItemId: InboxItemId,
+        resolution: Resolution,
+    ) {
+        val resolvedAt = resolution.resolvedAt?.toEpochMilli()
+        val updatedAt = resolvedAt ?: System.currentTimeMillis()
+        inboxItemDao.resolve(
+            inboxItemId.value,
+            resolution.status,
+            resolution.transactionId?.value,
+            resolvedAt,
+            updatedAt,
+        )
     }
 }

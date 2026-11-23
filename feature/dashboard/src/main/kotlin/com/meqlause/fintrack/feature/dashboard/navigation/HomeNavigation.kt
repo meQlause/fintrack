@@ -10,6 +10,7 @@ import com.meqlause.fintrack.feature.dashboard.HomeRoute
 // DOC-09, FR-040..043: registers Beranda in the host graph; every step out of S-03 is handed to the host
 public fun NavGraphBuilder.homeDestination(
     onOpenSettings: () -> Unit,
+    onOpenInbox: () -> Unit,
     onOpenWallet: (WalletId) -> Unit,
     onOpenWallets: () -> Unit,
     onOpenHistory: () -> Unit,
@@ -20,6 +21,7 @@ public fun NavGraphBuilder.homeDestination(
     composable<HomeDestination> {
         HomeRoute(
             onOpenSettings = onOpenSettings,
+            onOpenInbox = onOpenInbox,
             onOpenWallet = onOpenWallet,
             onOpenWallets = onOpenWallets,
             onOpenHistory = onOpenHistory,
