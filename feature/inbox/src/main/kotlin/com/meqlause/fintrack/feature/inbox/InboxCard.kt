@@ -20,6 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
@@ -47,12 +50,39 @@ internal fun InboxCard(
     }
     SwipeToDismissBox(
         state = swipe,
-        modifier = modifier,
+        modifier =
+            modifier.swipeAlternatives(
+                onConfirm = { actions.onConfirm(card.itemId) },
+                onDismiss = { actions.onDismiss(card.itemId) },
+            ),
         backgroundContent = { SwipeBackground(swipe.dismissDirection) },
     ) {
         FintrackCard(modifier = Modifier.fillMaxWidth()) {
             CardBody(card, actions, onPickCategory, onPickWallet)
         }
+    }
+}
+
+// NFR-010: the swipe gestures have screen-reader alternatives under the card's custom actions
+@Composable
+private fun Modifier.swipeAlternatives(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+): Modifier {
+    val confirmLabel = stringResource(R.string.inbox_confirm)
+    val dismissLabel = stringResource(R.string.inbox_dismiss)
+    return semantics {
+        customActions =
+            listOf(
+                CustomAccessibilityAction(confirmLabel) {
+                    onConfirm()
+                    true
+                },
+                CustomAccessibilityAction(dismissLabel) {
+                    onDismiss()
+                    true
+                },
+            )
     }
 }
 

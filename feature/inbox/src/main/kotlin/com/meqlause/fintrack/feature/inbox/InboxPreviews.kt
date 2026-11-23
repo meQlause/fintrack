@@ -79,3 +79,10 @@ private fun InboxPreviewFrame(
         }
     }
 }
+
+// NFR-010: font scale 2.0 variant for the screenshot tests
+@Preview(name = "Kotak masuk font 200", showBackground = true, heightDp = 1200, fontScale = 2f)
+@Composable
+internal fun InboxFontScalePreview() {
+    InboxPreviewFrame(darkTheme = false, state = sampleState)
+}

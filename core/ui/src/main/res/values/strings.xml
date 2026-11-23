@@ -32,4 +32,7 @@
     <string name="shortcut_deleted">Pintasan dihapus</string>
     <string name="shortcut_drawer_title">⚡ Pintasan</string>
     <string name="shortcut_manage_title">Atur pintasan</string>
+    <!-- NFR-010: spoken form of a signed amount for TalkBack -->
+    <string name="money_spoken_minus">minus %1$s</string>
+    <string name="money_spoken_plus">plus %1$s</string>
 </resources>

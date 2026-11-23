@@ -5,10 +5,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,11 +34,12 @@ fun FintrackChip(
     Box(
         modifier =
             modifier
-                .height(FintrackTheme.sizes.chipHeight)
+                .minimumInteractiveComponentSize()
+                .selectable(selected = selected, role = Role.Checkbox, onClick = onClick)
+                .heightIn(min = FintrackTheme.sizes.chipHeight)
                 .clip(FintrackTheme.shapes.full)
                 .background(containerColor)
                 .border(FintrackTheme.sizes.hairline, colors.surfaces.outline, FintrackTheme.shapes.full)
-                .selectable(selected = selected, role = Role.Checkbox, onClick = onClick)
                 .padding(horizontal = FintrackTheme.spacing.large),
         contentAlignment = Alignment.Center,
     ) {

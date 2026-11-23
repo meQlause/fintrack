@@ -58,3 +58,12 @@ internal fun sampleHistoryState(): HistoryUiState =
         hasRecords = true,
         isLoaded = true,
     )
+
+// NFR-010: font scale 2.0 variant for the screenshot tests
+@Preview(name = "History font 200", showBackground = true, fontScale = 2f)
+@Composable
+internal fun HistoryScreenFontScalePreview() {
+    FintrackTheme(darkTheme = false) {
+        HistoryScreen(state = sampleHistoryState(), onEvent = {}, onOpenTransaction = {})
+    }
+}

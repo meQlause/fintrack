@@ -109,3 +109,10 @@ internal fun WalletEditorLightPreview() {
 internal fun WalletEditorDarkPreview() {
     FintrackTheme(darkTheme = true) { ScreenSample(successState(editor = WalletEditor.forNew())) }
 }
+
+// NFR-010: font scale 2.0 variant for the screenshot tests
+@Preview(name = "Dompet font 200", showBackground = true, heightDp = 1200, fontScale = 2f)
+@Composable
+internal fun WalletFontScalePreview() {
+    FintrackTheme(darkTheme = false) { ScreenSample(successState()) }
+}

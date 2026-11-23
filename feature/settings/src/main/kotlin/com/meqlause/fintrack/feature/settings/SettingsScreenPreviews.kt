@@ -30,3 +30,10 @@ internal fun SettingsLightPreview() {
 internal fun SettingsDarkPreview() {
     SettingsDarkSample()
 }
+
+// NFR-010: font scale 2.0 variant for the screenshot tests
+@Preview(name = "Settings font 200", showBackground = true, fontScale = 2f)
+@Composable
+internal fun SettingsFontScalePreview() {
+    SettingsLightSample()
+}

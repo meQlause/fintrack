@@ -15,7 +15,7 @@ class FintrackSizes {
     val tabHeaderHeight: Dp = Dp(value = 40f)
     val chipHeight: Dp = Dp(value = 34f)
     val formRowHeight: Dp = Dp(value = 52f)
-    val segmentHeight: Dp = Dp(value = 40f)
+    val segmentHeight: Dp = Dp(value = 48f)
     val switchWidth: Dp = Dp(value = 44f)
     val switchHeight: Dp = Dp(value = 26f)
     val knobSize: Dp = Dp(value = 20f)

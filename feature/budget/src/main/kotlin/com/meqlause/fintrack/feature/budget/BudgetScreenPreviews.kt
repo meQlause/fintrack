@@ -61,3 +61,10 @@ internal fun BudgetEmptyDarkPreview() {
         BudgetScreen(state = BudgetUiState(loaded = true), callbacks = BudgetCallbacks())
     }
 }
+
+// NFR-010: font scale 2.0 variant for the screenshot tests
+@Preview(name = "Anggaran font 200", showBackground = true, heightDp = 1200, fontScale = 2f)
+@Composable
+internal fun BudgetFontScalePreview() {
+    FintrackTheme(darkTheme = false) { BudgetScreen(state = sampleSuccess, callbacks = BudgetCallbacks()) }
+}

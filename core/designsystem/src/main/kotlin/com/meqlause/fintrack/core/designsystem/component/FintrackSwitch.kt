@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,24 +36,32 @@ fun FintrackSwitch(
         animationSpec = FintrackTheme.motion.quick.toSpec(),
     )
     val travel = sizes.switchWidth - sizes.knobSize - sizes.knobInset * 2
+    // NFR-010: the touch target is at least 48 dp; the visible track stays 44 x 26 dp
     Box(
         modifier =
             modifier
-                .width(sizes.switchWidth)
-                .height(sizes.switchHeight)
-                .clip(FintrackTheme.shapes.full)
-                .background(if (checked) colors.brands.primary else colors.surfaces.outline)
+                .minimumInteractiveComponentSize()
                 .toggleable(value = checked, role = Role.Switch, onValueChange = onCheckedChange),
-        contentAlignment = Alignment.CenterStart,
+        contentAlignment = Alignment.Center,
     ) {
         Box(
             modifier =
                 Modifier
-                    .offset { IntOffset(x = (sizes.knobInset + travel * progress).roundToPx(), y = 0) }
-                    .size(sizes.knobSize)
+                    .width(sizes.switchWidth)
+                    .height(sizes.switchHeight)
                     .clip(FintrackTheme.shapes.full)
-                    .background(colors.brands.onPrimary),
-        )
+                    .background(if (checked) colors.brands.primary else colors.surfaces.outline),
+            contentAlignment = Alignment.CenterStart,
+        ) {
+            Box(
+                modifier =
+                    Modifier
+                        .offset { IntOffset(x = (sizes.knobInset + travel * progress).roundToPx(), y = 0) }
+                        .size(sizes.knobSize)
+                        .clip(FintrackTheme.shapes.full)
+                        .background(colors.brands.onPrimary),
+            )
+        }
     }
 }
 

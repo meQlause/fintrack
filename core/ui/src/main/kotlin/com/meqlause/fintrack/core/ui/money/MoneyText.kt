@@ -5,32 +5,49 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.theme.FintrackColors
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionType
+import com.meqlause.fintrack.core.ui.R
 import com.meqlause.fintrack.core.ui.UiPreviewCanvas
 import com.meqlause.fintrack.core.ui.format.AmountSign
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 
-// DOC-08: an amount with its sign and the colour of its money direction; loan lines stay neutral
+// NFR-010: the sign is spoken ("minus Rp25.000") instead of read as a symbol
 @Composable
 fun MoneyText(
     money: Money,
     type: TransactionType,
     modifier: Modifier = Modifier,
 ) {
+    val sign = signOf(type)
+    val spoken = spokenAmount(sign, MoneyFormatter.format(money))
     Text(
-        text = MoneyFormatter.formatSigned(money, signOf(type)),
-        modifier = modifier,
+        text = MoneyFormatter.formatSigned(money, sign),
+        modifier = modifier.semantics { contentDescription = spoken },
         style = FintrackTheme.typography.numberMedium,
         color = colorOf(type, FintrackTheme.colors),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
     )
 }
+
+@Composable
+private fun spokenAmount(
+    sign: AmountSign,
+    amount: String,
+): String =
+    when (sign) {
+        AmountSign.NONE -> amount
+        AmountSign.MINUS -> stringResource(R.string.money_spoken_minus, amount)
+        AmountSign.PLUS -> stringResource(R.string.money_spoken_plus, amount)
+    }
 
 // DOC-08: expense and lent or repaid money show −; income and borrowed or collected money show +
 private fun signOf(type: TransactionType): AmountSign =

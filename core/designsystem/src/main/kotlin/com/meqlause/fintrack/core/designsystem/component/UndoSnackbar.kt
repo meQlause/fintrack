@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
@@ -29,7 +29,7 @@ fun UndoSnackbar(
     Row(
         modifier =
             modifier
-                .height(FintrackTheme.sizes.snackbarHeight)
+                .heightIn(min = FintrackTheme.sizes.snackbarHeight)
                 .clip(FintrackTheme.shapes.full)
                 .background(colors.texts.onSurface)
                 .padding(start = FintrackTheme.spacing.large, end = FintrackTheme.spacing.small),

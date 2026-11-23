@@ -123,3 +123,8 @@ internal fun HomeSummaryDrawerDarkPreview() =
 @Composable
 internal fun HomeCategoriesDrawerLightPreview() =
     HomeSample(state = sampleSuccess(drawer = HomeDrawer.CATEGORIES), darkTheme = false)
+
+// NFR-010: font scale 2.0 variant for the screenshot tests
+@Preview(name = "Beranda font 200", showBackground = true, heightDp = 1200, fontScale = 2f)
+@Composable
+internal fun HomeFontScalePreview() = HomeSample(state = sampleSuccess(), darkTheme = false)
