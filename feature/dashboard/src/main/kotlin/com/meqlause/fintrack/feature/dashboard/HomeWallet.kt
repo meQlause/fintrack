@@ -8,4 +8,5 @@ internal data class HomeWallet(
     val walletId: WalletId,
     val name: String,
     val balance: Money,
+    val isCredit: Boolean = false,
 )

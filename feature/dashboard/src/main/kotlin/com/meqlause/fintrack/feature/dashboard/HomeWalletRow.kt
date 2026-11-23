@@ -14,6 +14,7 @@ internal fun HomeWalletRow(
     wallets: List<HomeWallet>,
     hidden: Boolean,
     onOpenWallet: (WalletId) -> Unit,
+    onOpenCreditWallet: (WalletId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
@@ -21,7 +22,8 @@ internal fun HomeWalletRow(
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
         items(items = wallets, key = { it.walletId.value }) { wallet ->
-            HomeWalletChip(wallet = wallet, hidden = hidden, onClick = { onOpenWallet(wallet.walletId) })
+            val open = if (wallet.isCredit) onOpenCreditWallet else onOpenWallet
+            HomeWalletChip(wallet = wallet, hidden = hidden, onClick = { open(wallet.walletId) })
         }
     }
 }

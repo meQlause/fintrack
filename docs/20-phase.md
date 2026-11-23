@@ -485,7 +485,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(investment): add investment tracking [P7, FR-170]`
 
 ### T7.7 — Tagihan card on Home
-- [ ] done · Refs: FR-137, FR-146 · Commit: `feat(dashboard): add bills card [P7, FR-137]`
+- [x] done · Refs: FR-137, FR-146 · Commit: `feat(dashboard): add bills card [P7, FR-137]`
 
 ### T7.8 — Net worth (Dompet) + Ringkasan drawer data
 - [ ] done · Refs: FR-160, FR-161, BR-043, BR-053 · Aset vs Utang bar and columns.

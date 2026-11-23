@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.Money
+import com.meqlause.fintrack.core.model.StatementStatus
 import com.meqlause.fintrack.core.model.TransactionId
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.WalletId
@@ -18,6 +19,15 @@ private fun sampleSuccess(
     HomeUiState.Success(
         hidden = hidden,
         total = Money(12_450_000L),
+        bills =
+            HomeBills(
+                bills =
+                    listOf(
+                        HomeBill(WalletId(4L), "BCA Kredit", StatementStatus.DUE, Money(1_250_000L), "Sen, 10 Nov"),
+                        HomeBill(WalletId(5L), "SPayLater", StatementStatus.PAID, Money(0L), "Sen, 10 Nov"),
+                    ),
+                instalmentsDue = Money(350_000L),
+            ),
         wallets =
             listOf(
                 HomeWallet(WalletId(1L), "BCA", Money(8_200_000L)),
