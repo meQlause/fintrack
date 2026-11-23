@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -85,7 +84,7 @@ private fun AssetDebtBar(
             Modifier
                 .fillMaxWidth()
                 .height(FintrackTheme.sizes.netWorthBarHeight)
-                .clip(RoundedCornerShape(FintrackTheme.sizes.netWorthBarHeight / 2)),
+                .clip(FintrackTheme.shapes.full),
     ) {
         if (assetPart + debtPart == 0f) {
             Box(
@@ -125,17 +124,19 @@ private fun BreakdownColumn(
         )
         Text(text = total, style = FintrackTheme.typography.titleMedium, color = color)
         rows.forEach { (label, value) ->
-            Row(modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.small)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.small)) {
                 Text(
                     text = label,
-                    style = FintrackTheme.typography.bodyMedium,
+                    style = FintrackTheme.typography.labelMedium,
                     color = FintrackTheme.colors.texts.onSurfaceVariant,
-                    modifier = Modifier.weight(1f),
+                    maxLines = 1,
                 )
                 Text(
                     text = value,
                     style = FintrackTheme.typography.bodyMedium,
                     color = FintrackTheme.colors.texts.onSurface,
+                    maxLines = 1,
+                    softWrap = false,
                 )
             }
         }
