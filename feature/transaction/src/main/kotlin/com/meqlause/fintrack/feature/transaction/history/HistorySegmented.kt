@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.Dp
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // S-05, S-08: a pill of equal segments; the picked segment is raised on the surface colour
@@ -30,12 +31,13 @@ internal fun <T> HistorySegmented(
     selected: T,
     onPick: (T) -> Unit,
     modifier: Modifier = Modifier,
+    trackHeight: Dp = FintrackTheme.sizes.segmentTrackHeight,
 ) {
     Row(
         modifier =
             modifier
                 .fillMaxWidth()
-                .height(FintrackTheme.sizes.segmentTrackHeight)
+                .height(trackHeight)
                 .clip(FintrackTheme.shapes.segmentTrack)
                 .background(FintrackTheme.colors.surfaces.surfaceVariant)
                 .padding(FintrackTheme.spacing.xxSmall + FintrackTheme.spacing.xxSmall / 2),
@@ -44,6 +46,7 @@ internal fun <T> HistorySegmented(
             HistorySegment(
                 label = option.label,
                 iconRes = option.iconRes,
+                activeColor = option.activeColor,
                 isSelected = option.value == selected,
                 onClick = { onPick(option.value) },
                 modifier = Modifier.weight(1f),
@@ -56,6 +59,7 @@ internal fun <T> HistorySegmented(
 private fun HistorySegment(
     label: String,
     iconRes: Int?,
+    activeColor: Color,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -70,7 +74,8 @@ private fun HistorySegment(
                 .selectable(selected = isSelected, role = Role.Tab, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        val tone = if (isSelected) colors.texts.onSurface else colors.texts.onSurfaceVariant
+        val active = if (activeColor == Color.Unspecified) colors.texts.onSurface else activeColor
+        val tone = if (isSelected) active else colors.texts.onSurfaceVariant
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),

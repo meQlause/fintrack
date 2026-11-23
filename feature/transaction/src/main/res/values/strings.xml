@@ -51,10 +51,10 @@
     <string name="history_total_net">Selisih</string>
     <string name="history_view_list">Daftar</string>
     <string name="history_view_statistics">Statistik</string>
-    <string name="history_stats_versus_previous">vs periode lalu</string>
-    <string name="history_stats_categories_title">Kategori</string>
-    <string name="history_stats_daily_title">Per hari</string>
-    <string name="history_stats_show_all">Lihat semua (%1$d)</string>
+    <string name="history_stats_total">Total</string>
+    <string name="history_stats_daily_title">Harian</string>
+    <string name="history_stats_average">≈ %1$s / hari</string>
+    <string name="history_stats_show_all">Semua %1$d kategori</string>
     <string name="history_stats_collapse">Ringkas</string>
     <string name="history_stats_uncategorized">Tanpa kategori</string>
     <string name="history_stats_new_change">baru</string>

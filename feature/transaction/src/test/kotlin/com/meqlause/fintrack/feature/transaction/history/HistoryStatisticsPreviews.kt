@@ -36,39 +36,59 @@ internal fun HistoryStatisticsDarkPreview() {
     }
 }
 
-// FR-060..062: a November expense breakdown compared with October, with four categories and a daily sum per day
+// FR-060..062, DOC-08: the mockup breakdown of 2026-11 against October: nine expense categories and 22 days
 internal fun sampleStatisticsState(): HistoryUiState =
     HistoryUiState(
         month = YearMonth.of(2026, 11),
         view = HistoryView.STATISTICS,
         categories =
-            listOf(
-                sampleCategory(1L, "Makanan"),
-                sampleCategory(2L, "Transportasi"),
-                sampleCategory(3L, "Belanja"),
-                sampleCategory(4L, "Hiburan"),
-            ),
+            SAMPLE_CATEGORIES.mapIndexed {
+                index,
+                row,
+                ->
+                sampleCategory(index + 1L, row.name, row.icon, row.color)
+            },
         statistics =
             PeriodStatistics(
                 type = TransactionType.EXPENSE,
-                total = Money(1_530_000L),
-                previousTotal = Money(1_200_000L),
+                total = Money(8_214_500L),
+                previousTotal = Money(5_134_000L),
                 categories =
-                    listOf(
-                        CategoryChange(CategoryId(1L), Money(620_000L), Money(540_000L)),
-                        CategoryChange(CategoryId(3L), Money(450_000L), Money(300_000L)),
-                        CategoryChange(CategoryId(2L), Money(310_000L), Money(260_000L)),
-                        CategoryChange(CategoryId(4L), Money(150_000L), Money(100_000L)),
-                    ),
-                dailyTotals = List(30) { day -> Money(if (day % 3 == 0) 0L else (day * 37_000L) % 150_000L + 20_000L) },
+                    SAMPLE_CATEGORIES.mapIndexed { index, row ->
+                        CategoryChange(CategoryId(index + 1L), Money(row.amount), Money(row.previous))
+                    },
+                dailyTotals = List(22) { day -> Money(if (day % 4 == 3) 0L else (day * 37_000L) % 420_000L + 60_000L) },
             ),
         hasRecords = true,
         isLoaded = true,
     )
 
+private data class SampleCategory(
+    val name: String,
+    val icon: String,
+    val color: String,
+    val amount: Long,
+    val previous: Long,
+)
+
+private val SAMPLE_CATEGORIES =
+    listOf(
+        SampleCategory("Belanja", "shopping", "pink", 4_175_500L, 1_906_600L),
+        SampleCategory("Tagihan", "bill", "purple", 2_300_000L, 1_916_700L),
+        SampleCategory("Makanan & Minuman", "food", "orange", 869_000L, 583_200L),
+        SampleCategory("Transportasi", "transport", "blue", 300_000L, 250_000L),
+        SampleCategory("Hiburan", "entertainment", "violet", 219_000L, 180_000L),
+        SampleCategory("Sosial & Kondangan", "gift", "rose", 200_000L, 150_000L),
+        SampleCategory("Pulsa & Internet", "phone", "cyan", 105_000L, 105_000L),
+        SampleCategory("Kesehatan", "health", "red", 45_000L, 40_000L),
+        SampleCategory("Lainnya", "other", "gray", 1_000L, 2_500L),
+    )
+
 private fun sampleCategory(
     categoryNumber: Long,
     name: String,
+    icon: String,
+    color: String,
 ): Category =
     Category(
         categoryId = CategoryId(categoryNumber),
@@ -76,7 +96,7 @@ private fun sampleCategory(
             CategoryProfile(
                 name = name,
                 kind = CategoryKind.EXPENSE,
-                appearance = Appearance(iconKey = "food", colorKey = "orange"),
+                appearance = Appearance(iconKey = icon, colorKey = color),
                 sortOrder = categoryNumber.toInt(),
             ),
         state = CategoryState(isDefault = true, isArchived = false),

@@ -2,6 +2,7 @@ package com.meqlause.fintrack.feature.transaction.history
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -11,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
+import com.meqlause.fintrack.core.designsystem.component.FintrackCard
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.feature.transaction.R
 import com.meqlause.fintrack.core.designsystem.R as DesignR
@@ -23,32 +24,47 @@ internal fun ColumnScope.StatisticsContent(
     state: HistoryUiState,
     onEvent: (HistoryEvent) -> Unit,
 ) {
-    Column(
-        modifier =
-            Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState()),
-    ) {
+    val colors = FintrackTheme.colors
+    Column(modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState())) {
         HistorySegmented(
             options =
                 listOf(
-                    HistorySegmentOption(TransactionType.EXPENSE, stringResource(R.string.transaction_type_expense)),
-                    HistorySegmentOption(TransactionType.INCOME, stringResource(R.string.transaction_type_income)),
+                    HistorySegmentOption(
+                        TransactionType.EXPENSE,
+                        stringResource(R.string.history_type_expense),
+                        activeColor = colors.semantics.expense,
+                    ),
+                    HistorySegmentOption(
+                        TransactionType.INCOME,
+                        stringResource(R.string.history_type_income),
+                        activeColor = colors.semantics.income,
+                    ),
                 ),
             selected = state.statisticsType,
             onPick = { onEvent(HistoryEvent.StatisticsTypePicked(it)) },
-            modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
+            modifier = Modifier.padding(top = FintrackTheme.spacing.small),
+            trackHeight = FintrackTheme.sizes.statSegmentHeight,
         )
         val statistics = state.statistics
         if (statistics == null || statistics.categories.isEmpty()) {
             StatisticsEmpty()
         } else {
-            StatisticsSummary(
-                statistics = statistics,
-                appearances = state.categories.associate { it.categoryId to it.profile.appearance },
-            )
-            StatisticsCategoryList(statistics = statistics, state = state, onEvent = onEvent)
+            FintrackCard(
+                modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.stack),
+                contentPadding =
+                    PaddingValues(
+                        start = FintrackTheme.spacing.large,
+                        top = FintrackTheme.spacing.section,
+                        end = FintrackTheme.spacing.large,
+                    ),
+            ) {
+                StatisticsSummary(
+                    statistics = statistics,
+                    month = state.month,
+                    appearances = state.categories.associate { it.categoryId to it.profile.appearance },
+                )
+                StatisticsCategoryList(statistics = statistics, state = state, onEvent = onEvent)
+            }
             StatisticsDailyBars(statistics = statistics)
         }
     }
