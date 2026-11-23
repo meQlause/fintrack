@@ -19,14 +19,13 @@ import com.meqlause.fintrack.feature.wallet.WalletItem
 internal fun WalletItemRow(
     item: WalletItem,
     showDivider: Boolean,
-    onOpen: () -> Unit,
-    onEdit: () -> Unit,
+    actions: WalletRowActions,
     modifier: Modifier = Modifier,
 ) {
     val appearance = item.wallet.profile.appearance
     ScreenRow(
         modifier = modifier,
-        style = RowStyle(showDivider = showDivider, onClick = onOpen, onLongClick = onEdit),
+        style = RowStyle(showDivider = showDivider, onClick = actions.onOpen, onLongClick = actions.onEdit),
         slots =
             RowSlots(leading = {
                 IconCircle(look = IconLook(iconKey = appearance.iconKey, colorKey = appearance.colorKey))

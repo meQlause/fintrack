@@ -149,21 +149,28 @@ private fun RecentHeading(
             style = FintrackScreenText.label(),
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
-        if (state.rows.size > RECENT_LIMIT) {
-            val label =
-                if (state.expanded) {
-                    stringResource(R.string.wallet_detail_collapse)
-                } else {
-                    stringResource(R.string.wallet_detail_show_all, state.rows.size)
-                }
-            Text(
-                text = label,
-                style = FintrackScreenText.style(size = 12.5f, weight = 700),
-                color = FintrackTheme.colors.brands.primary,
-                modifier = Modifier.clickable(onClick = callbacks.onToggleExpanded),
-            )
-        }
+        if (state.rows.size > RECENT_LIMIT) RecentToggle(state = state, onToggle = callbacks.onToggleExpanded)
     }
+}
+
+// FR-017: "Lihat semua (N)" while the list is short, "Ringkas" once it is expanded
+@Composable
+private fun RecentToggle(
+    state: WalletDetailUiState.Success,
+    onToggle: () -> Unit,
+) {
+    val label =
+        if (state.expanded) {
+            stringResource(R.string.wallet_detail_collapse)
+        } else {
+            stringResource(R.string.wallet_detail_show_all, state.rows.size)
+        }
+    Text(
+        text = label,
+        style = FintrackScreenText.style(size = 12.5f, weight = 700),
+        color = FintrackTheme.colors.brands.primary,
+        modifier = Modifier.clickable(onClick = onToggle),
+    )
 }
 
 // S-19: the recent transactions in one card, or "Belum ada transaksi" when the wallet has none

@@ -24,7 +24,7 @@ internal data class WalletDetailStats(
             WalletDetailStats(inflow = Money(0L), outflow = Money(0L), count = 0, perDay = emptyList(), today = 0)
 
         // S-19: money counts as incoming when it lands on the wallet (income, borrowed, collected, transfer in)
-        fun of(
+        fun from(
             walletId: WalletId,
             related: List<Transaction>,
             clock: Clock,

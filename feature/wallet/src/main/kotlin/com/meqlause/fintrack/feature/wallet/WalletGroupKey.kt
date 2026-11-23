@@ -14,7 +14,7 @@ internal enum class WalletGroupKey {
 
     companion object {
         // S-09: the group a wallet type is listed under
-        fun of(type: WalletType): WalletGroupKey =
+        fun forType(type: WalletType): WalletGroupKey =
             when (type) {
                 WalletType.CASH -> CASH
                 WalletType.BANK -> BANK

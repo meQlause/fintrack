@@ -51,7 +51,7 @@ internal class WalletDetailViewModel
                 categories.observeAll(),
                 expanded,
             ) { all, balances, rows, categoryList, open ->
-                buildState(all, balances, rows, categoryList, open)
+                buildState(all, balances, Ledger(rows, categoryList), open)
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), WalletDetailUiState.Loading)
 
         // FR-017: "Lihat semua (N)" expands the list in place; "Ringkas" collapses it again
@@ -62,11 +62,11 @@ internal class WalletDetailViewModel
         private fun buildState(
             allWallets: List<Wallet>,
             balances: Map<WalletId, Money>,
-            rows: List<Transaction>,
-            categoryList: List<Category>,
+            ledger: Ledger,
             open: Boolean,
         ): WalletDetailUiState {
-            val appearances = categoryList.associate { it.categoryId to it.profile.appearance }
+            val rows = ledger.rows
+            val appearances = ledger.categoryList.associate { it.categoryId to it.profile.appearance }
             val wallet = allWallets.firstOrNull { it.walletId == walletId } ?: return WalletDetailUiState.Missing
             val balance = balances[walletId] ?: wallet.terms.initialBalance
             val names = allWallets.associate { it.walletId to it.profile.name }
@@ -76,9 +76,15 @@ internal class WalletDetailViewModel
                 item = WalletItem(wallet = wallet, balance = balance),
                 rows = related,
                 expanded = open,
-                stats = WalletDetailStats.of(walletId, mine, clock),
+                stats = WalletDetailStats.from(walletId, mine, clock),
             )
         }
+
+        // S-19: the transactions and the categories the detail is built from
+        private data class Ledger(
+            val rows: List<Transaction>,
+            val categoryList: List<Category>,
+        )
 
         // S-19: "BCA · 12:30" or, for a transfer, "BCA → BCA Card · 10:00"
         private fun Transaction.toRow(

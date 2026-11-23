@@ -27,33 +27,11 @@ internal fun WalletNetWorthCard(
     netWorth: NetWorth,
     modifier: Modifier = Modifier,
 ) {
-    val parts = NetWorthParts.of(netWorth)
+    val parts = NetWorthParts.from(netWorth)
     ScreenCard(modifier = modifier) {
         Column(modifier = Modifier.padding(FintrackTheme.spacing.large)) {
             NetWorthBar(parts = parts.every)
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                        .padding(top = FintrackScreenSizes.rowPaddingHorizontal),
-            ) {
-                NetWorthColumn(
-                    title = stringResource(R.string.wallet_networth_assets),
-                    total = parts.assetTotal,
-                    rows = parts.assets,
-                    isDebt = false,
-                    modifier = Modifier.weight(1f).padding(end = FintrackScreenSizes.rowPaddingHorizontal),
-                )
-                VerticalDivider(thickness = FintrackTheme.sizes.hairline, color = FintrackTheme.colors.surfaces.outline)
-                NetWorthColumn(
-                    title = stringResource(R.string.wallet_networth_debts),
-                    total = parts.debtTotal,
-                    rows = parts.debts,
-                    isDebt = true,
-                    modifier = Modifier.weight(1f).padding(start = FintrackScreenSizes.rowPaddingHorizontal),
-                )
-            }
+            NetWorthColumns(parts = parts)
         }
     }
 }
@@ -80,3 +58,47 @@ private fun NetWorthBar(parts: List<NetWorthPart>) {
         }
     }
 }
+
+// BR-053: the Aset and the Utang column side by side, with a hairline between
+@Composable
+private fun NetWorthColumns(parts: NetWorthParts) {
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .padding(top = FintrackScreenSizes.rowPaddingHorizontal),
+    ) {
+        val assets =
+            NetWorthSide(stringResource(R.string.wallet_networth_assets), parts.assetTotal, parts.assets, false)
+        NetWorthColumn(
+            side = assetSide(parts),
+            modifier = Modifier.weight(1f).padding(end = FintrackScreenSizes.rowPaddingHorizontal),
+        )
+        VerticalDivider(thickness = FintrackTheme.sizes.hairline, color = FintrackTheme.colors.surfaces.outline)
+        NetWorthColumn(
+            side = debtSide(parts),
+            modifier = Modifier.weight(1f).padding(start = FintrackScreenSizes.rowPaddingHorizontal),
+        )
+    }
+}
+
+// BR-053: the Aset column, its total in the income colour
+@Composable
+private fun assetSide(parts: NetWorthParts): NetWorthSide =
+    NetWorthSide(
+        title = stringResource(R.string.wallet_networth_assets),
+        total = parts.assetTotal,
+        rows = parts.assets,
+        isDebt = false,
+    )
+
+// BR-053: the Utang column, its total in the expense colour
+@Composable
+private fun debtSide(parts: NetWorthParts): NetWorthSide =
+    NetWorthSide(
+        title = stringResource(R.string.wallet_networth_debts),
+        total = parts.debtTotal,
+        rows = parts.debts,
+        isDebt = true,
+    )

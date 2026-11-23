@@ -31,15 +31,7 @@ internal fun WalletLoanRow(
     ScreenCard(modifier = modifier) {
         ScreenRow(
             style = RowStyle(onClick = onOpen),
-            slots =
-                RowSlots(leading = { IconCircle(look = IconLook(iconKey = "person", colorKey = "teal")) }, trailing = {
-                    Icon(
-                        painter = painterResource(DesignR.drawable.ic_chevron_right),
-                        contentDescription = null,
-                        tint = FintrackTheme.colors.texts.onSurfaceVariant,
-                        modifier = Modifier.size(FintrackScreenSizes.chevron),
-                    )
-                }),
+            slots = RowSlots(leading = { IconCircle(look = LOAN_LOOK) }, trailing = { LoanChevron() }),
         ) {
             Text(
                 text = stringResource(R.string.wallet_loans_title),
@@ -58,4 +50,17 @@ internal fun WalletLoanRow(
             )
         }
     }
+}
+
+private val LOAN_LOOK = IconLook(iconKey = "person", colorKey = "teal")
+
+// FR-150: the chevron at the end of the Pinjaman card
+@Composable
+private fun LoanChevron() {
+    Icon(
+        painter = painterResource(DesignR.drawable.ic_chevron_right),
+        contentDescription = null,
+        tint = FintrackTheme.colors.texts.onSurfaceVariant,
+        modifier = Modifier.size(FintrackScreenSizes.chevron),
+    )
 }

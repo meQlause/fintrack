@@ -19,22 +19,29 @@ import java.time.Instant
 // S-09: previews of every state, light and dark
 private val previewAudit = Audit(createdAt = Instant.EPOCH, updatedAt = Instant.EPOCH)
 
+// S-09: which sample wallet to build, its kind and its icon and colour
+private data class PreviewWallet(
+    val itemId: Long,
+    val name: String,
+    val type: WalletType,
+    val look: Pair<String, String> = "wallet" to "gray",
+)
+
 private fun previewItem(
-    itemId: Long,
-    name: String,
-    type: WalletType,
+    spec: PreviewWallet,
     balance: Long,
-    look: Pair<String, String> = "wallet" to "gray",
     archived: Boolean = false,
 ): WalletItem {
+    val itemId = spec.itemId
+    val look = spec.look
     val wallet =
         Wallet(
             walletId = WalletId(itemId),
-            kind = WalletKind(type = type, investKind = null),
+            kind = WalletKind(type = spec.type, investKind = null),
             terms = WalletTerms(initialBalance = Money(balance), credit = null),
             profile =
                 WalletProfile(
-                    name = name,
+                    name = spec.name,
                     appearance = Appearance(iconKey = look.first, colorKey = look.second),
                     sortOrder = itemId.toInt(),
                 ),
@@ -45,33 +52,87 @@ private fun previewItem(
 }
 
 // design/screens/wallets.png: the prototype seed on 2026-11-22
+// S-09: the prototype's wallets in display order, each with its balance
+private data class SampleWallet(
+    val spec: PreviewWallet,
+    val balance: Long,
+)
+
+private val SAMPLE_WALLETS =
+    listOf(
+        SampleWallet(
+            PreviewWallet(itemId = 1, name = "Tunai", type = WalletType.CASH, look = "cash" to "green"),
+            balance = 223_000L,
+        ),
+        SampleWallet(
+            PreviewWallet(itemId = 2, name = "BCA", type = WalletType.BANK, look = "bank" to "blue"),
+            balance = 9_976_500L,
+        ),
+        SampleWallet(
+            PreviewWallet(itemId = 5, name = "Tabungan", type = WalletType.BANK, look = "bank" to "amber"),
+            balance = 2_700_000L,
+        ),
+        SampleWallet(
+            PreviewWallet(itemId = 3, name = "GoPay", type = WalletType.EWALLET, look = "ewallet" to "teal"),
+            balance = 222_000L,
+        ),
+        SampleWallet(
+            PreviewWallet(itemId = 4, name = "DANA", type = WalletType.EWALLET, look = "ewallet" to "indigo"),
+            balance = 295_000L,
+        ),
+        SampleWallet(
+            PreviewWallet(
+                itemId = 6,
+                name = "BCA Card",
+                type = WalletType.CREDIT_CARD,
+                look =
+                    "card" to "slate",
+            ),
+            balance = 3_500_000L,
+        ),
+        SampleWallet(
+            PreviewWallet(
+                itemId = 7,
+                name = "SPayLater",
+                type = WalletType.PAYLATER,
+                look =
+                    "clock" to "orange",
+            ),
+            balance = 1_090_000L,
+        ),
+        SampleWallet(
+            PreviewWallet(
+                itemId = 8,
+                name = "Reksa Dana",
+                type = WalletType.INVESTMENT,
+                look =
+                    "trend" to "green",
+            ),
+            balance = 4_200_000L,
+        ),
+    )
+
+// design/screens/wallets.png: the prototype seed on 2026-11-22
 private fun successState(editor: WalletEditor? = null): WalletUiState.Success {
-    val cash = previewItem(1, "Tunai", WalletType.CASH, 223_000L, "cash" to "green")
-    val bca = previewItem(2, "BCA", WalletType.BANK, 9_976_500L, "bank" to "blue")
-    val saving = previewItem(5, "Tabungan", WalletType.BANK, 2_700_000L, "bank" to "amber")
-    val gopay = previewItem(3, "GoPay", WalletType.EWALLET, 222_000L, "ewallet" to "teal")
-    val dana = previewItem(4, "DANA", WalletType.EWALLET, 295_000L, "ewallet" to "indigo")
-    val card = previewItem(6, "BCA Card", WalletType.CREDIT_CARD, 3_500_000L, "card" to "slate")
-    val later = previewItem(7, "SPayLater", WalletType.PAYLATER, 1_090_000L, "clock" to "orange")
-    val fund = previewItem(8, "Reksa Dana", WalletType.INVESTMENT, 4_200_000L, "trend" to "green")
+    val items = SAMPLE_WALLETS.map { previewItem(it.spec, it.balance) }
     return WalletUiState.Success(
         netWorth =
             NetWorth(
-                saldo = Money(13_416_500L),
-                investasi = Money(4_200_000L),
-                piutang = Money(200_000L),
-                utangKartu = Money(4_590_000L),
-                hutang = Money(500_000L),
+                saldo = Money(rupiah = 13_416_500L),
+                investasi = Money(rupiah = 4_200_000L),
+                piutang = Money(rupiah = 200_000L),
+                utangKartu = Money(rupiah = 4_590_000L),
+                hutang = Money(rupiah = 500_000L),
             ),
-        sections =
+        sections = WalletSection.group(items),
+        archived =
             listOf(
-                WalletSection(WalletGroupKey.CASH, listOf(cash)),
-                WalletSection(WalletGroupKey.BANK, listOf(bca, saving)),
-                WalletSection(WalletGroupKey.EWALLET, listOf(gopay, dana)),
-                WalletSection(WalletGroupKey.CREDIT, listOf(card, later)),
-                WalletSection(WalletGroupKey.INVESTMENT, listOf(fund)),
+                previewItem(
+                    PreviewWallet(itemId = 9, name = "Dompet lama", type = WalletType.OTHER),
+                    balance = 0L,
+                    archived = true,
+                ),
             ),
-        archived = listOf(previewItem(9, "Dompet lama", WalletType.OTHER, 0L, archived = true)),
         archivedExpanded = false,
         editor = editor,
         picker = null,

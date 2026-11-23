@@ -27,7 +27,7 @@ class WalletScreenUiTest {
         composeRule.setContent {
             WalletScreen(
                 state = WalletUiState.Empty(editor = null, picker = null),
-                callbacks = WalletCallbacks(onAdd = { added = true }),
+                callbacks = WalletCallbacks(list = WalletCallbacks.ListLinks(onAdd = { added = true })),
             )
         }
 

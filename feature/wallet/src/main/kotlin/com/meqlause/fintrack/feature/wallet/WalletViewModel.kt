@@ -6,11 +6,9 @@ import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import com.meqlause.fintrack.core.domain.usecase.ObserveNetWorthUseCase
 import com.meqlause.fintrack.core.domain.validation.WalletNameValidator
-import com.meqlause.fintrack.core.model.InvestKind
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.Wallet
 import com.meqlause.fintrack.core.model.WalletId
-import com.meqlause.fintrack.core.model.WalletType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,7 +19,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Clock
-import java.time.Instant
 import javax.inject.Inject
 
 // FR-010..016, S-09: drives the Dompet tab; the repository is the only source of wallets and balances
@@ -48,7 +45,7 @@ internal class WalletViewModel
                 picker,
                 archivedExpanded,
             ) { (all, balances, worth), draft, open, expanded ->
-                buildState(all, balances, worth, draft, open, expanded)
+                buildState(all, balances, worth, SheetView(draft, open, expanded))
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), WalletUiState.Loading)
 
         // S-09: the archived section opens and closes in place
@@ -63,29 +60,13 @@ internal class WalletViewModel
 
         // FR-011: opens the editor for an existing wallet
         fun startEdit(item: WalletItem) {
-            editor.value = WalletEditor.of(item)
+            editor.value = WalletEditor.forWallet(item)
         }
 
         // FR-010: closes the editor and any drawer it opened
         fun dismissEditor() {
             editor.value = null
             picker.value = null
-        }
-
-        fun changeName(name: String) {
-            editor.update { it?.copy(name = name, nameError = null) }
-        }
-
-        fun changeInitialBalance(digits: String) {
-            editor.update { it?.copy(initialBalance = digitsOf(digits)) }
-        }
-
-        fun changeCreditLimit(digits: String) {
-            editor.update { it?.copy(creditLimit = digitsOf(digits), limitError = false) }
-        }
-
-        fun changeIncludeInTotal(include: Boolean) {
-            editor.update { it?.copy(includeInTotal = include) }
         }
 
         fun openPicker(target: WalletPicker) {
@@ -96,26 +77,21 @@ internal class WalletViewModel
             picker.value = null
         }
 
-        // FR-010: the type drawer result; the drawer closes
-        fun pickType(type: WalletType) {
-            editor.update { it?.copy(type = type) }
-            picker.value = null
+        // FR-010, FR-139: one change of the draft; a drawer result also closes the drawer
+        fun edit(change: (WalletEditor) -> WalletEditor) {
+            editor.update { draft -> draft?.let(change) }
         }
 
-        // FR-170: the investment kind drawer result; the drawer closes
-        fun pickInvestKind(kind: InvestKind) {
-            editor.update { it?.copy(investKind = kind) }
+        // FR-010, FR-170: a drawer result changes the draft and closes the drawer
+        fun pick(change: (WalletEditor) -> WalletEditor) {
+            edit(change)
             picker.value = null
         }
 
         // FR-139: the statement or due day drawer result, depending on which drawer was open
         fun pickDay(pickedDay: Int) {
-            when (picker.value) {
-                WalletPicker.STATEMENT_DAY -> editor.update { it?.copy(statementDay = pickedDay) }
-                WalletPicker.DUE_DAY -> editor.update { it?.copy(dueDay = pickedDay) }
-                else -> Unit
-            }
-            picker.value = null
+            val open = picker.value
+            pick { it.withDay(open, pickedDay) }
         }
 
         // FR-010, FR-011, FR-139: saves a new or edited wallet; a rejected name or limit keeps the editor open
@@ -124,17 +100,17 @@ internal class WalletViewModel
             val nameError = validator.validate(draft.name)
             val limitError = draft.isCredit && (draft.creditLimit.toLongOrNull() ?: 0L) <= 0L
             if (nameError != null || limitError) {
-                editor.value = draft.copy(nameError = nameError, limitError = limitError)
+                editor.value = draft.withErrors(nameError, limitError)
                 return
             }
             viewModelScope.launch {
-                val all = wallets.observeAll().first()
-                val now = clock.instant()
-                val existing = all.firstOrNull { it.walletId == draft.walletId }
+                val stored = wallets.observeAll().first()
+                val stamp = clock.instant()
+                val existing = stored.firstOrNull { it.walletId == draft.walletId }
                 if (existing == null) {
-                    wallets.insert(WalletDraftMapper.newWallet(draft, nextSortOrder(all), now))
+                    wallets.insert(WalletDraftMapper.newWallet(draft, WalletDraftMapper.nextSortOrder(stored), stamp))
                 } else {
-                    wallets.update(WalletDraftMapper.applyTo(existing, draft, now))
+                    wallets.update(WalletDraftMapper.applyTo(existing, draft, stamp))
                 }
                 dismissEditor()
             }
@@ -145,7 +121,7 @@ internal class WalletViewModel
             val walletId = editor.value?.walletId ?: return
             viewModelScope.launch {
                 val existing = wallets.observeAll().first().firstOrNull { it.walletId == walletId } ?: return@launch
-                wallets.update(existing.withArchived(archived, clock.instant()))
+                wallets.update(WalletDraftMapper.archived(existing, archived, clock.instant()))
                 dismissEditor()
             }
         }
@@ -154,47 +130,30 @@ internal class WalletViewModel
             allWallets: List<Wallet>,
             balances: Map<WalletId, Money>,
             worth: NetWorth,
-            draft: WalletEditor?,
-            open: WalletPicker?,
-            expanded: Boolean,
+            sheet: SheetView,
         ): WalletUiState {
-            if (allWallets.isEmpty()) return WalletUiState.Empty(editor = draft, picker = open)
+            if (allWallets.isEmpty()) return WalletUiState.Empty(editor = sheet.draft, picker = sheet.open)
             val items =
                 allWallets.map { WalletItem(wallet = it, balance = balances[it.walletId] ?: it.terms.initialBalance) }
             val active = items.filterNot { it.wallet.status.isArchived }
             return WalletUiState.Success(
                 netWorth = worth,
-                sections = sectionsOf(active),
+                sections = WalletSection.group(active),
                 archived = items.filter { it.wallet.status.isArchived },
-                archivedExpanded = expanded,
-                editor = draft,
-                picker = open,
+                archivedExpanded = sheet.expanded,
+                editor = sheet.draft,
+                picker = sheet.open,
             )
         }
 
-        // S-09: the active wallets grouped in display order; empty groups are not shown
-        private fun sectionsOf(active: List<WalletItem>): List<WalletSection> =
-            WalletGroupKey.entries.mapNotNull { group ->
-                val items = active.filter { WalletGroupKey.of(it.wallet.kind.type) == group }
-                items.takeIf { it.isNotEmpty() }?.let { WalletSection(group = group, items = it) }
-            }
-
-        private fun Wallet.withArchived(
-            archived: Boolean,
-            currentTime: Instant,
-        ): Wallet =
-            copy(
-                status = status.copy(isArchived = archived),
-                audit = audit.copy(updatedAt = currentTime),
-            )
-
-        private fun nextSortOrder(existingWallets: List<Wallet>): Int =
-            (existingWallets.maxOfOrNull { it.profile.sortOrder } ?: -1) + 1
-
-        private fun digitsOf(rawInput: String): String = rawInput.filter { it.isDigit() }.take(MAX_DIGITS)
+        // S-09: the editor draft, the open drawer and the archived section, as the screen shows them
+        private data class SheetView(
+            val draft: WalletEditor?,
+            val open: WalletPicker?,
+            val expanded: Boolean,
+        )
 
         private companion object {
             const val STOP_TIMEOUT_MS = 5_000L
-            const val MAX_DIGITS = 12
         }
     }

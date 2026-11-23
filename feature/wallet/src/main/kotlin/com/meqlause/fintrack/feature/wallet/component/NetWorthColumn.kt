@@ -24,26 +24,23 @@ import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 // BR-053: one side of the card, Aset or Utang, with its total (17 px bold) and a dot row per part
 @Composable
 internal fun NetWorthColumn(
-    title: String,
-    total: String,
-    rows: List<NetWorthPart>,
-    isDebt: Boolean,
+    side: NetWorthSide,
     modifier: Modifier = Modifier,
 ) {
     val semantics = FintrackTheme.colors.semantics
     Column(modifier = modifier) {
         Text(
-            text = title,
+            text = side.title,
             style = FintrackScreenText.label(),
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
         Text(
-            text = total,
+            text = side.total,
             style = FintrackScreenText.total(),
-            color = if (isDebt) semantics.expense else semantics.income,
+            color = if (side.isDebt) semantics.expense else semantics.income,
             modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
         )
-        rows.forEach { part -> NetWorthLegendRow(part = part) }
+        side.rows.forEach { part -> NetWorthLegendRow(part = part) }
     }
 }
 

@@ -19,6 +19,7 @@ import com.meqlause.fintrack.core.designsystem.icon.TintedIconBox
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.wallet.R
 import com.meqlause.fintrack.feature.wallet.WalletItem
@@ -44,18 +45,27 @@ internal fun WalletDetailBalance(
                     shape = RoundedCornerShape(FintrackScreenSizes.heroCorner),
                 ),
         )
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = stringResource(R.string.wallet_detail_balance_label),
-                style = FintrackScreenText.label(),
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-            )
-            Text(
-                text = MoneyFormatter.format(item.balance),
-                style = FintrackScreenText.number(size = 32f, weight = 700),
-                color = FintrackTheme.colors.texts.onSurface,
-            )
-        }
+        BalanceTexts(balance = item.balance, modifier = Modifier.weight(1f))
+    }
+}
+
+// FR-017: the "Saldo" label over the 32 px balance
+@Composable
+private fun BalanceTexts(
+    balance: Money,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.wallet_detail_balance_label),
+            style = FintrackScreenText.label(),
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
+        Text(
+            text = MoneyFormatter.format(balance),
+            style = FintrackScreenText.number(size = 32f, weight = 700),
+            color = FintrackTheme.colors.texts.onSurface,
+        )
     }
 }
 

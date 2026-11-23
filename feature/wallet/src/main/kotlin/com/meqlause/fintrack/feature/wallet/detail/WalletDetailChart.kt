@@ -71,20 +71,20 @@ private fun Bars(
         verticalAlignment = Alignment.Bottom,
     ) {
         stats.perDay.forEachIndexed { index, value ->
-            val day = index + 1
+            val dayNumber = index + 1
             val color =
                 when {
-                    day > stats.today -> FintrackTheme.colors.surfaces.outline
-                    day == stats.today -> FintrackTheme.colors.brands.primary
+                    dayNumber > stats.today -> FintrackTheme.colors.surfaces.outline
+                    dayNumber == stats.today -> FintrackTheme.colors.brands.primary
                     else -> FintrackTheme.colors.categoryColor(colorKey)
                 }
-            Bar(value = value, peak = peak, color = color, modifier = Modifier.weight(1f))
+            BarColumn(value = value, peak = peak, color = color, modifier = Modifier.weight(1f))
         }
     }
 }
 
 @Composable
-private fun Bar(
+private fun BarColumn(
     value: Long,
     peak: Long,
     color: Color,

@@ -31,6 +31,7 @@ import com.meqlause.fintrack.feature.wallet.component.WalletItemRow
 import com.meqlause.fintrack.feature.wallet.component.WalletLoanRow
 import com.meqlause.fintrack.feature.wallet.component.WalletNetWorthCard
 import com.meqlause.fintrack.feature.wallet.component.WalletPickerOverlay
+import com.meqlause.fintrack.feature.wallet.component.WalletRowActions
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // DOC-03, FR-010..016, S-09: stateless Dompet screen; list, editor and drawers all come from WalletUiState
@@ -121,20 +122,28 @@ private fun WalletList(
             }
         }
         archivedItems(state = state, callbacks = callbacks)
-        item(key = "loans") {
-            WalletLoanRow(
-                netWorth = state.netWorth,
-                onOpen = callbacks.onOpenLoans,
-                modifier = Modifier.padding(top = FintrackScreenSizes.groupGap),
-            )
-        }
-        item(key = "add") {
-            ScreenDashedButton(
-                text = stringResource(R.string.wallet_add_short),
-                onClick = callbacks.onAdd,
-                modifier = Modifier.padding(top = FintrackScreenSizes.rowPaddingHorizontal),
-            )
-        }
+        footerItems(state = state, callbacks = callbacks)
+    }
+}
+
+// FR-150, S-09: the Pinjaman card and the dashed add button close the list
+private fun LazyListScope.footerItems(
+    state: WalletUiState.Success,
+    callbacks: WalletCallbacks,
+) {
+    item(key = "loans") {
+        WalletLoanRow(
+            netWorth = state.netWorth,
+            onOpen = callbacks.onOpenLoans,
+            modifier = Modifier.padding(top = FintrackScreenSizes.groupGap),
+        )
+    }
+    item(key = "add") {
+        ScreenDashedButton(
+            text = stringResource(R.string.wallet_add_short),
+            onClick = callbacks.onAdd,
+            modifier = Modifier.padding(top = FintrackScreenSizes.rowPaddingHorizontal),
+        )
     }
 }
 
@@ -171,8 +180,10 @@ private fun WalletRows(
         WalletItemRow(
             item = row,
             showDivider = index > 0,
-            onOpen = { callbacks.onOpenDetail(row.wallet.walletId, row.wallet.kind.type) },
-            onEdit = { callbacks.onEdit(row) },
+            actions =
+                WalletRowActions(onOpen = {
+                    callbacks.onOpenDetail(row.wallet.walletId, row.wallet.kind.type)
+                }, onEdit = { callbacks.onEdit(row) }),
         )
     }
 }

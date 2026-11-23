@@ -89,8 +89,8 @@ class WalletViewModelTest {
             val viewModel = viewModel(repository)
             val collector = backgroundScope.launch { viewModel.state.collect {} }
             viewModel.startCreate()
-            viewModel.changeName("  Dompet tunai  ")
-            viewModel.changeInitialBalance("150000")
+            viewModel.edit { it.withName("  Dompet tunai  ") }
+            viewModel.edit { it.withInitialBalance("150000") }
             viewModel.save()
             advanceUntilIdle()
 
@@ -108,7 +108,7 @@ class WalletViewModelTest {
             val viewModel = viewModel(repository)
             val collector = backgroundScope.launch { viewModel.state.collect {} }
             viewModel.startCreate()
-            viewModel.changeName("   ")
+            viewModel.edit { it.withName("   ") }
             viewModel.save()
             advanceUntilIdle()
 

@@ -15,7 +15,7 @@ internal class NetWorthParts private constructor(
     val debtTotal: String = "−" + MoneyFormatter.formatCompact(Money(positiveSum(debts)))
 
     companion object {
-        fun of(netWorth: NetWorth): NetWorthParts =
+        fun from(netWorth: NetWorth): NetWorthParts =
             NetWorthParts(
                 assets =
                     listOf(

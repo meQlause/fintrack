@@ -20,25 +20,45 @@ public fun WalletRoute(
     WalletScreen(
         state = state,
         callbacks =
-            WalletCallbacks(
-                onAdd = viewModel::startCreate,
-                onOpenDetail = onOpenDetail,
-                onOpenLoans = onOpenLoans,
-                onEdit = viewModel::startEdit,
-                onToggleArchived = viewModel::toggleArchivedSection,
-                onNameChange = viewModel::changeName,
-                onOpenPicker = viewModel::openPicker,
-                onDismissPicker = viewModel::dismissPicker,
-                onPickType = viewModel::pickType,
-                onPickInvestKind = viewModel::pickInvestKind,
-                onPickDay = viewModel::pickDay,
-                onInitialBalanceChange = viewModel::changeInitialBalance,
-                onCreditLimitChange = viewModel::changeCreditLimit,
-                onIncludeInTotalChange = viewModel::changeIncludeInTotal,
-                onSetArchivedEditing = viewModel::setArchivedEditing,
-                onSave = viewModel::save,
-                onDismissEditor = viewModel::dismissEditor,
+            walletCallbacks(
+                viewModel,
+                WalletCallbacks.ListLinks(onOpenDetail = onOpenDetail, onOpenLoans = onOpenLoans),
             ),
         modifier = modifier,
     )
 }
+
+// FR-010..016: the view model's actions and the host's links gathered for the screen
+private fun walletCallbacks(
+    viewModel: WalletViewModel,
+    host: WalletCallbacks.ListLinks,
+): WalletCallbacks =
+    WalletCallbacks(
+        list =
+            host.copy(
+                onAdd = viewModel::startCreate,
+                onEdit = viewModel::startEdit,
+                onToggleArchived = viewModel::toggleArchivedSection,
+            ),
+        fields =
+            WalletCallbacks.Fields(
+                onNameChange = { text -> viewModel.edit { it.withName(text) } },
+                onInitialBalanceChange = { text -> viewModel.edit { it.withInitialBalance(text) } },
+                onCreditLimitChange = { text -> viewModel.edit { it.withCreditLimit(text) } },
+                onIncludeInTotalChange = { include -> viewModel.edit { it.withIncludeInTotal(include) } },
+            ),
+        picks =
+            WalletCallbacks.Picks(
+                onOpenPicker = viewModel::openPicker,
+                onDismissPicker = viewModel::dismissPicker,
+                onPickType = { type -> viewModel.pick { it.withType(type) } },
+                onPickInvestKind = { kind -> viewModel.pick { it.withInvestKind(kind) } },
+                onPickDay = viewModel::pickDay,
+            ),
+        sheet =
+            WalletCallbacks.Sheet(
+                onSetArchivedEditing = viewModel::setArchivedEditing,
+                onSave = viewModel::save,
+                onDismissEditor = viewModel::dismissEditor,
+            ),
+    )

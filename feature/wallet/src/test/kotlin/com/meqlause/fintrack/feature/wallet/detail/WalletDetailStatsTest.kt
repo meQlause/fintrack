@@ -25,7 +25,7 @@ class WalletDetailStatsTest {
     private val mine = WalletId(1L)
     private val other = WalletId(2L)
 
-    private fun tx(
+    private fun txRow(
         type: TransactionType,
         stamp: String,
         rupiah: Long,
@@ -45,13 +45,13 @@ class WalletDetailStatsTest {
     fun givenMixedTransactionsWhenSummarisedThenOnlyThisMonthCountsByDirection() {
         val rows =
             listOf(
-                tx(TransactionType.INCOME, "2026-11-03T09:00", 1_000L),
-                tx(TransactionType.EXPENSE, "2026-11-03T10:00", 300L),
-                tx(TransactionType.TRANSFER, "2026-11-20T10:00", 200L, target = other),
-                tx(TransactionType.EXPENSE, "2026-10-30T10:00", 999L),
+                txRow(TransactionType.INCOME, "2026-11-03T09:00", 1_000L),
+                txRow(TransactionType.EXPENSE, "2026-11-03T10:00", 300L),
+                txRow(TransactionType.TRANSFER, "2026-11-20T10:00", 200L, target = other),
+                txRow(TransactionType.EXPENSE, "2026-10-30T10:00", 999L),
             )
 
-        val stats = WalletDetailStats.of(mine, rows, clock)
+        val stats = WalletDetailStats.from(mine, rows, clock)
 
         assertThat(stats.inflow).isEqualTo(Money(1_000L))
         assertThat(stats.outflow).isEqualTo(Money(500L))

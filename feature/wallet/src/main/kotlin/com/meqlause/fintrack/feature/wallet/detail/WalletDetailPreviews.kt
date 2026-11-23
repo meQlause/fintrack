@@ -36,78 +36,114 @@ private fun previewWallet(): WalletItem {
             status = WalletStatus(),
             audit = previewAudit,
         )
-    return WalletItem(wallet = wallet, balance = Money(9_976_500L))
+    return WalletItem(wallet = wallet, balance = Money(rupiah = 9_976_500L))
 }
+
+// S-19: the icon, colour, type and time of one sample row
+private data class PreviewLook(
+    val iconKey: String,
+    val colorKey: String,
+    val type: TransactionType,
+    val time: String,
+)
 
 private fun previewRow(
     index: Long,
     title: String,
     amount: Long,
-    look: Triple<String, String, TransactionType>,
-    time: String,
+    look: PreviewLook,
 ): WalletDetailRow =
     WalletDetailRow(
         transactionId = index,
         title = title,
-        subtitle = if (look.third == TransactionType.TRANSFER) "BCA → BCA Card · $time" else "BCA · $time",
+        subtitle = if (look.type == TransactionType.TRANSFER) "BCA → BCA Card · ${look.time}" else "BCA · ${look.time}",
         amount = Money(amount),
-        type = look.third,
-        appearance = Appearance(look.first, look.second),
+        type = look.type,
+        appearance = Appearance(look.iconKey, look.colorKey),
     )
 
-private fun previewRows(): List<WalletDetailRow> {
-    val spend = TransactionType.EXPENSE
-    return listOf(
-        previewRow(1, "Makan siang", 45_000L, Triple("food", "orange", spend), "12:30"),
-        previewRow(2, "Belanja bulanan", 186_500L, Triple("shopping", "rose", spend), "19:45"),
-        previewRow(3, "Langganan musik", 54_000L, Triple("entertainment", "indigo", spend), "20:15"),
-        previewRow(4, "Bayar BCA Card", 500_000L, Triple("card", "blue", TransactionType.TRANSFER), "10:00"),
-        previewRow(5, "Listrik", 450_000L, Triple("bill", "purple", spend), "10:00"),
-        previewRow(6, "Nonton", 100_000L, Triple("entertainment", "indigo", spend), "19:00"),
-        previewRow(7, "Transfer ke Tunai", 300_000L, Triple("transfer", "blue", TransactionType.TRANSFER), "08:00"),
-        previewRow(8, "Kopi", 28_000L, Triple("food", "orange", spend), "07:30"),
-        previewRow(9, "Bensin", 60_000L, Triple("transport", "blue", spend), "07:00"),
+// S-19: the nine sample rows of the wallet detail
+private data class SampleRow(
+    val index: Long,
+    val title: String,
+    val amount: Long,
+    val look: PreviewLook,
+)
+
+private val SAMPLE_ROWS =
+    listOf(
+        SampleRow(
+            index = 1,
+            title = "Makan siang",
+            amount = 45_000L,
+            look = PreviewLook("food", "orange", TransactionType.EXPENSE, "12:30"),
+        ),
+        SampleRow(
+            index = 2,
+            title = "Belanja bulanan",
+            amount = 186_500L,
+            look = PreviewLook("shopping", "rose", TransactionType.EXPENSE, "19:45"),
+        ),
+        SampleRow(
+            index = 3,
+            title = "Langganan musik",
+            amount = 54_000L,
+            look = PreviewLook("entertainment", "indigo", TransactionType.EXPENSE, "20:15"),
+        ),
+        SampleRow(
+            index = 4,
+            title = "Bayar BCA Card",
+            amount = 500_000L,
+            look = PreviewLook("card", "blue", TransactionType.TRANSFER, "10:00"),
+        ),
+        SampleRow(
+            index = 5,
+            title = "Listrik",
+            amount = 450_000L,
+            look = PreviewLook("bill", "purple", TransactionType.EXPENSE, "10:00"),
+        ),
+        SampleRow(
+            index = 6,
+            title = "Nonton",
+            amount = 100_000L,
+            look = PreviewLook("entertainment", "indigo", TransactionType.EXPENSE, "19:00"),
+        ),
+        SampleRow(
+            index = 7,
+            title = "Transfer ke Tunai",
+            amount = 300_000L,
+            look = PreviewLook("transfer", "blue", TransactionType.TRANSFER, "08:00"),
+        ),
+        SampleRow(
+            index = 8,
+            title = "Kopi",
+            amount = 28_000L,
+            look = PreviewLook("food", "orange", TransactionType.EXPENSE, "07:30"),
+        ),
+        SampleRow(
+            index = 9,
+            title = "Bensin",
+            amount = 60_000L,
+            look = PreviewLook("transport", "blue", TransactionType.EXPENSE, "07:00"),
+        ),
     )
-}
+
+private fun previewRows(): List<WalletDetailRow> =
+    SAMPLE_ROWS.map { previewRow(index = it.index, title = it.title, amount = it.amount, look = it.look) }
+
+// S-19: thirty days of outflow, nothing after the ninth of the month
+private val PER_DAY_SAMPLE: List<Long> =
+    """
+    900000 700000 40000 110000 30000 50000 20000 100000 10000 10000 10000 20000 40000 30000 150000
+    20000 10000 200000 40000 20000 10000 0 0 0 0 0 0 0 0 0
+    """.trim().split(Regex("""\s+""")).map(String::toLong)
 
 private val previewStats =
     WalletDetailStats(
-        inflow = Money(10_200_000L),
-        outflow = Money(5_300_000L),
+        inflow = Money(rupiah = 10_200_000L),
+        outflow = Money(rupiah = 5_300_000L),
         count = 18,
-        perDay =
-            listOf(
-                900_000L,
-                700_000L,
-                40_000L,
-                110_000L,
-                30_000L,
-                50_000L,
-                20_000L,
-                100_000L,
-                10_000L,
-                10_000L,
-                10_000L,
-                20_000L,
-                40_000L,
-                30_000L,
-                150_000L,
-                20_000L,
-                10_000L,
-                200_000L,
-                40_000L,
-                20_000L,
-                10_000L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-            ),
+        perDay = PER_DAY_SAMPLE,
         today = 22,
         monthLabel = "Nov",
     )

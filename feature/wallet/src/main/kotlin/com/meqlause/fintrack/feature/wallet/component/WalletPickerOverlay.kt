@@ -24,45 +24,11 @@ internal fun WalletPickerOverlay(
 ) {
     when (picker) {
         WalletPicker.TYPE -> {
-            OptionsDrawer(
-                title = stringResource(R.string.wallet_picker_type_title),
-                choices =
-                    OptionChoices(
-                        options =
-                            WalletType.entries.map {
-                                PickerOption(
-                                    optionKey = it.name,
-                                    label = stringResource(WalletLabels.type(it)),
-                                )
-                            },
-                        selectedKey = draft.type.name,
-                    ),
-                actions =
-                    PickerActions(onPick = {
-                        callbacks.onPickType(WalletType.valueOf(it.optionKey))
-                    }, onClose = callbacks.onDismissPicker),
-            )
+            TypeDrawer(draft = draft, callbacks = callbacks)
         }
 
         WalletPicker.INVEST_KIND -> {
-            OptionsDrawer(
-                title = stringResource(R.string.wallet_picker_invest_title),
-                choices =
-                    OptionChoices(
-                        options =
-                            InvestKind.entries.map {
-                                PickerOption(
-                                    optionKey = it.name,
-                                    label = stringResource(WalletLabels.investKind(it)),
-                                )
-                            },
-                        selectedKey = draft.investKind.name,
-                    ),
-                actions =
-                    PickerActions(onPick = {
-                        callbacks.onPickInvestKind(InvestKind.valueOf(it.optionKey))
-                    }, onClose = callbacks.onDismissPicker),
-            )
+            InvestKindDrawer(draft = draft, callbacks = callbacks)
         }
 
         WalletPicker.STATEMENT_DAY -> {
@@ -81,4 +47,40 @@ internal fun WalletPickerOverlay(
             )
         }
     }
+}
+
+// FR-010: the wallet type as a single-choice list
+@Composable
+private fun TypeDrawer(
+    draft: WalletEditor,
+    callbacks: WalletCallbacks,
+) {
+    val options = WalletType.entries.map { PickerOption(it.name, stringResource(WalletLabels.type(it))) }
+    OptionsDrawer(
+        title = stringResource(R.string.wallet_picker_type_title),
+        choices = OptionChoices(options = options, selectedKey = draft.type.name),
+        actions =
+            PickerActions(
+                onPick = { callbacks.onPickType(WalletType.valueOf(it.optionKey)) },
+                onClose = callbacks.onDismissPicker,
+            ),
+    )
+}
+
+// FR-170: the investment kind as a single-choice list
+@Composable
+private fun InvestKindDrawer(
+    draft: WalletEditor,
+    callbacks: WalletCallbacks,
+) {
+    val options = InvestKind.entries.map { PickerOption(it.name, stringResource(WalletLabels.investKind(it))) }
+    OptionsDrawer(
+        title = stringResource(R.string.wallet_picker_invest_title),
+        choices = OptionChoices(options = options, selectedKey = draft.investKind.name),
+        actions =
+            PickerActions(
+                onPick = { callbacks.onPickInvestKind(InvestKind.valueOf(it.optionKey)) },
+                onClose = callbacks.onDismissPicker,
+            ),
+    )
 }

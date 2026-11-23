@@ -6,7 +6,7 @@ import com.meqlause.fintrack.core.model.WalletType
 // FR-010: the icon and colour a new wallet gets from its type; the icon and colour pickers come later
 internal object WalletAppearance {
     // FR-010: same icons and colours as the onboarding wallet step, neutral for the other types
-    fun of(type: WalletType): Appearance =
+    fun forType(type: WalletType): Appearance =
         when (type) {
             WalletType.CASH -> Appearance(iconKey = "cash", colorKey = "green")
             WalletType.BANK -> Appearance(iconKey = "bank", colorKey = "blue")

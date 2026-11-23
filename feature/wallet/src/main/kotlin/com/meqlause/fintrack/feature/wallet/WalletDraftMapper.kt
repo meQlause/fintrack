@@ -26,7 +26,7 @@ internal object WalletDraftMapper {
             profile =
                 WalletProfile(
                     name = draft.name.trim(),
-                    appearance = WalletAppearance.of(draft.type),
+                    appearance = WalletAppearance.forType(draft.type),
                     sortOrder = sortOrder,
                 ),
             status = WalletStatus(isIncludedInTotal = draft.includeInTotal),
@@ -44,6 +44,21 @@ internal object WalletDraftMapper {
             terms = termsOf(draft),
             profile = wallet.profile.copy(name = draft.name.trim()),
             status = wallet.status.copy(isIncludedInTotal = draft.includeInTotal),
+            audit = wallet.audit.copy(updatedAt = currentTime),
+        )
+
+    // FR-010: the next place in the manual order
+    fun nextSortOrder(existingWallets: List<Wallet>): Int =
+        (existingWallets.maxOfOrNull { it.profile.sortOrder } ?: -1) + 1
+
+    // FR-012: the wallet archived or restored; only the flag and the update time change
+    fun archived(
+        wallet: Wallet,
+        archived: Boolean,
+        currentTime: Instant,
+    ): Wallet =
+        wallet.copy(
+            status = wallet.status.copy(isArchived = archived),
             audit = wallet.audit.copy(updatedAt = currentTime),
         )
 

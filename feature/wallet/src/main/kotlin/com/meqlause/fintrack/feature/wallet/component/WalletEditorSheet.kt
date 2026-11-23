@@ -93,18 +93,27 @@ private fun WalletFormFields(
         if (draft.isCredit) {
             CreditFields(draft = draft, callbacks = callbacks)
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = stringResource(R.string.wallet_include_total),
-                style = FintrackTheme.typography.bodyLarge,
-                color = FintrackTheme.colors.texts.onSurface,
-            )
-            FintrackSwitch(checked = draft.includeInTotal, onCheckedChange = callbacks.onIncludeInTotalChange)
-        }
+        IncludeInTotalRow(draft = draft, onChange = callbacks.onIncludeInTotalChange)
+    }
+}
+
+// FR-013: the switch that decides whether the wallet counts in the total
+@Composable
+private fun IncludeInTotalRow(
+    draft: WalletEditor,
+    onChange: (Boolean) -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = stringResource(R.string.wallet_include_total),
+            style = FintrackTheme.typography.bodyLarge,
+            color = FintrackTheme.colors.texts.onSurface,
+        )
+        FintrackSwitch(checked = draft.includeInTotal, onCheckedChange = onChange)
     }
 }
 
@@ -130,6 +139,26 @@ private fun BalanceField(
     )
 }
 
+// FR-139: the credit limit, with its error underneath when the save found it empty
+@Composable
+private fun LimitField(
+    draft: WalletEditor,
+    onChange: (String) -> Unit,
+) {
+    OutlinedTextField(
+        value = draft.creditLimit,
+        onValueChange = onChange,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(text = stringResource(R.string.wallet_field_limit)) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        singleLine = true,
+        isError = draft.limitError,
+    )
+    if (draft.limitError) {
+        ErrorText(text = stringResource(R.string.wallet_limit_invalid))
+    }
+}
+
 // FR-139: limit, statement day and due day of a card or paylater wallet
 @Composable
 private fun CreditFields(
@@ -137,18 +166,7 @@ private fun CreditFields(
     callbacks: WalletCallbacks,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-        OutlinedTextField(
-            value = draft.creditLimit,
-            onValueChange = callbacks.onCreditLimitChange,
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text(text = stringResource(R.string.wallet_field_limit)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            singleLine = true,
-            isError = draft.limitError,
-        )
-        if (draft.limitError) {
-            ErrorText(text = stringResource(R.string.wallet_limit_invalid))
-        }
+        LimitField(draft = draft, onChange = callbacks.onCreditLimitChange)
         Text(
             text = stringResource(R.string.wallet_cycle_title),
             style = FintrackTheme.typography.labelLarge,
