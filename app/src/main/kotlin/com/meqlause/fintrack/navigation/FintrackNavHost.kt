@@ -12,6 +12,7 @@ import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.SettingsDestination
 import com.meqlause.fintrack.feature.settings.navigation.settingsDestination
+import com.meqlause.fintrack.feature.transaction.edit.navigation.editTransactionDestination
 import com.meqlause.fintrack.feature.wallet.navigation.WalletDetailDestination
 import com.meqlause.fintrack.feature.wallet.navigation.walletDestination
 import com.meqlause.fintrack.feature.wallet.navigation.walletDetailDestination
@@ -67,4 +68,6 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenCategories = { navController.navigate(CategoryDestination) },
     )
     categoryDestination(onBack = { navController.popBackStack() })
+    // DOC-09, S-04: the add or edit sheet returns to the screen it was opened from
+    editTransactionDestination(onDismiss = { navController.popBackStack() })
 }

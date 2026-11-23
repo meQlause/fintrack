@@ -16,6 +16,7 @@ import com.meqlause.fintrack.core.designsystem.component.FintrackBarItem
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomBar
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomBarCallbacks
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
+import com.meqlause.fintrack.feature.transaction.edit.navigation.EditTransactionDestination
 import com.meqlause.fintrack.navigation.FintrackNavHost
 import com.meqlause.fintrack.navigation.MainTab
 import com.meqlause.fintrack.startup.AppStartViewModel
@@ -60,9 +61,9 @@ private fun FintrackShell(
     }
 }
 
-// DOC-09: a tab tap switches the NavHost destination; the add sheet (S-04) is wired with feature:transaction in P4
+// DOC-09: a tab tap switches the NavHost destination; the centre button opens the add sheet (S-04)
 private fun barCallbacks(navController: NavHostController): FintrackBottomBarCallbacks =
     FintrackBottomBarCallbacks(
         onSelect = { index -> MainTab.entries[index].navigateFrom(navController) },
-        onAddClick = {},
+        onAddClick = { navController.navigate(EditTransactionDestination()) },
     )

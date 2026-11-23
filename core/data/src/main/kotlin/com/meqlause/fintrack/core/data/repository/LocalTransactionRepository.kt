@@ -18,4 +18,8 @@ public class LocalTransactionRepository(
 
     override suspend fun insert(transaction: Transaction): TransactionId =
         TransactionId(transactionDao.insert(transaction.toEntity()))
+
+    override suspend fun update(transaction: Transaction) {
+        transactionDao.update(transaction.toEntity())
+    }
 }

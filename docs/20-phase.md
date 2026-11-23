@@ -377,7 +377,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - [x] done · Refs: FR-020 … FR-023, BR-008 · Commit: `feat(category): add category management [P4, FR-020]`
 
 ### T4.6 — Add / edit transaction sheet (S-04)
-- [ ] done
+- [x] done
 - Refs: FR-030 … FR-035, BR-001 … BR-003, BR-006, BR-009
 - Read: 09 S-04 (incl. "Bayar pakai" row and left-to-right transfer), prototype `isAddSheet`
 - Tests: validation messages; 4-tap path UI test (FR-033 AC); transfer source ≠ target; credit wallet not allowed as transfer source (BR-039).
