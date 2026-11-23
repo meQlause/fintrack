@@ -16,4 +16,10 @@ dependencies {
     implementation(libs.work.runtime.ktx)
     ksp(libs.hilt.androidx.compiler)
     ksp(libs.hilt.compiler)
+
+    testImplementation(libs.junit4)
+    testImplementation(libs.assertk)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.robolectric.annotations)
+    testImplementation(libs.androidx.test.core)
 }
