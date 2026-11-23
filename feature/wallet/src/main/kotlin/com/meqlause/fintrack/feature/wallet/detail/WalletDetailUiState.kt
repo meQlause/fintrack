@@ -15,5 +15,6 @@ internal sealed interface WalletDetailUiState {
         val item: WalletItem,
         val rows: List<WalletDetailRow>,
         val expanded: Boolean,
+        val stats: WalletDetailStats = WalletDetailStats.EMPTY,
     ) : WalletDetailUiState
 }

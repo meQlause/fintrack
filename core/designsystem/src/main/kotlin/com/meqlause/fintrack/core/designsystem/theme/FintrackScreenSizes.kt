@@ -1,0 +1,45 @@
+package com.meqlause.fintrack.core.designsystem.theme
+
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.unit.Dp
+
+// DOC-08: prototype (Main.dc.html) metrics of the list screens that FintrackSizes does not carry
+object FintrackScreenSizes {
+    // prototype .app .card radius is 18 px
+    val cardCorner: RoundedCornerShape = RoundedCornerShape(size = Dp(value = 18f))
+    val buttonCorner: RoundedCornerShape = RoundedCornerShape(size = Dp(value = 14f))
+    val dashedRadius: Dp = Dp(value = 16f)
+    val dashedCorner: RoundedCornerShape = RoundedCornerShape(size = dashedRadius)
+    val screenGutter: Dp = Dp(value = 20f)
+    val screenTop: Dp = Dp(value = 14f)
+    val screenBottom: Dp = Dp(value = 132f)
+    val groupGap: Dp = Dp(value = 20f)
+    val groupLabelBottom: Dp = Dp(value = 8f)
+    val groupLabelInset: Dp = Dp(value = 2f)
+    val rowGap: Dp = Dp(value = 12f)
+    val rowPaddingVertical: Dp = Dp(value = 12f)
+    val rowPaddingHorizontal: Dp = Dp(value = 14f)
+    val netWorthBarGap: Dp = Dp(value = 2f)
+    val netWorthBarCorner: Dp = Dp(value = 5f)
+    val legendDot: Dp = Dp(value = 7f)
+    val legendGap: Dp = Dp(value = 7f)
+    val legendRowTop: Dp = Dp(value = 9f)
+    val dashedHeight: Dp = Dp(value = 50f)
+    val primaryButtonHeight: Dp = Dp(value = 44f)
+    val chevron: Dp = Dp(value = 16f)
+    val thinBar: Dp = Dp(value = 3f)
+    val iconButton: Dp = Dp(value = 40f)
+    val backGlyph: Dp = Dp(value = 20f)
+    val badgeCorner: Dp = Dp(value = 7f)
+    val badgePadding: Dp = Dp(value = 3f)
+    val heroIcon: Dp = Dp(value = 52f)
+    val heroGlyph: Dp = Dp(value = 24f)
+    val heroCorner: Dp = Dp(value = 16f)
+    val actionHeight: Dp = Dp(value = 56f)
+    val actionGlyph: Dp = Dp(value = 18f)
+    val chartHeight: Dp = Dp(value = 56f)
+    val chartBarMin: Dp = Dp(value = 4f)
+    val chartBarEmpty: Dp = Dp(value = 2f)
+    val chartBarCorner: Dp = Dp(value = 2f)
+    val chartGap: Dp = Dp(value = 2f)
+}

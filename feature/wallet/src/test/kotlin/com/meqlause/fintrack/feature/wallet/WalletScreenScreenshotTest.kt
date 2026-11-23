@@ -13,7 +13,7 @@ import org.robolectric.annotation.GraphicsMode
 // FR-010..016, S-09: screenshot references of the Dompet previews in light and dark themes
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(qualifiers = "w411dp-h720dp")
+@Config(qualifiers = "w390dp-h844dp")
 class WalletScreenScreenshotTest {
     @get:Rule
     val composeRule = createComposeRule()
