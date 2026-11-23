@@ -18,6 +18,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.StatementStatus
 
@@ -38,7 +39,7 @@ internal fun HomeBillRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
-        IconCircle(iconKey = bill.appearance.iconKey, colorKey = bill.appearance.colorKey)
+        IconCircle(look = IconLook(iconKey = bill.appearance.iconKey, colorKey = bill.appearance.colorKey))
         BillName(bill = bill, modifier = Modifier.weight(1f))
         Column(horizontalAlignment = Alignment.End) {
             HomeAmountText(

@@ -1,6 +1,7 @@
 package com.meqlause.fintrack.feature.transaction.edit
 
 import com.meqlause.fintrack.core.domain.loan.LoanDraft
+import com.meqlause.fintrack.core.domain.loan.LoanSchedule
 import com.meqlause.fintrack.core.domain.transaction.SaveTransactionResult
 import com.meqlause.fintrack.core.domain.usecase.SaveLoanUseCase
 import java.time.Clock
@@ -25,8 +26,7 @@ internal class EditLoanController
                     personName = loan.personName,
                     principal = state.form.amount,
                     walletId = state.form.walletId,
-                    startDate = state.record.occurredAt,
-                    dueDate = loan.dueDate,
+                    schedule = LoanSchedule(startDate = state.record.occurredAt, dueDate = loan.dueDate),
                     note = state.form.note,
                 )
             return saveLoan(draft)

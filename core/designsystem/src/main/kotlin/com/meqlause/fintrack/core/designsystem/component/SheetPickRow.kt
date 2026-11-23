@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import com.meqlause.fintrack.core.designsystem.R
+import com.meqlause.fintrack.core.designsystem.icon.IconBox
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.icon.TintedIconBox
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
@@ -27,11 +30,8 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 // DOC-08: the prototype .pickrow, a card with an icon tile, a label over a bold name, a balance and a chevron
 @Composable
 fun SheetPickRow(
-    label: String,
-    name: String,
-    balance: String,
-    iconKey: String,
-    colorKey: String,
+    text: PickRowText,
+    look: IconLook,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -52,17 +52,19 @@ fun SheetPickRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
-        TintedIconBox(
-            iconKey = iconKey,
-            colorKey = colorKey,
-            size = FintrackScreenSizes.pickRowIcon,
-            glyph = FintrackScreenSizes.pickRowGlyph,
-            corner = FintrackScreenSizes.pickRowCorner,
-        )
-        PickLabels(label = label, name = name, modifier = Modifier.weight(1f))
-        PickTrailing(balance = balance)
+        TintedIconBox(look = look, tile = pickRowBox())
+        PickLabels(label = text.label, name = text.name, modifier = Modifier.weight(1f))
+        PickTrailing(balance = text.fundsText)
     }
 }
+
+// DOC-08: the icon tile of a pick row, a rounded square
+private fun pickRowBox(): IconBox =
+    IconBox(
+        size = FintrackScreenSizes.pickRowIcon,
+        glyph = FintrackScreenSizes.pickRowGlyph,
+        shape = RoundedCornerShape(FintrackScreenSizes.pickRowCorner),
+    )
 
 @Composable
 private fun PickTrailing(balance: String) {

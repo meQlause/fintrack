@@ -10,6 +10,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.BackAction
+import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.component.ScreenGroup
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
@@ -25,9 +27,8 @@ internal fun SettingsScreen(
 ) {
     Column(modifier = Modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         ScreenBackHeader(
-            title = stringResource(R.string.settings_title),
-            backLabel = stringResource(R.string.settings_back),
-            onBack = callbacks.links.onBack,
+            title = HeaderTitle(text = stringResource(R.string.settings_title)),
+            back = BackAction(label = stringResource(R.string.settings_back), onBack = callbacks.links.onBack),
         )
         SettingsSections(state = state, callbacks = callbacks, backup = backup, version = version)
     }

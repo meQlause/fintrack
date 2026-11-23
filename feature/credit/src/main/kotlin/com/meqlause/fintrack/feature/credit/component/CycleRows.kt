@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.RowSlots
+import com.meqlause.fintrack.core.designsystem.component.RowStyle
 import com.meqlause.fintrack.core.designsystem.component.ScreenGroup
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.component.ScreenTintBox
@@ -56,22 +58,21 @@ private fun CycleRow(
     onClick: () -> Unit,
 ) {
     ScreenRow(
-        showDivider = showDivider,
-        onClick = onClick,
-        leading = { ScreenTintBox(iconRes = iconRes) },
-        trailing = {
-            Text(
-                text = note,
-                style = FintrackScreenText.style(size = 13f, weight = 500),
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-            )
-            Icon(
-                painter = painterResource(DesignR.drawable.ic_chevron_right),
-                contentDescription = null,
-                tint = FintrackTheme.colors.texts.onSurfaceVariant,
-                modifier = Modifier.size(FintrackScreenSizes.chevron),
-            )
-        },
+        style = RowStyle(showDivider = showDivider, onClick = onClick),
+        slots =
+            RowSlots(leading = { ScreenTintBox(iconRes = iconRes) }, trailing = {
+                Text(
+                    text = note,
+                    style = FintrackScreenText.style(size = 13f, weight = 500),
+                    color = FintrackTheme.colors.texts.onSurfaceVariant,
+                )
+                Icon(
+                    painter = painterResource(DesignR.drawable.ic_chevron_right),
+                    contentDescription = null,
+                    tint = FintrackTheme.colors.texts.onSurfaceVariant,
+                    modifier = Modifier.size(FintrackScreenSizes.chevron),
+                )
+            }),
     ) {
         Text(
             text = label,

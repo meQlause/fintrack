@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,6 +22,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import com.meqlause.fintrack.core.designsystem.component.SheetBleed
+import com.meqlause.fintrack.core.designsystem.icon.IconBox
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.icon.TintedIconBox
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
@@ -69,11 +72,13 @@ private fun CategoryTile(
         verticalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap),
     ) {
         TintedIconBox(
-            iconKey = appearance.iconKey,
-            colorKey = appearance.colorKey,
-            size = FintrackScreenSizes.categoryTile,
-            glyph = FintrackScreenSizes.categoryTileGlyph,
-            corner = FintrackScreenSizes.categoryTileCorner,
+            look = IconLook(iconKey = appearance.iconKey, colorKey = appearance.colorKey),
+            tile =
+                IconBox(
+                    size = FintrackScreenSizes.categoryTile,
+                    glyph = FintrackScreenSizes.categoryTileGlyph,
+                    shape = RoundedCornerShape(FintrackScreenSizes.categoryTileCorner),
+                ),
             modifier = Modifier.drawBehind { if (selected) drawRing(ring, colors.surfaces.surface) },
         )
         Text(

@@ -9,10 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import com.meqlause.fintrack.core.designsystem.component.ComponentCanvas
 import com.meqlause.fintrack.core.designsystem.theme.CategoryPalette
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -20,15 +18,13 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 // DOC-08, DOC-09: category icon in a 38 px rounded box tinted with its colour, as the prototype .row; decorative
 @Composable
 fun IconCircle(
-    iconKey: String,
-    colorKey: String,
+    look: IconLook,
     modifier: Modifier = Modifier,
-    size: Dp = FintrackTheme.sizes.categoryIcon,
-    glyph: Dp = FintrackTheme.sizes.categoryGlyph,
-    shape: Shape = FintrackTheme.shapes.categoryIcon,
+    tile: IconBox? = null,
 ) {
+    val box = tile ?: categoryTile()
     val surface = FintrackTheme.colors.surfaces.background
-    val tint = CategoryPalette.colorFor(colorKey = colorKey, surface = surface)
+    val tint = CategoryPalette.colorFor(colorKey = look.colorKey, surface = surface)
     val alpha =
         if (CategoryPalette.isDarkSurface(surface)) {
             FintrackTheme.alphas.categoryTintDark
@@ -38,19 +34,28 @@ fun IconCircle(
     Box(
         modifier =
             modifier
-                .size(size)
-                .clip(shape)
+                .size(box.size)
+                .clip(box.shape)
                 .background(tint.copy(alpha = alpha)),
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            painter = painterResource(FintrackIcons.drawableFor(iconKey)),
+            painter = painterResource(FintrackIcons.drawableFor(look.iconKey)),
             contentDescription = null,
             tint = tint,
-            modifier = Modifier.size(glyph),
+            modifier = Modifier.size(box.glyph),
         )
     }
 }
+
+// DOC-08: the 38 px category tile of the list rows
+@Composable
+private fun categoryTile(): IconBox =
+    IconBox(
+        size = FintrackTheme.sizes.categoryIcon,
+        glyph = FintrackTheme.sizes.categoryGlyph,
+        shape = FintrackTheme.shapes.categoryIcon,
+    )
 
 @Preview(name = "IconCircle light", showBackground = true)
 @Composable
@@ -67,8 +72,8 @@ internal fun IconCircleDarkPreview() {
 @Composable
 private fun IconCirclePreviewRow() {
     Row {
-        IconCircle(iconKey = "food", colorKey = "orange")
-        IconCircle(iconKey = "transport", colorKey = "blue")
-        IconCircle(iconKey = "salary", colorKey = "green")
+        IconCircle(look = IconLook(iconKey = "food", colorKey = "orange"))
+        IconCircle(look = IconLook(iconKey = "transport", colorKey = "blue"))
+        IconCircle(look = IconLook(iconKey = "salary", colorKey = "green"))
     }
 }

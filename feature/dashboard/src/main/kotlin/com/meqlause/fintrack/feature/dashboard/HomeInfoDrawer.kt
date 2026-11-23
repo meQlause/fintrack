@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,8 +20,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
+import com.meqlause.fintrack.core.designsystem.component.RowSlots
+import com.meqlause.fintrack.core.designsystem.component.RowStyle
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
+import com.meqlause.fintrack.core.designsystem.icon.IconBox
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.icon.TintedIconBox
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
@@ -118,20 +123,23 @@ private fun HomeInfoRowLine(
     showDivider: Boolean,
 ) {
     ScreenRow(
-        showDivider = showDivider,
-        contentPadding =
-            PaddingValues(
-                horizontal = FintrackScreenSizes.rowPaddingHorizontal,
-                vertical = FintrackScreenSizes.infoRowVertical,
+        style =
+            RowStyle(
+                showDivider = showDivider,
+                contentPadding =
+                    PaddingValues(
+                        horizontal = FintrackScreenSizes.rowPaddingHorizontal,
+                        vertical = FintrackScreenSizes.infoRowVertical,
+                    ),
             ),
-        leading = { InfoRowIcon(entry = entry) },
-        trailing = {
-            Text(
-                text = entry.value,
-                style = FintrackScreenText.number(size = 14f, weight = 700),
-                color = toneColor(entry.tone),
-            )
-        },
+        slots =
+            RowSlots(leading = { InfoRowIcon(entry = entry) }, trailing = {
+                Text(
+                    text = entry.value,
+                    style = FintrackScreenText.number(size = 14f, weight = 700),
+                    color = toneColor(entry.tone),
+                )
+            }),
     ) {
         InfoRowLabels(entry = entry)
     }
@@ -141,11 +149,13 @@ private fun HomeInfoRowLine(
 @Composable
 private fun InfoRowIcon(entry: HomeInfoRow) {
     TintedIconBox(
-        iconKey = entry.iconKey,
-        colorKey = entry.colorKey,
-        size = FintrackScreenSizes.smallIconBox + FintrackTheme.spacing.xxSmall,
-        glyph = FintrackScreenSizes.circleGlyph,
-        corner = FintrackScreenSizes.smallIconCorner,
+        look = IconLook(iconKey = entry.iconKey, colorKey = entry.colorKey),
+        tile =
+            IconBox(
+                size = FintrackScreenSizes.smallIconBox + FintrackTheme.spacing.xxSmall,
+                glyph = FintrackScreenSizes.circleGlyph,
+                shape = RoundedCornerShape(FintrackScreenSizes.smallIconCorner),
+            ),
     )
 }
 

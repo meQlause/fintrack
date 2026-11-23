@@ -32,7 +32,7 @@ class LoanListScreenUiTest {
 
     private fun text(resId: Int): String = context.getString(resId)
 
-    private fun row(
+    private fun listRow(
         loanId: Long,
         person: String,
         status: LoanStatus = LoanStatus.OPEN,
@@ -52,7 +52,7 @@ class LoanListScreenUiTest {
         val state =
             LoanListUiState(
                 direction = LoanDirection.LENT,
-                groups = listOf(LoanPersonGroup(personName = "Budi", rows = listOf(row(7L, "Budi")))),
+                groups = listOf(LoanPersonGroup(personName = "Budi", rows = listOf(listRow(7L, "Budi")))),
                 settled = emptyList(),
             )
         composeRule.setContent {
@@ -70,7 +70,7 @@ class LoanListScreenUiTest {
             LoanListUiState(
                 direction = LoanDirection.LENT,
                 groups = emptyList(),
-                settled = listOf(row(9L, "Sari", LoanStatus.SETTLED)),
+                settled = listOf(listRow(9L, "Sari", LoanStatus.SETTLED)),
             )
         composeRule.setContent {
             LoanListScreen(state = state, callbacks = LoanListCallbacks({}, {}, {}))
@@ -136,9 +136,9 @@ class LoanListScreenUiTest {
                 direction = LoanDirection.LENT,
                 groups =
                     listOf(
-                        LoanPersonGroup(personName = "Budi", rows = listOf(row(1L, "Budi"), row(2L, "Budi"))),
+                        LoanPersonGroup(personName = "Budi", rows = listOf(listRow(1L, "Budi"), listRow(2L, "Budi"))),
                     ),
-                settled = listOf(row(3L, "Sari", LoanStatus.SETTLED), row(4L, "Rini", LoanStatus.SETTLED)),
+                settled = listOf(listRow(3L, "Sari", LoanStatus.SETTLED), listRow(4L, "Rini", LoanStatus.SETTLED)),
             )
         composeRule.setContent {
             LoanListScreen(state = state, callbacks = LoanListCallbacks({}, {}, { opened += it }))
@@ -179,7 +179,7 @@ class LoanListScreenUiTest {
                     listOf(
                         LoanPersonGroup(
                             personName = "Andi",
-                            rows = listOf(row(5L, "Andi").copy(dueInfo = LoanDue(date = date, overdue = false))),
+                            rows = listOf(listRow(5L, "Andi").copy(dueInfo = LoanDue(date = date, overdue = false))),
                         ),
                     ),
                 settled = emptyList(),
@@ -194,12 +194,12 @@ class LoanListScreenUiTest {
     @Test
     fun givenOverdueAndWrittenOffLoansThenEachRowSaysItsState() {
         val overdue =
-            row(3L, "Andi").copy(dueInfo = LoanDue(date = LocalDate.of(2026, 11, 1), overdue = true))
+            listRow(3L, "Andi").copy(dueInfo = LoanDue(date = LocalDate.of(2026, 11, 1), overdue = true))
         val state =
             LoanListUiState(
                 direction = LoanDirection.LENT,
                 groups = listOf(LoanPersonGroup(personName = "Andi", rows = listOf(overdue))),
-                settled = listOf(row(4L, "Rudi", LoanStatus.WRITTEN_OFF)),
+                settled = listOf(listRow(4L, "Rudi", LoanStatus.WRITTEN_OFF)),
             )
         composeRule.setContent {
             LoanListScreen(state = state, callbacks = LoanListCallbacks({}, {}, {}))

@@ -32,4 +32,8 @@ interface MonitoredAppDao {
     /** DOC-02: every monitored app, by package name. */
     @Query("SELECT * FROM monitored_app ORDER BY packageName")
     fun observeAll(): Flow<List<MonitoredAppEntity>>
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM monitored_app")
+    suspend fun deleteAll()
 }

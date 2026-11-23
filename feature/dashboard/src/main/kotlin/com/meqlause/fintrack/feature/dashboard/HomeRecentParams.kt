@@ -2,6 +2,7 @@ package com.meqlause.fintrack.feature.dashboard
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.ui.transaction.TransactionRowParams
 
@@ -9,8 +10,7 @@ import com.meqlause.fintrack.core.ui.transaction.TransactionRowParams
 @Composable
 internal fun HomeRecent.toParams(): TransactionRowParams =
     TransactionRowParams(
-        iconKey = style.appearance.iconKey,
-        colorKey = style.appearance.colorKey,
+        look = IconLook(iconKey = style.appearance.iconKey, colorKey = style.appearance.colorKey),
         title = title ?: stringResource(typeLabelOf(type)),
         subtitle = stringResource(R.string.home_row_subtitle, stamp.walletName, stamp.whenLabel),
         amount = amount,

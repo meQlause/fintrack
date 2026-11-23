@@ -25,4 +25,8 @@ interface MerchantRuleDao {
     /** BR-012, FR-088: replaces the merchant rule with the same id when the merchant is confirmed again. */
     @Update
     suspend fun update(rule: MerchantRuleEntity)
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM merchant_rule")
+    suspend fun deleteAll()
 }

@@ -25,4 +25,8 @@ interface LoanDao {
     /** DOC-02: every loan in creation order. */
     @Query("SELECT * FROM loan ORDER BY loanId")
     fun observeAll(): Flow<List<LoanEntity>>
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM loan")
+    suspend fun deleteAll()
 }

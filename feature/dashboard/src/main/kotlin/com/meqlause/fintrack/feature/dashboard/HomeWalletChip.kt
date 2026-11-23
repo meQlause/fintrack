@@ -17,7 +17,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
+import com.meqlause.fintrack.core.designsystem.icon.IconBox
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 
@@ -65,11 +67,13 @@ private fun WalletChipHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         IconCircle(
-            iconKey = wallet.appearance.iconKey,
-            colorKey = wallet.appearance.colorKey,
-            size = FintrackTheme.sizes.walletChipIcon,
-            glyph = FintrackTheme.sizes.walletChipGlyph,
-            shape = FintrackTheme.shapes.walletIcon,
+            look = IconLook(iconKey = wallet.appearance.iconKey, colorKey = wallet.appearance.colorKey),
+            tile =
+                IconBox(
+                    size = FintrackTheme.sizes.walletChipIcon,
+                    glyph = FintrackTheme.sizes.walletChipGlyph,
+                    shape = FintrackTheme.shapes.walletIcon,
+                ),
         )
         Text(
             text = stringResource(R.string.home_percent, percent),

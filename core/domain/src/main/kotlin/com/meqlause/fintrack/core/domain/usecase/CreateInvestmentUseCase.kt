@@ -38,7 +38,17 @@ public class CreateInvestmentUseCase
             val allWallets = wallets.observeAll().first()
             if (!isAccepted(trimmed, invested, allWallets)) return null
             val order = (allWallets.maxOfOrNull { it.profile.sortOrder } ?: -1) + 1
-            return wallets.insert(newWallet(trimmed, investKind, invested, order, currentTime))
+            val profile =
+                WalletProfile(
+                    name = trimmed,
+                    appearance = Appearance(iconKey = INVESTMENT_ICON, colorKey = INVESTMENT_COLOR),
+                    sortOrder = order,
+                )
+            val kind = WalletKind(type = WalletType.INVESTMENT, investKind = investKind)
+            val terms = WalletTerms(initialBalance = invested, credit = null)
+            return wallets.insert(
+                newWallet(kind, terms, profile, Audit(createdAt = currentTime, updatedAt = currentTime)),
+            )
         }
 
         private fun isAccepted(
@@ -52,24 +62,18 @@ public class CreateInvestmentUseCase
 
         // FR-170: the default icon and colour of an investment wallet, as the Dompet editor gives them
         private fun newWallet(
-            name: String,
-            investKind: InvestKind,
-            invested: Money,
-            order: Int,
-            currentTime: Instant,
+            kind: WalletKind,
+            terms: WalletTerms,
+            profile: WalletProfile,
+            audit: Audit,
         ): Wallet =
             Wallet(
                 walletId = WalletId(0L),
-                kind = WalletKind(type = WalletType.INVESTMENT, investKind = investKind),
-                terms = WalletTerms(initialBalance = invested, credit = null),
-                profile =
-                    WalletProfile(
-                        name = name,
-                        appearance = Appearance(iconKey = INVESTMENT_ICON, colorKey = INVESTMENT_COLOR),
-                        sortOrder = order,
-                    ),
+                kind = kind,
+                terms = terms,
+                profile = profile,
                 status = WalletStatus(),
-                audit = Audit(createdAt = currentTime, updatedAt = currentTime),
+                audit = audit,
             )
 
         private companion object {

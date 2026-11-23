@@ -155,7 +155,7 @@ internal object HomeCalculator {
     private fun appearanceOf(
         entry: Transaction,
         appearances: Map<CategoryId, Appearance>,
-    ): Appearance = RowAppearance.of(entry.movement.type, entry.routing.categoryId?.let(appearances::get))
+    ): Appearance = RowAppearance.forType(entry.movement.type, entry.routing.categoryId?.let(appearances::get))
 
     private fun titleOf(
         transaction: Transaction,

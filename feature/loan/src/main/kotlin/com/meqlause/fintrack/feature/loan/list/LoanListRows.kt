@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import com.meqlause.fintrack.core.designsystem.component.RowSlots
+import com.meqlause.fintrack.core.designsystem.component.RowStyle
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
@@ -35,17 +37,16 @@ internal fun LoanRowItem(
 ) {
     ScreenRow(
         modifier = modifier,
-        showDivider = showDivider,
-        onClick = onClick,
-        leading = { LoanAvatar(name = loanRow.personName) },
-        trailing = {
-            Text(
-                text = MoneyFormatter.format(loanRow.outstanding),
-                style = FintrackScreenText.number(size = 14f, weight = 700),
-                color = FintrackTheme.colors.texts.onSurface,
-                maxLines = 1,
-            )
-        },
+        style = RowStyle(showDivider = showDivider, onClick = onClick),
+        slots =
+            RowSlots(leading = { LoanAvatar(name = loanRow.personName) }, trailing = {
+                Text(
+                    text = MoneyFormatter.format(loanRow.outstanding),
+                    style = FintrackScreenText.number(size = 14f, weight = 700),
+                    color = FintrackTheme.colors.texts.onSurface,
+                    maxLines = 1,
+                )
+            }),
     ) {
         LoanRowTexts(loanRow)
     }

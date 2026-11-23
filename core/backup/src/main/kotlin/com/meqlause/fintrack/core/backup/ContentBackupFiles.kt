@@ -53,14 +53,14 @@ public class ContentBackupFiles(
 
 // DOC-11: reads at most [limit] bytes; InputStream.readNBytes(Int) needs API 33 and the minimum is 26
 private fun InputStream.readUpTo(limit: Int): ByteArray {
-    val out = ByteArrayOutputStream()
+    val sink = ByteArrayOutputStream()
     val buffer = ByteArray(READ_CHUNK_BYTES)
-    while (out.size() < limit) {
-        val count = read(buffer, 0, minOf(buffer.size, limit - out.size()))
+    while (sink.size() < limit) {
+        val count = read(buffer, 0, minOf(buffer.size, limit - sink.size()))
         if (count < 0) break
-        out.write(buffer, 0, count)
+        sink.write(buffer, 0, count)
     }
-    return out.toByteArray()
+    return sink.toByteArray()
 }
 
 private const val READ_CHUNK_BYTES = 8_192

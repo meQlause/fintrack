@@ -20,4 +20,8 @@ interface ValuationEntryDao {
     /** DOC-02: every valuation in the order it was valued. */
     @Query("SELECT * FROM valuation_entry ORDER BY valuedAt")
     fun observeAll(): Flow<List<ValuationEntryEntity>>
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM valuation_entry")
+    suspend fun deleteAll()
 }

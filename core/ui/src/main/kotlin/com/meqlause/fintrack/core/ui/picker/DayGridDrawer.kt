@@ -31,11 +31,10 @@ private val DAY_WEEKS: List<List<Int>> = (1..DAYS_IN_GRID).chunked(DAYS_PER_ROW)
 fun DayGridDrawer(
     title: String,
     selectedDay: Int?,
-    onPick: (Int) -> Unit,
-    onClose: () -> Unit,
+    actions: PickerActions<Int>,
     modifier: Modifier = Modifier,
 ) {
-    PickerDrawer(title = title, onClose = onClose, modifier = modifier) {
+    PickerDrawer(title = title, onClose = actions.onClose, modifier = modifier) {
         DAY_WEEKS.forEach { week ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -45,7 +44,7 @@ fun DayGridDrawer(
                     DayCell(
                         dayNumber = day,
                         isSelected = day == selectedDay,
-                        onClick = { onPick(day) },
+                        onClick = { actions.onPick(day) },
                         modifier = Modifier.weight(1f),
                     )
                 }
@@ -86,8 +85,7 @@ internal fun DayGridDrawerSample() {
     DayGridDrawer(
         title = stringResource(R.string.picker_sample_title_day),
         selectedDay = 10,
-        onPick = {},
-        onClose = {},
+        actions = PickerActions(onPick = {}, onClose = {}),
     )
 }
 

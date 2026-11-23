@@ -10,7 +10,6 @@ data class WalletPickerRow(
     val name: String,
     val type: WalletType,
     val shownBalanceText: String,
-    val isSelected: Boolean = false,
-    val isBlocked: Boolean = false,
+    val mark: PickerMark = PickerMark(),
     val appearance: Appearance = Appearance("wallet", "gray"),
 )

@@ -110,7 +110,7 @@ private fun card(
         itemId = item.inboxItemId.value,
         text =
             InboxCardText(
-                sourceLabel = InboxSourceLabel.of(item.notice.packageName),
+                sourceLabel = InboxSourceLabel.forPackage(item.notice.packageName),
                 timeLabel = DateFormatter.timeLabel(time),
                 merchant = item.parsed.merchant,
             ),
@@ -152,7 +152,7 @@ private fun resolvedRows(
         .map { item ->
             InboxResolvedUi(
                 itemId = item.inboxItemId.value,
-                label = item.parsed.merchant.ifEmpty { InboxSourceLabel.of(item.notice.packageName) },
+                label = item.parsed.merchant.ifEmpty { InboxSourceLabel.forPackage(item.notice.packageName) },
                 amount = item.parsed.amount,
                 type = typeOf(item),
                 isConfirmed = item.resolution.status == InboxStatus.CONFIRMED,

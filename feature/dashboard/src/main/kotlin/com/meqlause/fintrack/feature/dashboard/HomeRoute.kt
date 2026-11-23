@@ -9,8 +9,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 // DOC-03, FR-040..043: stateful entry of S-03; the only composable that touches HomeViewModel
 @Composable
 internal fun HomeRoute(
-    host: HomeCallbacks.Host,
-    entry: HomeCallbacks.Entry,
+    host: HomeHostLinks,
+    entry: HomeEntryLinks,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: HomeViewModel = hiltViewModel()

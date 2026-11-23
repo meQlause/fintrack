@@ -5,7 +5,9 @@ import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.ui.picker.DayGridDrawer
+import com.meqlause.fintrack.core.ui.picker.OptionChoices
 import com.meqlause.fintrack.core.ui.picker.OptionsDrawer
+import com.meqlause.fintrack.core.ui.picker.PickerActions
 import com.meqlause.fintrack.core.ui.picker.PickerOption
 import com.meqlause.fintrack.feature.transaction.R
 
@@ -27,38 +29,44 @@ internal fun HistorySheetHost(
         HistorySheet.WALLET -> {
             OptionsDrawer(
                 title = stringResource(R.string.history_filter_wallet_title),
-                options =
-                    listOf(PickerOption(ALL_KEY, allLabel)) +
-                        state.wallets.map { wallet ->
-                            PickerOption(wallet.walletId.value.toString(), wallet.profile.name)
-                        },
-                selectedKey =
-                    state.filter.walletId
-                        ?.value
-                        ?.toString() ?: ALL_KEY,
-                onPick = { option ->
-                    onEvent(HistoryEvent.WalletPicked(option.optionKey.toLongOrNull()?.let { WalletId(it) }))
-                },
-                onClose = close,
+                choices =
+                    OptionChoices(
+                        options =
+                            listOf(PickerOption(ALL_KEY, allLabel)) +
+                                state.wallets.map { wallet ->
+                                    PickerOption(wallet.walletId.value.toString(), wallet.profile.name)
+                                },
+                        selectedKey =
+                            state.filter.walletId
+                                ?.value
+                                ?.toString() ?: ALL_KEY,
+                    ),
+                actions =
+                    PickerActions(onPick = { option ->
+                        onEvent(HistoryEvent.WalletPicked(option.optionKey.toLongOrNull()?.let { WalletId(it) }))
+                    }, onClose = close),
             )
         }
 
         HistorySheet.CATEGORY -> {
             OptionsDrawer(
                 title = stringResource(R.string.history_filter_category_title),
-                options =
-                    listOf(PickerOption(ALL_KEY, allLabel)) +
-                        state.categories.map { category ->
-                            PickerOption(category.categoryId.value.toString(), category.profile.name)
-                        },
-                selectedKey =
-                    state.filter.categoryId
-                        ?.value
-                        ?.toString() ?: ALL_KEY,
-                onPick = { option ->
-                    onEvent(HistoryEvent.CategoryPicked(option.optionKey.toLongOrNull()?.let { CategoryId(it) }))
-                },
-                onClose = close,
+                choices =
+                    OptionChoices(
+                        options =
+                            listOf(PickerOption(ALL_KEY, allLabel)) +
+                                state.categories.map { category ->
+                                    PickerOption(category.categoryId.value.toString(), category.profile.name)
+                                },
+                        selectedKey =
+                            state.filter.categoryId
+                                ?.value
+                                ?.toString() ?: ALL_KEY,
+                    ),
+                actions =
+                    PickerActions(onPick = { option ->
+                        onEvent(HistoryEvent.CategoryPicked(option.optionKey.toLongOrNull()?.let { CategoryId(it) }))
+                    }, onClose = close),
             )
         }
 
@@ -66,8 +74,7 @@ internal fun HistorySheetHost(
             DayGridDrawer(
                 title = stringResource(R.string.history_filter_day_title),
                 selectedDay = state.filter.dayOfMonth,
-                onPick = { day -> onEvent(HistoryEvent.DayPicked(day)) },
-                onClose = close,
+                actions = PickerActions(onPick = { day -> onEvent(HistoryEvent.DayPicked(day)) }, onClose = close),
             )
         }
 

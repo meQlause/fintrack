@@ -18,6 +18,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionType
@@ -42,7 +43,7 @@ fun TransactionRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
-        IconCircle(iconKey = params.iconKey, colorKey = params.colorKey)
+        IconCircle(look = params.look)
         TransactionTitles(params = params, modifier = Modifier.weight(1f))
         MoneyText(
             money = params.amount,
@@ -99,8 +100,7 @@ internal fun TransactionRowSample() {
     TransactionRow(
         params =
             TransactionRowParams(
-                iconKey = "food",
-                colorKey = "orange",
+                look = IconLook(iconKey = "food", colorKey = "orange"),
                 title = stringResource(R.string.sample_row_expense_title),
                 subtitle = stringResource(R.string.sample_row_expense_subtitle),
                 amount = Money(rupiah = 25_000L),
@@ -111,8 +111,7 @@ internal fun TransactionRowSample() {
     TransactionRow(
         params =
             TransactionRowParams(
-                iconKey = "salary",
-                colorKey = "green",
+                look = IconLook(iconKey = "salary", colorKey = "green"),
                 title = stringResource(R.string.sample_row_income_title),
                 subtitle = stringResource(R.string.sample_row_income_subtitle),
                 amount = Money(rupiah = 5_000_000L),

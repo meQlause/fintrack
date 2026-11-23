@@ -28,11 +28,9 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 // DOC-08: header of a pushed screen, a 40 px back button, an 18 px bold title and an optional grey badge
 @Composable
 fun ScreenBackHeader(
-    title: String,
-    backLabel: String,
-    onBack: () -> Unit,
+    title: HeaderTitle,
+    back: BackAction,
     modifier: Modifier = Modifier,
-    badge: String? = null,
     trailing: @Composable () -> Unit = {},
 ) {
     Row(
@@ -48,14 +46,14 @@ fun ScreenBackHeader(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),
     ) {
-        BackButton(backLabel = backLabel, onBack = onBack)
+        BackButton(back = back)
         Text(
-            text = title,
+            text = title.text,
             modifier = Modifier.semantics { heading() },
             style = FintrackScreenText.style(size = 18f, weight = 700),
             color = FintrackTheme.colors.texts.onSurface,
         )
-        badge?.let { Badge(text = it) }
+        title.badge?.let { Badge(text = it) }
         Spacer(modifier = Modifier.weight(1f))
         trailing()
     }
@@ -76,21 +74,18 @@ private fun Badge(text: String) {
 }
 
 @Composable
-private fun BackButton(
-    backLabel: String,
-    onBack: () -> Unit,
-) {
+private fun BackButton(back: BackAction) {
     Box(
         modifier =
             Modifier
                 .size(FintrackScreenSizes.iconButton)
                 .clip(CircleShape)
-                .clickable(onClick = onBack),
+                .clickable(onClick = back.onBack),
         contentAlignment = Alignment.Center,
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_back),
-            contentDescription = backLabel,
+            contentDescription = back.label,
             tint = FintrackTheme.colors.texts.onSurface,
             modifier = Modifier.size(FintrackScreenSizes.backGlyph),
         )

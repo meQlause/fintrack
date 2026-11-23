@@ -6,6 +6,7 @@ import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
+import com.meqlause.fintrack.core.domain.statistics.StatisticsRequest
 import com.meqlause.fintrack.core.domain.usecase.BuildPeriodStatisticsUseCase
 import com.meqlause.fintrack.core.model.Category
 import com.meqlause.fintrack.core.model.Transaction
@@ -74,7 +75,16 @@ internal class HistoryViewModel
                 )
             val content = buildHistoryContent(transactions, current.filter, period, names, clock)
             val statistics =
-                buildStatistics(transactions, current.statisticsType, period, startDay, clock.zone)
+                buildStatistics(
+                    transactions = transactions,
+                    request =
+                        StatisticsRequest(
+                            type = current.statisticsType,
+                            period = period,
+                            startDay = startDay,
+                            zone = clock.zone,
+                        ),
+                )
             return HistoryUiState(
                 month = current.month,
                 period = period,

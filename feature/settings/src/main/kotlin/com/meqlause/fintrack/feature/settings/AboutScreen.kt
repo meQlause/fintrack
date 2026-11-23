@@ -12,6 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.BackAction
+import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -25,9 +27,8 @@ internal fun AboutScreen(
 ) {
     Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         ScreenBackHeader(
-            title = stringResource(R.string.about_title),
-            backLabel = stringResource(R.string.settings_back),
-            onBack = onBack,
+            title = HeaderTitle(text = stringResource(R.string.about_title)),
+            back = BackAction(label = stringResource(R.string.settings_back), onBack = onBack),
         )
         Column(
             modifier =

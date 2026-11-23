@@ -34,6 +34,10 @@ interface WalletDao {
      */
     @Query(WALLET_BALANCE_SQL)
     fun observeBalances(): Flow<List<WalletBalance>>
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM wallet")
+    suspend fun deleteAll()
 }
 
 // DOC-02, BR-004, BR-040: each sum is a correlated subquery over the transaction table

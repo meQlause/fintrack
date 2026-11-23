@@ -18,6 +18,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.BackAction
+import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -62,9 +64,8 @@ private fun InboxHeader(
     onDismissAll: () -> Unit,
 ) {
     ScreenBackHeader(
-        title = stringResource(R.string.inbox_title),
-        backLabel = stringResource(R.string.inbox_back_description),
-        onBack = onBack,
+        title = HeaderTitle(text = stringResource(R.string.inbox_title)),
+        back = BackAction(label = stringResource(R.string.inbox_back_description), onBack = onBack),
         trailing = {
             TextButton(onClick = onDismissAll) {
                 Text(

@@ -47,7 +47,7 @@ public class SaveLoanUseCase
                     movement = Movement(draft.direction.openingType(), draft.principal),
                     routing = Routing(walletId, null, null, loanId),
                     memo = Memo(note = draft.note.trim()),
-                    timing = Timing(draft.startDate, Audit(nowInstant, nowInstant)),
+                    timing = Timing(draft.schedule.startDate, Audit(nowInstant, nowInstant)),
                 )
             return SaveTransactionResult.Saved(transactions.insert(movement))
         }
@@ -64,8 +64,8 @@ public class SaveLoanUseCase
                         direction = draft.direction,
                         personName = draft.personName.trim(),
                         principal = draft.principal,
-                        startDate = draft.startDate,
-                        dueDate = dueInstant(draft.dueDate),
+                        startDate = draft.schedule.startDate,
+                        dueDate = dueInstant(draft.schedule.dueDate),
                         note = draft.note.trim(),
                     ),
                 status = LoanStatus.OPEN,

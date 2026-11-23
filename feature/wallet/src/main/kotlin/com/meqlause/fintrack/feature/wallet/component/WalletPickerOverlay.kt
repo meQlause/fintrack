@@ -5,7 +5,9 @@ import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.model.InvestKind
 import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.core.ui.picker.DayGridDrawer
+import com.meqlause.fintrack.core.ui.picker.OptionChoices
 import com.meqlause.fintrack.core.ui.picker.OptionsDrawer
+import com.meqlause.fintrack.core.ui.picker.PickerActions
 import com.meqlause.fintrack.core.ui.picker.PickerOption
 import com.meqlause.fintrack.feature.wallet.R
 import com.meqlause.fintrack.feature.wallet.WalletCallbacks
@@ -24,32 +26,42 @@ internal fun WalletPickerOverlay(
         WalletPicker.TYPE -> {
             OptionsDrawer(
                 title = stringResource(R.string.wallet_picker_type_title),
-                options =
-                    WalletType.entries.map {
-                        PickerOption(
-                            optionKey = it.name,
-                            label = stringResource(WalletLabels.type(it)),
-                        )
-                    },
-                selectedKey = draft.type.name,
-                onPick = { callbacks.onPickType(WalletType.valueOf(it.optionKey)) },
-                onClose = callbacks.onDismissPicker,
+                choices =
+                    OptionChoices(
+                        options =
+                            WalletType.entries.map {
+                                PickerOption(
+                                    optionKey = it.name,
+                                    label = stringResource(WalletLabels.type(it)),
+                                )
+                            },
+                        selectedKey = draft.type.name,
+                    ),
+                actions =
+                    PickerActions(onPick = {
+                        callbacks.onPickType(WalletType.valueOf(it.optionKey))
+                    }, onClose = callbacks.onDismissPicker),
             )
         }
 
         WalletPicker.INVEST_KIND -> {
             OptionsDrawer(
                 title = stringResource(R.string.wallet_picker_invest_title),
-                options =
-                    InvestKind.entries.map {
-                        PickerOption(
-                            optionKey = it.name,
-                            label = stringResource(WalletLabels.investKind(it)),
-                        )
-                    },
-                selectedKey = draft.investKind.name,
-                onPick = { callbacks.onPickInvestKind(InvestKind.valueOf(it.optionKey)) },
-                onClose = callbacks.onDismissPicker,
+                choices =
+                    OptionChoices(
+                        options =
+                            InvestKind.entries.map {
+                                PickerOption(
+                                    optionKey = it.name,
+                                    label = stringResource(WalletLabels.investKind(it)),
+                                )
+                            },
+                        selectedKey = draft.investKind.name,
+                    ),
+                actions =
+                    PickerActions(onPick = {
+                        callbacks.onPickInvestKind(InvestKind.valueOf(it.optionKey))
+                    }, onClose = callbacks.onDismissPicker),
             )
         }
 
@@ -57,8 +69,7 @@ internal fun WalletPickerOverlay(
             DayGridDrawer(
                 title = stringResource(R.string.wallet_picker_statement_title),
                 selectedDay = draft.statementDay,
-                onPick = callbacks.onPickDay,
-                onClose = callbacks.onDismissPicker,
+                actions = PickerActions(onPick = callbacks.onPickDay, onClose = callbacks.onDismissPicker),
             )
         }
 
@@ -66,8 +77,7 @@ internal fun WalletPickerOverlay(
             DayGridDrawer(
                 title = stringResource(R.string.wallet_picker_due_title),
                 selectedDay = draft.dueDay,
-                onPick = callbacks.onPickDay,
-                onClose = callbacks.onDismissPicker,
+                actions = PickerActions(onPick = callbacks.onPickDay, onClose = callbacks.onDismissPicker),
             )
         }
     }

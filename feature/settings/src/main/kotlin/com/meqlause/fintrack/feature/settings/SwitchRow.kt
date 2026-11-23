@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.meqlause.fintrack.core.designsystem.component.FintrackSwitch
+import com.meqlause.fintrack.core.designsystem.component.RowSlots
+import com.meqlause.fintrack.core.designsystem.component.RowStyle
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
@@ -18,14 +20,20 @@ internal fun SwitchRow(
     showDivider: Boolean = false,
 ) {
     ScreenRow(
-        showDivider = showDivider,
-        contentPadding =
-            PaddingValues(
-                horizontal = FintrackScreenSizes.rowPaddingHorizontal,
-                vertical = FintrackScreenSizes.rowSwitchInset,
+        style =
+            RowStyle(
+                showDivider = showDivider,
+                contentPadding =
+                    PaddingValues(
+                        horizontal = FintrackScreenSizes.rowPaddingHorizontal,
+                        vertical = FintrackScreenSizes.rowSwitchInset,
+                    ),
             ),
-        leading = {},
-        trailing = { FintrackSwitch(checked = checked, onCheckedChange = onCheckedChange) },
+        slots =
+            RowSlots(
+                leading = {},
+                trailing = { FintrackSwitch(checked = checked, onCheckedChange = onCheckedChange) },
+            ),
     ) {
         Text(
             text = label,

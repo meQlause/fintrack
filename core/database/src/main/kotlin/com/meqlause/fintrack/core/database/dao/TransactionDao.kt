@@ -25,4 +25,8 @@ interface TransactionDao {
     /** DOC-02: every transaction in the order it happened. */
     @Query("SELECT * FROM `transaction` ORDER BY occurredAt")
     fun observeAll(): Flow<List<TransactionEntity>>
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM `transaction`")
+    suspend fun deleteAll()
 }

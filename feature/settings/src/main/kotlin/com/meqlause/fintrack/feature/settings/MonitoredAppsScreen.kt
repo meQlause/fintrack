@@ -15,10 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.BackAction
+import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.ui.picker.OptionChoices
 import com.meqlause.fintrack.core.ui.picker.OptionsDrawer
+import com.meqlause.fintrack.core.ui.picker.PickerActions
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -39,9 +43,8 @@ internal fun MonitoredAppsScreen(
 ) {
     Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         ScreenBackHeader(
-            title = stringResource(R.string.monitored_title),
-            backLabel = stringResource(R.string.settings_back),
-            onBack = callbacks.onBack,
+            title = HeaderTitle(text = stringResource(R.string.monitored_title)),
+            back = BackAction(label = stringResource(R.string.settings_back), onBack = callbacks.onBack),
         )
         MonitoredAppsContent(state = state, callbacks = callbacks)
     }
@@ -93,15 +96,17 @@ private fun WalletDrawer(
 ) {
     OptionsDrawer(
         title = stringResource(R.string.monitored_wallet_sheet_title),
-        options = state.wallets,
-        selectedKey =
-            state.apps
-                .firstOrNull { it.packageName == state.pickingPackage }
-                ?.defaultWalletId
-                ?.value
-                ?.toString(),
-        onPick = callbacks.onPickWallet,
-        onClose = callbacks.onDismissPicker,
+        choices =
+            OptionChoices(
+                options = state.wallets,
+                selectedKey =
+                    state.apps
+                        .firstOrNull { it.packageName == state.pickingPackage }
+                        ?.defaultWalletId
+                        ?.value
+                        ?.toString(),
+            ),
+        actions = PickerActions(onPick = callbacks.onPickWallet, onClose = callbacks.onDismissPicker),
     )
 }
 

@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
+import com.meqlause.fintrack.core.designsystem.icon.IconBox
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 
@@ -33,11 +35,13 @@ fun ShortcutTile(
                 .padding(FintrackTheme.spacing.medium - FintrackTheme.spacing.xxSmall),
     ) {
         IconCircle(
-            iconKey = params.appearance.iconKey,
-            colorKey = params.appearance.colorKey,
-            size = FintrackTheme.sizes.shortcutIcon,
-            glyph = FintrackTheme.sizes.shortcutGlyph,
-            shape = FintrackTheme.shapes.shortcutIcon,
+            look = IconLook(iconKey = params.appearance.iconKey, colorKey = params.appearance.colorKey),
+            tile =
+                IconBox(
+                    size = FintrackTheme.sizes.shortcutIcon,
+                    glyph = FintrackTheme.sizes.shortcutGlyph,
+                    shape = FintrackTheme.shapes.shortcutIcon,
+                ),
         )
         ShortcutCaption(params = params)
     }

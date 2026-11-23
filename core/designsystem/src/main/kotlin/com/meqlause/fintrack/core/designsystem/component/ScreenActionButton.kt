@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
@@ -20,9 +19,7 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 // DOC-08: prototype .card button, 56 px tall, a coloured 18 px glyph and a 13.5 px bold label side by side
 @Composable
 fun ScreenActionButton(
-    text: String,
-    iconRes: Int,
-    tint: Color,
+    action: ScreenAction,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -33,13 +30,13 @@ fun ScreenActionButton(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                painter = painterResource(iconRes),
+                painter = painterResource(action.iconRes),
                 contentDescription = null,
-                tint = tint,
+                tint = action.tint,
                 modifier = Modifier.size(FintrackScreenSizes.actionGlyph),
             )
             Text(
-                text = text,
+                text = action.text,
                 style = FintrackScreenText.style(size = 13.5f, weight = 700),
                 color = FintrackTheme.colors.texts.onSurface,
             )

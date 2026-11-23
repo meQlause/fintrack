@@ -11,7 +11,7 @@ import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
-/** FR-113, DOC-11: builds the CSV export repository from the injected transaction, wallet, category and loan sources. */
+/** FR-113, DOC-11: builds the CSV export repository from the injected data sources. */
 internal class CsvRepositoryFactory
     @Inject
     constructor(

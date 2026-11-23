@@ -9,6 +9,7 @@ import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import com.meqlause.fintrack.core.domain.loan.LoanDraft
+import com.meqlause.fintrack.core.domain.loan.LoanSchedule
 import com.meqlause.fintrack.core.domain.loan.RepaymentError
 import com.meqlause.fintrack.core.domain.loan.RepaymentResult
 import com.meqlause.fintrack.core.domain.transaction.SaveTransactionResult
@@ -183,8 +184,7 @@ class LoanUseCasesTest {
             personName = name,
             principal = Money(amount),
             walletId = wallet,
-            startDate = Instant.parse("2026-11-20T00:00:00Z"),
-            dueDate = null,
+            schedule = LoanSchedule(startDate = Instant.parse("2026-11-20T00:00:00Z"), dueDate = null),
             note = "",
         )
 }

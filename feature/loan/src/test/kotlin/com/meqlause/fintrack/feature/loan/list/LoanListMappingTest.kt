@@ -54,47 +54,47 @@ class LoanListMappingTest {
 
     @Test
     fun givenAnOpenLoanPastItsDueDateWhenMappedThenItIsOverdue() {
-        val row = entry("Budi", 300_000L, dueDate = Instant.parse("2026-11-10T00:00:00Z")).toListRow(today, zone)
+        val loanRow = entry("Budi", 300_000L, dueDate = Instant.parse("2026-11-10T00:00:00Z")).toListRow(today, zone)
 
-        assertThat(row.dueInfo.overdue).isTrue()
-        assertThat(row.dueInfo.date).isEqualTo(LocalDate.of(2026, 11, 10))
-        assertThat(row.personName).isEqualTo("Budi")
-        assertThat(row.status).isEqualTo(LoanStatus.OPEN)
+        assertThat(loanRow.dueInfo.overdue).isTrue()
+        assertThat(loanRow.dueInfo.date).isEqualTo(LocalDate.of(2026, 11, 10))
+        assertThat(loanRow.personName).isEqualTo("Budi")
+        assertThat(loanRow.status).isEqualTo(LoanStatus.OPEN)
     }
 
     @Test
     fun givenASettledLoanPastItsDueDateWhenMappedThenItIsNotOverdue() {
-        val row =
+        val loanRow =
             entry("Sari", 300_000L, LoanStatus.SETTLED, dueDate = Instant.parse("2026-11-10T00:00:00Z"))
                 .toListRow(today, zone)
 
-        assertThat(row.dueInfo.overdue).isFalse()
+        assertThat(loanRow.dueInfo.overdue).isFalse()
     }
 
     @Test
     fun givenALoanWithoutDueDateWhenMappedThenItHasNoDateAndIsNotOverdue() {
-        val row = entry("Dimas", 300_000L).toListRow(today, zone)
+        val loanRow = entry("Dimas", 300_000L).toListRow(today, zone)
 
-        assertThat(row.dueInfo.date).isNull()
-        assertThat(row.dueInfo.overdue).isFalse()
-        assertThat(row.progress).isEqualTo(0f)
+        assertThat(loanRow.dueInfo.date).isNull()
+        assertThat(loanRow.dueInfo.overdue).isFalse()
+        assertThat(loanRow.progress).isEqualTo(0f)
     }
 
     @Test
     fun givenAZeroPrincipalWhenMappedThenTheProgressIsZero() {
-        val row = entry("Ani", 0L).toListRow(today, zone)
+        val loanRow = entry("Ani", 0L).toListRow(today, zone)
 
-        assertThat(row.progress).isEqualTo(0f)
+        assertThat(loanRow.progress).isEqualTo(0f)
     }
 
     @Test
     fun givenTwoGroupsWhenComparedThenOnlyTheSamePersonAndRowsAreEqual() {
-        val row = entry("Budi", 1L).toListRow(today, zone)
-        val group = LoanPersonGroup(personName = "Budi", rows = listOf(row))
+        val loanRow = entry("Budi", 1L).toListRow(today, zone)
+        val group = LoanPersonGroup(personName = "Budi", rows = listOf(loanRow))
 
-        assertThat(group).isEqualTo(LoanPersonGroup(personName = "Budi", rows = listOf(row)))
-        assertThat(group.hashCode()).isEqualTo(LoanPersonGroup(personName = "Budi", rows = listOf(row)).hashCode())
-        assertThat(group).isNotEqualTo(LoanPersonGroup(personName = "Sari", rows = listOf(row)))
+        assertThat(group).isEqualTo(LoanPersonGroup(personName = "Budi", rows = listOf(loanRow)))
+        assertThat(group.hashCode()).isEqualTo(LoanPersonGroup(personName = "Budi", rows = listOf(loanRow)).hashCode())
+        assertThat(group).isNotEqualTo(LoanPersonGroup(personName = "Sari", rows = listOf(loanRow)))
         assertThat(group).isNotEqualTo(LoanPersonGroup(personName = "Budi", rows = emptyList()))
     }
 

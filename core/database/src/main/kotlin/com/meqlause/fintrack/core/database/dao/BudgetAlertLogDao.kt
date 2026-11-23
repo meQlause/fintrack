@@ -16,4 +16,8 @@ interface BudgetAlertLogDao {
     /** DOC-02: every sent alert, oldest first. */
     @Query("SELECT * FROM budget_alert_log ORDER BY notifiedAt")
     fun observeAll(): Flow<List<BudgetAlertLogEntity>>
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM budget_alert_log")
+    suspend fun deleteAll()
 }

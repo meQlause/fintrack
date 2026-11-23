@@ -11,8 +11,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.BackAction
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
+import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.component.ScreenDashedButton
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
@@ -30,9 +32,8 @@ internal fun BudgetScreen(
 ) {
     Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         ScreenBackHeader(
-            title = stringResource(R.string.budget_title),
-            backLabel = stringResource(R.string.budget_back),
-            onBack = callbacks.onBack,
+            title = HeaderTitle(text = stringResource(R.string.budget_title)),
+            back = BackAction(label = stringResource(R.string.budget_back), onBack = callbacks.onBack),
         )
         Column(
             modifier = Modifier.weight(1f).padding(horizontal = FintrackScreenSizes.screenGutter),

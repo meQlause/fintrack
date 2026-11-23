@@ -2,7 +2,7 @@ package com.meqlause.fintrack.core.ui.inbox
 
 // S-07, S-03: the source app label of a detected notice, from the package names of the monitored apps
 object InboxSourceLabel {
-    fun of(packageName: String): String =
+    fun forPackage(packageName: String): String =
         when {
             packageName.startsWith("com.bca") -> "BCA"
             packageName.startsWith("id.bmri.livin") -> "Livin' Mandiri"

@@ -7,8 +7,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import com.meqlause.fintrack.core.designsystem.component.RowSlots
+import com.meqlause.fintrack.core.designsystem.component.RowStyle
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.domain.investment.InvestmentAccount
@@ -29,10 +32,11 @@ internal fun AccountRow(
     val appearance = account.wallet.profile.appearance
     ScreenRow(
         modifier = modifier,
-        showDivider = showDivider,
-        onClick = onClick,
-        leading = { IconCircle(iconKey = appearance.iconKey, colorKey = appearance.colorKey) },
-        trailing = { AccountValue(account = account) },
+        style = RowStyle(showDivider = showDivider, onClick = onClick),
+        slots =
+            RowSlots(leading = {
+                IconCircle(look = IconLook(iconKey = appearance.iconKey, colorKey = appearance.colorKey))
+            }, trailing = { AccountValue(account = account) }),
     ) {
         Text(
             text = account.wallet.profile.name,

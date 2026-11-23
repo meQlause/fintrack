@@ -3,7 +3,9 @@ package com.meqlause.fintrack.feature.inbox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.model.TransactionType
+import com.meqlause.fintrack.core.ui.picker.OptionChoices
 import com.meqlause.fintrack.core.ui.picker.OptionsDrawer
+import com.meqlause.fintrack.core.ui.picker.PickerActions
 import com.meqlause.fintrack.core.ui.picker.PickerOption
 
 // S-07: which chip is open; the id is the inbox item whose wallet or category changes
@@ -30,13 +32,12 @@ internal fun InboxPickerDrawer(
     val selected = selectedKey(picker, state)
     OptionsDrawer(
         title = titleFor(picker.kind),
-        options = options,
-        selectedKey = selected,
-        onPick = { option ->
-            onPicked(picker, option, actions.items)
-            onClose()
-        },
-        onClose = onClose,
+        choices = OptionChoices(options = options, selectedKey = selected),
+        actions =
+            PickerActions(onPick = { option ->
+                onPicked(picker, option, actions.items)
+                onClose()
+            }, onClose = onClose),
     )
 }
 

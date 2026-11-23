@@ -17,6 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.CircleIcon
+import com.meqlause.fintrack.core.designsystem.component.PillLook
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.component.ScreenCircleButton
 import com.meqlause.fintrack.core.designsystem.component.ScreenPill
@@ -65,12 +67,12 @@ private fun PairActions(
         ScreenPill(
             label = pair.from.name ?: stringResource(R.string.inbox_pick_wallet),
             onClick = { onPick(InboxPicker(pair.fromItemId, PickKind.WALLET)) },
-            contentColor = transfer,
+            look = PillLook(contentColor = transfer),
         )
         ScreenPill(
             label = pair.target.name ?: stringResource(R.string.inbox_pick_wallet),
             onClick = { onPick(InboxPicker(pair.toItemId, PickKind.TARGET_WALLET)) },
-            contentColor = transfer,
+            look = PillLook(contentColor = transfer),
         )
         Spacer(modifier = Modifier.weight(1f))
         PairButtons(pair, actions)
@@ -96,10 +98,13 @@ private fun PairButtons(
                 .wrapContentHeight(Alignment.CenterVertically),
     )
     ScreenCircleButton(
-        iconRes = DesignR.drawable.ic_check,
-        description = stringResource(R.string.inbox_pair_confirm),
+        icon =
+            CircleIcon(
+                iconRes = DesignR.drawable.ic_check,
+                description = stringResource(R.string.inbox_pair_confirm),
+                filled = true,
+            ),
         onClick = { actions.onConfirmPair(pair.fromItemId) },
-        filled = true,
         enabled = pair.from.slotId != null && pair.target.slotId != null,
     )
 }

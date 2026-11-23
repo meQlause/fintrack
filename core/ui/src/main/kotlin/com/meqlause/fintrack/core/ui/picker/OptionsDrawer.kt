@@ -24,18 +24,16 @@ import com.meqlause.fintrack.core.ui.UiPreviewCanvas
 @Composable
 fun OptionsDrawer(
     title: String,
-    options: List<PickerOption>,
-    selectedKey: String?,
-    onPick: (PickerOption) -> Unit,
-    onClose: () -> Unit,
+    choices: OptionChoices,
+    actions: PickerActions<PickerOption>,
     modifier: Modifier = Modifier,
 ) {
-    PickerDrawer(title = title, onClose = onClose, modifier = modifier) {
-        options.forEach { option ->
+    PickerDrawer(title = title, onClose = actions.onClose, modifier = modifier) {
+        choices.options.forEach { option ->
             OptionItem(
                 option = option,
-                isSelected = option.optionKey == selectedKey,
-                onClick = { onPick(option) },
+                isSelected = option.optionKey == choices.selectedKey,
+                onClick = { actions.onPick(option) },
             )
         }
     }
@@ -80,10 +78,8 @@ private fun OptionItem(
 internal fun OptionsDrawerSample() {
     OptionsDrawer(
         title = stringResource(R.string.picker_sample_title_due),
-        options = sampleOptions(),
-        selectedKey = "month",
-        onPick = {},
-        onClose = {},
+        choices = OptionChoices(options = sampleOptions(), selectedKey = "month"),
+        actions = PickerActions(onPick = {}, onClose = {}),
     )
 }
 

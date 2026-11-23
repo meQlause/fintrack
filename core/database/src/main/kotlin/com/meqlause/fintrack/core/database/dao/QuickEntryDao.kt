@@ -20,4 +20,8 @@ interface QuickEntryDao {
     /** FR-039: removes a shortcut; the manager offers undo for five seconds. */
     @Query("DELETE FROM quick_entry WHERE quickEntryId = :quickEntryId")
     suspend fun delete(quickEntryId: Long)
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM quick_entry")
+    suspend fun deleteAll()
 }

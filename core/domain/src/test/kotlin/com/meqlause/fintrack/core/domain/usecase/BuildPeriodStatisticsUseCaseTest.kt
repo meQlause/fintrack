@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import com.meqlause.fintrack.core.domain.period.Period
+import com.meqlause.fintrack.core.domain.statistics.StatisticsRequest
 import com.meqlause.fintrack.core.model.Audit
 import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.Memo
@@ -91,7 +92,10 @@ class BuildPeriodStatisticsUseCaseTest {
         transactions: List<Transaction>,
         type: TransactionType,
         period: Period,
-    ) = useCase(transactions, type, period, 1, zone)
+    ) = useCase(
+        transactions = transactions,
+        request = StatisticsRequest(type = type, period = period, startDay = 1, zone = zone),
+    )
 
     private fun transaction(
         type: TransactionType,

@@ -14,8 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.graphics.takeOrElse
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -26,36 +25,43 @@ fun ScreenPill(
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    dotColor: Color? = null,
-    contentColor: Color = FintrackTheme.colors.texts.onSurface,
-    selected: Boolean = false,
-    height: Dp = FintrackScreenSizes.pillTall,
+    look: PillLook = PillLook(),
 ) {
-    val shape = CircleShape
+    val selected = look.selected
     val colors = FintrackTheme.colors
     val fill = if (selected) colors.texts.onSurface else colors.surfaces.surface
     val border = if (selected) colors.texts.onSurface else colors.surfaces.outline
-    val textColor = if (selected) colors.surfaces.background else contentColor
     Row(
         modifier =
             modifier
-                .height(height)
-                .clip(shape)
+                .height(look.height)
+                .clip(CircleShape)
                 .background(fill)
-                .border(FintrackTheme.sizes.hairline, border, shape)
+                .border(FintrackTheme.sizes.hairline, border, CircleShape)
                 .clickable(onClick = onClick)
                 .padding(horizontal = FintrackTheme.spacing.medium),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small - FintrackTheme.spacing.xxSmall),
     ) {
-        if (dotColor != null) {
-            Row(modifier = Modifier.size(FintrackScreenSizes.pillDot).clip(CircleShape).background(dotColor)) {}
-        }
-        Text(
-            text = label,
-            style = FintrackScreenText.style(size = 12.5f, weight = 600),
-            color = textColor,
-            maxLines = 1,
-        )
+        PillContent(label = label, look = look)
     }
+}
+
+@Composable
+private fun PillContent(
+    label: String,
+    look: PillLook,
+) {
+    val colors = FintrackTheme.colors
+    val plain = look.contentColor.takeOrElse { colors.texts.onSurface }
+    val textColor = if (look.selected) colors.surfaces.background else plain
+    if (look.dotColor != null) {
+        Row(modifier = Modifier.size(FintrackScreenSizes.pillDot).clip(CircleShape).background(look.dotColor)) {}
+    }
+    Text(
+        text = label,
+        style = FintrackScreenText.style(size = 12.5f, weight = 600),
+        color = textColor,
+        maxLines = 1,
+    )
 }

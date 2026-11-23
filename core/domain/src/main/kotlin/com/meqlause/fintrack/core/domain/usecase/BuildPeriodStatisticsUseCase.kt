@@ -4,10 +4,10 @@ import com.meqlause.fintrack.core.domain.period.Period
 import com.meqlause.fintrack.core.domain.period.PeriodCalculator
 import com.meqlause.fintrack.core.domain.statistics.CategoryChange
 import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
+import com.meqlause.fintrack.core.domain.statistics.StatisticsRequest
 import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.Transaction
-import com.meqlause.fintrack.core.model.TransactionType
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
@@ -20,17 +20,16 @@ public class BuildPeriodStatisticsUseCase
         /** FR-051: [period] is the one [startDay] produces; transfers and loans are never counted. */
         public operator fun invoke(
             transactions: List<Transaction>,
-            type: TransactionType,
-            period: Period,
-            startDay: Int,
-            zone: ZoneId,
+            request: StatisticsRequest,
         ): PeriodStatistics {
-            val previous = PeriodCalculator.previousPeriod(period, startDay)
-            val ofType = transactions.filter { it.movement.type == type }
+            val period = request.period
+            val zone = request.zone
+            val previous = PeriodCalculator.previousPeriod(period, request.startDay)
+            val ofType = transactions.filter { it.movement.type == request.type }
             val current = ofType.during(period, zone)
             val before = ofType.during(previous, zone)
             return PeriodStatistics(
-                type = type,
+                type = request.type,
                 total = sumOf(current),
                 previousTotal = sumOf(before),
                 categories = rankCategories(current, before),

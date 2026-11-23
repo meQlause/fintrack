@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +26,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.zIndex
+import com.meqlause.fintrack.core.designsystem.icon.IconBox
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.icon.TintedIconBox
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
@@ -144,10 +147,12 @@ private fun SideName(
 @Composable
 private fun SideIcon(info: EditWalletInfo) {
     TintedIconBox(
-        iconKey = info.appearance.iconKey,
-        colorKey = info.appearance.colorKey,
-        size = FintrackScreenSizes.smallIconBox,
-        glyph = FintrackScreenSizes.circleGlyph,
-        corner = FintrackScreenSizes.smallIconCorner,
+        look = IconLook(iconKey = info.appearance.iconKey, colorKey = info.appearance.colorKey),
+        tile =
+            IconBox(
+                size = FintrackScreenSizes.smallIconBox,
+                glyph = FintrackScreenSizes.circleGlyph,
+                shape = RoundedCornerShape(FintrackScreenSizes.smallIconCorner),
+            ),
     )
 }

@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FormRow
+import com.meqlause.fintrack.core.designsystem.component.PickRowText
 import com.meqlause.fintrack.core.designsystem.component.SheetPickRow
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.WalletId
@@ -58,11 +60,20 @@ private fun EditWalletCard(
     val base = stringResource(pickerTitleRes(state.form.type, EditSheet.WALLET))
     val group = info.groupRes?.let { stringResource(it) }
     SheetPickRow(
-        label = if (group == null) base else stringResource(R.string.transaction_pay_group, base, group),
-        name = info.name,
-        balance = info.fundsText,
-        iconKey = info.appearance.iconKey,
-        colorKey = info.appearance.colorKey,
+        text =
+            PickRowText(
+                label =
+                    if (group ==
+                        null
+                    ) {
+                        base
+                    } else {
+                        stringResource(R.string.transaction_pay_group, base, group)
+                    },
+                name = info.name,
+                fundsText = info.fundsText,
+            ),
+        look = IconLook(iconKey = info.appearance.iconKey, colorKey = info.appearance.colorKey),
         onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.WALLET)) },
         modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
     )

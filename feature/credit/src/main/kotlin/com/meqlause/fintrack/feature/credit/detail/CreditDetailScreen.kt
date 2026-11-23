@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,10 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.BackAction
+import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.picker.DayGridDrawer
+import com.meqlause.fintrack.core.ui.picker.PickerActions
 import com.meqlause.fintrack.feature.credit.R
 import com.meqlause.fintrack.feature.credit.component.BillCard
 import com.meqlause.fintrack.feature.credit.component.CycleRows
@@ -34,10 +36,15 @@ internal fun CreditDetailScreen(
     Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         val success = state as? CreditDetailUiState.Success
         ScreenBackHeader(
-            title = success?.name.orEmpty(),
-            backLabel = stringResource(R.string.credit_back),
-            onBack = callbacks.onBack,
-            badge = success?.let { stringResource(CreditLabels.type(it.type)) },
+            title =
+                HeaderTitle(
+                    text = success?.name.orEmpty(),
+                    badge =
+                        success?.let {
+                            stringResource(CreditLabels.type(it.type))
+                        },
+                ),
+            back = BackAction(label = stringResource(R.string.credit_back), onBack = callbacks.onBack),
         )
         when (state) {
             CreditDetailUiState.Loading -> {
@@ -95,8 +102,7 @@ private fun CreditDetailBody(
             DayGridDrawer(
                 title = stringResource(pickerTitle(day)),
                 selectedDay = dayOf(state, day),
-                onPick = callbacks.onPickDay,
-                onClose = callbacks.onDismissPicker,
+                actions = PickerActions(onPick = callbacks.onPickDay, onClose = callbacks.onDismissPicker),
             )
         }
         state.payDraft?.let { draft ->

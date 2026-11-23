@@ -14,6 +14,8 @@ import com.meqlause.fintrack.feature.credit.navigation.CreditDetailDestination
 import com.meqlause.fintrack.feature.credit.navigation.CreditNavigation
 import com.meqlause.fintrack.feature.credit.navigation.InstalmentDetailDestination
 import com.meqlause.fintrack.feature.credit.navigation.InstalmentListDestination
+import com.meqlause.fintrack.feature.dashboard.HomeEntryLinks
+import com.meqlause.fintrack.feature.dashboard.HomeHostLinks
 import com.meqlause.fintrack.feature.dashboard.navigation.HomeDestination
 import com.meqlause.fintrack.feature.dashboard.navigation.HomeNavigation
 import com.meqlause.fintrack.feature.inbox.navigation.InboxDestination
@@ -29,6 +31,8 @@ import com.meqlause.fintrack.feature.lock.navigation.PinSetupMode
 import com.meqlause.fintrack.feature.lock.navigation.PinSetupNavigation
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingGraph
+import com.meqlause.fintrack.feature.settings.SettingsLinks
+import com.meqlause.fintrack.feature.settings.SettingsSecurityCallbacks
 import com.meqlause.fintrack.feature.settings.navigation.AboutDestination
 import com.meqlause.fintrack.feature.settings.navigation.AboutNavigation
 import com.meqlause.fintrack.feature.settings.navigation.BatteryHelpDestination
@@ -75,6 +79,11 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
 }
 
 private fun NavGraphBuilder.startGraph(navController: NavHostController) {
+    onboardingGraph(navController)
+    homeGraph(navController)
+}
+
+private fun NavGraphBuilder.onboardingGraph(navController: NavHostController) {
     OnboardingGraph.register(
         builder = this,
         onFinished = {
@@ -91,20 +100,29 @@ private fun NavGraphBuilder.startGraph(navController: NavHostController) {
         onDone = { navController.popBackStack() },
         onCancel = { navController.popBackStack() },
     )
-    // DOC-09, FR-040..043: Beranda (S-03); Catat cepat opens the add sheet, a row opens its S-06 detail
+}
+
+// DOC-09, FR-040..043: Beranda (S-03); Catat cepat opens the add sheet, a row opens its S-06 detail
+private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
     HomeNavigation.register(
         builder = this,
-        onOpenSettings = { navController.navigate(SettingsDestination) },
-        onOpenInbox = { navController.navigate(InboxDestination) },
-        onOpenWallet = { navController.navigate(WalletDetailDestination(it.value)) },
-        onOpenCreditWallet = { navController.navigate(CreditDetailDestination(it.value)) },
-        onOpenInstalments = { navController.navigate(InstalmentListDestination) },
-        onOpenLoans = { navController.navigate(LoanListDestination) },
-        onOpenWallets = { MainTab.WALLET.navigateFrom(navController) },
-        onOpenHistory = { MainTab.HISTORY.navigateFrom(navController) },
-        onQuickEntry = { navController.navigate(EditTransactionDestination()) },
-        onApplyShortcut = { navController.navigate(EditTransactionDestination(quickEntryId = it.value)) },
-        onOpenTransaction = { navController.navigate(TransactionDetailDestination(transactionId = it.value)) },
+        host =
+            HomeHostLinks(
+                onOpenSettings = { navController.navigate(SettingsDestination) },
+                onOpenInbox = { navController.navigate(InboxDestination) },
+                onOpenWallet = { navController.navigate(WalletDetailDestination(it.value)) },
+                onOpenCreditWallet = { navController.navigate(CreditDetailDestination(it.value)) },
+                onOpenWallets = { MainTab.WALLET.navigateFrom(navController) },
+                onOpenTransaction = { navController.navigate(TransactionDetailDestination(transactionId = it.value)) },
+            ),
+        entry =
+            HomeEntryLinks(
+                onOpenHistory = { MainTab.HISTORY.navigateFrom(navController) },
+                onOpenInstalments = { navController.navigate(InstalmentListDestination) },
+                onOpenLoans = { navController.navigate(LoanListDestination) },
+                onQuickEntry = { navController.navigate(EditTransactionDestination()) },
+                onApplyShortcut = { navController.navigate(EditTransactionDestination(quickEntryId = it.value)) },
+            ),
     )
 }
 
@@ -176,18 +194,24 @@ private fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
     // DOC-09, S-12: Pengaturan is opened from the Beranda header; its Kategori row leads to S-10 (FR-020)
     SettingsNavigation.register(
         builder = this,
-        onBack = { navController.popBackStack() },
-        onOpenCategories = { navController.navigate(CategoryDestination) },
-        onOpenBudgets = { navController.navigate(BudgetDestination) },
-        onOpenMonitoredApps = { navController.navigate(MonitoredAppsDestination) },
-        // FR-123, S-12: the Tentang row opens the About and privacy screen
-        onOpenAbout = { navController.navigate(AboutDestination) },
-        // DOC-07, S-12: the Bantuan optimasi baterai row opens the OEM help page
-        onOpenBatteryHelp = { navController.navigate(BatteryHelpDestination) },
+        links =
+            SettingsLinks(
+                onBack = { navController.popBackStack() },
+                onOpenCategories = { navController.navigate(CategoryDestination) },
+                onOpenBudgets = { navController.navigate(BudgetDestination) },
+                onOpenMonitoredApps = { navController.navigate(MonitoredAppsDestination) },
+                // FR-123, S-12: the Tentang row opens the About and privacy screen
+                onOpenAbout = { navController.navigate(AboutDestination) },
+                // DOC-07, S-12: the Bantuan optimasi baterai row opens the OEM help page
+                onOpenBatteryHelp = { navController.navigate(BatteryHelpDestination) },
+            ),
         // FR-100, S-12: Keamanan rows open the PIN setup in the mode they need
-        onOpenPinSetup = { navController.navigate(PinSetupDestination(PinSetupMode.SET)) },
-        onOpenPinChange = { navController.navigate(PinSetupDestination(PinSetupMode.CHANGE)) },
-        onOpenPinRemove = { navController.navigate(PinSetupDestination(PinSetupMode.REMOVE)) },
+        pins =
+            SettingsSecurityCallbacks(
+                onOpenPinSetup = { navController.navigate(PinSetupDestination(PinSetupMode.SET)) },
+                onOpenPinChange = { navController.navigate(PinSetupDestination(PinSetupMode.CHANGE)) },
+                onOpenPinRemove = { navController.navigate(PinSetupDestination(PinSetupMode.REMOVE)) },
+            ),
     )
     // FR-070 to FR-074, S-11: Anggaran is opened from the Data group of Pengaturan
     BudgetNavigation.register(builder = this, onBack = { navController.popBackStack() })

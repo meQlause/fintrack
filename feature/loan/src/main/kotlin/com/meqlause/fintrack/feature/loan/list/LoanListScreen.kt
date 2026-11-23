@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.BackAction
+import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.component.ScreenSegments
@@ -31,9 +33,8 @@ internal fun LoanListScreen(
 ) {
     Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         ScreenBackHeader(
-            title = stringResource(R.string.loan_title),
-            backLabel = stringResource(R.string.loan_back),
-            onBack = callbacks.onBack,
+            title = HeaderTitle(text = stringResource(R.string.loan_title)),
+            back = BackAction(label = stringResource(R.string.loan_back), onBack = callbacks.onBack),
         )
         LazyColumn(
             modifier = Modifier.fillMaxWidth().padding(horizontal = FintrackScreenSizes.screenGutter),

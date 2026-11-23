@@ -14,7 +14,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.TextStyle
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // DOC-08: a single-line borderless input with a faint placeholder; the text lives in the caller, the state mirrors it
@@ -22,11 +21,11 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 fun ScreenInput(
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String,
-    style: TextStyle,
+    look: InputLook,
     modifier: Modifier = Modifier,
 ) {
     val colors = FintrackTheme.colors
+    val hint = look.placeholder
     val state = rememberTextFieldState(initialText = value)
     val latest by rememberUpdatedState(onValueChange)
     val shown by rememberUpdatedState(value)
@@ -38,13 +37,13 @@ fun ScreenInput(
     }
     BasicTextField(
         state = state,
-        textStyle = style.copy(color = colors.texts.onSurface),
+        textStyle = look.style.copy(color = colors.texts.onSurface),
         cursorBrush = SolidColor(colors.brands.primary),
         modifier = modifier,
         decorator =
             TextFieldDecorator { inner ->
                 Box(contentAlignment = Alignment.CenterStart) {
-                    if (state.text.isEmpty()) Text(text = placeholder, style = style, color = colors.texts.faint)
+                    if (state.text.isEmpty()) Text(text = hint, style = look.style, color = colors.texts.faint)
                     inner()
                 }
             },

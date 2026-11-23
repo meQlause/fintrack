@@ -6,6 +6,9 @@ import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
+import com.meqlause.fintrack.core.ui.picker.PickerActions
+import com.meqlause.fintrack.core.ui.picker.PickerMark
+import com.meqlause.fintrack.core.ui.picker.WalletChoices
 import com.meqlause.fintrack.core.ui.picker.WalletPickerDrawer
 import com.meqlause.fintrack.core.ui.picker.WalletPickerRow
 import com.meqlause.fintrack.feature.transaction.R
@@ -20,11 +23,17 @@ internal fun EditTransactionWalletPicker(
 ) {
     WalletPickerDrawer(
         title = stringResource(pickerTitleRes(state.form.type, sheet)),
-        rows = pickerRows(state, sheet),
-        onPick = { walletId -> onEvent(EditTransactionEvent.WalletPicked(walletId)) },
-        onClose = { onEvent(EditTransactionEvent.SheetDismissed) },
+        choices =
+            WalletChoices(
+                rows = pickerRows(state, sheet),
+                allowCredit =
+                    sheet == EditSheet.TARGET_WALLET || state.form.type == TransactionType.EXPENSE,
+            ),
+        actions =
+            PickerActions(onPick = { walletId ->
+                onEvent(EditTransactionEvent.WalletPicked(walletId))
+            }, onClose = { onEvent(EditTransactionEvent.SheetDismissed) }),
         modifier = modifier,
-        allowCredit = sheet == EditSheet.TARGET_WALLET || state.form.type == TransactionType.EXPENSE,
     )
 }
 
@@ -54,10 +63,9 @@ internal fun pickerRows(
             walletId = wallet.walletId,
             name = wallet.profile.name,
             type = wallet.kind.type,
-            appearance = wallet.profile.appearance,
             shownBalanceText = MoneyFormatter.format(state.catalog.moneyByWallet[wallet.walletId] ?: Money(0L)),
-            isSelected = wallet.walletId == selected,
-            isBlocked = wallet.walletId == blocked,
+            mark = PickerMark(isSelected = wallet.walletId == selected, isBlocked = wallet.walletId == blocked),
+            appearance = wallet.profile.appearance,
         )
     }
 }

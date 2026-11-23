@@ -21,4 +21,8 @@ interface BudgetDao {
     /** DOC-02: every budget in creation order. */
     @Query("SELECT * FROM budget ORDER BY budgetId")
     fun observeAll(): Flow<List<BudgetEntity>>
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM budget")
+    suspend fun deleteAll()
 }

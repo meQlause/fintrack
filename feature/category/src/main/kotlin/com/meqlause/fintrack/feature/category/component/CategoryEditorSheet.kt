@@ -12,6 +12,7 @@ import com.meqlause.fintrack.core.designsystem.component.FintrackBottomSheet
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
 import com.meqlause.fintrack.core.designsystem.icon.ColorSwatch
 import com.meqlause.fintrack.core.designsystem.icon.IconChoice
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.category.CategoryAppearance
 import com.meqlause.fintrack.feature.category.CategoryCallbacks
@@ -57,8 +58,7 @@ private fun CategoryEditorFields(
     Text(text = stringResource(R.string.category_editor_icon), style = FintrackTheme.typography.labelLarge)
     ChoiceGrid(keys = CategoryAppearance.iconKeys) { key ->
         IconChoice(
-            iconKey = key,
-            colorKey = draft.colorKey,
+            look = IconLook(iconKey = key, colorKey = draft.colorKey),
             selected = key == draft.iconKey,
             onSelect = { callbacks.editor.onIconChange(key) },
         )

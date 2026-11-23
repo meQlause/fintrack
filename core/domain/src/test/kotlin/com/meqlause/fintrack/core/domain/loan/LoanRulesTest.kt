@@ -54,8 +54,11 @@ class LoanRulesTest {
             personName = name,
             principal = Money(principal),
             walletId = wallet,
-            startDate = Instant.parse("2026-11-20T00:00:00Z"),
-            dueDate = LocalDate.of(2026, 12, 20),
+            schedule =
+                LoanSchedule(
+                    startDate = Instant.parse("2026-11-20T00:00:00Z"),
+                    dueDate = LocalDate.of(2026, 12, 20),
+                ),
             note = "",
         )
 }

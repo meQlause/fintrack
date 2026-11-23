@@ -14,6 +14,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import com.meqlause.fintrack.core.designsystem.component.RowSlots
+import com.meqlause.fintrack.core.designsystem.component.RowStyle
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
@@ -37,14 +39,8 @@ internal fun ActivityRow(
     val title = stringResource(titleRes(activity.kind))
     ScreenRow(
         modifier = modifier,
-        showDivider = showDivider,
-        contentPadding =
-            PaddingValues(
-                horizontal = FintrackScreenSizes.rowPaddingHorizontal,
-                vertical = FintrackScreenSizes.rowPaddingVertical - FintrackTheme.spacing.xxSmall / 2,
-            ),
-        leading = { ActivityMark(kind = activity.kind) },
-        trailing = { ActivityAmount(activity) },
+        style = activityRowStyle(showDivider),
+        slots = RowSlots(leading = { ActivityMark(kind = activity.kind) }, trailing = { ActivityAmount(activity) }),
     ) {
         Text(
             text = if (accountName == null) title else "$title · $accountName",
@@ -61,6 +57,18 @@ internal fun ActivityRow(
         )
     }
 }
+
+// FR-173: the timeline row is a little tighter than the standard one
+@Composable
+private fun activityRowStyle(showDivider: Boolean): RowStyle =
+    RowStyle(
+        showDivider = showDivider,
+        contentPadding =
+            PaddingValues(
+                horizontal = FintrackScreenSizes.rowPaddingHorizontal,
+                vertical = FintrackScreenSizes.rowPaddingVertical - FintrackTheme.spacing.xxSmall / 2,
+            ),
+    )
 
 // FR-173: the amount with its sign; a valuation is shown in the primary colour
 @Composable

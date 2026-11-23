@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.RowSlots
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
@@ -57,22 +58,22 @@ private fun LastBackupRow(
     onCreate: () -> Unit,
 ) {
     ScreenRow(
-        leading = {
-            Icon(
-                painter = painterResource(DesignR.drawable.ic_download),
-                contentDescription = null,
-                tint = FintrackTheme.colors.texts.onSurfaceVariant,
-                modifier = Modifier.size(FintrackTheme.sizes.categoryGlyph),
-            )
-        },
-        trailing = {
-            Text(
-                text = lastBackupLabel(lastBackupAt),
-                style = FintrackScreenText.style(size = 12f, weight = 500),
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-            )
-            BackupButton(onClick = onCreate)
-        },
+        slots =
+            RowSlots(leading = {
+                Icon(
+                    painter = painterResource(DesignR.drawable.ic_download),
+                    contentDescription = null,
+                    tint = FintrackTheme.colors.texts.onSurfaceVariant,
+                    modifier = Modifier.size(FintrackTheme.sizes.categoryGlyph),
+                )
+            }, trailing = {
+                Text(
+                    text = lastBackupLabel(lastBackupAt),
+                    style = FintrackScreenText.style(size = 12f, weight = 500),
+                    color = FintrackTheme.colors.texts.onSurfaceVariant,
+                )
+                BackupButton(onClick = onCreate)
+            }),
     ) {
         Text(
             text = stringResource(R.string.settings_backup_last_label),

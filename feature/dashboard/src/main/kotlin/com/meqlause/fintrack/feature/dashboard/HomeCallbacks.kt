@@ -6,8 +6,8 @@ import com.meqlause.fintrack.core.model.WalletId
 
 // DOC-09, S-03: every action of Beranda, grouped by where it leads; the defaults keep previews and tests free of wiring
 internal data class HomeCallbacks(
-    val host: Host = Host(),
-    val entry: Entry = Entry(),
+    val host: HomeHostLinks = HomeHostLinks(),
+    val entry: HomeEntryLinks = HomeEntryLinks(),
     val screen: Screen = Screen(),
     val shortcuts: Shortcuts = Shortcuts(),
 ) {
@@ -30,25 +30,6 @@ internal data class HomeCallbacks(
     val onOpenShortcuts: () -> Unit get() = screen.onOpenShortcuts
     val onDeleteShortcut: (QuickEntryId) -> Unit get() = shortcuts.onDeleteShortcut
     val onRestoreShortcut: () -> Unit get() = shortcuts.onRestoreShortcut
-
-    // leaving Beranda for a screen the host app owns
-    internal data class Host(
-        val onOpenSettings: () -> Unit = {},
-        val onOpenInbox: () -> Unit = {},
-        val onOpenWallet: (WalletId) -> Unit = {},
-        val onOpenCreditWallet: (WalletId) -> Unit = {},
-        val onOpenWallets: () -> Unit = {},
-        val onOpenTransaction: (TransactionId) -> Unit = {},
-    )
-
-    // entries into the money screens: history, instalments, loans and the quick entry shortcuts
-    internal data class Entry(
-        val onOpenHistory: () -> Unit = {},
-        val onOpenInstalments: () -> Unit = {},
-        val onOpenLoans: () -> Unit = {},
-        val onQuickEntry: () -> Unit = {},
-        val onApplyShortcut: (QuickEntryId) -> Unit = {},
-    )
 
     // actions that stay on Beranda: theme, privacy toggle and the drawers
     internal data class Screen(

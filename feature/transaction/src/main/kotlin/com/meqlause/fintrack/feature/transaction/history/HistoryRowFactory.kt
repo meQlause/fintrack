@@ -19,7 +19,7 @@ internal fun Transaction.toRowItem(
             memo.merchant.ifBlank { memo.note }.takeIf { it.isNotBlank() }
                 ?: routing.categoryId?.let(names::categoryName),
         subtitle = "${walletLabel(names)} · $time",
-        appearance = RowAppearance.of(movement.type, routing.categoryId?.let(names::categoryAppearance)),
+        appearance = RowAppearance.forType(movement.type, routing.categoryId?.let(names::categoryAppearance)),
     )
 }
 

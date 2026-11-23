@@ -1,36 +1,13 @@
 package com.meqlause.fintrack.feature.loan.detail
 
-import androidx.lifecycle.SavedStateHandle
 import assertk.assertThat
-import assertk.assertions.containsOnly
-import assertk.assertions.hasSize
-import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
-import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
-import com.meqlause.fintrack.core.domain.loan.LoanDueOption
-import com.meqlause.fintrack.core.domain.loan.RepaymentError
-import com.meqlause.fintrack.core.domain.usecase.ChangeLoanDueDateUseCase
-import com.meqlause.fintrack.core.domain.usecase.DeleteLoanUseCase
-import com.meqlause.fintrack.core.domain.usecase.ObserveLoansUseCase
-import com.meqlause.fintrack.core.domain.usecase.RecordRepaymentUseCase
-import com.meqlause.fintrack.core.domain.usecase.WriteOffLoanUseCase
-import com.meqlause.fintrack.core.model.Agreement
-import com.meqlause.fintrack.core.model.Audit
-import com.meqlause.fintrack.core.model.Loan
-import com.meqlause.fintrack.core.model.LoanDirection
-import com.meqlause.fintrack.core.model.LoanId
 import com.meqlause.fintrack.core.model.LoanStatus
-import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.testing.coroutine.MainDispatcherRule
-import com.meqlause.fintrack.core.testing.repository.FakeLoanRepository
-import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
-import com.meqlause.fintrack.core.testing.repository.FakeWalletRepository
-import com.meqlause.fintrack.core.testing.repository.PassthroughAtomicRunner
-import com.meqlause.fintrack.core.testing.time.FakeClock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -39,7 +16,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.time.Instant
 
 // FR-152, FR-155, FR-158, S-17: the loan detail ViewModel handles every event and reports every outcome
 @RunWith(RobolectricTestRunner::class)
@@ -67,15 +43,15 @@ class LoanDetailDialogsViewModelTest {
     @Test
     fun `given a write-off dialog when confirmed then the loan is written off (FR-155)`() =
         runBlocking {
-            val id = harness.insertLoan()
-            val model = harness.viewModel(id)
+            val loanKey = harness.insertLoan()
+            val model = harness.viewModel(loanKey)
             model.loaded()
             model.onEvent(LoanDetailEvent.DialogOpened(LoanDialog.WRITE_OFF))
             assertThat(model.state.value.overlay.dialog).isEqualTo(LoanDialog.WRITE_OFF)
 
             model.onEvent(LoanDetailEvent.DialogConfirmed)
 
-            assertThat(harness.loanOf(id)?.status).isEqualTo(LoanStatus.WRITTEN_OFF)
+            assertThat(harness.loanOf(loanKey)?.status).isEqualTo(LoanStatus.WRITTEN_OFF)
             assertThat(model.state.value.overlay.dialog).isNull()
             assertThat(model.state.value.finished).isFalse()
         }
@@ -83,22 +59,22 @@ class LoanDetailDialogsViewModelTest {
     @Test
     fun `given a delete dialog when confirmed then the loan is removed and the screen finishes (BR-046)`() =
         runBlocking {
-            val id = harness.insertLoan()
-            val model = harness.viewModel(id)
+            val loanKey = harness.insertLoan()
+            val model = harness.viewModel(loanKey)
             model.loaded()
             model.onEvent(LoanDetailEvent.DialogOpened(LoanDialog.DELETE))
 
             model.onEvent(LoanDetailEvent.DialogConfirmed)
 
-            assertThat(harness.loanOf(id)).isNull()
+            assertThat(harness.loanOf(loanKey)).isNull()
             assertThat(model.state.value.finished).isTrue()
         }
 
     @Test
     fun `given a dialog when dismissed then it closes and nothing changes (FR-155)`() =
         runBlocking {
-            val id = harness.insertLoan()
-            val model = harness.viewModel(id)
+            val loanKey = harness.insertLoan()
+            val model = harness.viewModel(loanKey)
             model.loaded()
             model.onEvent(LoanDetailEvent.DialogOpened(LoanDialog.DELETE))
 
@@ -106,14 +82,14 @@ class LoanDetailDialogsViewModelTest {
             model.onEvent(LoanDetailEvent.DialogConfirmed)
 
             assertThat(model.state.value.overlay.dialog).isNull()
-            assertThat(harness.loanOf(id)?.status).isEqualTo(LoanStatus.OPEN)
+            assertThat(harness.loanOf(loanKey)?.status).isEqualTo(LoanStatus.OPEN)
         }
 
     @Test
     fun `given a repayment already stored when repaying again then its wallet is preselected (FR-152)`() =
         runBlocking {
-            val id = harness.insertLoan()
-            val model = harness.viewModel(id)
+            val loanKey = harness.insertLoan()
+            val model = harness.viewModel(loanKey)
             model.loaded()
             model.onEvent(LoanDetailEvent.OpenRepayment)
             "100000".forEach { model.onEvent(LoanDetailEvent.DigitTyped(it.toString())) }
@@ -157,13 +133,13 @@ class LoanDetailDialogsViewModelTest {
     @Test
     fun `given no dialog when confirmed then nothing happens (FR-155)`() =
         runBlocking {
-            val id = harness.insertLoan()
-            val model = harness.viewModel(id)
+            val loanKey = harness.insertLoan()
+            val model = harness.viewModel(loanKey)
             model.loaded()
 
             model.onEvent(LoanDetailEvent.DialogConfirmed)
 
-            assertThat(harness.loanOf(id)?.status).isEqualTo(LoanStatus.OPEN)
+            assertThat(harness.loanOf(loanKey)?.status).isEqualTo(LoanStatus.OPEN)
             assertThat(model.state.value.finished).isFalse()
         }
 }

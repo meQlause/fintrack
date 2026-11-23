@@ -5,7 +5,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,35 +19,28 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ScreenRow(
+    slots: RowSlots,
     modifier: Modifier = Modifier,
-    showDivider: Boolean = false,
-    onClick: (() -> Unit)? = null,
-    onLongClick: (() -> Unit)? = null,
-    contentPadding: PaddingValues =
-        PaddingValues(
-            horizontal = FintrackScreenSizes.rowPaddingHorizontal,
-            vertical = FintrackScreenSizes.rowPaddingVertical,
-        ),
-    leading: @Composable () -> Unit,
-    trailing: @Composable () -> Unit = {},
+    style: RowStyle = RowStyle(),
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(modifier = modifier) {
-        if (showDivider) {
+        if (style.showDivider) {
             HorizontalDivider(
                 thickness = FintrackTheme.sizes.hairline,
                 color = FintrackTheme.colors.surfaces.outline,
             )
         }
-        val press = onClick?.let { Modifier.combinedClickable(onClick = it, onLongClick = onLongClick) } ?: Modifier
+        val press =
+            style.onClick?.let { Modifier.combinedClickable(onClick = it, onLongClick = style.onLongClick) } ?: Modifier
         Row(
-            modifier = Modifier.fillMaxWidth().then(press).padding(contentPadding),
+            modifier = Modifier.fillMaxWidth().then(press).padding(style.contentPadding),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.rowGap),
         ) {
-            leading()
+            slots.leading()
             Column(modifier = Modifier.weight(1f), content = content)
-            trailing()
+            slots.trailing()
         }
     }
 }

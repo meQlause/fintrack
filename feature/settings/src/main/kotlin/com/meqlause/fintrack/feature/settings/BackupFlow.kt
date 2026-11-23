@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.domain.backup.BackupFailure
 import com.meqlause.fintrack.core.model.BackupSnapshot
+import com.meqlause.fintrack.core.ui.picker.OptionChoices
 import com.meqlause.fintrack.core.ui.picker.OptionsDrawer
+import com.meqlause.fintrack.core.ui.picker.PickerActions
 import com.meqlause.fintrack.core.ui.picker.PickerOption
 import java.time.Instant
 import java.time.LocalDate
@@ -39,31 +41,45 @@ internal fun BackupFlow(
             BackupPasswordDialog(creating = false, onConfirm = callbacks.onPasswordForImport, onDismiss = onDismissStep)
         }
 
+        is BackupStep.CsvRange -> {
+            BackupCsvDialog(range = step.range, onConfirm = callbacks.onCsvRangePicked, onDismiss = onDismissStep)
+        }
+
+        else -> {
+            BackupSheetStep(state = state, callbacks = callbacks, onDismiss = onDismissStep)
+        }
+    }
+    state.outcome?.let { outcome -> OutcomeDialog(outcome = outcome, onDismiss = onDismissOutcome) }
+}
+
+// FR-112, FR-110: the restore summary and the reminder choice, the steps that are not a plain dialog
+@Composable
+private fun BackupSheetStep(
+    state: BackupUiState,
+    callbacks: BackupFlowCallbacks,
+    onDismiss: () -> Unit,
+) {
+    when (val step = state.step) {
         is BackupStep.ConfirmRestore -> {
             RestoreSummaryDialog(
                 snapshot = step.snapshot,
                 onConfirm = callbacks.onConfirmRestore,
-                onDismiss = onDismissStep,
+                onDismiss = onDismiss,
             )
-        }
-
-        is BackupStep.CsvRange -> {
-            BackupCsvDialog(range = step.range, onConfirm = callbacks.onCsvRangePicked, onDismiss = onDismissStep)
         }
 
         BackupStep.ReminderDays -> {
             ReminderDrawer(
                 selectedDays = state.reminderDays,
                 onPick = callbacks.onReminderDaysPicked,
-                onClose = onDismissStep,
+                onClose = onDismiss,
             )
         }
 
-        null -> {
+        else -> {
             Unit
         }
     }
-    state.outcome?.let { outcome -> OutcomeDialog(outcome = outcome, onDismiss = onDismissOutcome) }
 }
 
 // FR-110..FR-113: the answers the backup dialogs give, each one passes on to the ViewModel
@@ -84,10 +100,8 @@ private fun ReminderDrawer(
 ) {
     OptionsDrawer(
         title = stringResource(R.string.settings_backup_reminder_sheet_title),
-        options = reminderOptions(),
-        selectedKey = selectedDays.toString(),
-        onPick = { option -> onPick(option.optionKey.toInt()) },
-        onClose = onClose,
+        choices = OptionChoices(options = reminderOptions(), selectedKey = selectedDays.toString()),
+        actions = PickerActions(onPick = { option -> onPick(option.optionKey.toInt()) }, onClose = onClose),
     )
 }
 

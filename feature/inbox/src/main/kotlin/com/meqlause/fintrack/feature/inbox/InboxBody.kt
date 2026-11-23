@@ -22,6 +22,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
+import com.meqlause.fintrack.core.designsystem.component.RowSlots
+import com.meqlause.fintrack.core.designsystem.component.RowStyle
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
@@ -161,14 +163,16 @@ private fun ResolvedRow(
     showDivider: Boolean,
 ) {
     ScreenRow(
-        showDivider = showDivider,
-        contentPadding =
-            PaddingValues(
-                horizontal = FintrackScreenSizes.rowPaddingHorizontal,
-                vertical = FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall,
+        style =
+            RowStyle(
+                showDivider = showDivider,
+                contentPadding =
+                    PaddingValues(
+                        horizontal = FintrackScreenSizes.rowPaddingHorizontal,
+                        vertical = FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall,
+                    ),
             ),
-        leading = {},
-        trailing = { ResolvedIcon(isConfirmed = resolvedRow.isConfirmed) },
+        slots = RowSlots(leading = {}, trailing = { ResolvedIcon(isConfirmed = resolvedRow.isConfirmed) }),
     ) {
         Text(
             text = resolvedRow.label + " · " + MoneyFormatter.format(resolvedRow.amount),

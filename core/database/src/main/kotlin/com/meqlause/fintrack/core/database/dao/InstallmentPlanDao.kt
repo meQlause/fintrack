@@ -25,4 +25,8 @@ interface InstallmentPlanDao {
     /** DOC-02: every installment plan in creation order. */
     @Query("SELECT * FROM installment_plan ORDER BY installmentPlanId")
     fun observeAll(): Flow<List<InstallmentPlanEntity>>
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM installment_plan")
+    suspend fun deleteAll()
 }

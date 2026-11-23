@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.ui.R
@@ -55,34 +56,44 @@ private fun WalletPickerItem(
     pickerRow: WalletPickerRow,
     onPick: (WalletId) -> Unit,
 ) {
-    val colors = FintrackTheme.colors
     Row(
         modifier =
             Modifier
                 .fillMaxWidth()
                 .heightIn(min = FintrackTheme.sizes.formRowHeight)
-                .clickable(enabled = !pickerRow.isBlocked, role = Role.RadioButton) { onPick(pickerRow.walletId) }
+                .clickable(enabled = !pickerRow.mark.isBlocked, role = Role.RadioButton) { onPick(pickerRow.walletId) }
                 .padding(vertical = FintrackTheme.spacing.xSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
-        IconCircle(iconKey = pickerRow.appearance.iconKey, colorKey = pickerRow.appearance.colorKey)
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = pickerRow.name,
-                style = FintrackTheme.typography.titleMedium,
-                color = if (pickerRow.isBlocked) colors.texts.faint else colors.texts.onSurface,
-            )
-            Text(
-                text = blockedOrBalance(pickerRow),
-                style = FintrackTheme.typography.bodyMedium,
-                color = colors.texts.onSurfaceVariant,
-            )
-        }
-        RadioButton(selected = pickerRow.isSelected, onClick = null, enabled = !pickerRow.isBlocked)
+        IconCircle(
+            look = IconLook(iconKey = pickerRow.appearance.iconKey, colorKey = pickerRow.appearance.colorKey),
+        )
+        WalletPickerTexts(pickerRow = pickerRow, modifier = Modifier.weight(1f))
+        RadioButton(selected = pickerRow.mark.isSelected, onClick = null, enabled = !pickerRow.mark.isBlocked)
+    }
+}
+
+@Composable
+private fun WalletPickerTexts(
+    pickerRow: WalletPickerRow,
+    modifier: Modifier = Modifier,
+) {
+    val colors = FintrackTheme.colors
+    Column(modifier = modifier) {
+        Text(
+            text = pickerRow.name,
+            style = FintrackTheme.typography.titleMedium,
+            color = if (pickerRow.mark.isBlocked) colors.texts.faint else colors.texts.onSurface,
+        )
+        Text(
+            text = blockedOrBalance(pickerRow),
+            style = FintrackTheme.typography.bodyMedium,
+            color = colors.texts.onSurfaceVariant,
+        )
     }
 }
 
 @Composable
 private fun blockedOrBalance(pickerRow: WalletPickerRow): String =
-    if (pickerRow.isBlocked) stringResource(R.string.picker_already_selected) else pickerRow.shownBalanceText
+    if (pickerRow.mark.isBlocked) stringResource(R.string.picker_already_selected) else pickerRow.shownBalanceText

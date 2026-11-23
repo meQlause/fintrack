@@ -5,7 +5,7 @@ import com.meqlause.fintrack.core.model.TransactionType
 
 // DOC-08: the row icon and colour: the category, the transfer icon for transfers, the person icon for loans
 object RowAppearance {
-    fun of(
+    fun forType(
         type: TransactionType,
         categoryAppearance: Appearance?,
     ): Appearance =

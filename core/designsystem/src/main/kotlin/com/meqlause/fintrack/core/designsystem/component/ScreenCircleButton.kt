@@ -19,16 +19,14 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 // DOC-08: prototype 36 px round action; filled primary with a check, or outlined and muted for dismiss
 @Composable
 fun ScreenCircleButton(
-    iconRes: Int,
-    description: String,
+    icon: CircleIcon,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    filled: Boolean = false,
     enabled: Boolean = true,
 ) {
     val colors = FintrackTheme.colors
     val base =
-        if (filled) {
+        if (icon.filled) {
             Modifier.background(colors.brands.primary)
         } else {
             Modifier.border(FintrackTheme.sizes.hairline, colors.surfaces.outline, CircleShape)
@@ -44,9 +42,9 @@ fun ScreenCircleButton(
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            painter = painterResource(iconRes),
-            contentDescription = description,
-            tint = if (filled) colors.brands.onPrimary else colors.texts.onSurfaceVariant,
+            painter = painterResource(icon.iconRes),
+            contentDescription = icon.description,
+            tint = if (icon.filled) colors.brands.onPrimary else colors.texts.onSurfaceVariant,
             modifier = Modifier.size(FintrackScreenSizes.circleGlyph),
         )
     }

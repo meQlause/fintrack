@@ -1,9 +1,7 @@
 package com.meqlause.fintrack.feature.transaction.detail
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,7 +19,9 @@ import com.meqlause.fintrack.core.designsystem.component.FintrackBottomSheet
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
 import com.meqlause.fintrack.core.designsystem.component.SheetHeader
 import com.meqlause.fintrack.core.designsystem.component.UndoSnackbar
+import com.meqlause.fintrack.core.designsystem.icon.IconBox
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.money.MoneyText
 import com.meqlause.fintrack.feature.transaction.R
@@ -81,12 +81,14 @@ private fun TransactionDetailBody(
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         IconCircle(
-            iconKey = detail.appearance.iconKey,
-            colorKey = detail.appearance.colorKey,
-            size = FintrackTheme.sizes.detailIcon,
-            glyph = FintrackTheme.sizes.detailGlyph,
-            shape = FintrackTheme.shapes.card,
+            look = IconLook(iconKey = detail.appearance.iconKey, colorKey = detail.appearance.colorKey),
             modifier = Modifier.padding(top = FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),
+            tile =
+                IconBox(
+                    size = FintrackTheme.sizes.detailIcon,
+                    glyph = FintrackTheme.sizes.detailGlyph,
+                    shape = FintrackTheme.shapes.card,
+                ),
         )
         MoneyText(
             money = detail.amount,

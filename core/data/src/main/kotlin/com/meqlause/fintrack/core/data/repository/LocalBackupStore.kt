@@ -57,20 +57,20 @@ public class LocalBackupStore(
         )
     }
 
+    // DOC-11: children first, so no foreign key points at a row that is already gone
     private suspend fun clearAll() {
-        val clear = database.backupWriteDao()
-        clear.clearQuickEntries()
-        clear.clearValuations()
-        clear.clearInstallmentPlans()
-        clear.clearMonitoredApps()
-        clear.clearMerchantRules()
-        clear.clearBudgetAlertLogs()
-        clear.clearBudgets()
-        clear.clearTransactions()
-        clear.clearInboxItems()
-        clear.clearLoans()
-        clear.clearCategories()
-        clear.clearWallets()
+        database.quickEntryDao().deleteAll()
+        database.valuationEntryDao().deleteAll()
+        database.installmentPlanDao().deleteAll()
+        database.monitoredAppDao().deleteAll()
+        database.merchantRuleDao().deleteAll()
+        database.budgetAlertLogDao().deleteAll()
+        database.budgetDao().deleteAll()
+        database.transactionDao().deleteAll()
+        database.inboxItemDao().deleteAll()
+        database.loanDao().deleteAll()
+        database.categoryDao().deleteAll()
+        database.walletDao().deleteAll()
     }
 
     private suspend fun insertAll(snapshot: BackupSnapshot) {

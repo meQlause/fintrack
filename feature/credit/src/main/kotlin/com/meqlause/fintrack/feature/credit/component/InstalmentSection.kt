@@ -2,10 +2,8 @@ package com.meqlause.fintrack.feature.credit.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.RowSlots
+import com.meqlause.fintrack.core.designsystem.component.RowStyle
 import com.meqlause.fintrack.core.designsystem.component.ScreenGroup
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
@@ -67,27 +67,26 @@ private fun InstalmentCard(
     onClick: () -> Unit,
 ) {
     ScreenRow(
-        showDivider = showDivider,
-        onClick = onClick,
-        leading = {},
-        trailing = {
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = stringResource(R.string.instalment_progress, item.billed, item.tenor),
-                    style = FintrackScreenText.number(size = 14.5f, weight = 700),
-                    color = FintrackTheme.colors.texts.onSurface,
-                )
-                Text(
-                    text =
-                        stringResource(
-                            R.string.instalment_remaining,
-                            "Rp" + MoneyFormatter.formatCompact(item.remaining),
-                        ),
-                    style = FintrackScreenText.rowSub(),
-                    color = FintrackTheme.colors.texts.onSurfaceVariant,
-                )
-            }
-        },
+        style = RowStyle(showDivider = showDivider, onClick = onClick),
+        slots =
+            RowSlots(leading = {}, trailing = {
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = stringResource(R.string.instalment_progress, item.billed, item.tenor),
+                        style = FintrackScreenText.number(size = 14.5f, weight = 700),
+                        color = FintrackTheme.colors.texts.onSurface,
+                    )
+                    Text(
+                        text =
+                            stringResource(
+                                R.string.instalment_remaining,
+                                "Rp" + MoneyFormatter.formatCompact(item.remaining),
+                            ),
+                        style = FintrackScreenText.rowSub(),
+                        color = FintrackTheme.colors.texts.onSurfaceVariant,
+                    )
+                }
+            }),
     ) {
         Text(
             text = item.title,

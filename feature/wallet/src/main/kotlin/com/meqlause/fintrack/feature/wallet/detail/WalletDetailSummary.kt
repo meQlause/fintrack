@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.ScreenStat
 import com.meqlause.fintrack.core.designsystem.component.ScreenStatGrid
+import com.meqlause.fintrack.core.designsystem.icon.IconBox
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.icon.TintedIconBox
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
@@ -33,11 +36,13 @@ internal fun WalletDetailBalance(
         horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.rowPaddingHorizontal),
     ) {
         TintedIconBox(
-            iconKey = appearance.iconKey,
-            colorKey = appearance.colorKey,
-            size = FintrackScreenSizes.heroIcon,
-            glyph = FintrackScreenSizes.heroGlyph,
-            corner = FintrackScreenSizes.heroCorner,
+            look = IconLook(iconKey = appearance.iconKey, colorKey = appearance.colorKey),
+            tile =
+                IconBox(
+                    size = FintrackScreenSizes.heroIcon,
+                    glyph = FintrackScreenSizes.heroGlyph,
+                    shape = RoundedCornerShape(FintrackScreenSizes.heroCorner),
+                ),
         )
         Column(modifier = Modifier.weight(1f)) {
             Text(

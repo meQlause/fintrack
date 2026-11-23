@@ -16,20 +16,19 @@ import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 @Composable
 fun WalletPickerDrawer(
     title: String,
-    rows: List<WalletPickerRow>,
-    onPick: (WalletId) -> Unit,
-    onClose: () -> Unit,
+    choices: WalletChoices,
+    actions: PickerActions<WalletId>,
     modifier: Modifier = Modifier,
-    allowCredit: Boolean = true,
-    allowInvestment: Boolean = false,
 ) {
-    PickerDrawer(title = title, onClose = onClose, modifier = modifier) {
+    val allowCredit = choices.allowCredit
+    val allowInvestment = choices.allowInvestment
+    PickerDrawer(title = title, onClose = actions.onClose, modifier = modifier) {
         WalletPickerGroup.entries
             .filter { it.isAllowed(allowCredit = allowCredit, allowInvestment = allowInvestment) }
             .forEach { group ->
-                val groupRows = rows.filter { it.type in group.types }
+                val groupRows = choices.rows.filter { it.type in group.types }
                 if (groupRows.isNotEmpty()) {
-                    WalletPickerSection(group = group, rows = groupRows, onPick = onPick)
+                    WalletPickerSection(group = group, rows = groupRows, onPick = actions.onPick)
                 }
             }
     }
@@ -40,11 +39,8 @@ internal fun WalletPickerDrawerSample() {
     val limit = MoneyFormatter.format(Money(rupiah = 2_000_000L))
     WalletPickerDrawer(
         title = stringResource(R.string.picker_sample_title_pay),
-        rows = sampleRows(limit),
-        onPick = {},
-        onClose = {},
-        allowCredit = true,
-        allowInvestment = true,
+        choices = WalletChoices(rows = sampleRows(limit), allowCredit = true, allowInvestment = true),
+        actions = PickerActions(onPick = {}, onClose = {}),
     )
 }
 
@@ -78,8 +74,7 @@ private fun SampleWallet.toRow(rowId: Long): WalletPickerRow =
         name = stringResource(nameRes),
         type = type,
         shownBalanceText = shownText,
-        isSelected = isSelected,
-        isBlocked = isBlocked,
+        mark = PickerMark(isSelected = isSelected, isBlocked = isBlocked),
     )
 
 @Preview(name = "WalletPickerDrawer light", showBackground = true)

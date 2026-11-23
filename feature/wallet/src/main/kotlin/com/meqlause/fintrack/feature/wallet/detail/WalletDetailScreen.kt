@@ -15,8 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.BackAction
+import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
+import com.meqlause.fintrack.core.designsystem.component.ScreenAction
 import com.meqlause.fintrack.core.designsystem.component.ScreenActionButton
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -37,15 +41,17 @@ internal fun WalletDetailScreen(
         val success = state as? WalletDetailUiState.Success
         ScreenBackHeader(
             title =
-                success
-                    ?.item
-                    ?.wallet
-                    ?.profile
-                    ?.name
-                    .orEmpty(),
-            backLabel = stringResource(R.string.wallet_detail_back),
-            onBack = callbacks.onBack,
-            badge = success?.let { stringResource(WalletLabels.type(it.item.wallet.kind.type)) },
+                HeaderTitle(
+                    text =
+                        success
+                            ?.item
+                            ?.wallet
+                            ?.profile
+                            ?.name
+                            .orEmpty(),
+                    badge = success?.let { stringResource(WalletLabels.type(it.item.wallet.kind.type)) },
+                ),
+            back = BackAction(label = stringResource(R.string.wallet_detail_back), onBack = callbacks.onBack),
         )
         when (state) {
             WalletDetailUiState.Loading -> Unit
@@ -97,16 +103,22 @@ private fun ActionRow(callbacks: WalletDetailCallbacks) {
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
         ScreenActionButton(
-            text = stringResource(R.string.wallet_detail_use),
-            iconRes = DesignR.drawable.ic_up,
-            tint = FintrackTheme.colors.semantics.expense,
+            action =
+                ScreenAction(
+                    text = stringResource(R.string.wallet_detail_use),
+                    iconRes = DesignR.drawable.ic_up,
+                    tint = FintrackTheme.colors.semantics.expense,
+                ),
             onClick = callbacks.onUse,
             modifier = Modifier.weight(1f),
         )
         ScreenActionButton(
-            text = stringResource(R.string.wallet_detail_transfer),
-            iconRes = DesignR.drawable.ic_arrow_r,
-            tint = FintrackTheme.colors.semantics.transfer,
+            action =
+                ScreenAction(
+                    text = stringResource(R.string.wallet_detail_transfer),
+                    iconRes = DesignR.drawable.ic_arrow_r,
+                    tint = FintrackTheme.colors.semantics.transfer,
+                ),
             onClick = callbacks.onTransfer,
             modifier = Modifier.weight(1f),
         )
@@ -166,8 +178,7 @@ private fun RecentCard(rows: List<WalletDetailRow>) {
         rows =
             rows.map { row ->
                 TransactionRowParams(
-                    iconKey = row.appearance.iconKey,
-                    colorKey = row.appearance.colorKey,
+                    look = IconLook(iconKey = row.appearance.iconKey, colorKey = row.appearance.colorKey),
                     title = row.title.ifBlank { untitled },
                     subtitle = row.subtitle,
                     amount = row.amount,

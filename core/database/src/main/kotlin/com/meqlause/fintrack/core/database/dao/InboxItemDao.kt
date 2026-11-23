@@ -51,4 +51,8 @@ interface InboxItemDao {
             "WHERE status IN ('CONFIRMED', 'DISMISSED') AND resolvedAt IS NOT NULL AND resolvedAt < :resolvedBefore",
     )
     suspend fun purgeRawTextResolvedBefore(resolvedBefore: Long)
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM inbox_item")
+    suspend fun deleteAll()
 }

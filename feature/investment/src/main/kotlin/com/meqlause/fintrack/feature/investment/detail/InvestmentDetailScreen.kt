@@ -11,8 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.BackAction
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
+import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.component.ScreenGroup
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
@@ -37,10 +39,17 @@ internal fun InvestmentDetailScreen(
     val wallet = state.detail?.account?.wallet
     Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         ScreenBackHeader(
-            title = wallet?.profile?.name.orEmpty(),
-            backLabel = stringResource(R.string.investment_back),
-            onBack = callbacks.onBack,
-            badge = wallet?.let { stringResource(InvestmentLabels.kindRes(it.kind.investKind ?: InvestKind.OTHER)) },
+            title =
+                HeaderTitle(
+                    text = wallet?.profile?.name.orEmpty(),
+                    badge =
+                        wallet?.let {
+                            stringResource(
+                                InvestmentLabels.kindRes(it.kind.investKind ?: InvestKind.OTHER),
+                            )
+                        },
+                ),
+            back = BackAction(label = stringResource(R.string.investment_back), onBack = callbacks.onBack),
         )
         DetailContent(state = state, callbacks = callbacks, modifier = Modifier.weight(1f))
     }

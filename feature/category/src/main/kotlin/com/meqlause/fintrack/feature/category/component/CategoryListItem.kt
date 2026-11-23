@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.Category
 import com.meqlause.fintrack.feature.category.CategoryCallbacks
@@ -23,29 +24,45 @@ internal fun CategoryListItem(
     callbacks: CategoryCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    val archived = category.state.isArchived
     FintrackCard(modifier = modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
         ) {
-            IconCircle(iconKey = category.profile.appearance.iconKey, colorKey = category.profile.appearance.colorKey)
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = category.profile.name,
-                    style = FintrackTheme.typography.titleMedium,
-                    color = FintrackTheme.colors.texts.onSurface,
-                )
-                if (archived) {
-                    Text(
-                        text = stringResource(R.string.category_archived_label),
-                        style = FintrackTheme.typography.labelMedium,
-                        color = FintrackTheme.colors.texts.faint,
-                    )
-                }
-                ActionRow(category, callbacks, archived)
-            }
+            IconCircle(
+                look =
+                    IconLook(
+                        iconKey = category.profile.appearance.iconKey,
+                        colorKey = category.profile.appearance.colorKey,
+                    ),
+            )
+            CategoryTexts(category, callbacks, Modifier.weight(1f))
         }
+    }
+}
+
+// FR-021: the name, the archived note and the actions of one category
+@Composable
+private fun CategoryTexts(
+    category: Category,
+    callbacks: CategoryCallbacks,
+    modifier: Modifier = Modifier,
+) {
+    val archived = category.state.isArchived
+    Column(modifier = modifier) {
+        Text(
+            text = category.profile.name,
+            style = FintrackTheme.typography.titleMedium,
+            color = FintrackTheme.colors.texts.onSurface,
+        )
+        if (archived) {
+            Text(
+                text = stringResource(R.string.category_archived_label),
+                style = FintrackTheme.typography.labelMedium,
+                color = FintrackTheme.colors.texts.faint,
+            )
+        }
+        ActionRow(category, callbacks, archived)
     }
 }
 

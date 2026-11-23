@@ -33,6 +33,6 @@ internal fun Transaction.toDetail(
         timeLabel = DateFormatter.timeLabel(local.toLocalTime()),
         source = origin.source,
         isLoanLinked = routing.loanId != null,
-        appearance = RowAppearance.of(movement.type, routing.categoryId?.let(appearances::get)),
+        appearance = RowAppearance.forType(movement.type, routing.categoryId?.let(appearances::get)),
     )
 }

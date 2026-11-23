@@ -1,6 +1,5 @@
 package com.meqlause.fintrack.feature.loan.detail
 
-import androidx.lifecycle.SavedStateHandle
 import assertk.assertThat
 import assertk.assertions.containsOnly
 import assertk.assertions.hasSize
@@ -12,25 +11,8 @@ import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import com.meqlause.fintrack.core.domain.loan.LoanDueOption
 import com.meqlause.fintrack.core.domain.loan.RepaymentError
-import com.meqlause.fintrack.core.domain.usecase.ChangeLoanDueDateUseCase
-import com.meqlause.fintrack.core.domain.usecase.DeleteLoanUseCase
-import com.meqlause.fintrack.core.domain.usecase.ObserveLoansUseCase
-import com.meqlause.fintrack.core.domain.usecase.RecordRepaymentUseCase
-import com.meqlause.fintrack.core.domain.usecase.WriteOffLoanUseCase
-import com.meqlause.fintrack.core.model.Agreement
-import com.meqlause.fintrack.core.model.Audit
-import com.meqlause.fintrack.core.model.Loan
-import com.meqlause.fintrack.core.model.LoanDirection
-import com.meqlause.fintrack.core.model.LoanId
-import com.meqlause.fintrack.core.model.LoanStatus
-import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.testing.coroutine.MainDispatcherRule
-import com.meqlause.fintrack.core.testing.repository.FakeLoanRepository
-import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
-import com.meqlause.fintrack.core.testing.repository.FakeWalletRepository
-import com.meqlause.fintrack.core.testing.repository.PassthroughAtomicRunner
-import com.meqlause.fintrack.core.testing.time.FakeClock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -39,7 +21,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.time.Instant
 
 // FR-152, FR-155, FR-158, S-17: the loan detail ViewModel handles every event and reports every outcome
 @RunWith(RobolectricTestRunner::class)
@@ -55,15 +36,15 @@ class LoanDetailViewModelTest {
     @Test
     fun `given an open loan when opened then it is loaded and can be repaid or written off (FR-152, FR-155)`() =
         runBlocking {
-            val id = harness.insertLoan()
-            val state = harness.viewModel(id).loaded()
+            val loanKey = harness.insertLoan()
+            val state = harness.viewModel(loanKey).loaded()
 
             assertThat(
                 state.entry
                     ?.loan
                     ?.loanId
                     ?.value,
-            ).isEqualTo(id)
+            ).isEqualTo(loanKey)
             assertThat(state.canRepay).isTrue()
             assertThat(state.canWriteOff).isTrue()
         }
@@ -168,15 +149,15 @@ class LoanDetailViewModelTest {
     @Test
     fun `given the due date sheet when a due date is picked then the loan gets it and the sheet closes (FR-158)`() =
         runBlocking {
-            val id = harness.insertLoan()
-            val model = harness.viewModel(id)
+            val loanKey = harness.insertLoan()
+            val model = harness.viewModel(loanKey)
             model.loaded()
 
             model.onEvent(LoanDetailEvent.OpenDueDate)
             assertThat(model.state.value.overlay.sheet).isEqualTo(LoanDetailSheet.DUE_DATE)
             model.onEvent(LoanDetailEvent.DuePicked(LoanDueOption.ONE_WEEK))
 
-            assertThat(harness.loanOf(id)?.agreement?.dueDate).isNotNull()
+            assertThat(harness.loanOf(loanKey)?.agreement?.dueDate).isNotNull()
             assertThat(model.state.value.overlay.sheet).isNull()
         }
 }

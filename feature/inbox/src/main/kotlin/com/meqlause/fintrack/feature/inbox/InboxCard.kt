@@ -25,6 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
+import com.meqlause.fintrack.core.designsystem.component.CircleIcon
+import com.meqlause.fintrack.core.designsystem.component.PillLook
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.component.ScreenCircleButton
 import com.meqlause.fintrack.core.designsystem.component.ScreenPill
@@ -129,7 +131,7 @@ private fun CardActions(
         ScreenPill(
             label = card.category.name ?: stringResource(R.string.inbox_pick_category),
             onClick = { onPick(InboxPicker(card.itemId, PickKind.CATEGORY)) },
-            dotColor = if (card.category.name != null) FintrackTheme.colors.texts.faint else null,
+            look = PillLook(dotColor = if (card.category.name != null) FintrackTheme.colors.texts.faint else null),
         )
         ScreenPill(
             label = card.wallet.name ?: stringResource(R.string.inbox_pick_wallet),
@@ -147,15 +149,17 @@ private fun CardButtons(
     actions: InboxItemActions,
 ) {
     ScreenCircleButton(
-        iconRes = DesignR.drawable.ic_close,
-        description = stringResource(R.string.inbox_dismiss),
+        icon = CircleIcon(iconRes = DesignR.drawable.ic_close, description = stringResource(R.string.inbox_dismiss)),
         onClick = { actions.onDismiss(card.itemId) },
     )
     ScreenCircleButton(
-        iconRes = DesignR.drawable.ic_check,
-        description = stringResource(R.string.inbox_confirm),
+        icon =
+            CircleIcon(
+                iconRes = DesignR.drawable.ic_check,
+                description = stringResource(R.string.inbox_confirm),
+                filled = true,
+            ),
         onClick = { actions.onConfirm(card.itemId) },
-        filled = true,
         enabled = card.wallet.slotId != null && card.category.slotId != null,
     )
 }

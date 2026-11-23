@@ -1,11 +1,12 @@
 package com.meqlause.fintrack.feature.settings
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.PillLook
+import com.meqlause.fintrack.core.designsystem.component.RowSlots
 import com.meqlause.fintrack.core.designsystem.component.ScreenPill
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
@@ -20,13 +21,11 @@ internal fun AppearanceRows(
     callbacks: SettingsCallbacks,
 ) {
     ScreenRow(
-        contentPadding =
-            PaddingValues(
-                horizontal = FintrackScreenSizes.rowPaddingHorizontal,
-                vertical = FintrackScreenSizes.rowPaddingVertical,
+        slots =
+            RowSlots(
+                leading = {},
+                trailing = { ThemeChips(selected = state.themeMode, onPick = callbacks.preferences.onPickThemeMode) },
             ),
-        leading = {},
-        trailing = { ThemeChips(selected = state.themeMode, onPick = callbacks.preferences.onPickThemeMode) },
     ) {
         Text(
             text = stringResource(R.string.settings_theme_label),
@@ -69,8 +68,7 @@ private fun ThemeChips(
             ScreenPill(
                 label = themeLabel(mode),
                 onClick = { onPick(mode) },
-                selected = selected == mode,
-                height = FintrackScreenSizes.chipTall,
+                look = PillLook(selected = selected == mode, height = FintrackScreenSizes.chipTall),
             )
         }
     }

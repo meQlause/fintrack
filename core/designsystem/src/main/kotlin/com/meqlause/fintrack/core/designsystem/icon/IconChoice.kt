@@ -12,8 +12,7 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 // DOC-08: a choosable category icon; the chosen one gets a ring in its colour
 @Composable
 fun IconChoice(
-    iconKey: String,
-    colorKey: String,
+    look: IconLook,
     selected: Boolean,
     onSelect: () -> Unit,
     modifier: Modifier = Modifier,
@@ -26,8 +25,7 @@ fun IconChoice(
                 .selectable(selected = selected, role = Role.RadioButton, onClick = onSelect),
     ) {
         IconCircle(
-            iconKey = iconKey,
-            colorKey = colorKey,
+            look = look,
             modifier =
                 Modifier.border(
                     width = FintrackTheme.sizes.selectionRing,

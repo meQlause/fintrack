@@ -39,8 +39,7 @@ fun SheetTextField(
         ScreenInput(
             value = value,
             onValueChange = onValueChange,
-            placeholder = placeholder,
-            style = style,
+            look = InputLook(placeholder = placeholder, style = style),
             modifier = Modifier.fillMaxWidth(),
         )
     }

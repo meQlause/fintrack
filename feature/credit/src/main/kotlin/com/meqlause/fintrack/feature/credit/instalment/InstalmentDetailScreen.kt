@@ -17,7 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.BackAction
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
+import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
 import com.meqlause.fintrack.core.designsystem.component.ProgressBar
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
@@ -35,9 +37,8 @@ internal fun InstalmentDetailScreen(
     Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         val title = (state as? InstalmentDetailUiState.Success)?.instalmentRow?.title.orEmpty()
         ScreenBackHeader(
-            title = title,
-            backLabel = stringResource(R.string.credit_back),
-            onBack = callbacks.onBack,
+            title = HeaderTitle(text = title),
+            back = BackAction(label = stringResource(R.string.credit_back), onBack = callbacks.onBack),
         )
         Column(
             modifier = Modifier.weight(1f).padding(horizontal = FintrackScreenSizes.screenGutter),

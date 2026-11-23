@@ -7,9 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.RowSlots
+import com.meqlause.fintrack.core.designsystem.component.RowStyle
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -27,16 +30,16 @@ internal fun WalletLoanRow(
 ) {
     ScreenCard(modifier = modifier) {
         ScreenRow(
-            onClick = onOpen,
-            leading = { IconCircle(iconKey = "person", colorKey = "teal") },
-            trailing = {
-                Icon(
-                    painter = painterResource(DesignR.drawable.ic_chevron_right),
-                    contentDescription = null,
-                    tint = FintrackTheme.colors.texts.onSurfaceVariant,
-                    modifier = Modifier.size(FintrackScreenSizes.chevron),
-                )
-            },
+            style = RowStyle(onClick = onOpen),
+            slots =
+                RowSlots(leading = { IconCircle(look = IconLook(iconKey = "person", colorKey = "teal")) }, trailing = {
+                    Icon(
+                        painter = painterResource(DesignR.drawable.ic_chevron_right),
+                        contentDescription = null,
+                        tint = FintrackTheme.colors.texts.onSurfaceVariant,
+                        modifier = Modifier.size(FintrackScreenSizes.chevron),
+                    )
+                }),
         ) {
             Text(
                 text = stringResource(R.string.wallet_loans_title),

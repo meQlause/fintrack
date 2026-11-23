@@ -88,15 +88,45 @@ class StatisticsExclusionsTest {
                 loanMovement(TransactionType.COLLECT, 100_000L, loanId = 9L),
                 transaction(TransactionType.TRANSFER, 700_000L, targetWalletId = 5L),
             )
-        val expense = statistics(mixed, TransactionType.EXPENSE, november, 1, zone)
+        val expense =
+            statistics(
+                transactions = mixed,
+                request =
+                    StatisticsRequest(
+                        type = TransactionType.EXPENSE,
+                        period = november,
+                        startDay = 1,
+                        zone = zone,
+                    ),
+            )
         assertThat(expense.total).isEqualTo(Money(100_000L))
         assertThat(expense.categories.map { it.categoryId }).isEqualTo(listOf(CategoryId(1L)))
         assertThat(BudgetSpending.spentIn(overallBudget, mixed, november, zone)).isEqualTo(Money(100_000L))
     }
 
     private fun assertNothingCounted(movements: List<Transaction>) {
-        val expense = statistics(movements, TransactionType.EXPENSE, november, 1, zone)
-        val income = statistics(movements, TransactionType.INCOME, november, 1, zone)
+        val expense =
+            statistics(
+                transactions = movements,
+                request =
+                    StatisticsRequest(
+                        type = TransactionType.EXPENSE,
+                        period = november,
+                        startDay = 1,
+                        zone = zone,
+                    ),
+            )
+        val income =
+            statistics(
+                transactions = movements,
+                request =
+                    StatisticsRequest(
+                        type = TransactionType.INCOME,
+                        period = november,
+                        startDay = 1,
+                        zone = zone,
+                    ),
+            )
         assertThat(expense.total).isEqualTo(Money(0L))
         assertThat(expense.categories).isEmpty()
         assertThat(income.total).isEqualTo(Money(0L))

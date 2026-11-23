@@ -33,4 +33,8 @@ interface CategoryDao {
     /** DOC-02: every category in manual order, archived ones included. */
     @Query("SELECT * FROM category ORDER BY sortOrder")
     fun observeAll(): Flow<List<CategoryEntity>>
+
+    /** DOC-11: removes every row before a restore. */
+    @Query("DELETE FROM category")
+    suspend fun deleteAll()
 }

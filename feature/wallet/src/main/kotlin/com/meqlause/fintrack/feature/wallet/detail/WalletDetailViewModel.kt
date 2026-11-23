@@ -91,7 +91,7 @@ internal class WalletDetailViewModel
                 subtitle = subtitleOf(names),
                 amount = movement.amount,
                 type = movement.type,
-                appearance = RowAppearance.of(movement.type, routing.categoryId?.let(appearances::get)),
+                appearance = RowAppearance.forType(movement.type, routing.categoryId?.let(appearances::get)),
             )
 
         private fun Transaction.subtitleOf(names: Map<WalletId, String>): String {

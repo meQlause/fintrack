@@ -10,24 +10,6 @@ internal data class SettingsCallbacks(
     val backup: SettingsBackupCallbacks = SettingsBackupCallbacks(),
 )
 
-// FR-120, FR-121: the back button and the rows that open another screen
-internal data class SettingsLinks(
-    val onBack: () -> Unit = {},
-    val onOpenCategories: () -> Unit = {},
-    val onOpenBudgets: () -> Unit = {},
-    val onOpenMonitoredApps: () -> Unit = {},
-    val onOpenAbout: () -> Unit = {},
-    val onOpenBatteryHelp: () -> Unit = {},
-)
-
-// FR-100: the PIN rows and the biometric switch
-internal data class SettingsSecurityCallbacks(
-    val onOpenPinSetup: () -> Unit = {},
-    val onOpenPinChange: () -> Unit = {},
-    val onOpenPinRemove: () -> Unit = {},
-    val onToggleBiometric: (Boolean) -> Unit = {},
-)
-
 // FR-101, FR-104, FR-120: the theme and period choices, the picker drawer and the hide-from-recents switch
 internal data class SettingsPreferenceCallbacks(
     val onOpenSheet: (SettingsSheet) -> Unit = {},

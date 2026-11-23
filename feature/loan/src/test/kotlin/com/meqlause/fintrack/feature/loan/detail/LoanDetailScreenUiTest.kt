@@ -1,49 +1,20 @@
 package com.meqlause.fintrack.feature.loan.detail
 
 import android.content.Context
-import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
 import assertk.assertThat
 import assertk.assertions.containsExactly
-import assertk.assertions.isEqualTo
-import com.meqlause.fintrack.core.domain.loan.LoanDueOption
-import com.meqlause.fintrack.core.domain.loan.LoanEntry
-import com.meqlause.fintrack.core.domain.loan.RepaymentError
-import com.meqlause.fintrack.core.model.Agreement
-import com.meqlause.fintrack.core.model.Appearance
-import com.meqlause.fintrack.core.model.Audit
-import com.meqlause.fintrack.core.model.Loan
 import com.meqlause.fintrack.core.model.LoanDirection
-import com.meqlause.fintrack.core.model.LoanId
 import com.meqlause.fintrack.core.model.LoanStatus
-import com.meqlause.fintrack.core.model.Memo
-import com.meqlause.fintrack.core.model.Money
-import com.meqlause.fintrack.core.model.Movement
-import com.meqlause.fintrack.core.model.Origin
-import com.meqlause.fintrack.core.model.Routing
-import com.meqlause.fintrack.core.model.Timing
-import com.meqlause.fintrack.core.model.Transaction
-import com.meqlause.fintrack.core.model.TransactionId
-import com.meqlause.fintrack.core.model.TransactionSource
-import com.meqlause.fintrack.core.model.TransactionType
-import com.meqlause.fintrack.core.model.Wallet
-import com.meqlause.fintrack.core.model.WalletId
-import com.meqlause.fintrack.core.model.WalletKind
-import com.meqlause.fintrack.core.model.WalletProfile
-import com.meqlause.fintrack.core.model.WalletStatus
-import com.meqlause.fintrack.core.model.WalletTerms
-import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.feature.loan.R
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.time.Instant
 
 // FR-152, FR-155, FR-158, S-17: the loan detail screen sends the right event for every action it shows
 @RunWith(RobolectricTestRunner::class)
