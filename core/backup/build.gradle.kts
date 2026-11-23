@@ -11,8 +11,9 @@ dependencies {
     api(libs.coroutines.core)
     implementation(libs.serialization.json)
     testImplementation(libs.junit4)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.androidx.test.core)
+    testRuntimeOnly(libs.robolectric)
+    testRuntimeOnly(libs.androidx.test.core)
     testImplementation(libs.assertk)
     testImplementation(libs.coroutines.test)
+    implementation(libs.serialization.core)
 }

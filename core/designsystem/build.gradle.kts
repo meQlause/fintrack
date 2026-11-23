@@ -31,4 +31,5 @@ dependencies {
     testImplementation(libs.roborazzi.core)
     debugImplementation(libs.compose.ui.tooling)
     debugRuntimeOnly(libs.compose.ui.test.manifest)
+    implementation(libs.androidx.annotation)
 }

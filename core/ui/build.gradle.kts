@@ -9,11 +9,11 @@ dependencies {
     api(platform(libs.compose.bom))
     api(libs.compose.ui)
     api(libs.compose.runtime)
-    implementation(project(":core:designsystem"))
+    api(project(":core:designsystem"))
     implementation(libs.compose.foundation)
     implementation(libs.compose.foundation.layout)
     implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.text)
+    api(libs.compose.ui.text)
     implementation(libs.compose.material3)
     implementation(libs.compose.ui.tooling.preview)
 
@@ -29,4 +29,6 @@ dependencies {
     testImplementation(libs.roborazzi.core)
     debugImplementation(libs.compose.ui.tooling)
     debugRuntimeOnly(libs.compose.ui.test.manifest)
+    implementation(libs.androidx.annotation)
+    implementation(libs.compose.ui.unit)
 }

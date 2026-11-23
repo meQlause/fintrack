@@ -9,7 +9,7 @@ plugins {
 dependencies {
     // NFR-004: the generated profile is installed on first launch, so cold start runs precompiled code
     baselineProfile(project(":baselineprofile"))
-    implementation(libs.profileinstaller)
+    runtimeOnly(libs.profileinstaller)
     implementation(project(":core:backup"))
     implementation(project(":core:common"))
     implementation(project(":core:data"))
@@ -35,8 +35,6 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.navigation.runtime)
     implementation(libs.navigation.common)
-    implementation(libs.serialization.core)
-    implementation(libs.compose.animation)
     implementation(libs.compose.foundation.layout)
     implementation(libs.compose.ui.graphics)
     implementation(platform(libs.compose.bom))
@@ -56,7 +54,6 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.lifecycle.viewmodel.compose)
     implementation(libs.hilt.work)
-    implementation(libs.work.runtime.ktx)
     implementation(libs.androidx.annotation)
     implementation(libs.biometric)
     implementation(libs.datastore.core)
@@ -65,6 +62,7 @@ dependencies {
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.viewmodel.compose)
     ksp(libs.hilt.compiler)
+    implementation(libs.work.runtime)
 }
 
 dependencies {
@@ -77,7 +75,7 @@ dependencies {
     testImplementation(libs.assertk)
     testImplementation(libs.guava)
     testImplementation(libs.robolectric.annotations)
-    testImplementation(project(":core:model"))
+    implementation(project(":core:model"))
     testImplementation(libs.hilt.android.testing)
     kspTest(libs.hilt.compiler)
     testImplementation(platform(libs.compose.bom))

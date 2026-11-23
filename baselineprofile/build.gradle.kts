@@ -8,6 +8,8 @@ dependencies {
     implementation(libs.androidx.test.ext.junit)
     implementation(libs.androidx.test.uiautomator)
     implementation(libs.baselineprofile.benchmark)
+    implementation(libs.benchmark.macro)
+    implementation(libs.junit4)
 }
 
 // NFR-004: the profile is collected from a connected device; no managed device is declared here

@@ -5,21 +5,23 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:model"))
-    implementation(project(":core:common"))
-    implementation(project(":core:domain"))
-    implementation(project(":core:parser"))
-    implementation(libs.coroutines.core)
-    implementation(libs.dagger)
-    implementation(libs.hilt.android)
-    implementation(libs.hilt.work)
-    implementation(libs.work.runtime.ktx)
+    api(project(":core:model"))
+    api(project(":core:common"))
+    api(project(":core:domain"))
+    api(project(":core:parser"))
+    api(libs.coroutines.core)
+    api(libs.dagger)
+    api(libs.hilt.android)
+    api(libs.hilt.work)
     ksp(libs.hilt.androidx.compiler)
     ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit4)
     testImplementation(libs.assertk)
     testImplementation(libs.robolectric)
-    testImplementation(libs.robolectric.annotations)
     testImplementation(libs.androidx.test.core)
+    implementation(libs.androidx.annotation)
+    api(libs.work.runtime)
+    api(libs.hilt.core)
+    api(libs.javax.inject)
 }
