@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import com.meqlause.fintrack.R
 import com.meqlause.fintrack.feature.dashboard.navigation.HomeDestination
+import com.meqlause.fintrack.feature.investment.navigation.InvestmentDestination
 import com.meqlause.fintrack.feature.transaction.history.navigation.HistoryDestination
 import com.meqlause.fintrack.feature.wallet.navigation.WalletDestination
 import com.meqlause.fintrack.core.designsystem.R as DesignR
@@ -29,7 +30,7 @@ enum class MainTab(
         when (this) {
             HOME -> HomeDestination::class.java.name
             HISTORY -> HistoryDestination::class.java.name
-            INVESTMENT -> InvestmentRoute::class.java.name
+            INVESTMENT -> InvestmentDestination::class.java.name
             WALLET -> WalletDestination::class.java.name
         }
 
@@ -43,7 +44,7 @@ enum class MainTab(
         when (this) {
             HOME -> controller.navigate(HomeDestination, options)
             HISTORY -> controller.navigate(HistoryDestination, options)
-            INVESTMENT -> controller.navigate(InvestmentRoute, options)
+            INVESTMENT -> controller.navigate(InvestmentDestination, options)
             WALLET -> controller.navigate(WalletDestination, options)
         }
     }

@@ -11,4 +11,7 @@ public interface ValuationRepository {
 
     /** FR-172: records a valuation and returns its generated id; the valuationId of [valuation] is ignored. */
     public suspend fun insert(valuation: ValuationEntry): ValuationEntryId
+
+    /** BR-054: removes one valuation so that a valuation of the same day can replace it; an unknown id is ignored. */
+    public suspend fun delete(valuationId: ValuationEntryId)
 }

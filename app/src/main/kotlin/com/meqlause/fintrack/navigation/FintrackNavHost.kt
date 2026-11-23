@@ -17,6 +17,9 @@ import com.meqlause.fintrack.feature.dashboard.navigation.HomeDestination
 import com.meqlause.fintrack.feature.dashboard.navigation.homeDestination
 import com.meqlause.fintrack.feature.inbox.navigation.InboxDestination
 import com.meqlause.fintrack.feature.inbox.navigation.inboxDestination
+import com.meqlause.fintrack.feature.investment.navigation.InvestmentDetailDestination
+import com.meqlause.fintrack.feature.investment.navigation.investmentDestination
+import com.meqlause.fintrack.feature.investment.navigation.investmentDetailDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.MonitoredAppsDestination
@@ -31,7 +34,6 @@ import com.meqlause.fintrack.feature.transaction.history.navigation.historyDesti
 import com.meqlause.fintrack.feature.wallet.navigation.WalletDetailDestination
 import com.meqlause.fintrack.feature.wallet.navigation.walletDestination
 import com.meqlause.fintrack.feature.wallet.navigation.walletDetailDestination
-import com.meqlause.fintrack.tab.PlaceholderTabScreen
 
 // DOC-03: app owns the NavHost; onboarding (FR-001) starts when it is needed, otherwise Beranda is the start
 @Composable
@@ -77,7 +79,12 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     historyDestination(onOpenTransaction = { id ->
         navController.navigate(TransactionDetailDestination(transactionId = id))
     })
-    composable<InvestmentRoute> { PlaceholderTabScreen(mainTab = MainTab.INVESTMENT) }
+    // DOC-09, FR-173: Investasi tab (S-08); an account opens S-20, which leaves to the add sheet for transfers
+    investmentDestination(onOpenAccount = { navController.navigate(InvestmentDetailDestination(it.value)) })
+    investmentDetailDestination(
+        onBack = { navController.popBackStack() },
+        onTransfer = { navController.navigate(EditTransactionDestination()) },
+    )
     walletDestination(onOpenDetail = { id, type ->
         if (type.isCredit()) {
             navController.navigate(CreditDetailDestination(id.value))

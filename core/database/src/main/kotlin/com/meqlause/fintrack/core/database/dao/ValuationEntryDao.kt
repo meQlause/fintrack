@@ -13,6 +13,10 @@ interface ValuationEntryDao {
     @Insert
     suspend fun insert(valuation: ValuationEntryEntity): Long
 
+    /** BR-054: removes one valuation by its id. */
+    @Query("DELETE FROM valuation_entry WHERE valuationId = :valuationId")
+    suspend fun delete(valuationId: Long)
+
     /** DOC-02: every valuation in the order it was valued. */
     @Query("SELECT * FROM valuation_entry ORDER BY valuedAt")
     fun observeAll(): Flow<List<ValuationEntryEntity>>

@@ -17,4 +17,8 @@ public class FakeValuationRepository : ValuationRepository {
     override fun observeAll(): Flow<List<ValuationEntry>> = store.observe()
 
     override suspend fun insert(valuation: ValuationEntry): ValuationEntryId = ValuationEntryId(store.append(valuation))
+
+    override suspend fun delete(valuationId: ValuationEntryId) {
+        store.remove(valuationId.value)
+    }
 }

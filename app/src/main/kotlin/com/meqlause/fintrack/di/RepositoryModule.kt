@@ -10,6 +10,7 @@ import com.meqlause.fintrack.core.data.repository.LocalMonitoredAppRepository
 import com.meqlause.fintrack.core.data.repository.LocalQuickEntryRepository
 import com.meqlause.fintrack.core.data.repository.LocalSettingsRepository
 import com.meqlause.fintrack.core.data.repository.LocalTransactionRepository
+import com.meqlause.fintrack.core.data.repository.LocalValuationRepository
 import com.meqlause.fintrack.core.data.repository.LocalWalletRepository
 import com.meqlause.fintrack.core.data.repository.RoomAtomicRunner
 import com.meqlause.fintrack.core.database.FintrackDatabase
@@ -22,6 +23,7 @@ import com.meqlause.fintrack.core.database.dao.MerchantRuleDao
 import com.meqlause.fintrack.core.database.dao.MonitoredAppDao
 import com.meqlause.fintrack.core.database.dao.QuickEntryDao
 import com.meqlause.fintrack.core.database.dao.TransactionDao
+import com.meqlause.fintrack.core.database.dao.ValuationEntryDao
 import com.meqlause.fintrack.core.database.dao.WalletDao
 import com.meqlause.fintrack.core.datastore.SettingsDataSource
 import com.meqlause.fintrack.core.domain.repository.AtomicRunner
@@ -35,6 +37,7 @@ import com.meqlause.fintrack.core.domain.repository.MonitoredAppRepository
 import com.meqlause.fintrack.core.domain.repository.QuickEntryRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
+import com.meqlause.fintrack.core.domain.repository.ValuationRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import dagger.Module
 import dagger.Provides
@@ -99,6 +102,12 @@ object RepositoryModule {
     @Singleton
     fun provideBudgetAlertLogRepository(alertLogDao: BudgetAlertLogDao): BudgetAlertLogRepository =
         LocalBudgetAlertLogRepository(alertLogDao)
+
+    // FR-172, BR-054: manual valuations of investment wallets
+    @Provides
+    @Singleton
+    fun provideValuationRepository(valuationEntryDao: ValuationEntryDao): ValuationRepository =
+        LocalValuationRepository(valuationEntryDao)
 
     // BR-011: a confirmed item writes its transaction and status in one Room transaction
     @Provides
