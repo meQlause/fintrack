@@ -5,6 +5,10 @@
     <string name="settings_back">Kembali</string>
     <string name="settings_section_general">Umum</string>
     <string name="settings_section_data">Data</string>
+    <string name="settings_section_security">Keamanan</string>
+    <string name="settings_pin_setup_label">Atur PIN</string>
+    <string name="settings_pin_change_label">Ubah PIN</string>
+    <string name="settings_pin_remove_label">Hapus PIN</string>
     <string name="settings_theme_label">Tampilan</string>
     <string name="settings_theme_sheet_title">Tampilan</string>
     <string name="settings_theme_system">Sistem</string>

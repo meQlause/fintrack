@@ -17,19 +17,26 @@ import com.meqlause.fintrack.core.designsystem.component.FintrackBottomBar
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomBarCallbacks
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.transaction.edit.navigation.EditTransactionDestination
+import com.meqlause.fintrack.lock.AppLockGate
+import com.meqlause.fintrack.lock.LockOverlay
 import com.meqlause.fintrack.navigation.FintrackNavHost
 import com.meqlause.fintrack.navigation.MainTab
 import com.meqlause.fintrack.startup.AppStartViewModel
 
-// FR-001, DOC-09: the app opens on onboarding when it is needed, otherwise on Beranda; the shell waits for that answer
+// FR-001, FR-102, DOC-09: the app opens on onboarding when it is needed, otherwise on Beranda; the lock covers it all
 @Composable
 fun FintrackApp(
+    lockGate: AppLockGate,
     modifier: Modifier = Modifier,
     startViewModel: AppStartViewModel = hiltViewModel(),
 ) {
     val showOnboarding by startViewModel.showOnboarding.collectAsStateWithLifecycle()
-    showOnboarding?.let { onboardingNeeded ->
-        FintrackShell(onboardingNeeded = onboardingNeeded, modifier = modifier)
+    val locked by lockGate.isLocked.collectAsStateWithLifecycle()
+    Box(modifier = modifier.fillMaxSize()) {
+        showOnboarding?.let { onboardingNeeded ->
+            FintrackShell(onboardingNeeded = onboardingNeeded, modifier = Modifier.fillMaxSize())
+        }
+        LockOverlay(locked = locked, onUnlocked = lockGate::unlock, modifier = Modifier.fillMaxSize())
     }
 }
 

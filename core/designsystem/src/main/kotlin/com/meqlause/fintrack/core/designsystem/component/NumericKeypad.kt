@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -24,6 +25,7 @@ import com.meqlause.fintrack.core.designsystem.R
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 private const val BACKSPACE_KEY = "backspace"
+private const val TRIPLE_ZERO_KEY = "000"
 
 private val KEYPAD_ROWS =
     listOf(
@@ -34,11 +36,13 @@ private val KEYPAD_ROWS =
     )
 
 // DOC-08: 4x3 keypad for amounts; digit keys emit their text, the backspace key emits onBackspace
+// S-02: showTripleZero false leaves the 000 corner empty for the PIN lock
 @Composable
 fun NumericKeypad(
     onDigit: (String) -> Unit,
     onBackspace: () -> Unit,
     modifier: Modifier = Modifier,
+    showTripleZero: Boolean = true,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -47,11 +51,15 @@ fun NumericKeypad(
         KEYPAD_ROWS.forEach { keys ->
             Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
                 keys.forEach { keyLabel ->
-                    KeypadKey(
-                        label = keyLabel,
-                        onClick = { if (keyLabel == BACKSPACE_KEY) onBackspace() else onDigit(keyLabel) },
-                        modifier = Modifier.weight(1f),
-                    )
+                    if (keyLabel == TRIPLE_ZERO_KEY && !showTripleZero) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    } else {
+                        KeypadKey(
+                            label = keyLabel,
+                            onClick = { if (keyLabel == BACKSPACE_KEY) onBackspace() else onDigit(keyLabel) },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
                 }
             }
         }

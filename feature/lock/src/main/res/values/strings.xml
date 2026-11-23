@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-09 S-02, S-12 and DOC-10: PIN lock and PIN setup copy, Indonesian; new copy is for owner review, see the commit body -->
+<resources>
+    <string name="lock_app_name">Fintrack</string>
+    <string name="lock_title">Masukkan PIN</string>
+    <string name="lock_wrong">PIN salah</string>
+    <string name="lock_cooldown">Coba lagi dalam %1$d detik</string>
+    <string name="pin_setup_title_new">Buat PIN 6 digit</string>
+    <string name="pin_setup_title_new_change">Masukkan PIN baru</string>
+    <string name="pin_setup_title_confirm">Ulangi PIN</string>
+    <string name="pin_setup_title_current">Masukkan PIN lama</string>
+    <string name="pin_setup_title_remove">Masukkan PIN untuk menghapus</string>
+    <string name="pin_setup_warning">PIN tidak bisa dipulihkan. Jika lupa, hapus data aplikasi lalu pulihkan dari cadangan.</string>
+    <string name="pin_setup_mismatch">PIN tidak sama. Ulangi dari awal.</string>
+    <string name="pin_setup_cancel">Batal</string>
+</resources>

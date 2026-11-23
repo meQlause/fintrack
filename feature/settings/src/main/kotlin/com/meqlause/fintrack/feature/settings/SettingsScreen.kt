@@ -72,6 +72,9 @@ internal fun SettingsScreen(
                     onClick = callbacks.onOpenMonitoredApps,
                 )
             }
+            SettingsSection(title = stringResource(R.string.settings_section_security)) {
+                SecurityRows(state = state, callbacks = callbacks)
+            }
             SettingsSection(title = stringResource(R.string.settings_section_backup)) {
                 FormRow(
                     label = stringResource(R.string.settings_backup_create_label),
@@ -102,6 +105,32 @@ internal fun SettingsSection(
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
         content()
+    }
+}
+
+// FR-100: a PIN is set up when none exists; once set it can be changed or removed, and both ask for the current PIN
+@Composable
+internal fun SecurityRows(
+    state: SettingsUiState,
+    callbacks: SettingsCallbacks,
+) {
+    if (state.pinEnabled) {
+        FormRow(
+            label = stringResource(R.string.settings_pin_change_label),
+            value = "",
+            onClick = callbacks.onOpenPinChange,
+        )
+        FormRow(
+            label = stringResource(R.string.settings_pin_remove_label),
+            value = "",
+            onClick = callbacks.onOpenPinRemove,
+        )
+    } else {
+        FormRow(
+            label = stringResource(R.string.settings_pin_setup_label),
+            value = "",
+            onClick = callbacks.onOpenPinSetup,
+        )
     }
 }
 

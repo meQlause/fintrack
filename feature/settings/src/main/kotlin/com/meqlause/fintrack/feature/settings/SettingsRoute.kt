@@ -7,13 +7,16 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
-// DOC-03, FR-120, FR-121, FR-110, FR-111: stateful entry of S-12; the only composable that touches its view models
+// DOC-03, FR-100, FR-110, FR-111, FR-120, FR-121: stateful entry of S-12; the only composable touching its view models
 @Composable
 internal fun SettingsRoute(
     onBack: () -> Unit,
     onOpenCategories: () -> Unit,
     onOpenBudgets: () -> Unit,
     onOpenMonitoredApps: () -> Unit,
+    onOpenPinSetup: () -> Unit,
+    onOpenPinChange: () -> Unit,
+    onOpenPinRemove: () -> Unit,
 ) {
     val viewModel: SettingsViewModel = hiltViewModel()
     val backup: BackupViewModel = hiltViewModel()
@@ -36,6 +39,9 @@ internal fun SettingsRoute(
                 onOpenCategories = onOpenCategories,
                 onOpenBudgets = onOpenBudgets,
                 onOpenMonitoredApps = onOpenMonitoredApps,
+                onOpenPinSetup = onOpenPinSetup,
+                onOpenPinChange = onOpenPinChange,
+                onOpenPinRemove = onOpenPinRemove,
                 onPickThemeMode = viewModel::pickThemeMode,
                 onPickPeriodStartDay = viewModel::pickPeriodStartDay,
                 onDismissSheet = viewModel::dismissSheet,
