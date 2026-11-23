@@ -14,7 +14,7 @@ private val FALLBACK_APPEARANCE = Appearance(iconKey = "wallet", colorKey = "gra
 // S-04, DOC-08: what a wallet row of the sheet shows, the name, the compact balance and the icon of the wallet
 internal data class EditWalletInfo(
     val name: String,
-    val balance: String,
+    val fundsText: String,
     val appearance: Appearance,
     val groupRes: Int?,
 ) {
@@ -27,7 +27,7 @@ internal data class EditWalletInfo(
             val money = state.catalog.moneyByWallet[walletId] ?: Money(0L)
             return EditWalletInfo(
                 name = wallet?.profile?.name.orEmpty(),
-                balance = if (wallet == null) "" else MoneyFormatter.formatShort(money),
+                fundsText = if (wallet == null) "" else MoneyFormatter.formatShort(money),
                 appearance = wallet?.profile?.appearance ?: FALLBACK_APPEARANCE,
                 groupRes = wallet?.let(::groupOf),
             )

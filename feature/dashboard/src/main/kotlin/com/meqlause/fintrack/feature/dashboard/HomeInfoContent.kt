@@ -6,7 +6,7 @@ internal enum class HomeTone { NORMAL, INCOME, EXPENSE }
 // S-03: one icon row of an info drawer card, every text already formatted
 internal data class HomeInfoRow(
     val label: String,
-    val sub: String,
+    val caption: String,
     val value: String,
     val tone: HomeTone,
     val iconKey: String,

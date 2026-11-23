@@ -45,7 +45,7 @@ internal fun EditTransactionAmountBlock(
             modifier =
                 Modifier
                     .padding(top = FintrackTheme.spacing.xxSmall)
-                    .heightIn(min = FintrackScreenSizes.amountMessage),
+                    .heightIn(min = FintrackScreenSizes.messageHeight),
         )
     }
 }

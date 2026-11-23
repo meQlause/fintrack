@@ -108,13 +108,13 @@ private fun HomeInfoSectionBlock(section: HomeInfoSection) {
         )
     }
     ScreenCard {
-        section.rows.forEachIndexed { index, row -> HomeInfoRowLine(row = row, showDivider = index > 0) }
+        section.rows.forEachIndexed { index, row -> HomeInfoRowLine(entry = row, showDivider = index > 0) }
     }
 }
 
 @Composable
 private fun HomeInfoRowLine(
-    row: HomeInfoRow,
+    entry: HomeInfoRow,
     showDivider: Boolean,
 ) {
     val colors = FintrackTheme.colors
@@ -127,8 +127,8 @@ private fun HomeInfoRowLine(
             ),
         leading = {
             TintedIconBox(
-                iconKey = row.iconKey,
-                colorKey = row.colorKey,
+                iconKey = entry.iconKey,
+                colorKey = entry.colorKey,
                 size = FintrackScreenSizes.smallIconBox + FintrackTheme.spacing.xxSmall,
                 glyph = FintrackScreenSizes.circleGlyph,
                 corner = FintrackScreenSizes.smallIconCorner,
@@ -136,20 +136,20 @@ private fun HomeInfoRowLine(
         },
         trailing = {
             Text(
-                text = row.value,
+                text = entry.value,
                 style = FintrackScreenText.number(size = 14f, weight = 700),
-                color = toneColor(row.tone),
+                color = toneColor(entry.tone),
             )
         },
     ) {
         Text(
-            text = row.label,
+            text = entry.label,
             style = FintrackScreenText.style(size = 14f, weight = 600),
             color = colors.texts.onSurface,
             maxLines = 1,
         )
         Text(
-            text = row.sub,
+            text = entry.caption,
             style = FintrackScreenText.style(size = 12f, weight = 400),
             color = colors.texts.onSurfaceVariant,
             maxLines = 1,

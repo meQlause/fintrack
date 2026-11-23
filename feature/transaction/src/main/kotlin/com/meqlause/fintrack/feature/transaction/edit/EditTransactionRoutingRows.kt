@@ -60,7 +60,7 @@ private fun EditWalletCard(
     SheetPickRow(
         label = if (group == null) base else stringResource(R.string.transaction_pay_group, base, group),
         name = info.name,
-        balance = info.balance,
+        balance = info.fundsText,
         iconKey = info.appearance.iconKey,
         colorKey = info.appearance.colorKey,
         onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.WALLET)) },

@@ -88,7 +88,7 @@ object FintrackScreenSizes {
     val tinyIcon: Dp = Dp(value = 14f)
     val formRowTall: Dp = Dp(value = 52f)
     val loanAvatar: Dp = Dp(value = 32f)
-    val amountMessage: Dp = Dp(value = 18f)
+    val messageHeight: Dp = Dp(value = 18f)
     val swapSlot: Dp = Dp(value = 28f)
     val swapRing: Dp = Dp(value = 4f)
     val sideBorder: Dp = Dp(value = 1.5f)

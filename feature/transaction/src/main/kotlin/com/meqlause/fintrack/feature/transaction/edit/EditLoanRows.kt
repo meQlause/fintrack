@@ -56,7 +56,7 @@ internal fun EditLoanRows(
             LoanValueRow(
                 label = stringResource(walletLabelRes(loan.direction)),
                 value = info.name,
-                note = info.balance,
+                note = info.fundsText,
                 muted = false,
                 onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.WALLET)) },
             )

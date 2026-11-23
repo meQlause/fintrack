@@ -111,7 +111,7 @@ private fun TransferSide(
         Text(text = label, style = FintrackScreenText.label(), color = colors.texts.onSurfaceVariant)
         SideName(info = info, alignEnd = alignEnd)
         Text(
-            text = info.balance,
+            text = info.fundsText,
             style = FintrackScreenText.number(size = 11.5f, weight = 400),
             color = colors.texts.onSurfaceVariant,
             modifier = Modifier.padding(top = FintrackScreenSizes.pillGap),

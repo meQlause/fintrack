@@ -89,11 +89,11 @@ private fun CategoryTile(
 // prototype box-shadow: a 2 px surface gap, then a 2 px ring of the category colour
 private fun DrawScope.drawRing(
     ring: Color,
-    gap: Color,
+    halo: Color,
 ) {
     val step = FintrackScreenSizes.categoryRingStep.toPx()
     val corner = FintrackScreenSizes.categoryTileCorner.toPx()
-    listOf(2f to ring, 1f to gap).forEach { (factor, color) ->
+    listOf(2f to ring, 1f to halo).forEach { (factor, color) ->
         val grow = step * factor
         drawRoundRect(
             color = color,
