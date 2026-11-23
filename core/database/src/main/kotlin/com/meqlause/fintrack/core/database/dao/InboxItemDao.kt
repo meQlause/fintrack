@@ -3,8 +3,8 @@ package com.meqlause.fintrack.core.database.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.meqlause.fintrack.core.database.entity.InboxItemEntity
-import com.meqlause.fintrack.core.model.InboxStatus
 import kotlinx.coroutines.flow.Flow
 
 /** DOC-02: inbox writes are suspend, reads are Flow (03 threading). */
@@ -41,18 +41,9 @@ interface InboxItemDao {
     @Query("SELECT * FROM inbox_item WHERE inboxItemId = :inboxItemId LIMIT 1")
     suspend fun findById(inboxItemId: Long): InboxItemEntity?
 
-    /** BR-011, FR-087: stores the review status, the transaction and the resolution time in one statement. */
-    @Query(
-        "UPDATE inbox_item SET status = :status, transactionId = :transactionId, " +
-            "resolvedAt = :resolvedAt, updatedAt = :updatedAt WHERE inboxItemId = :inboxItemId",
-    )
-    suspend fun resolve(
-        inboxItemId: Long,
-        status: InboxStatus,
-        transactionId: Long?,
-        resolvedAt: Long?,
-        updatedAt: Long,
-    )
+    /** BR-011, FR-087: stores a reviewed row with its new status, transaction and resolution time. */
+    @Update
+    suspend fun update(item: InboxItemEntity)
 
     /** FR-092: clears raw title and text of CONFIRMED or DISMISSED items resolved before the cutoff (epoch millis). */
     @Query(

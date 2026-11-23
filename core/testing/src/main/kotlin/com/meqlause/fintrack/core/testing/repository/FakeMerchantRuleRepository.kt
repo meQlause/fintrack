@@ -20,7 +20,7 @@ public class FakeMerchantRuleRepository : MerchantRuleRepository {
         MerchantRuleId(store.append(rule) { existing -> existing.merchantKey == rule.merchantKey })
 
     override suspend fun findByKey(merchantKey: String): MerchantRule? =
-        store.all().firstOrNull { it.merchantKey == merchantKey }
+        store.snapshot().firstOrNull { it.merchantKey == merchantKey }
 
     override suspend fun update(rule: MerchantRule) {
         store.replace(rule)

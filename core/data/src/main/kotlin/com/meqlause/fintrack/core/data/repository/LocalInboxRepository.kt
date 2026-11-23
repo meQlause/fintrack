@@ -40,12 +40,17 @@ public class LocalInboxRepository(
     ) {
         val resolvedAt = resolution.resolvedAt?.toEpochMilli()
         val updatedAt = resolvedAt ?: System.currentTimeMillis()
-        inboxItemDao.resolve(
-            inboxItemId.value,
-            resolution.status,
-            resolution.transactionId?.value,
-            resolvedAt,
-            updatedAt,
+        val row = inboxItemDao.findById(inboxItemId.value) ?: return
+        inboxItemDao.update(
+            row.copy(
+                lifecycle =
+                    row.lifecycle.copy(
+                        status = resolution.status,
+                        transactionId = resolution.transactionId?.value,
+                        resolvedAt = resolvedAt,
+                    ),
+                audit = row.audit.copy(updatedAt = updatedAt),
+            ),
         )
     }
 

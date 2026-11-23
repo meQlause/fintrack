@@ -24,7 +24,7 @@ public class FakeInboxRepository : InboxRepository {
         InboxItemId(store.append(item) { existing -> existing.notice.fingerprint == item.notice.fingerprint })
 
     override suspend fun containsFingerprint(fingerprint: String): Boolean =
-        store.all().any { it.notice.fingerprint == fingerprint }
+        store.snapshot().any { it.notice.fingerprint == fingerprint }
 
     override suspend fun pendingItems(): List<InboxItem> =
         store.observe().first().filter { it.resolution.status == InboxStatus.PENDING }
@@ -33,7 +33,7 @@ public class FakeInboxRepository : InboxRepository {
         first: InboxItemId,
         second: InboxItemId,
     ) {
-        store.all().forEach { item ->
+        store.snapshot().forEach { item ->
             val partner = partnerOf(item.inboxItemId, first, second) ?: return@forEach
             store.replace(item.copy(suggestion = item.suggestion.copy(relatedInboxItemId = partner)))
         }
@@ -51,13 +51,13 @@ public class FakeInboxRepository : InboxRepository {
         }
 
     override suspend fun findById(inboxItemId: InboxItemId): InboxItem? =
-        store.all().firstOrNull { it.inboxItemId == inboxItemId }
+        store.snapshot().firstOrNull { it.inboxItemId == inboxItemId }
 
     override suspend fun resolve(
         inboxItemId: InboxItemId,
         resolution: Resolution,
     ) {
-        store.all().firstOrNull { it.inboxItemId == inboxItemId }?.let {
+        store.snapshot().firstOrNull { it.inboxItemId == inboxItemId }?.let {
             store.replace(
                 it.copy(resolution = resolution),
             )
@@ -65,7 +65,7 @@ public class FakeInboxRepository : InboxRepository {
     }
 
     override suspend fun purgeRawTextResolvedBefore(cutoff: Instant) {
-        store.all().filter { purgeable(it, cutoff) }.forEach { item ->
+        store.snapshot().filter { purgeable(it, cutoff) }.forEach { item ->
             store.replace(item.copy(notice = item.notice.copy(rawTitle = "", rawText = "")))
         }
     }

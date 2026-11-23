@@ -5,7 +5,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.meqlause.fintrack.core.database.converter.CoreEnumConverters
 import com.meqlause.fintrack.core.database.converter.PlanEnumConverters
-import com.meqlause.fintrack.core.database.dao.BackupClearDao
 import com.meqlause.fintrack.core.database.dao.BackupReadDao
 import com.meqlause.fintrack.core.database.dao.BackupWriteDao
 import com.meqlause.fintrack.core.database.dao.BudgetAlertLogDao
@@ -95,7 +94,4 @@ abstract class FintrackDatabase : RoomDatabase() {
 
     /** DOC-11: bulk inserts for a restore. */
     abstract fun backupWriteDao(): BackupWriteDao
-
-    /** DOC-11: table clears for a restore. */
-    abstract fun backupClearDao(): BackupClearDao
 }

@@ -16,7 +16,7 @@ internal class RowStore<T : Any>(
 
     fun observe(): Flow<List<T>> = rows.map { list -> list.sortedWith(order.thenBy(idOf)) }
 
-    fun all(): List<T> = rows.value
+    fun snapshot(): List<T> = rows.value
 
     // DOC-02: a row that conflicts with an existing one is rejected, as the unique index rejects it
     fun append(

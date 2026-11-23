@@ -20,7 +20,7 @@ import com.meqlause.fintrack.core.model.BackupAdjunct
 import com.meqlause.fintrack.core.model.BackupLedger
 import com.meqlause.fintrack.core.model.BackupSnapshot
 
-// DOC-11, FR-111: Room access for backups; replaceAll clears children first and inserts parents first
+/** DOC-11, FR-111: Room access for backups; replaceAll clears children first and inserts parents first. */
 public class LocalBackupStore(
     private val database: FintrackDatabase,
 ) : BackupStore {
@@ -58,19 +58,19 @@ public class LocalBackupStore(
     }
 
     private suspend fun clearAll() {
-        val clear = database.backupClearDao()
-        clear.quickEntries()
-        clear.valuations()
-        clear.installmentPlans()
-        clear.monitoredApps()
-        clear.merchantRules()
-        clear.budgetAlertLogs()
-        clear.budgets()
-        clear.transactions()
-        clear.inboxItems()
-        clear.loans()
-        clear.categories()
-        clear.wallets()
+        val clear = database.backupWriteDao()
+        clear.clearQuickEntries()
+        clear.clearValuations()
+        clear.clearInstallmentPlans()
+        clear.clearMonitoredApps()
+        clear.clearMerchantRules()
+        clear.clearBudgetAlertLogs()
+        clear.clearBudgets()
+        clear.clearTransactions()
+        clear.clearInboxItems()
+        clear.clearLoans()
+        clear.clearCategories()
+        clear.clearWallets()
     }
 
     private suspend fun insertAll(snapshot: BackupSnapshot) {
