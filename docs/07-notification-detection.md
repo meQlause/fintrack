@@ -39,7 +39,7 @@ User confirms (inbox screen, swipe, or notification action)
 ConfirmInboxItemUseCase  ──► creates Transaction(source = NOTIFICATION) + sets CONFIRMED + upserts MerchantRule (BR-011, BR-012)
 ```
 
-## Data types (core:parser)
+## Data types (core:model; `ParseResult` stays in core:parser)
 
 ```kotlin
 data class RawNotification(
