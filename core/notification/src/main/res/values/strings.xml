@@ -14,13 +14,19 @@
     <string name="budget_alert_text">Terpakai %1$s dari %2$s</string>
     <string name="reminder_channel_name">Pengingat tagihan</string>
     <string name="reminder_card_title">Tagihan kartu %1$s jatuh tempo</string>
-    <string name="reminder_due_text">%1$d hari lagi · %2$s</string>
+    <plurals name="reminder_due_text">
+        <item quantity="other">%1$d hari lagi · %2$s</item>
+    </plurals>
     <string name="reminder_loan_borrowed_title">Hutang ke %1$s jatuh tempo</string>
     <string name="reminder_loan_lent_title">Piutang dari %1$s jatuh tempo</string>
-    <string name="reminder_loan_text">%1$d hari lagi · sisa %2$s</string>
+    <plurals name="reminder_loan_text">
+        <item quantity="other">%1$d hari lagi · sisa %2$s</item>
+    </plurals>
     <string name="reminder_invest_title">Update nilai investasi</string>
     <string name="reminder_invest_text">Perbarui nilai investasi Anda bulan ini</string>
     <string name="backup_reminder_channel_name">Pengingat cadangan</string>
     <string name="backup_reminder_title">Pengingat cadangan</string>
-    <string name="backup_reminder_text">Sudah %1$d hari sejak cadangan terakhir. Cadangkan sekarang?</string>
+    <plurals name="backup_reminder_text">
+        <item quantity="other">Sudah %1$d hari sejak cadangan terakhir. Cadangkan sekarang?</item>
+    </plurals>
 </resources>

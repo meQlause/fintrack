@@ -38,7 +38,7 @@ public class CreateInvestmentUseCase
             val allWallets = wallets.observeAll().first()
             if (!isAccepted(trimmed, invested, allWallets)) return null
             val order = (allWallets.maxOfOrNull { it.profile.sortOrder } ?: -1) + 1
-            return wallets.insert(newWallet(WalletSeed(trimmed, investKind, invested, order, currentTime)))
+            return wallets.insert(newWallet(trimmed, investKind, invested, order, currentTime))
         }
 
         private fun isAccepted(
@@ -51,28 +51,26 @@ public class CreateInvestmentUseCase
                 allWallets.none { !it.status.isArchived && it.profile.name.equals(trimmed, ignoreCase = true) }
 
         // FR-170: the default icon and colour of an investment wallet, as the Dompet editor gives them
-        private fun newWallet(seed: WalletSeed): Wallet =
+        private fun newWallet(
+            name: String,
+            investKind: InvestKind,
+            invested: Money,
+            order: Int,
+            currentTime: Instant,
+        ): Wallet =
             Wallet(
                 walletId = WalletId(0L),
-                kind = WalletKind(type = WalletType.INVESTMENT, investKind = seed.investKind),
-                terms = WalletTerms(initialBalance = seed.invested, credit = null),
+                kind = WalletKind(type = WalletType.INVESTMENT, investKind = investKind),
+                terms = WalletTerms(initialBalance = invested, credit = null),
                 profile =
                     WalletProfile(
-                        name = seed.name,
+                        name = name,
                         appearance = Appearance(iconKey = INVESTMENT_ICON, colorKey = INVESTMENT_COLOR),
-                        sortOrder = seed.order,
+                        sortOrder = order,
                     ),
                 status = WalletStatus(),
-                audit = Audit(createdAt = seed.currentTime, updatedAt = seed.currentTime),
+                audit = Audit(createdAt = currentTime, updatedAt = currentTime),
             )
-
-        private data class WalletSeed(
-            val name: String,
-            val investKind: InvestKind,
-            val invested: Money,
-            val order: Int,
-            val currentTime: Instant,
-        )
 
         private companion object {
             const val INVESTMENT_ICON = "trend"

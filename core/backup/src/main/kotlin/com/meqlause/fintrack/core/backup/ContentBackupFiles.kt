@@ -6,7 +6,9 @@ import android.provider.DocumentsContract
 import com.meqlause.fintrack.core.domain.backup.BackupException
 import com.meqlause.fintrack.core.domain.backup.BackupFailure
 import com.meqlause.fintrack.core.domain.port.BackupFiles
+import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.io.InputStream
 
 /** DOC-11: reads and writes the file the user picked through the system picker; no network is involved */
 public class ContentBackupFiles(
@@ -21,7 +23,7 @@ public class ContentBackupFiles(
                 val input =
                     context.contentResolver.openInputStream(Uri.parse(fileUri))
                         ?: throw BackupException(BackupFailure.READ_FAILED)
-                input.use { it.readNBytes(maxBytes.toInt() + 1) }
+                input.use { it.readUpTo(maxBytes.toInt() + 1) }
             } catch (error: IOException) {
                 throw BackupException(BackupFailure.READ_FAILED, error)
             }
@@ -48,3 +50,17 @@ public class ContentBackupFiles(
         runCatching { DocumentsContract.deleteDocument(context.contentResolver, Uri.parse(fileUri)) }
     }
 }
+
+// DOC-11: reads at most [limit] bytes; InputStream.readNBytes(Int) needs API 33 and the minimum is 26
+private fun InputStream.readUpTo(limit: Int): ByteArray {
+    val out = ByteArrayOutputStream()
+    val buffer = ByteArray(READ_CHUNK_BYTES)
+    while (out.size() < limit) {
+        val count = read(buffer, 0, minOf(buffer.size, limit - out.size()))
+        if (count < 0) break
+        out.write(buffer, 0, count)
+    }
+    return out.toByteArray()
+}
+
+private const val READ_CHUNK_BYTES = 8_192

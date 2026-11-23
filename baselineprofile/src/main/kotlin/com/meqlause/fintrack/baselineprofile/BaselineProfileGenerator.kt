@@ -9,12 +9,13 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-// NFR-004, NFR-005: records the classes used at cold start and while the Riwayat list is scrolled
+/** NFR-004, NFR-005: records the classes used at cold start and while the Riwayat list is scrolled. */
 @RunWith(AndroidJUnit4::class)
 class BaselineProfileGenerator {
     @get:Rule
     val baselineProfileRule = BaselineProfileRule()
 
+    /** NFR-004: collects the startup and Riwayat classes into the profile. */
     @Test
     fun generateStartupAndHistoryProfile() =
         baselineProfileRule.collect(packageName = TARGET_PACKAGE) {

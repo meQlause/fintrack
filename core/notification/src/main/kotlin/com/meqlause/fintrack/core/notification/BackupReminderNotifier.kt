@@ -31,7 +31,7 @@ public class BackupReminderNotifier
                     .Builder(context, BACKUP_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_inbox_notification)
                     .setContentTitle(context.getString(R.string.backup_reminder_title))
-                    .setContentText(context.getString(R.string.backup_reminder_text, days))
+                    .setContentText(context.resources.getQuantityString(R.plurals.backup_reminder_text, days, days))
                     .setContentIntent(openAppIntent(context))
                     .setAutoCancel(true)
             manager.notify(BACKUP_TAG, BACKUP_NOTIFICATION_ID, builder.build())

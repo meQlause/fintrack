@@ -65,16 +65,18 @@ public class ReminderNotifier
         private fun text(reminder: Reminder): String =
             when (reminder) {
                 is CardBillReminder -> {
-                    context.getString(
-                        R.string.reminder_due_text,
+                    context.resources.getQuantityString(
+                        R.plurals.reminder_due_text,
+                        reminder.daysBefore,
                         reminder.daysBefore,
                         rupiahText(reminder.amount.rupiah),
                     )
                 }
 
                 is LoanDueReminder -> {
-                    context.getString(
-                        R.string.reminder_loan_text,
+                    context.resources.getQuantityString(
+                        R.plurals.reminder_loan_text,
+                        reminder.daysBefore,
                         reminder.daysBefore,
                         rupiahText(reminder.outstanding.rupiah),
                     )

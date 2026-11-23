@@ -9,15 +9,17 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-// NFR-004: cold start to the first screen, measured with and without the Baseline Profile
+/** NFR-004: cold start to the first screen, measured with and without the Baseline Profile. */
 @RunWith(AndroidJUnit4::class)
 class StartupBenchmark {
     @get:Rule
     val benchmarkRule = MacrobenchmarkRule()
 
+    /** NFR-004: cold start with no profile, the baseline for the comparison. */
     @Test
     fun coldStartWithoutProfile() = measureColdStart(CompilationMode.None())
 
+    /** NFR-004: cold start with the Baseline Profile installed. */
     @Test
     fun coldStartWithProfile() = measureColdStart(CompilationMode.Partial())
 
