@@ -22,6 +22,7 @@ import java.time.Clock
 import java.time.ZoneOffset
 
 // FR-110, FR-111: export proves itself, a wrong password changes nothing, and a restore replaces the store
+/** File backup repository tests. */
 class FileBackupRepositoryTest {
     private val password = "rahasia-123"
     private val store = FakeBackupStore()
@@ -33,6 +34,7 @@ class FileBackupRepositoryTest {
         }
     private val repository = FileBackupRepository(store, settings, files, clock, Dispatchers.Unconfined, "1.0.0")
 
+    /** Export then read then restore keeps every table. */
     @Test
     fun exportThenReadThenRestoreKeepsEveryTable() =
         runBlocking {
@@ -57,6 +59,7 @@ class FileBackupRepositoryTest {
             assertThat(settings.current.backup.backupReminderDays).isEqualTo(sample.backupReminderDays)
         }
 
+    /** Wrong password leaves the store untouched. */
     @Test
     fun wrongPasswordLeavesTheStoreUntouched() =
         runBlocking {
@@ -68,6 +71,7 @@ class FileBackupRepositoryTest {
             assertThat(store.current).isEqualTo(before)
         }
 
+    /** Short password is refused before writing. */
     @Test
     fun shortPasswordIsRefusedBeforeWriting() =
         runBlocking {

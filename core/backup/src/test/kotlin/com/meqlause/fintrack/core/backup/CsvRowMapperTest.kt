@@ -20,6 +20,7 @@ import java.time.Instant
 import java.time.ZoneId
 
 // FR-113, DOC-11: the CSV cells of a transaction follow the fixed column order and Indonesian labels
+/** Csv row mapper tests. */
 class CsvRowMapperTest {
     private val zone = ZoneId.of("Asia/Jakarta")
     private val mapper =
@@ -30,6 +31,7 @@ class CsvRowMapperTest {
             zone = zone,
         )
 
+    /** Given expense when cells then matches doc example. */
     @Test
     fun givenExpenseWhenCellsThenMatchesDocExample() {
         val expense = transaction(TransactionType.EXPENSE, 25_000, 0, Memo("Kopi", "KOPI KENANGAN"), WalletId(1), null)
@@ -38,6 +40,7 @@ class CsvRowMapperTest {
         )
     }
 
+    /** Given transfer when cells then fills target wallet and fee. */
     @Test
     fun givenTransferWhenCellsThenFillsTargetWalletAndFee() {
         val transfer = transaction(TransactionType.TRANSFER, 50_000, 1_000, Memo(), WalletId(1), WalletId(2))

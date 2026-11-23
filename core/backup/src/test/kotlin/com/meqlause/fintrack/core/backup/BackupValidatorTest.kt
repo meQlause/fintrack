@@ -12,12 +12,15 @@ import com.meqlause.fintrack.core.model.WalletId
 import org.junit.Test
 
 // DOC-11: every business rule violation in a crafted payload is rejected before anything is replaced
+/** Backup validator tests. */
 class BackupValidatorTest {
+    /** Valid sample is accepted. */
     @Test
     fun validSampleIsAccepted() {
         BackupValidator.validate(SampleSnapshot.build())
     }
 
+    /** Unknown wallet reference is rejected. */
     @Test
     fun unknownWalletReferenceIsRejected() {
         val snapshot = SampleSnapshot.build()
@@ -34,12 +37,14 @@ class BackupValidatorTest {
         assertThat(failureOf { BackupValidator.validate(broken) }).isEqualTo(BackupFailure.CORRUPT)
     }
 
+    /** Transfer without target wallet is rejected. */
     @Test
     fun transferWithoutTargetWalletIsRejected() {
         assertThat(failureOf { BackupValidator.validate(withTransfer { it.copy(targetWalletId = null) }) })
             .isEqualTo(BackupFailure.CORRUPT)
     }
 
+    /** Zero amount is rejected. */
     @Test
     fun zeroAmountIsRejected() {
         val snapshot = SampleSnapshot.build()
@@ -56,6 +61,7 @@ class BackupValidatorTest {
         assertThat(failureOf { BackupValidator.validate(broken) }).isEqualTo(BackupFailure.CORRUPT)
     }
 
+    /** Duplicate merchant key is rejected. */
     @Test
     fun duplicateMerchantKeyIsRejected() {
         val snapshot = SampleSnapshot.build()
@@ -65,6 +71,7 @@ class BackupValidatorTest {
         assertThat(failureOf { BackupValidator.validate(broken) }).isEqualTo(BackupFailure.CORRUPT)
     }
 
+    /** Invalid period start day is rejected. */
     @Test
     fun invalidPeriodStartDayIsRejected() {
         val snapshot = SampleSnapshot.build()
