@@ -30,48 +30,57 @@ import com.meqlause.fintrack.core.designsystem.R as DesignR
 @Composable
 internal fun InboxPairCard(
     pair: InboxPairUi,
-    actions: InboxActions,
-    onPickFrom: () -> Unit,
-    onPickTo: () -> Unit,
+    actions: InboxItemActions,
+    onPick: (InboxPicker) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val from = pair.fromWalletName.orEmpty()
-    val to = pair.toWalletName.orEmpty()
+    val fromName = pair.from.name.orEmpty()
+    val toName = pair.to.name.orEmpty()
     ScreenCard(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(FintrackScreenSizes.rowPaddingHorizontal)) {
             InboxHeaderRow(
-                source = from,
-                title = stringResource(R.string.inbox_pair_title, from.ifEmpty { "?" }, to.ifEmpty { "?" }),
-                subtitle = "$from \u2192 $to",
+                source = fromName,
+                title = stringResource(R.string.inbox_pair_title, fromName.ifEmpty { "?" }, toName.ifEmpty { "?" }),
+                subtitle = "$fromName → $toName",
                 amount = { InboxAmount(money = pair.amount, type = TransactionType.TRANSFER) },
             )
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium),
-                horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                val transfer = FintrackTheme.colors.semantics.transfer
-                ScreenPill(
-                    label = pair.fromWalletName ?: stringResource(R.string.inbox_pick_wallet),
-                    onClick = onPickFrom,
-                    contentColor = transfer,
-                )
-                ScreenPill(
-                    label = pair.toWalletName ?: stringResource(R.string.inbox_pick_wallet),
-                    onClick = onPickTo,
-                    contentColor = transfer,
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                PairButtons(pair, actions)
-            }
+            PairActions(pair, actions, onPick)
         }
+    }
+}
+
+// FR-091: the two wallet chips, then the split text and the confirm button of the pair
+@Composable
+private fun PairActions(
+    pair: InboxPairUi,
+    actions: InboxItemActions,
+    onPick: (InboxPicker) -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium),
+        horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        val transfer = FintrackTheme.colors.semantics.transfer
+        ScreenPill(
+            label = pair.from.name ?: stringResource(R.string.inbox_pick_wallet),
+            onClick = { onPick(InboxPicker(pair.fromItemId, PickKind.WALLET)) },
+            contentColor = transfer,
+        )
+        ScreenPill(
+            label = pair.to.name ?: stringResource(R.string.inbox_pick_wallet),
+            onClick = { onPick(InboxPicker(pair.toItemId, PickKind.TARGET_WALLET)) },
+            contentColor = transfer,
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        PairButtons(pair, actions)
     }
 }
 
 @Composable
 private fun PairButtons(
     pair: InboxPairUi,
-    actions: InboxActions,
+    actions: InboxItemActions,
 ) {
     Text(
         text = stringResource(R.string.inbox_pair_split),
@@ -91,6 +100,6 @@ private fun PairButtons(
         description = stringResource(R.string.inbox_pair_confirm),
         onClick = { actions.onConfirmPair(pair.fromItemId) },
         filled = true,
-        enabled = pair.fromWalletId != null && pair.toWalletId != null,
+        enabled = pair.from.id != null && pair.to.id != null,
     )
 }

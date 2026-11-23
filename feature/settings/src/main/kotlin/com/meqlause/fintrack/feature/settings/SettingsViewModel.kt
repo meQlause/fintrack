@@ -37,8 +37,11 @@ internal class SettingsViewModel
                     themeMode = stored.preferences.themeMode,
                     periodStartDay = stored.preferences.periodStartDay,
                     pinEnabled = stored.security.pinLock.pinHash != null,
-                    biometricSupported = biometricAvailability.isSupported(),
-                    biometricEnabled = stored.security.biometricEnabled,
+                    biometric =
+                        BiometricState(
+                            supported = biometricAvailability.isSupported(),
+                            enabled = stored.security.biometricEnabled,
+                        ),
                     hideFromRecents = stored.security.hideFromRecents,
                     sheet = open,
                 )

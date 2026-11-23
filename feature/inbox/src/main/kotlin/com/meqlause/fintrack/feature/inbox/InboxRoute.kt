@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.inbox
 
+import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import androidx.compose.runtime.Composable
@@ -17,19 +18,25 @@ internal fun InboxRoute(onBack: () -> Unit) {
     val actions =
         InboxActions(
             onBack = onBack,
-            onConfirm = viewModel::confirmCard,
-            onDismiss = viewModel::dismissCard,
+            onDismissAll = viewModel::dismissEverything,
             onUndo = viewModel::undoDismiss,
             onUndoShown = viewModel::clearUndo,
-            onDismissAll = viewModel::dismissEverything,
-            onConfirmPair = viewModel::confirmPair,
-            onSplitPair = viewModel::splitPair,
-            onChooseWallet = viewModel::chooseWallet,
-            onChooseCategory = viewModel::chooseCategory,
-            onEnableAccess = {
-                val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-                context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            },
+            onEnableAccess = { openListenerSettings(context) },
+            items =
+                InboxItemActions(
+                    onConfirm = viewModel::confirmCard,
+                    onDismiss = viewModel::dismissCard,
+                    onConfirmPair = viewModel::confirmPair,
+                    onSplitPair = viewModel::splitPair,
+                    onChooseWallet = viewModel::chooseWallet,
+                    onChooseCategory = viewModel::chooseCategory,
+                ),
         )
     InboxScreen(state = state, actions = actions)
+}
+
+// S-07: opens the system page where the user grants the notification access
+private fun openListenerSettings(context: Context) {
+    val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+    context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
 }

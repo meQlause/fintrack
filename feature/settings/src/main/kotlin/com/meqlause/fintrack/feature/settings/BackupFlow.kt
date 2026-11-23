@@ -15,43 +15,46 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-private val REMINDER_CHOICES = listOf(0, 3, 7, 14, 30)
+private const val DAYS_SHORT = 3
+private const val DAYS_WEEK = 7
+private const val DAYS_TWO_WEEKS = 14
+private const val DAYS_MONTH = 30
+
+private val REMINDER_CHOICES = listOf(0, DAYS_SHORT, DAYS_WEEK, DAYS_TWO_WEEKS, DAYS_MONTH)
 
 // FR-110..FR-113: the backup dialogs of S-12, shown one at a time for the step the flow is in
 @Composable
 internal fun BackupFlow(
     state: BackupUiState,
-    onPasswordForExport: (String) -> Unit,
-    onPasswordForImport: (String) -> Unit,
-    onConfirmRestore: () -> Unit,
-    onCsvRangePicked: (ClosedRange<LocalDate>) -> Unit,
-    onReminderDaysPicked: (Int) -> Unit,
+    callbacks: BackupFlowCallbacks,
     onDismissStep: () -> Unit,
     onDismissOutcome: () -> Unit,
 ) {
     when (val step = state.step) {
         BackupStep.ExportPassword -> {
-            BackupPasswordDialog(creating = true, onConfirm = onPasswordForExport, onDismiss = onDismissStep)
+            BackupPasswordDialog(creating = true, onConfirm = callbacks.onPasswordForExport, onDismiss = onDismissStep)
         }
 
         is BackupStep.ImportPassword -> {
-            BackupPasswordDialog(creating = false, onConfirm = onPasswordForImport, onDismiss = onDismissStep)
+            BackupPasswordDialog(creating = false, onConfirm = callbacks.onPasswordForImport, onDismiss = onDismissStep)
         }
 
         is BackupStep.ConfirmRestore -> {
-            RestoreSummaryDialog(snapshot = step.snapshot, onConfirm = onConfirmRestore, onDismiss = onDismissStep)
+            RestoreSummaryDialog(
+                snapshot = step.snapshot,
+                onConfirm = callbacks.onConfirmRestore,
+                onDismiss = onDismissStep,
+            )
         }
 
         is BackupStep.CsvRange -> {
-            BackupCsvDialog(range = step.range, onConfirm = onCsvRangePicked, onDismiss = onDismissStep)
+            BackupCsvDialog(range = step.range, onConfirm = callbacks.onCsvRangePicked, onDismiss = onDismissStep)
         }
 
         BackupStep.ReminderDays -> {
-            OptionsDrawer(
-                title = stringResource(R.string.settings_backup_reminder_sheet_title),
-                options = reminderOptions(),
-                selectedKey = state.reminderDays.toString(),
-                onPick = { option -> onReminderDaysPicked(option.optionKey.toInt()) },
+            ReminderDrawer(
+                selectedDays = state.reminderDays,
+                onPick = callbacks.onReminderDaysPicked,
                 onClose = onDismissStep,
             )
         }
@@ -61,6 +64,31 @@ internal fun BackupFlow(
         }
     }
     state.outcome?.let { outcome -> OutcomeDialog(outcome = outcome, onDismiss = onDismissOutcome) }
+}
+
+// FR-110..FR-113: the answers the backup dialogs give, each one passes on to the ViewModel
+internal data class BackupFlowCallbacks(
+    val onPasswordForExport: (String) -> Unit,
+    val onPasswordForImport: (String) -> Unit,
+    val onConfirmRestore: () -> Unit,
+    val onCsvRangePicked: (ClosedRange<LocalDate>) -> Unit,
+    val onReminderDaysPicked: (Int) -> Unit,
+)
+
+// FR-112: the drawer that picks how many days pass between reminders
+@Composable
+private fun ReminderDrawer(
+    selectedDays: Int,
+    onPick: (Int) -> Unit,
+    onClose: () -> Unit,
+) {
+    OptionsDrawer(
+        title = stringResource(R.string.settings_backup_reminder_sheet_title),
+        options = reminderOptions(),
+        selectedKey = selectedDays.toString(),
+        onPick = { option -> onPick(option.optionKey.toInt()) },
+        onClose = onClose,
+    )
 }
 
 // FR-112: the reminder choices; 0 means reminders are off

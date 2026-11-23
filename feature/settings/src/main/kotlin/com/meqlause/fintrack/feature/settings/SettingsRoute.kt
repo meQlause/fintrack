@@ -1,5 +1,7 @@
 package com.meqlause.fintrack.feature.settings
 
+import android.net.Uri
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -14,77 +16,100 @@ import java.time.YearMonth
 // DOC-03, FR-100, FR-110, FR-111, FR-120, FR-121: stateful entry of S-12; the only composable touching its view models
 @Composable
 internal fun SettingsRoute(
-    onBack: () -> Unit,
-    onOpenCategories: () -> Unit,
-    onOpenBudgets: () -> Unit,
-    onOpenMonitoredApps: () -> Unit,
-    onOpenAbout: () -> Unit,
-    onOpenBatteryHelp: () -> Unit,
-    onOpenPinSetup: () -> Unit,
-    onOpenPinChange: () -> Unit,
-    onOpenPinRemove: () -> Unit,
+    links: SettingsLinks,
+    pins: SettingsSecurityCallbacks,
 ) {
     val viewModel: SettingsViewModel = hiltViewModel()
     val backup: BackupViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val backupState by backup.state.collectAsStateWithLifecycle()
-    val createLauncher =
+    val launchers = rememberBackupLaunchers(backup)
+    val context = LocalContext.current
+    val callbacks =
+        settingsCallbacks(viewModel, backup, launchers).copy(
+            links = links,
+            security = pins.copy(onToggleBiometric = viewModel::toggleBiometric),
+        )
+    SettingsScreen(
+        state = state,
+        callbacks = callbacks,
+        backup = backupState,
+        version = remember { readVersionName(context) },
+    )
+    BackupFlow(
+        state = backupState,
+        callbacks = backupFlowCallbacks(backup, launchers),
+        onDismissStep = backup::dismissStep,
+        onDismissOutcome = backup::dismissOutcome,
+    )
+}
+
+// FR-110, FR-111, FR-113: the system file pickers behind the backup and CSV rows
+private class BackupLaunchers(
+    val create: ManagedActivityResultLauncher<String, Uri?>,
+    val open: ManagedActivityResultLauncher<Array<String>, Uri?>,
+    val csvPicker: ManagedActivityResultLauncher<String, Uri?>,
+)
+
+@Composable
+private fun rememberBackupLaunchers(backup: BackupViewModel): BackupLaunchers {
+    val create =
         rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(BACKUP_MIME_TYPE)) { uri ->
             backup.onExportTarget(uri?.toString())
         }
-    val openLauncher =
+    val open =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             backup.onImportPicked(uri?.toString())
         }
-    val csvLauncher =
+    val csvPicker =
         rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(CSV_MIME_TYPE)) { uri ->
             backup.onCsvTarget(uri?.toString())
         }
-    val context = LocalContext.current
-    SettingsScreen(
-        state = state,
-        backup = backupState,
-        version = remember { readVersionName(context) },
-        callbacks =
-            SettingsCallbacks(
-                onBack = onBack,
+    return BackupLaunchers(create = create, open = open, csvPicker = csvPicker)
+}
+
+// FR-120, FR-121: the callbacks of the settings screen, each one a link, a ViewModel call or a picker
+private fun settingsCallbacks(
+    viewModel: SettingsViewModel,
+    backup: BackupViewModel,
+    launchers: BackupLaunchers,
+): SettingsCallbacks =
+    SettingsCallbacks(
+        preferences =
+            SettingsPreferenceCallbacks(
                 onOpenSheet = viewModel::openSheet,
-                onOpenCategories = onOpenCategories,
-                onOpenBudgets = onOpenBudgets,
-                onOpenMonitoredApps = onOpenMonitoredApps,
-                onOpenAbout = onOpenAbout,
-                onOpenBatteryHelp = onOpenBatteryHelp,
-                onOpenPinSetup = onOpenPinSetup,
-                onOpenPinChange = onOpenPinChange,
-                onOpenPinRemove = onOpenPinRemove,
                 onPickThemeMode = viewModel::pickThemeMode,
                 onPickPeriodStartDay = viewModel::pickPeriodStartDay,
                 onDismissSheet = viewModel::dismissSheet,
-                onBackupCreate = backup::startExport,
-                onBackupRestore = { openLauncher.launch(arrayOf(BACKUP_OPEN_MIME_TYPE)) },
-                onToggleBiometric = viewModel::toggleBiometric,
                 onToggleHideFromRecents = viewModel::toggleHideFromRecents,
+            ),
+        backup =
+            SettingsBackupCallbacks(
+                onBackupCreate = backup::startExport,
+                onBackupRestore = { launchers.open.launch(arrayOf(BACKUP_OPEN_MIME_TYPE)) },
                 onBackupReminder = backup::startReminderPick,
                 onBackupCsv = backup::startCsvExport,
             ),
     )
-    BackupFlow(
-        state = backupState,
+
+// FR-110, FR-113: the password and file steps of the backup and CSV export, each one ends in the system picker
+private fun backupFlowCallbacks(
+    backup: BackupViewModel,
+    launchers: BackupLaunchers,
+): BackupFlowCallbacks =
+    BackupFlowCallbacks(
         onPasswordForExport = { password ->
             backup.onExportPassword(password)
-            createLauncher.launch(BACKUP_FILE_NAME)
+            launchers.create.launch(BACKUP_FILE_NAME)
         },
         onPasswordForImport = backup::onImportPassword,
         onConfirmRestore = backup::confirmRestore,
         onCsvRangePicked = { range ->
             backup.onCsvRangePicked(range)
-            csvLauncher.launch(csvFileName(range.start))
+            launchers.csvPicker.launch(csvFileName(range.start))
         },
         onReminderDaysPicked = backup::onReminderDaysPicked,
-        onDismissStep = backup::dismissStep,
-        onDismissOutcome = backup::dismissOutcome,
     )
-}
 
 // FR-113: the file name offered by the CSV save picker, for example fintrack-2026-11.csv
 private fun csvFileName(start: LocalDate): String = "fintrack-${YearMonth.from(start)}.csv"

@@ -3,8 +3,6 @@ package com.meqlause.fintrack.feature.inbox
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -19,10 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -40,6 +35,14 @@ internal fun InboxScreen(
     var infoShown by rememberSaveable { mutableStateOf(showInfo) }
     var resolvedOpen by rememberSaveable { mutableStateOf(false) }
     UndoEffect(state.undoItemId, snackbar, actions)
+    val panels =
+        InboxPanels(
+            infoShown = infoShown,
+            resolvedOpen = resolvedOpen,
+            onInfoDismiss = { infoShown = false },
+            onToggleResolved = { resolvedOpen = !resolvedOpen },
+            onPick = { picker = it },
+        )
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = FintrackTheme.colors.surfaces.background,
@@ -47,15 +50,7 @@ internal fun InboxScreen(
     ) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
             InboxHeader(onBack = actions.onBack, onDismissAll = actions.onDismissAll)
-            InboxBody(
-                state = state,
-                actions = actions,
-                infoShown = infoShown,
-                onInfoDismiss = { infoShown = false },
-                resolvedOpen = resolvedOpen,
-                onToggleResolved = { resolvedOpen = !resolvedOpen },
-                onPick = { picker = it },
-            )
+            InboxBody(state = state, actions = actions, panels = panels)
         }
     }
     picker?.let { InboxPickerDrawer(picker = it, state = state, actions = actions, onClose = { picker = null }) }
@@ -97,5 +92,3 @@ private fun UndoEffect(
         if (result == SnackbarResult.ActionPerformed) actions.onUndo() else actions.onUndoShown()
     }
 }
-
-private const val BACK_ROTATION = 180f

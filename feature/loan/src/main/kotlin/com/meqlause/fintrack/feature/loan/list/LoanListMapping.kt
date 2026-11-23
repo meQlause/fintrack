@@ -11,7 +11,7 @@ internal fun LoanEntry.toListRow(
     today: LocalDate,
     zone: ZoneId,
 ): LoanListRow {
-    val due =
+    val dueOn =
         loan.agreement.dueDate
             ?.atZone(zone)
             ?.toLocalDate()
@@ -21,9 +21,8 @@ internal fun LoanEntry.toListRow(
         personName = loan.agreement.personName,
         outstanding = loanBalance.outstanding,
         progress = progressOf(loanBalance),
-        dueDate = due,
+        due = LoanDue(date = dueOn, overdue = isOpen && dueOn != null && dueOn.isBefore(today)),
         status = loan.status,
-        overdue = isOpen && due != null && due.isBefore(today),
     )
 }
 

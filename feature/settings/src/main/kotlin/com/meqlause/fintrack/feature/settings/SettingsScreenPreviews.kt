@@ -5,7 +5,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // FR-120, FR-121, S-12: previews of the Pengaturan screen in light and dark themes
-private val previewState = SettingsUiState(pinEnabled = true, biometricSupported = true)
+private val previewState = SettingsUiState(pinEnabled = true, biometric = BiometricState(supported = true))
 
 @Composable
 internal fun SettingsLightSample() {

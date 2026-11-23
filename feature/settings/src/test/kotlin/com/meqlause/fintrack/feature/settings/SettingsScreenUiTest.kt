@@ -27,7 +27,7 @@ class SettingsScreenUiTest {
         composeRule.setContent {
             SettingsScreen(
                 state = SettingsUiState(),
-                callbacks = SettingsCallbacks(onOpenCategories = { opened = true }),
+                callbacks = SettingsCallbacks(links = SettingsLinks(onOpenCategories = { opened = true })),
             )
         }
 

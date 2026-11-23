@@ -37,20 +37,7 @@ internal fun InboxHeaderRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.rowGap),
     ) {
-        Box(
-            modifier =
-                Modifier
-                    .size(FintrackScreenSizes.appBadge)
-                    .clip(RoundedCornerShape(FintrackScreenSizes.appBadgeCorner))
-                    .background(FintrackAppBadges.colorOf(source)),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = FintrackAppBadges.letterOf(source),
-                style = FintrackScreenText.style(size = 12f, weight = 700),
-                color = Color.White,
-            )
-        }
+        InboxAppBadge(source)
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
@@ -68,6 +55,25 @@ internal fun InboxHeaderRow(
             )
         }
         amount()
+    }
+}
+
+// S-07: the square app badge with the letter of the source app on its brand colour
+@Composable
+private fun InboxAppBadge(source: String) {
+    Box(
+        modifier =
+            Modifier
+                .size(FintrackScreenSizes.appBadge)
+                .clip(RoundedCornerShape(FintrackScreenSizes.appBadgeCorner))
+                .background(FintrackAppBadges.colorOf(source)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = FintrackAppBadges.letterOf(source),
+            style = FintrackScreenText.style(size = 12f, weight = 700),
+            color = Color.White,
+        )
     }
 }
 

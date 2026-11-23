@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,7 +15,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,28 +35,13 @@ import com.meqlause.fintrack.core.designsystem.R as DesignR
 internal fun InboxBody(
     state: InboxUiState,
     actions: InboxActions,
-    infoShown: Boolean,
-    onInfoDismiss: () -> Unit,
-    resolvedOpen: Boolean,
-    onToggleResolved: () -> Unit,
-    onPick: (InboxPicker) -> Unit,
+    panels: InboxPanels,
 ) {
     when {
-        !state.isLoaded -> {
-            Unit
-        }
-
-        !state.hasAccess -> {
-            AccessOff(actions)
-        }
-
-        state.cards.isEmpty() && state.pairs.isEmpty() -> {
-            EmptyBody()
-        }
-
-        else -> {
-            InboxList(state, actions, infoShown, onInfoDismiss, resolvedOpen, onToggleResolved, onPick)
-        }
+        !state.isLoaded -> Unit
+        !state.hasAccess -> AccessOff(actions)
+        state.pending.isEmpty -> EmptyBody()
+        else -> InboxList(state, actions, panels)
     }
 }
 
@@ -93,11 +76,7 @@ private fun EmptyBody() {
 private fun InboxList(
     state: InboxUiState,
     actions: InboxActions,
-    infoShown: Boolean,
-    onInfoDismiss: () -> Unit,
-    resolvedOpen: Boolean,
-    onToggleResolved: () -> Unit,
-    onPick: (InboxPicker) -> Unit,
+    panels: InboxPanels,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -111,60 +90,49 @@ private fun InboxList(
                 FintrackScreenSizes.pillGap + FintrackTheme.spacing.xSmall - FintrackTheme.spacing.xxSmall,
             ),
     ) {
-        if (infoShown) {
-            item(key = "info") { InfoCard(onDismiss = onInfoDismiss) }
+        if (panels.infoShown) {
+            item(key = "info") { InfoCard(onDismiss = panels.onInfoDismiss) }
         }
-        pendingItems(state, actions, onPick)
-        resolvedSection(state, resolvedOpen, onToggleResolved)
+        pendingItems(state.pending, actions.items, panels.onPick)
+        resolvedSection(state.resolved, panels)
     }
 }
 
 // S-07: the pair cards first, then the single cards, both newest first
 private fun LazyListScope.pendingItems(
-    state: InboxUiState,
-    actions: InboxActions,
+    pending: InboxPending,
+    actions: InboxItemActions,
     onPick: (InboxPicker) -> Unit,
 ) {
-    items(state.pairs, key = { "pair-${it.fromItemId}" }) { pair ->
-        InboxPairCard(
-            pair = pair,
-            actions = actions,
-            onPickFrom = { onPick(InboxPicker(pair.fromItemId, PickKind.WALLET)) },
-            onPickTo = { onPick(InboxPicker(pair.toItemId, PickKind.TARGET_WALLET)) },
-        )
+    items(pending.pairs, key = { "pair-${it.fromItemId}" }) { pair ->
+        InboxPairCard(pair = pair, actions = actions, onPick = onPick)
     }
-    items(state.cards, key = { "card-${it.itemId}" }) { card ->
-        InboxCard(
-            card = card,
-            actions = actions,
-            onPickCategory = { onPick(InboxPicker(card.itemId, PickKind.CATEGORY)) },
-            onPickWallet = { onPick(InboxPicker(card.itemId, PickKind.WALLET)) },
-        )
+    items(pending.cards, key = { "card-${it.itemId}" }) { card ->
+        InboxCard(card = card, actions = actions, onPick = onPick)
     }
 }
 
 // S-07 "Selesai": collapsed by default; lists the confirmed and dismissed items of the last seven days
 private fun LazyListScope.resolvedSection(
-    state: InboxUiState,
-    resolvedOpen: Boolean,
-    onToggleResolved: () -> Unit,
+    resolved: List<InboxResolvedUi>,
+    panels: InboxPanels,
 ) {
-    if (state.resolved.isEmpty()) return
+    if (resolved.isEmpty()) return
     item(key = "resolved-header") {
         Text(
-            text = "${stringResource(R.string.inbox_resolved_title)} (${state.resolved.size})",
+            text = "${stringResource(R.string.inbox_resolved_title)} (${resolved.size})",
             style = FintrackScreenText.label(),
             color = FintrackTheme.colors.texts.onSurfaceVariant,
             modifier =
                 Modifier
                     .padding(top = FintrackTheme.spacing.large, start = FintrackTheme.spacing.xxSmall)
-                    .clickable(onClick = onToggleResolved),
+                    .clickable(onClick = panels.onToggleResolved),
         )
     }
-    if (resolvedOpen) {
+    if (panels.resolvedOpen) {
         item(key = "resolved-card") {
             ScreenCard {
-                state.resolved.forEachIndexed { index, row -> ResolvedRow(row, showDivider = index > 0) }
+                resolved.forEachIndexed { index, row -> ResolvedRow(row, showDivider = index > 0) }
             }
         }
     }
@@ -200,29 +168,30 @@ private fun ResolvedRow(
                 vertical = FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall,
             ),
         leading = {},
-        trailing = {
-            Icon(
-                painter =
-                    painterResource(
-                        if (resolvedRow.isConfirmed) DesignR.drawable.ic_check else DesignR.drawable.ic_close,
-                    ),
-                contentDescription = null,
-                tint =
-                    if (resolvedRow.isConfirmed) {
-                        FintrackTheme.colors.brands.primary
-                    } else {
-                        FintrackTheme.colors.texts.onSurfaceVariant
-                    },
-                modifier = Modifier.size(FintrackScreenSizes.circleGlyph),
-            )
-        },
+        trailing = { ResolvedIcon(isConfirmed = resolvedRow.isConfirmed) },
     ) {
         Text(
-            text = resolvedRow.label + " \u00B7 " + MoneyFormatter.format(resolvedRow.amount),
+            text = resolvedRow.label + " · " + MoneyFormatter.format(resolvedRow.amount),
             style = FintrackScreenText.style(size = 13f, weight = 400),
             color = FintrackTheme.colors.texts.onSurfaceVariant,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
     }
+}
+
+// S-07: the check for a confirmed item and the cross for a dismissed one
+@Composable
+private fun ResolvedIcon(isConfirmed: Boolean) {
+    Icon(
+        painter = painterResource(if (isConfirmed) DesignR.drawable.ic_check else DesignR.drawable.ic_close),
+        contentDescription = null,
+        tint =
+            if (isConfirmed) {
+                FintrackTheme.colors.brands.primary
+            } else {
+                FintrackTheme.colors.texts.onSurfaceVariant
+            },
+        modifier = Modifier.size(FintrackScreenSizes.circleGlyph),
+    )
 }

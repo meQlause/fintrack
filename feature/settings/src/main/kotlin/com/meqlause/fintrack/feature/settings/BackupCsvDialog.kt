@@ -23,27 +23,15 @@ internal fun BackupCsvDialog(
     var startText by remember { mutableStateOf(range.start.toString()) }
     var endText by remember { mutableStateOf(range.endInclusive.toString()) }
     val start = parseDate(startText)
-    val end = parseDate(endText)
-    val valid = start != null && end != null && start <= end
+    val endDate = parseDate(endText)
+    val valid = start != null && endDate != null && start <= endDate
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = stringResource(R.string.backup_csv_title)) },
         text = {
             Column {
-                OutlinedTextField(
-                    value = startText,
-                    onValueChange = { startText = it },
-                    label = { Text(text = stringResource(R.string.backup_csv_start_label)) },
-                    singleLine = true,
-                    isError = start == null,
-                )
-                OutlinedTextField(
-                    value = endText,
-                    onValueChange = { endText = it },
-                    label = { Text(text = stringResource(R.string.backup_csv_end_label)) },
-                    singleLine = true,
-                    isError = end == null,
-                )
+                DateField(startText, R.string.backup_csv_start_label, isError = start == null) { startText = it }
+                DateField(endText, R.string.backup_csv_end_label, isError = endDate == null) { endText = it }
                 Text(text = stringResource(R.string.backup_csv_hint))
                 Text(text = stringResource(R.string.backup_csv_warning))
             }
@@ -51,12 +39,29 @@ internal fun BackupCsvDialog(
         confirmButton = {
             TextButton(
                 enabled = valid,
-                onClick = { if (start != null && end != null) onConfirm(start..end) },
+                onClick = { if (start != null && endDate != null) onConfirm(start..endDate) },
             ) { Text(text = stringResource(R.string.backup_csv_action)) }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(text = stringResource(R.string.backup_cancel)) }
         },
+    )
+}
+
+// FR-113: one typed date of the range, a single line that turns red when it is not a date
+@Composable
+private fun DateField(
+    value: String,
+    label: Int,
+    isError: Boolean,
+    onChange: (String) -> Unit,
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onChange,
+        label = { Text(text = stringResource(label)) },
+        singleLine = true,
+        isError = isError,
     )
 }
 

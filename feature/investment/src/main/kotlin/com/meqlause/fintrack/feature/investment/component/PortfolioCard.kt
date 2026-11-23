@@ -108,6 +108,18 @@ private fun AllocationBar(portfolio: InvestmentPortfolio) {
     }
 }
 
+// FR-173: the coloured dot that identifies the kind in the legend
+@Composable
+private fun KindDot(kind: InvestKind) {
+    Row(
+        modifier =
+            Modifier
+                .size(FintrackScreenSizes.legendDot)
+                .clip(CircleShape)
+                .background(FintrackTheme.colors.categoryColor(kindColorKey(kind))),
+    ) {}
+}
+
 // FR-173: dot and kind name, the compact value and the share of the total
 @Composable
 private fun AllocationRow(
@@ -121,13 +133,7 @@ private fun AllocationRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
-        Row(
-            modifier =
-                Modifier
-                    .size(FintrackScreenSizes.legendDot)
-                    .clip(CircleShape)
-                    .background(FintrackTheme.colors.categoryColor(kindColorKey(kind))),
-        ) {}
+        KindDot(kind)
         Text(
             text = stringResource(InvestmentLabels.kindRes(kind)),
             style = FintrackScreenText.legend(weight = 500),

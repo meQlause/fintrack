@@ -29,6 +29,33 @@ internal fun BackupRows(
     backup: BackupUiState,
     callbacks: SettingsCallbacks,
 ) {
+    LastBackupRow(lastBackupAt = backup.lastBackupAt, onCreate = callbacks.backup.onBackupCreate)
+    SettingsRow(
+        label = stringResource(R.string.settings_backup_restore_label),
+        value = "",
+        onClick = callbacks.backup.onBackupRestore,
+        showDivider = true,
+    )
+    SettingsRow(
+        label = stringResource(R.string.settings_backup_reminder_label),
+        value = reminderValue(backup.reminderDays),
+        onClick = callbacks.backup.onBackupReminder,
+        showDivider = true,
+    )
+    SettingsRow(
+        label = stringResource(R.string.settings_backup_csv_label),
+        value = "",
+        onClick = callbacks.backup.onBackupCsv,
+        showDivider = true,
+    )
+}
+
+// FR-110, FR-112: the time of the last backup at the right, and the round button that starts a new one
+@Composable
+private fun LastBackupRow(
+    lastBackupAt: Instant?,
+    onCreate: () -> Unit,
+) {
     ScreenRow(
         leading = {
             Icon(
@@ -40,11 +67,11 @@ internal fun BackupRows(
         },
         trailing = {
             Text(
-                text = lastBackupLabel(backup.lastBackupAt),
+                text = lastBackupLabel(lastBackupAt),
                 style = FintrackScreenText.style(size = 12f, weight = 500),
                 color = FintrackTheme.colors.texts.onSurfaceVariant,
             )
-            BackupButton(onClick = callbacks.onBackupCreate)
+            BackupButton(onClick = onCreate)
         },
     ) {
         Text(
@@ -53,24 +80,6 @@ internal fun BackupRows(
             color = FintrackTheme.colors.texts.onSurface,
         )
     }
-    SettingsRow(
-        label = stringResource(R.string.settings_backup_restore_label),
-        value = "",
-        onClick = callbacks.onBackupRestore,
-        showDivider = true,
-    )
-    SettingsRow(
-        label = stringResource(R.string.settings_backup_reminder_label),
-        value = reminderValue(backup.reminderDays),
-        onClick = callbacks.onBackupReminder,
-        showDivider = true,
-    )
-    SettingsRow(
-        label = stringResource(R.string.settings_backup_csv_label),
-        value = "",
-        onClick = callbacks.onBackupCsv,
-        showDivider = true,
-    )
 }
 
 // FR-110: the 34 px round button that starts a backup now

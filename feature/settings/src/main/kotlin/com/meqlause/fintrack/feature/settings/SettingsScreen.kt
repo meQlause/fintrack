@@ -20,43 +20,53 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 internal fun SettingsScreen(
     state: SettingsUiState,
     callbacks: SettingsCallbacks,
-    modifier: Modifier = Modifier,
     backup: BackupUiState = BackupUiState(),
     version: String = "",
 ) {
-    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+    Column(modifier = Modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         ScreenBackHeader(
             title = stringResource(R.string.settings_title),
             backLabel = stringResource(R.string.settings_back),
-            onBack = callbacks.onBack,
+            onBack = callbacks.links.onBack,
         )
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = FintrackScreenSizes.screenGutter)
-                    .padding(bottom = FintrackScreenSizes.screenBottom),
-        ) {
-            SettingsSection(title = stringResource(R.string.settings_section_appearance)) {
-                AppearanceRows(state = state, callbacks = callbacks)
-            }
-            SettingsSection(title = stringResource(R.string.settings_section_data)) {
-                DataRows(callbacks = callbacks)
-            }
-            SettingsSection(title = stringResource(R.string.settings_section_detection)) {
-                DetectionRows(callbacks = callbacks)
-            }
-            SettingsSection(title = stringResource(R.string.settings_section_security)) {
-                SecurityRows(state = state, callbacks = callbacks)
-            }
-            SettingsSection(title = stringResource(R.string.settings_section_backup)) {
-                BackupRows(backup = backup, callbacks = callbacks)
-            }
-            SettingsFooter(version = version, onOpenAbout = callbacks.onOpenAbout)
-        }
+        SettingsSections(state = state, callbacks = callbacks, backup = backup, version = version)
     }
     SettingsSheetHost(state = state, callbacks = callbacks)
+}
+
+// FR-120, FR-121: the scrolling column of sections, the last one followed by the version footer
+@Composable
+private fun SettingsSections(
+    state: SettingsUiState,
+    callbacks: SettingsCallbacks,
+    backup: BackupUiState,
+    version: String,
+) {
+    Column(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = FintrackScreenSizes.screenGutter)
+                .padding(bottom = FintrackScreenSizes.screenBottom),
+    ) {
+        SettingsSection(title = stringResource(R.string.settings_section_appearance)) {
+            AppearanceRows(state = state, callbacks = callbacks)
+        }
+        SettingsSection(title = stringResource(R.string.settings_section_data)) {
+            DataRows(callbacks = callbacks)
+        }
+        SettingsSection(title = stringResource(R.string.settings_section_detection)) {
+            DetectionRows(callbacks = callbacks)
+        }
+        SettingsSection(title = stringResource(R.string.settings_section_security)) {
+            SecurityRows(state = state, callbacks = callbacks)
+        }
+        SettingsSection(title = stringResource(R.string.settings_section_backup)) {
+            BackupRows(backup = backup, callbacks = callbacks)
+        }
+        SettingsFooter(version = version, onOpenAbout = callbacks.links.onOpenAbout)
+    }
 }
 
 // FR-120, FR-121: a grey section label above one card of rows

@@ -10,7 +10,12 @@ internal data class LoanListRow(
     val personName: String,
     val outstanding: Money,
     val progress: Float,
-    val dueDate: LocalDate?,
+    val due: LoanDue,
     val status: LoanStatus,
+)
+
+// FR-154, FR-158: the due date of a loan, and whether an open loan is already past it
+internal data class LoanDue(
+    val date: LocalDate?,
     val overdue: Boolean,
 )

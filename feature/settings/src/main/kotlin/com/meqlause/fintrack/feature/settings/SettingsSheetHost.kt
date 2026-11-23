@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.model.ThemeMode
 import com.meqlause.fintrack.core.ui.picker.DayGridDrawer
-import com.meqlause.fintrack.feature.settings.R
 
 // FR-120, FR-121, S-18: shows the picker drawer that is open in SettingsUiState, if any
 @Composable
@@ -17,8 +16,8 @@ internal fun SettingsSheetHost(
             DayGridDrawer(
                 title = stringResource(R.string.settings_period_sheet_title),
                 selectedDay = state.periodStartDay,
-                onPick = callbacks.onPickPeriodStartDay,
-                onClose = callbacks.onDismissSheet,
+                onPick = callbacks.preferences.onPickPeriodStartDay,
+                onClose = callbacks.preferences.onDismissSheet,
             )
         }
 

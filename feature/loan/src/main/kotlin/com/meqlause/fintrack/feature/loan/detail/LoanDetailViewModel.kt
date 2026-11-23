@@ -7,11 +7,7 @@ import androidx.navigation.toRoute
 import com.meqlause.fintrack.core.domain.loan.LoanDueOption
 import com.meqlause.fintrack.core.domain.loan.RepaymentResult
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
-import com.meqlause.fintrack.core.domain.usecase.ChangeLoanDueDateUseCase
-import com.meqlause.fintrack.core.domain.usecase.DeleteLoanUseCase
 import com.meqlause.fintrack.core.domain.usecase.ObserveLoansUseCase
-import com.meqlause.fintrack.core.domain.usecase.RecordRepaymentUseCase
-import com.meqlause.fintrack.core.domain.usecase.WriteOffLoanUseCase
 import com.meqlause.fintrack.core.model.LoanId
 import com.meqlause.fintrack.feature.loan.navigation.LoanDetailDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +23,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 private const val MAX_DIGITS = 15
+private const val STOP_TIMEOUT_MS = 5_000L
 
 // FR-152, FR-155, FR-158, S-17: one loan with its repayments, write-off and due date; the rules live in core:domain
 @HiltViewModel
@@ -36,10 +33,7 @@ internal class LoanDetailViewModel
         savedStateHandle: SavedStateHandle,
         observeLoans: ObserveLoansUseCase,
         wallets: WalletRepository,
-        private val recordRepayment: RecordRepaymentUseCase,
-        private val writeOff: WriteOffLoanUseCase,
-        private val changeDueDate: ChangeLoanDueDateUseCase,
-        private val deleteLoan: DeleteLoanUseCase,
+        private val commands: LoanCommands,
         private val clock: Clock,
     ) : ViewModel() {
         private val loanId = LoanId(savedStateHandle.toRoute<LoanDetailDestination>().loanId)
@@ -56,16 +50,25 @@ internal class LoanDetailViewModel
 
         fun onEvent(event: LoanDetailEvent) {
             when (event) {
-                LoanDetailEvent.OpenRepayment -> {
-                    openRepayment()
-                }
+                LoanDetailEvent.OpenRepayment -> openRepayment()
+                LoanDetailEvent.SaveRepayment -> saveRepayment()
+                LoanDetailEvent.DialogConfirmed -> confirmDialog()
+                LoanDetailEvent.DialogDismissed -> showDialog(null)
+                is LoanDetailEvent.DialogOpened -> showDialog(event.dialog)
+                is LoanDetailEvent.DuePicked -> pickDue(event.option)
+                else -> onFormEvent(event)
+            }
+        }
 
+        // the keypad, the wallet pick and the due date sheet change what the sheets show
+        private fun onFormEvent(event: LoanDetailEvent) {
+            when (event) {
                 LoanDetailEvent.OpenDueDate -> {
-                    session.update { it.copy(sheet = LoanDetailSheet.DUE_DATE) }
+                    showSheet(LoanDetailSheet.DUE_DATE)
                 }
 
                 LoanDetailEvent.DismissSheet -> {
-                    session.update { it.copy(sheet = null) }
+                    showSheet(null)
                 }
 
                 is LoanDetailEvent.DigitTyped -> {
@@ -78,30 +81,12 @@ internal class LoanDetailViewModel
 
                 is LoanDetailEvent.WalletPicked -> {
                     session.update {
-                        it.copy(
-                            repayment = it.repayment.copy(walletId = event.walletId),
-                        )
+                        it.copy(repayment = it.repayment.copy(walletId = event.walletId))
                     }
                 }
 
-                LoanDetailEvent.SaveRepayment -> {
-                    saveRepayment()
-                }
-
-                is LoanDetailEvent.DuePicked -> {
-                    pickDue(event.option)
-                }
-
-                is LoanDetailEvent.DialogOpened -> {
-                    session.update { it.copy(dialog = event.dialog) }
-                }
-
-                LoanDetailEvent.DialogDismissed -> {
-                    session.update { it.copy(dialog = null) }
-                }
-
-                LoanDetailEvent.DialogConfirmed -> {
-                    confirmDialog()
+                else -> {
+                    Unit
                 }
             }
         }
@@ -116,9 +101,8 @@ internal class LoanDetailViewModel
                     ?.walletId
             session.update {
                 it.copy(
-                    sheet = LoanDetailSheet.REPAYMENT,
+                    overlay = it.overlay.copy(sheet = LoanDetailSheet.REPAYMENT),
                     repayment = RepaymentForm(walletId = opening),
-                    errors = emptySet(),
                 )
             }
         }
@@ -127,19 +111,17 @@ internal class LoanDetailViewModel
         private fun saveRepayment() {
             viewModelScope.launch {
                 val form = session.value.repayment
-                when (val result = recordRepayment(loanId, form.amount, form.walletId)) {
+                when (val result = commands.recordRepayment(loanId, form.amount, form.walletId)) {
                     is RepaymentResult.Saved -> {
                         session.update {
-                            it.copy(
-                                sheet = null,
-                                repayment = RepaymentForm(),
-                                errors = emptySet(),
-                            )
+                            it.copy(overlay = it.overlay.copy(sheet = null), repayment = RepaymentForm())
                         }
                     }
 
                     is RepaymentResult.Rejected -> {
-                        session.update { it.copy(errors = result.errors) }
+                        session.update {
+                            it.copy(repayment = it.repayment.copy(errors = result.errors))
+                        }
                     }
                 }
             }
@@ -148,18 +130,28 @@ internal class LoanDetailViewModel
         // FR-158: the chosen option counts from today; "Tidak ada" clears the due date
         private fun pickDue(option: LoanDueOption) {
             viewModelScope.launch {
-                changeDueDate(loanId, option.dueFrom(LocalDate.now(clock)))
-                session.update { it.copy(sheet = null) }
+                commands.changeDueDate(loanId, option.dueFrom(LocalDate.now(clock)))
+                showSheet(null)
             }
         }
 
         // FR-155, BR-046: the confirmed write-off or delete; deleting leaves the screen
         private fun confirmDialog() {
-            val dialog = session.value.dialog ?: return
+            val dialog = session.value.overlay.dialog ?: return
             viewModelScope.launch {
-                if (dialog == LoanDialog.WRITE_OFF) writeOff(loanId) else deleteLoan(loanId)
-                session.update { it.copy(dialog = null, finished = dialog == LoanDialog.DELETE) }
+                if (dialog == LoanDialog.WRITE_OFF) commands.writeOff(loanId) else commands.delete(loanId)
+                session.update {
+                    it.copy(overlay = it.overlay.copy(dialog = null), finished = dialog == LoanDialog.DELETE)
+                }
             }
+        }
+
+        private fun showSheet(sheet: LoanDetailSheet?) {
+            session.update { it.copy(overlay = it.overlay.copy(sheet = sheet)) }
+        }
+
+        private fun showDialog(dialog: LoanDialog?) {
+            session.update { it.copy(overlay = it.overlay.copy(dialog = dialog)) }
         }
 
         private fun LoanDetailUiState.withAmount(transform: (String) -> String): LoanDetailUiState =
@@ -167,11 +159,7 @@ internal class LoanDetailViewModel
                 repayment =
                     repayment.copy(
                         rupiahDigits = transform(repayment.rupiahDigits).trimStart('0').take(MAX_DIGITS),
+                        errors = emptySet(),
                     ),
-                errors = emptySet(),
             )
-
-        private companion object {
-            const val STOP_TIMEOUT_MS = 5_000L
-        }
     }

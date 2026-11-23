@@ -26,18 +26,7 @@ internal fun AppearanceRows(
                 vertical = FintrackScreenSizes.rowPaddingVertical,
             ),
         leading = {},
-        trailing = {
-            Row(horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap)) {
-                ThemeMode.entries.forEach { mode ->
-                    ScreenPill(
-                        label = themeLabel(mode),
-                        onClick = { callbacks.onPickThemeMode(mode) },
-                        selected = state.themeMode == mode,
-                        height = FintrackScreenSizes.chipTall,
-                    )
-                }
-            }
-        },
+        trailing = { ThemeChips(selected = state.themeMode, onPick = callbacks.preferences.onPickThemeMode) },
     ) {
         Text(
             text = stringResource(R.string.settings_theme_label),
@@ -48,7 +37,7 @@ internal fun AppearanceRows(
     SettingsRow(
         label = stringResource(R.string.settings_period_label),
         value = stringResource(R.string.settings_period_value, state.periodStartDay),
-        onClick = { callbacks.onOpenSheet(SettingsSheet.PERIOD_DAY) },
+        onClick = { callbacks.preferences.onOpenSheet(SettingsSheet.PERIOD_DAY) },
         showDivider = true,
     )
 }
@@ -59,14 +48,32 @@ internal fun DataRows(callbacks: SettingsCallbacks) {
     SettingsRow(
         label = stringResource(R.string.settings_categories_label),
         value = "",
-        onClick = callbacks.onOpenCategories,
+        onClick = callbacks.links.onOpenCategories,
     )
     SettingsRow(
         label = stringResource(R.string.settings_budgets_label),
         value = "",
-        onClick = callbacks.onOpenBudgets,
+        onClick = callbacks.links.onOpenBudgets,
         showDivider = true,
     )
+}
+
+// FR-120: one chip per theme choice, the chosen one selected
+@Composable
+private fun ThemeChips(
+    selected: ThemeMode,
+    onPick: (ThemeMode) -> Unit,
+) {
+    Row(horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap)) {
+        ThemeMode.entries.forEach { mode ->
+            ScreenPill(
+                label = themeLabel(mode),
+                onClick = { onPick(mode) },
+                selected = selected == mode,
+                height = FintrackScreenSizes.chipTall,
+            )
+        }
+    }
 }
 
 // FR-081, DOC-07: the monitored apps with their diagnostics and the battery help each open their own screen
@@ -75,12 +82,12 @@ internal fun DetectionRows(callbacks: SettingsCallbacks) {
     SettingsRow(
         label = stringResource(R.string.settings_monitored_label),
         value = "",
-        onClick = callbacks.onOpenMonitoredApps,
+        onClick = callbacks.links.onOpenMonitoredApps,
     )
     SettingsRow(
         label = stringResource(R.string.settings_battery_label),
         value = "",
-        onClick = callbacks.onOpenBatteryHelp,
+        onClick = callbacks.links.onOpenBatteryHelp,
         showDivider = true,
     )
 }

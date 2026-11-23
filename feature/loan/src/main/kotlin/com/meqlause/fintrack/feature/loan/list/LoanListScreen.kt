@@ -26,25 +26,23 @@ import com.meqlause.fintrack.feature.loan.R
 @Composable
 internal fun LoanListScreen(
     state: LoanListUiState,
-    onBack: () -> Unit,
-    onPickDirection: (LoanDirection) -> Unit,
-    onOpenLoan: (Long) -> Unit,
+    callbacks: LoanListCallbacks,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         ScreenBackHeader(
             title = stringResource(R.string.loan_title),
             backLabel = stringResource(R.string.loan_back),
-            onBack = onBack,
+            onBack = callbacks.onBack,
         )
         LazyColumn(
             modifier = Modifier.fillMaxWidth().padding(horizontal = FintrackScreenSizes.screenGutter),
             contentPadding = PaddingValues(top = FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),
         ) {
-            item { DirectionSegments(selected = state.direction, onPick = onPickDirection) }
+            item { DirectionSegments(selected = state.direction, onPick = callbacks.onPickDirection) }
             item { LoanTotal(state = state) }
-            item { OpenLoans(state = state, onOpenLoan = onOpenLoan) }
-            item { SettledLoans(state = state, onOpenLoan = onOpenLoan) }
+            item { OpenLoans(state = state, onOpenLoan = callbacks.onOpenLoan) }
+            item { SettledLoans(state = state, onOpenLoan = callbacks.onOpenLoan) }
         }
     }
 }

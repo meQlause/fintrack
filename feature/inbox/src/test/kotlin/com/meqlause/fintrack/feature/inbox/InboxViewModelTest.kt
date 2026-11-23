@@ -53,15 +53,19 @@ class InboxViewModelTest {
 
     private fun viewModel(): InboxViewModel {
         val atomic = PassthroughAtomicRunner()
+        val commands =
+            InboxCommands(
+                confirmItem = ConfirmInboxItemUseCase(inbox, transactions, rules, atomic, clock),
+                dismissItem = DismissInboxItemUseCase(inbox, clock),
+                dismissAllItems = DismissAllInboxItemsUseCase(inbox, atomic, clock),
+                restoreItem = RestoreInboxItemUseCase(inbox),
+            )
         return InboxViewModel(
             inbox = inbox,
             wallets = FakeWalletRepository(transactions),
             categories = FakeCategoryRepository(),
             access = access,
-            confirm = ConfirmInboxItemUseCase(inbox, transactions, rules, atomic, clock),
-            dismiss = DismissInboxItemUseCase(inbox, clock),
-            dismissAll = DismissAllInboxItemsUseCase(inbox, atomic, clock),
-            restore = RestoreInboxItemUseCase(inbox),
+            commands = commands,
             clock = clock,
         )
     }
@@ -69,52 +73,56 @@ class InboxViewModelTest {
     @Test
     fun `given a pending item when dismissed then it leaves the list and undo restores it (FR-087)`() =
         runBlocking {
-            val id = inbox.insert(pending("f1"))
-            val vm = viewModel()
+            val itemId = inbox.insert(pending("f1"))
+            val model = viewModel()
             assertThat(
-                vm.state
+                model.state
                     .first { it.isLoaded }
-                    .cards.size,
+                    .pending.cards.size,
             ).isEqualTo(1)
 
-            vm.dismissCard(id.value)
-            assertThat(vm.state.first { it.isLoaded }.cards).isEmpty()
-            assertThat(vm.state.first { it.isLoaded }.undoItemId).isEqualTo(id.value)
-
-            vm.undoDismiss()
+            model.dismissCard(itemId.value)
             assertThat(
-                vm.state
+                model.state
                     .first { it.isLoaded }
-                    .cards.size,
+                    .pending.cards,
+            ).isEmpty()
+            assertThat(model.state.first { it.isLoaded }.undoItemId).isEqualTo(itemId.value)
+
+            model.undoDismiss()
+            assertThat(
+                model.state
+                    .first { it.isLoaded }
+                    .pending.cards.size,
             ).isEqualTo(1)
-            assertThat(inbox.findById(id)?.resolution?.status).isEqualTo(InboxStatus.PENDING)
+            assertThat(inbox.findById(itemId)?.resolution?.status).isEqualTo(InboxStatus.PENDING)
         }
 
     @Test
     fun `given a card without wallet when Catat is pressed then nothing is stored (FR-087)`() =
         runBlocking {
-            val id = inbox.insert(pending("f2"))
-            val vm = viewModel()
-            vm.state.first { it.isLoaded }
+            val itemId = inbox.insert(pending("f2"))
+            val model = viewModel()
+            model.state.first { it.isLoaded }
 
-            vm.confirmCard(id.value)
+            model.confirmCard(itemId.value)
 
-            assertThat(inbox.findById(id)?.resolution?.status).isEqualTo(InboxStatus.PENDING)
+            assertThat(inbox.findById(itemId)?.resolution?.status).isEqualTo(InboxStatus.PENDING)
             assertThat(transactions.observeAll().first()).isEmpty()
         }
 
     @Test
     fun `given a dismissed undo window when cleared then no undo is pending (S-07)`() =
         runBlocking {
-            val id = inbox.insert(pending("f3"))
-            val vm = viewModel()
-            vm.dismissCard(id.value)
+            val itemId = inbox.insert(pending("f3"))
+            val model = viewModel()
+            model.dismissCard(itemId.value)
 
-            vm.clearUndo()
+            model.clearUndo()
 
-            assertThat(vm.state.first { it.isLoaded }.undoItemId).isNull()
+            assertThat(model.state.first { it.isLoaded }.undoItemId).isNull()
             assertThat(
-                vm.state
+                model.state
                     .first { it.isLoaded }
                     .resolved.size,
             ).isEqualTo(1)

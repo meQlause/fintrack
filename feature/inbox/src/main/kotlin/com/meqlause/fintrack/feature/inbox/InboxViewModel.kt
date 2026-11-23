@@ -7,10 +7,6 @@ import com.meqlause.fintrack.core.domain.inbox.InboxChoice
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.InboxRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
-import com.meqlause.fintrack.core.domain.usecase.ConfirmInboxItemUseCase
-import com.meqlause.fintrack.core.domain.usecase.DismissAllInboxItemsUseCase
-import com.meqlause.fintrack.core.domain.usecase.DismissInboxItemUseCase
-import com.meqlause.fintrack.core.domain.usecase.RestoreInboxItemUseCase
 import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.InboxItemId
 import com.meqlause.fintrack.core.model.WalletId
@@ -22,7 +18,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Clock
-import java.time.Instant
 import javax.inject.Inject
 
 private const val STOP_TIMEOUT_MILLIS = 5_000L
@@ -36,10 +31,7 @@ internal class InboxViewModel
         private val wallets: WalletRepository,
         private val categories: CategoryRepository,
         private val access: NotificationAccess,
-        private val confirm: ConfirmInboxItemUseCase,
-        private val dismiss: DismissInboxItemUseCase,
-        private val dismissAll: DismissAllInboxItemsUseCase,
-        private val restore: RestoreInboxItemUseCase,
+        private val commands: InboxCommands,
         private val clock: Clock,
     ) : ViewModel() {
         private val local = MutableStateFlow(InboxLocal())
@@ -52,55 +44,54 @@ internal class InboxViewModel
                 categories.observeAll(),
                 local,
             ) { items, walletList, cats, edits ->
-                buildInboxState(
-                    items = items,
-                    wallets = walletList,
-                    categories = cats,
-                    local = edits,
-                    hasAccess = access.isGranted(),
-                    currentTime = Instant.now(clock),
-                    zone = clock.zone,
-                )
+                val snapshot = InboxSnapshot(items, walletList, cats, hasAccess = access.isGranted())
+                buildInboxState(snapshot = snapshot, local = edits, clock = clock)
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), InboxUiState())
 
         // FR-087: Catat stores the card as it is shown; nothing is stored when the wallet or category is missing
         fun confirmCard(itemId: Long) {
-            val card = state.value.cards.firstOrNull { it.itemId == itemId } ?: return
-            val walletId = card.walletId?.let(::WalletId)
-            val categoryId = card.categoryId?.let(::CategoryId)
-            viewModelScope.launch { confirm(InboxChoice(InboxItemId(itemId), walletId, categoryId)) }
+            val card =
+                state.value.pending.cards
+                    .firstOrNull { it.itemId == itemId } ?: return
+            val walletId = card.wallet.id?.let(::WalletId)
+            val categoryId = card.category.id?.let(::CategoryId)
+            viewModelScope.launch { commands.confirm(InboxChoice(InboxItemId(itemId), walletId, categoryId)) }
         }
 
         // FR-091: Catat sebagai Transfer stores one transfer for the debit and the credit
         fun confirmPair(fromItemId: Long) {
-            val pair = state.value.pairs.firstOrNull { it.fromItemId == fromItemId } ?: return
+            val pair =
+                state.value.pending.pairs
+                    .firstOrNull { it.fromItemId == fromItemId } ?: return
             val choice =
                 InboxChoice(
                     itemId = InboxItemId(pair.fromItemId),
-                    walletId = pair.fromWalletId?.let(::WalletId),
+                    walletId = pair.from.id?.let(::WalletId),
                     categoryId = null,
-                    targetWalletId = pair.toWalletId?.let(::WalletId),
+                    targetWalletId = pair.to.id?.let(::WalletId),
                     asTransfer = true,
                 )
-            viewModelScope.launch { confirm(choice) }
+            viewModelScope.launch { commands.confirm(choice) }
         }
 
         // FR-091: Catat terpisah keeps both items and shows them as two cards
         fun splitPair(fromItemId: Long) {
-            val pair = state.value.pairs.firstOrNull { it.fromItemId == fromItemId } ?: return
+            val pair =
+                state.value.pending.pairs
+                    .firstOrNull { it.fromItemId == fromItemId } ?: return
             local.value = local.value.copy(separated = local.value.separated + pair.fromItemId + pair.toItemId)
         }
 
         // FR-087: swipe left and Abaikan; the item can be restored with the undo bar
         fun dismissCard(itemId: Long) {
             local.value = local.value.copy(undoItemId = itemId)
-            viewModelScope.launch { dismiss(InboxItemId(itemId)) }
+            viewModelScope.launch { commands.dismiss(InboxItemId(itemId)) }
         }
 
         fun undoDismiss() {
             val itemId = local.value.undoItemId ?: return
             local.value = local.value.copy(undoItemId = null)
-            viewModelScope.launch { restore(InboxItemId(itemId)) }
+            viewModelScope.launch { commands.restore(InboxItemId(itemId)) }
         }
 
         fun clearUndo() {
@@ -109,7 +100,7 @@ internal class InboxViewModel
 
         // S-07 overflow: "Abaikan semua"
         fun dismissEverything() {
-            viewModelScope.launch { dismissAll() }
+            viewModelScope.launch { commands.dismissAll() }
         }
 
         // FR-087: the category chip changes the suggestion of one card

@@ -33,7 +33,7 @@ internal fun InboxPickerDrawer(
         options = options,
         selectedKey = selected,
         onPick = { option ->
-            onPicked(picker, option, actions)
+            onPicked(picker, option, actions.items)
             onClose()
         },
         onClose = onClose,
@@ -53,47 +53,46 @@ private fun optionsFor(
     state: InboxUiState,
 ): List<PickerOption> =
     when (picker.kind) {
-        PickKind.WALLET, PickKind.TARGET_WALLET -> {
-            state.walletOptions
-        }
-
-        PickKind.CATEGORY -> {
-            if (typeOf(picker.itemId, state) ==
-                TransactionType.INCOME
-            ) {
-                state.incomeOptions
-            } else {
-                state.expenseOptions
-            }
-        }
+        PickKind.WALLET, PickKind.TARGET_WALLET -> state.options.wallets
+        PickKind.CATEGORY -> categoryOptions(picker.itemId, state)
     }
+
+// S-18: an income card lists the income categories, every other card the expense categories
+private fun categoryOptions(
+    itemId: Long,
+    state: InboxUiState,
+): List<PickerOption> =
+    if (typeOf(itemId, state) == TransactionType.INCOME) state.options.incomes else state.options.expenses
 
 private fun selectedKey(
     picker: InboxPicker,
     state: InboxUiState,
 ): String? {
-    val card = state.cards.firstOrNull { it.itemId == picker.itemId }
-    val pair = state.pairs.firstOrNull { it.fromItemId == picker.itemId || it.toItemId == picker.itemId }
+    val card = state.pending.cards.firstOrNull { it.itemId == picker.itemId }
+    val pair = state.pending.pairs.firstOrNull { it.fromItemId == picker.itemId || it.toItemId == picker.itemId }
     return when (picker.kind) {
-        PickKind.CATEGORY -> card?.categoryId?.toString()
-        PickKind.WALLET -> card?.walletId?.toString() ?: pair?.fromWalletId?.toString()
-        PickKind.TARGET_WALLET -> pair?.toWalletId?.toString()
+        PickKind.CATEGORY -> card?.category?.id?.toString()
+        PickKind.WALLET -> card?.wallet?.id?.toString() ?: pair?.from?.id?.toString()
+        PickKind.TARGET_WALLET -> pair?.to?.id?.toString()
     }
 }
 
 private fun typeOf(
     itemId: Long,
     state: InboxUiState,
-): TransactionType? = state.cards.firstOrNull { it.itemId == itemId }?.type
+): TransactionType? =
+    state.pending.cards
+        .firstOrNull { it.itemId == itemId }
+        ?.type
 
 private fun onPicked(
     picker: InboxPicker,
     option: PickerOption,
-    actions: InboxActions,
+    actions: InboxItemActions,
 ) {
-    val id = option.optionKey.toLong()
+    val optionId = option.optionKey.toLong()
     when (picker.kind) {
-        PickKind.CATEGORY -> actions.onChooseCategory(picker.itemId, id)
-        PickKind.WALLET, PickKind.TARGET_WALLET -> actions.onChooseWallet(picker.itemId, id)
+        PickKind.CATEGORY -> actions.onChooseCategory(picker.itemId, optionId)
+        PickKind.WALLET, PickKind.TARGET_WALLET -> actions.onChooseWallet(picker.itemId, optionId)
     }
 }

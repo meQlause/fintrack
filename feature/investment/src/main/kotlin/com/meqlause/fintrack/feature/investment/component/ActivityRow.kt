@@ -35,7 +35,6 @@ internal fun ActivityRow(
     modifier: Modifier = Modifier,
 ) {
     val title = stringResource(titleRes(activity.kind))
-    val primary = FintrackTheme.colors.brands.primary
     ScreenRow(
         modifier = modifier,
         showDivider = showDivider,
@@ -45,14 +44,7 @@ internal fun ActivityRow(
                 vertical = FintrackScreenSizes.rowPaddingVertical - FintrackTheme.spacing.xxSmall / 2,
             ),
         leading = { ActivityMark(kind = activity.kind) },
-        trailing = {
-            Text(
-                text = MoneyFormatter.formatSigned(activity.amount, signOf(activity.kind)),
-                style = FintrackScreenText.number(size = 13.5f, weight = 600),
-                color = if (activity.kind == ActivityKind.VALUATION) primary else FintrackTheme.colors.texts.onSurface,
-                maxLines = 1,
-            )
-        },
+        trailing = { ActivityAmount(activity) },
     ) {
         Text(
             text = if (accountName == null) title else "$title · $accountName",
@@ -70,9 +62,22 @@ internal fun ActivityRow(
     }
 }
 
+// FR-173: the amount with its sign; a valuation is shown in the primary colour
+@Composable
+private fun ActivityAmount(activity: InvestmentActivity) {
+    val isValuation = activity.kind == ActivityKind.VALUATION
+    Text(
+        text = MoneyFormatter.formatSigned(activity.amount, signOf(activity.kind)),
+        style = FintrackScreenText.number(size = 13.5f, weight = 600),
+        color = if (isValuation) FintrackTheme.colors.brands.primary else FintrackTheme.colors.texts.onSurface,
+        maxLines = 1,
+    )
+}
+
 // S-08: the 30 px grey square with a trend glyph for a valuation and a plus or minus for money moved
 @Composable
 private fun ActivityMark(kind: ActivityKind) {
+    val isValuation = kind == ActivityKind.VALUATION
     Box(
         modifier =
             Modifier
@@ -82,25 +87,9 @@ private fun ActivityMark(kind: ActivityKind) {
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            painter =
-                painterResource(
-                    if (kind ==
-                        ActivityKind.VALUATION
-                    ) {
-                        DesignR.drawable.ic_trend
-                    } else {
-                        DesignR.drawable.ic_plus
-                    },
-                ),
+            painter = painterResource(if (isValuation) DesignR.drawable.ic_trend else DesignR.drawable.ic_plus),
             contentDescription = null,
-            tint =
-                if (kind ==
-                    ActivityKind.VALUATION
-                ) {
-                    FintrackTheme.colors.brands.primary
-                } else {
-                    FintrackTheme.colors.texts.onSurface
-                },
+            tint = if (isValuation) FintrackTheme.colors.brands.primary else FintrackTheme.colors.texts.onSurface,
             modifier = Modifier.size(FintrackScreenSizes.smallGlyph),
         )
     }

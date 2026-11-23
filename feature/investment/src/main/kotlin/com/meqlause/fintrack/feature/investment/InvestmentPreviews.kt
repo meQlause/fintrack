@@ -82,35 +82,31 @@ private fun previewPortfolio(): InvestmentPortfolio {
             EMAS_VALUE,
             emasValued,
         )
-    val recent =
-        listOf(
-            InvestmentActivity(
-                WalletId(BIBIT_KEY),
-                bibitValued,
-                ActivityKind.VALUATION,
-                Money(BIBIT_VALUE),
-            ),
-            InvestmentActivity(
-                WalletId(EMAS_KEY),
-                emasValued,
-                ActivityKind.VALUATION,
-                Money(EMAS_VALUE),
-            ),
-            InvestmentActivity(
-                WalletId(BIBIT_KEY),
-                Instant.parse("2026-11-02T09:00:00Z"),
-                ActivityKind.PUT_IN,
-                Money(BIBIT_PUT_IN),
-            ),
-            InvestmentActivity(
-                WalletId(EMAS_KEY),
-                Instant.parse("2026-10-15T09:00:00Z"),
-                ActivityKind.PUT_IN,
-                Money(EMAS_PUT_IN),
-            ),
-        )
+    val recent = previewRecent(bibitValued, emasValued)
     return InvestmentPortfolio(accounts = listOf(bibit, emas), recent = recent)
 }
+
+// S-08: the two valuations and the two first deposits of the prototype seed, newest first
+private fun previewRecent(
+    bibitValued: Instant,
+    emasValued: Instant,
+): List<InvestmentActivity> =
+    listOf(
+        InvestmentActivity(WalletId(BIBIT_KEY), bibitValued, ActivityKind.VALUATION, Money(BIBIT_VALUE)),
+        InvestmentActivity(WalletId(EMAS_KEY), emasValued, ActivityKind.VALUATION, Money(EMAS_VALUE)),
+        InvestmentActivity(
+            WalletId(BIBIT_KEY),
+            Instant.parse("2026-11-02T09:00:00Z"),
+            ActivityKind.PUT_IN,
+            Money(BIBIT_PUT_IN),
+        ),
+        InvestmentActivity(
+            WalletId(EMAS_KEY),
+            Instant.parse("2026-10-15T09:00:00Z"),
+            ActivityKind.PUT_IN,
+            Money(EMAS_PUT_IN),
+        ),
+    )
 
 private fun previewCallbacks(): InvestmentCallbacks =
     InvestmentCallbacks(
