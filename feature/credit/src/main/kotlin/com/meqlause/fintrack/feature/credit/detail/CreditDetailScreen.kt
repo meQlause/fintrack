@@ -1,8 +1,6 @@
 package com.meqlause.fintrack.feature.credit.detail
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FormRow
+import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.picker.DayGridDrawer
 import com.meqlause.fintrack.feature.credit.R
@@ -32,18 +31,13 @@ internal fun CreditDetailScreen(
     callbacks: CreditDetailCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
-    ) {
-        Text(
-            text = stringResource(R.string.credit_back),
-            style = FintrackTheme.typography.bodyMedium,
-            color = FintrackTheme.colors.brands.primary,
-            modifier = Modifier.clickable(onClick = callbacks.onBack).padding(vertical = FintrackTheme.spacing.small),
+    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+        val success = state as? CreditDetailUiState.Success
+        ScreenBackHeader(
+            title = success?.name.orEmpty(),
+            backLabel = stringResource(R.string.credit_back),
+            onBack = callbacks.onBack,
+            badge = success?.let { stringResource(CreditLabels.type(it.type)) },
         )
         when (state) {
             CreditDetailUiState.Loading -> {
@@ -55,6 +49,7 @@ internal fun CreditDetailScreen(
                     text = stringResource(R.string.credit_missing),
                     style = FintrackTheme.typography.bodyLarge,
                     color = FintrackTheme.colors.texts.onSurfaceVariant,
+                    modifier = Modifier.padding(FintrackScreenSizes.screenGutter),
                 )
             }
 
@@ -73,12 +68,15 @@ private fun CreditDetailBody(
 ) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Column(
-            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = FintrackScreenSizes.screenGutter)
+                    .padding(top = FintrackTheme.spacing.small, bottom = FintrackTheme.spacing.xxLarge),
         ) {
-            CreditHeader(state = state)
             BillCard(state = state, onPay = callbacks.onOpenPay)
-            LimitBar(state = state)
+            LimitBar(state = state, modifier = Modifier.padding(top = FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall))
             CycleRows(terms = state.terms, onOpenPicker = callbacks.onOpenPicker)
             InstalmentSection(
                 instalments = state.instalments,
@@ -97,23 +95,6 @@ private fun CreditDetailBody(
         state.payDraft?.let { draft ->
             PayBillSheet(draft = draft, sources = state.sources, callbacks = callbacks)
         }
-    }
-}
-
-// S-14: the card name and its type badge (FR-139)
-@Composable
-private fun CreditHeader(state: CreditDetailUiState.Success) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = state.name,
-            style = FintrackTheme.typography.titleMedium,
-            color = FintrackTheme.colors.texts.onSurface,
-        )
-        Text(
-            text = stringResource(CreditLabels.type(state.type)),
-            style = FintrackTheme.typography.bodyMedium,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-        )
     }
 }
 

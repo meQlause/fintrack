@@ -3,60 +3,79 @@ package com.meqlause.fintrack.feature.credit.detail
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.domain.credit.CreditAccount
-import com.meqlause.fintrack.core.domain.credit.CreditEntry
-import com.meqlause.fintrack.core.domain.credit.StatementCalculator
+import com.meqlause.fintrack.core.domain.credit.StatementAmounts
+import com.meqlause.fintrack.core.domain.credit.StatementPeriod
+import com.meqlause.fintrack.core.domain.credit.StatementSummary
 import com.meqlause.fintrack.core.model.CreditTerms
 import com.meqlause.fintrack.core.model.Money
+import com.meqlause.fintrack.core.model.StatementStatus
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.model.WalletType
+import com.meqlause.fintrack.feature.credit.instalment.InstalmentRow
 import java.time.LocalDate
+import java.time.YearMonth
 
 // FR-131 to FR-138, S-14: previews of the credit wallet detail with a bill that is due, light and dark
-private val previewToday: LocalDate = LocalDate.of(2026, 11, 5)
+private val previewToday: LocalDate = LocalDate.of(2026, 11, 22)
 
+// design/screens/credit.png: BCA Card of the prototype seed on 2026-11-22
 private fun previewState(payDraft: PayDraft? = null): CreditDetailUiState.Success {
-    val terms = CreditTerms(Money(10_000_000L), statementDay = 25, dueDay = 10)
-    val account =
-        CreditAccount(
-            terms = terms,
-            initialBalance = Money(0L),
-            createdOn = LocalDate.of(2026, 1, 1),
-            entries = listOf(CreditEntry(LocalDate.of(2026, 10, 5), Money(-3_500_000L), isTransferIn = false)),
-            instalments = emptyList(),
+    val terms = CreditTerms(Money(10_000_000L), statementDay = 15, dueDay = 1)
+    val period =
+        StatementPeriod(
+            month = YearMonth.of(2026, 11),
+            cutOff = LocalDate.of(2026, 11, 15),
+            periodStart = LocalDate.of(2026, 10, 16),
+            dueDate = LocalDate.of(2026, 12, 1),
         )
+    val amounts = StatementAmounts(Money(4_300_000L), Money(2_500_000L), Money(500_000L))
     return CreditDetailUiState.Success(
-        name = "BCA Visa",
+        name = "BCA Card",
         type = WalletType.CREDIT_CARD,
         terms = terms,
-        statement = StatementCalculator.current(account, previewToday),
-        outstanding = StatementCalculator.outstandingOn(account, previewToday),
-        availableLimit = StatementCalculator.availableLimit(account, previewToday),
+        statement = StatementSummary(period, amounts, StatementStatus.DUE),
+        outstanding = Money(4_220_000L),
+        availableLimit = Money(5_780_000L),
         today = previewToday,
-        sources = listOf(PaySource(WalletId(2L), "BCA Tabungan")),
+        sources = listOf(PaySource(WalletId(2L), "BCA")),
         payDraft = payDraft,
         picker = null,
+        instalments = listOf(previewInstalment()),
     )
 }
+
+private fun previewInstalment(): InstalmentRow =
+    InstalmentRow(
+        planId = 1L,
+        title = "HP baru",
+        cardName = "BCA Card",
+        tenor = 6,
+        billed = 1,
+        monthly = Money(500_000L),
+        remaining = Money(2_500_000L),
+        nextMonth = YearMonth.of(2026, 12),
+        payoffMonth = null,
+        portions = emptyList(),
+    )
 
 @Composable
 private fun CreditDetailSample(state: CreditDetailUiState.Success) {
     CreditDetailScreen(state = state, callbacks = CreditDetailCallbacks())
 }
 
-@Preview(name = "Credit detail light", showBackground = true, heightDp = 720)
+@Preview(name = "Credit detail light", showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 internal fun CreditDetailLightPreview() {
     FintrackTheme(darkTheme = false) { CreditDetailSample(previewState()) }
 }
 
-@Preview(name = "Credit detail dark", showBackground = true, heightDp = 720)
+@Preview(name = "Credit detail dark", showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 internal fun CreditDetailDarkPreview() {
     FintrackTheme(darkTheme = true) { CreditDetailSample(previewState()) }
 }
 
-@Preview(name = "Credit pay sheet light", showBackground = true, heightDp = 720)
+@Preview(name = "Credit pay sheet light", showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 internal fun CreditPaySheetLightPreview() {
     FintrackTheme(darkTheme = false) {
