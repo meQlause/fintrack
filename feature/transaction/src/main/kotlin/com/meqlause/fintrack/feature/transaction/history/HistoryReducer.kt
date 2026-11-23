@@ -1,5 +1,7 @@
 package com.meqlause.fintrack.feature.transaction.history
 
+import com.meqlause.fintrack.core.model.HistoryView
+
 // FR-036, FR-037: applies one event to the selection; pure, so the ViewModel only wires flows
 internal fun HistorySelection.reduce(event: HistoryEvent): HistorySelection =
     when (event) {
@@ -52,6 +54,26 @@ internal fun HistorySelection.reduce(event: HistoryEvent): HistorySelection =
 
         HistoryEvent.SheetDismissed -> {
             copy(sheet = null)
+        }
+
+        is HistoryEvent.ViewPicked -> {
+            copy(view = event.view, sheet = null)
+        }
+
+        is HistoryEvent.StatisticsTypePicked -> {
+            copy(statisticsType = event.type)
+        }
+
+        HistoryEvent.CategoriesToggled -> {
+            copy(isCategoriesExpanded = !isCategoriesExpanded)
+        }
+
+        is HistoryEvent.CategoryDrilled -> {
+            copy(
+                view = HistoryView.LIST,
+                filter = HistoryFilter(type = event.type, categoryId = event.categoryId),
+                isSearchOpen = false,
+            )
         }
     }
 

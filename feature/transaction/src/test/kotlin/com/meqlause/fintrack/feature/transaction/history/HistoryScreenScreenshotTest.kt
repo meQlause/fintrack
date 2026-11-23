@@ -29,4 +29,16 @@ class HistoryScreenScreenshotTest {
         composeRule.setContent { HistoryScreenDarkPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/History_dark.png")
     }
+
+    @Test
+    fun givenStatisticsInLightThemeWhenRenderedThenItMatchesReference() {
+        composeRule.setContent { HistoryStatisticsLightPreview() }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/HistoryStatistics_light.png")
+    }
+
+    @Test
+    fun givenStatisticsInDarkThemeWhenRenderedThenItMatchesReference() {
+        composeRule.setContent { HistoryStatisticsDarkPreview() }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/HistoryStatistics_dark.png")
+    }
 }

@@ -445,7 +445,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 ## P6 — Insights
 
 ### T6.1 — Statistics view inside Riwayat
-- [ ] done · Refs: FR-060 … FR-064, DOC-09 (S-08 change note) · "Daftar | Statistik" segmented; follows the month strip; categories collapsed to top 3.
+- [x] done · Refs: FR-060 … FR-064, DOC-09 (S-08 change note) · "Daftar | Statistik" segmented; follows the month strip; categories collapsed to top 3.
 - Commit: `feat(statistics): add statistics view in history [P6, FR-060]`
 
 ### T6.2 — Budgets (S-11) + alerts

@@ -1,7 +1,10 @@
 package com.meqlause.fintrack.feature.transaction.history
 
 import com.meqlause.fintrack.core.domain.period.Period
+import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
 import com.meqlause.fintrack.core.model.Category
+import com.meqlause.fintrack.core.model.HistoryView
+import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.Wallet
 import java.time.YearMonth
 
@@ -19,4 +22,8 @@ internal data class HistoryUiState(
     val totals: HistoryTotals = HistoryTotals(),
     val hasRecords: Boolean = false,
     val isLoaded: Boolean = false,
+    val view: HistoryView = HistoryView.LIST,
+    val statisticsType: TransactionType = TransactionType.EXPENSE,
+    val isCategoriesExpanded: Boolean = false,
+    val statistics: PeriodStatistics? = null,
 )

@@ -1,6 +1,9 @@
 package com.meqlause.fintrack.feature.transaction.history
 
+import com.meqlause.fintrack.core.domain.usecase.BuildPeriodStatisticsUseCase
 import com.meqlause.fintrack.core.model.Audit
+import com.meqlause.fintrack.core.model.CategoryId
+import com.meqlause.fintrack.core.model.HistoryView
 import com.meqlause.fintrack.core.model.Memo
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.Movement
@@ -40,7 +43,8 @@ class HistoryViewModelTest {
     private val categories = FakeCategoryRepository()
     private val settings = FakeSettingsRepository()
 
-    private fun viewModel(): HistoryViewModel = HistoryViewModel(transactions, wallets, categories, settings, clock)
+    private fun viewModel(): HistoryViewModel =
+        HistoryViewModel(transactions, wallets, categories, settings, BuildPeriodStatisticsUseCase(), clock)
 
     /** FR-036: a November expense is listed under its day with the day's net and the month's expense total. */
     @Test
@@ -121,6 +125,28 @@ class HistoryViewModelTest {
         val cleared = picked.reduce(HistoryEvent.DayPicked(18))
         assertEquals(18, picked.filter.day)
         assertEquals(null, cleared.filter.day)
+    }
+
+    // FR-060: the statistics view totals the picked month for the picked kind of money
+    @Test
+    fun givenExpenseInNovemberWhenStatisticsOpenedThenTotalIsComputed() =
+        runTest {
+            transactions.insert(expense(note = "Makan", merchant = "", day = 18))
+            val model = viewModel()
+            model.onEvent(HistoryEvent.ViewPicked(HistoryView.STATISTICS))
+            val state = model.state.first { it.isLoaded && it.view == HistoryView.STATISTICS }
+            assertEquals(Money(25_000L), state.statistics?.total)
+            assertEquals(1, state.statistics?.categories?.size)
+        }
+
+    // FR-064: a tapped category opens the list filtered to that category only
+    @Test
+    fun givenCategoryDrilledThenListOpensFilteredToThatCategory() {
+        val selection = HistorySelection(month = YearMonth.of(2026, 11))
+        val picked = selection.reduce(HistoryEvent.ViewPicked(HistoryView.STATISTICS))
+        val drilled = picked.reduce(HistoryEvent.CategoryDrilled(CategoryId(4L), HistoryTypeFilter.EXPENSE))
+        assertEquals(HistoryView.LIST, drilled.view)
+        assertEquals(CategoryId(4L), drilled.filter.categoryId)
     }
 
     private suspend fun expense(

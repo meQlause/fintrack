@@ -1,6 +1,8 @@
 package com.meqlause.fintrack.feature.transaction.history
 
 import com.meqlause.fintrack.core.model.CategoryId
+import com.meqlause.fintrack.core.model.HistoryView
+import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.WalletId
 import java.time.YearMonth
 
@@ -45,4 +47,21 @@ internal sealed interface HistoryEvent {
     ) : HistoryEvent
 
     data object SheetDismissed : HistoryEvent
+
+    // S-08: switches Riwayat between the list and the statistics view
+    data class ViewPicked(
+        val view: HistoryView,
+    ) : HistoryEvent
+
+    data class StatisticsTypePicked(
+        val type: TransactionType,
+    ) : HistoryEvent
+
+    data object CategoriesToggled : HistoryEvent
+
+    // FR-064: a tapped category opens the list filtered to that category and the picked month
+    data class CategoryDrilled(
+        val categoryId: CategoryId,
+        val type: HistoryTypeFilter,
+    ) : HistoryEvent
 }

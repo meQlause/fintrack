@@ -6,6 +6,7 @@ import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
+import com.meqlause.fintrack.core.domain.usecase.BuildPeriodStatisticsUseCase
 import com.meqlause.fintrack.core.model.Category
 import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.Wallet
@@ -31,6 +32,7 @@ internal class HistoryViewModel
         private val walletRepository: WalletRepository,
         private val categoryRepository: CategoryRepository,
         private val settingsRepository: SettingsRepository,
+        private val buildStatistics: BuildPeriodStatisticsUseCase,
         private val clock: Clock,
     ) : ViewModel() {
         private val selection = MutableStateFlow(HistorySelection(month = YearMonth.now(clock)))
@@ -70,6 +72,8 @@ internal class HistoryViewModel
                     categories = categories.associate { it.categoryId to it.profile.name },
                 )
             val content = buildHistoryContent(transactions, current.filter, period, names, clock)
+            val statistics =
+                buildStatistics(transactions, current.statisticsType, period, startDay, clock.zone)
             return HistoryUiState(
                 month = current.month,
                 period = period,
@@ -83,6 +87,10 @@ internal class HistoryViewModel
                 totals = content.totals,
                 hasRecords = content.hasRecords,
                 isLoaded = true,
+                view = current.view,
+                statisticsType = current.statisticsType,
+                isCategoriesExpanded = current.isCategoriesExpanded,
+                statistics = statistics,
             )
         }
     }
