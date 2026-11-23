@@ -1,6 +1,7 @@
 package com.meqlause.fintrack.core.designsystem.component
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -37,8 +39,8 @@ fun FintrackBottomBar(
         modifier =
             modifier
                 .fillMaxWidth()
-                .height(sizes.navBarHeight)
-                .padding(start = sizes.navBarInset, end = sizes.navBarInset, bottom = sizes.navBarBottom),
+                .padding(start = sizes.navBarInset, end = sizes.navBarInset, bottom = sizes.navBarBottom)
+                .height(sizes.navBarHeight),
     ) {
         val widthPx = with(LocalDensity.current) { maxWidth.toPx() }
         val targetX = widthPx / SLOT_COUNT * (slotOf(selectedIndex) + CENTRE_OF_SLOT)
@@ -85,9 +87,14 @@ private fun RowScope.FabSlot(onClick: () -> Unit) {
         modifier = Modifier.weight(1f).fillMaxHeight(),
         contentAlignment = Alignment.TopCenter,
     ) {
+        val ring = FintrackTheme.sizes.navBarFabRing
         FintrackFab(
             onClick = onClick,
-            modifier = Modifier.offset(y = -FintrackTheme.sizes.navBarFabLift),
+            modifier =
+                Modifier
+                    .offset(y = -FintrackTheme.sizes.navBarFabLift - ring)
+                    .background(FintrackTheme.colors.surfaces.background, CircleShape)
+                    .padding(ring),
         )
     }
 }

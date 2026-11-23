@@ -85,6 +85,7 @@ class FintrackSizes {
     val navBarTabIcon: Dp = Dp(value = 24f)
     val navBarFab: Dp = Dp(value = 62f)
     val navBarFabLift: Dp = Dp(value = 14f)
+    val navBarFabRing: Dp = Dp(value = 6f)
     val navBarFabIcon: Dp = Dp(value = 30f)
     val navBarRing: Dp = Dp(value = 2f)
     val navBarDrop: Dp = Dp(value = 12f)
