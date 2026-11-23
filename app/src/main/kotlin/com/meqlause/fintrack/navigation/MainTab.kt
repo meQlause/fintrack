@@ -4,6 +4,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import com.meqlause.fintrack.R
+import com.meqlause.fintrack.feature.dashboard.navigation.HomeDestination
 import com.meqlause.fintrack.feature.transaction.history.navigation.HistoryDestination
 import com.meqlause.fintrack.feature.wallet.navigation.WalletDestination
 import com.meqlause.fintrack.core.designsystem.R as DesignR
@@ -26,7 +27,7 @@ enum class MainTab(
     // DOC-09: a type-safe route is identified by its class name, the default serial name NavDestination.route carries
     private fun routeName(): String =
         when (this) {
-            HOME -> HomeRoute::class.java.name
+            HOME -> HomeDestination::class.java.name
             HISTORY -> HistoryDestination::class.java.name
             INVESTMENT -> InvestmentRoute::class.java.name
             WALLET -> WalletDestination::class.java.name
@@ -40,7 +41,7 @@ enum class MainTab(
             restoreState = true
         }
         when (this) {
-            HOME -> controller.navigate(HomeRoute, options)
+            HOME -> controller.navigate(HomeDestination, options)
             HISTORY -> controller.navigate(HistoryDestination, options)
             INVESTMENT -> controller.navigate(InvestmentRoute, options)
             WALLET -> controller.navigate(WalletDestination, options)
