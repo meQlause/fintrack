@@ -3,9 +3,9 @@ package com.meqlause.fintrack.feature.transaction.history
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,38 +17,52 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.semantics.Role
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.transaction.R
 import java.time.YearMonth
 
-// BR-010, FR-036, S-05: the twelve months of the picked year in one row; a pill slides under the selected month
+// BR-010, FR-036, S-05: the picked year, then its twelve months in one row with a pill under the selected month
 @Composable
 internal fun HistoryMonthStrip(
+    month: YearMonth,
+    onPick: (YearMonth) -> Unit,
+) {
+    Column(modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium)) {
+        Text(
+            text = month.year.toString(),
+            style = FintrackTheme.typography.labelLarge,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
+        MonthPills(month = month, onPick = onPick)
+    }
+}
+
+// BR-010: the row opens scrolled to the selected month, so the current month is on screen
+@Composable
+private fun MonthPills(
     month: YearMonth,
     onPick: (YearMonth) -> Unit,
 ) {
     val names = stringArrayResource(R.array.history_month_names).toList()
     val selectedIndex = month.monthValue - 1
     val motion = FintrackTheme.motion.medium
+    val scrollState = rememberScrollState()
+    val pillPx = with(LocalDensity.current) { FintrackTheme.sizes.monthPillWidth.roundToPx() }
     val indicatorOffset by animateDpAsState(
         targetValue = FintrackTheme.sizes.monthPillWidth * selectedIndex.toFloat(),
         animationSpec = tween(durationMillis = motion.durationMillis, easing = motion.easing),
         label = "history-month-indicator",
     )
-    Box(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = FintrackTheme.spacing.medium,
-                ).horizontalScroll(rememberScrollState()),
-    ) {
+    LaunchedEffect(selectedIndex) { scrollState.animateScrollTo(selectedIndex * pillPx) }
+    Box(modifier = Modifier.fillMaxWidth().horizontalScroll(scrollState)) {
         Box(
             modifier =
                 Modifier
