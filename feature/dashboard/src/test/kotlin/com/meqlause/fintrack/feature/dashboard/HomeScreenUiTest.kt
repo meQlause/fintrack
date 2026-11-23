@@ -6,6 +6,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.model.Money
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -33,6 +34,7 @@ class HomeScreenUiTest {
                         HomeUiState.Success(
                             hidden = false,
                             total = Money(1_000_000L),
+                            netWorth = NetWorth(Money(1_000_000L), Money(0L), Money(0L), Money(0L), Money(0L)),
                             wallets = emptyList(),
                             period =
                                 HomePeriod(

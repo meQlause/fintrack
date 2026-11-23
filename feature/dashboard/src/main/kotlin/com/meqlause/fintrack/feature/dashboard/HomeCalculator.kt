@@ -1,6 +1,7 @@
 package com.meqlause.fintrack.feature.dashboard
 
 import com.meqlause.fintrack.core.domain.bills.BillsCard
+import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.domain.period.Period
 import com.meqlause.fintrack.core.domain.period.PeriodCalculator
 import com.meqlause.fintrack.core.model.Category
@@ -25,6 +26,7 @@ internal object HomeCalculator {
     fun success(
         snapshot: HomeSnapshot,
         card: BillsCard,
+        worth: NetWorth,
         hideOverride: Boolean?,
         drawer: HomeDrawer?,
         clock: Clock,
@@ -41,7 +43,8 @@ internal object HomeCalculator {
             }
         return HomeUiState.Success(
             hidden = hideOverride ?: snapshot.settings.preferences.hideAmountsByDefault,
-            total = totalOf(active, snapshot.balances),
+            total = worth.saldo,
+            netWorth = worth,
             wallets =
                 active.map {
                     HomeWallet(it.walletId, it.profile.name, balanceOf(it, snapshot.balances), isCreditWallet(it))
@@ -59,15 +62,6 @@ internal object HomeCalculator {
         part: Money,
         whole: Money,
     ): Int = if (whole.isZero) 0 else (part.rupiah * PERCENT / whole.rupiah).toInt()
-
-    // FR-040: included, non-archived wallets only (BR-043)
-    private fun totalOf(
-        active: List<Wallet>,
-        balances: Map<WalletId, Money>,
-    ): Money =
-        active
-            .filter { it.status.isIncludedInTotal }
-            .fold(Money(0L)) { running, wallet -> running + balanceOf(wallet, balances) }
 
     private fun isCreditWallet(wallet: Wallet): Boolean =
         wallet.kind.type == WalletType.CREDIT_CARD || wallet.kind.type == WalletType.PAYLATER

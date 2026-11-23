@@ -35,6 +35,11 @@
     <string name="home_summary_net_worth">Kekayaan bersih</string>
     <string name="home_summary_income">Pemasukan</string>
     <string name="home_summary_expense">Pengeluaran</string>
+    <string name="home_summary_saldo">Saldo</string>
+    <string name="home_summary_investment">Investasi</string>
+    <string name="home_summary_receivable">Piutang</string>
+    <string name="home_summary_card_debt">Utang kartu</string>
+    <string name="home_summary_debt">Hutang</string>
     <string name="home_summary_action">Lihat dompet</string>
 
     <string name="home_categories_title">Kategori</string>

@@ -3,6 +3,7 @@ package com.meqlause.fintrack.feature.dashboard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.StatementStatus
 import com.meqlause.fintrack.core.model.TransactionId
@@ -19,6 +20,7 @@ private fun sampleSuccess(
     HomeUiState.Success(
         hidden = hidden,
         total = Money(12_450_000L),
+        netWorth = sampleNetWorth(),
         bills =
             HomeBills(
                 bills =
@@ -70,6 +72,16 @@ private fun sampleRecent(): List<HomeRecent> =
             amount = Money(5_000_000L),
             type = TransactionType.INCOME,
         ),
+    )
+
+// FR-040, S-03: the Ringkasan sample; the parts add up to the Saldo shown in the hero
+private fun sampleNetWorth(): NetWorth =
+    NetWorth(
+        saldo = Money(12_450_000L),
+        investasi = Money(3_000_000L),
+        piutang = Money(300_000L),
+        utangKartu = Money(3_500_000L),
+        hutang = Money(500_000L),
     )
 
 @Composable

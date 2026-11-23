@@ -3,6 +3,7 @@ package com.meqlause.fintrack.feature.wallet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Audit
 import com.meqlause.fintrack.core.model.Money
@@ -47,7 +48,14 @@ private fun successState(editor: WalletEditor? = null): WalletUiState.Success {
     val bank = previewItem(2, "BCA", WalletType.BANK, 5_000_000L)
     val card = previewItem(3, "BCA Card", WalletType.CREDIT_CARD, 1_200_000L)
     return WalletUiState.Success(
-        total = Money(cash.balance.rupiah + bank.balance.rupiah),
+        netWorth =
+            NetWorth(
+                saldo = Money(cash.balance.rupiah + bank.balance.rupiah),
+                investasi = Money(900_000L),
+                piutang = Money(200_000L),
+                utangKartu = Money(1_200_000L),
+                hutang = Money(500_000L),
+            ),
         sections =
             listOf(
                 WalletSection(WalletGroupKey.CASH, listOf(cash)),

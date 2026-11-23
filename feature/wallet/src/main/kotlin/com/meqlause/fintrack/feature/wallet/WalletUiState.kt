@@ -1,6 +1,6 @@
 package com.meqlause.fintrack.feature.wallet
 
-import com.meqlause.fintrack.core.model.Money
+import com.meqlause.fintrack.core.domain.networth.NetWorth
 
 // FR-010..016, S-09: every state of the Dompet tab; the editor and an open picker can sit on top of a list state
 internal sealed interface WalletUiState {
@@ -13,9 +13,9 @@ internal sealed interface WalletUiState {
         val picker: WalletPicker?,
     ) : WalletUiState
 
-    // S-09: total of the included, non-archived wallets (FR-014, FR-016); archived wallets are collapsed (FR-012)
+    // S-09: Kekayaan bersih (BR-053) above the groups; archived wallets are collapsed (FR-012)
     data class Success(
-        val total: Money,
+        val netWorth: NetWorth,
         val sections: List<WalletSection>,
         val archived: List<WalletItem>,
         val archivedExpanded: Boolean,

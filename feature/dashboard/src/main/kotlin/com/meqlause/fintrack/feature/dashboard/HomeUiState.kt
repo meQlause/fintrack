@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.dashboard
 
+import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.QuickEntry
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutTileParams
@@ -11,6 +12,7 @@ internal sealed interface HomeUiState {
     data class Success(
         val hidden: Boolean,
         val total: Money,
+        val netWorth: NetWorth,
         val wallets: List<HomeWallet>,
         val period: HomePeriod,
         val categories: List<HomeCategoryShare>,

@@ -2,7 +2,16 @@
 <!-- DOC-08, FR-010..016, FR-139, FR-170: Indonesian copy of S-09 Dompet -->
 <resources>
     <string name="wallet_tab_title">Dompet</string>
-    <string name="wallet_total_label">Total saldo</string>
+    <string name="wallet_networth_label">Kekayaan bersih</string>
+    <string name="wallet_networth_assets">Aset</string>
+    <string name="wallet_networth_debts">Utang</string>
+    <string name="wallet_networth_saldo">Saldo</string>
+    <string name="wallet_networth_invest">Investasi</string>
+    <string name="wallet_networth_receivable">Piutang</string>
+    <string name="wallet_networth_card_debt">Utang kartu</string>
+    <string name="wallet_networth_debt">Hutang</string>
+    <string name="wallet_loans_title">Pinjaman</string>
+    <string name="wallet_loans_body">Piutang dan hutang dengan orang lain</string>
     <string name="wallet_add">Tambah Dompet</string>
     <string name="wallet_empty_title">Belum ada dompet</string>
     <string name="wallet_empty_body">Tambahkan dompet untuk mencatat di mana uangmu disimpan.</string>

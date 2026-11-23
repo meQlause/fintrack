@@ -3,12 +3,14 @@ package com.meqlause.fintrack.feature.dashboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.meqlause.fintrack.core.domain.bills.BillsCard
+import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.QuickEntryRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import com.meqlause.fintrack.core.domain.usecase.ObserveBillsCardUseCase
+import com.meqlause.fintrack.core.domain.usecase.ObserveNetWorthUseCase
 import com.meqlause.fintrack.core.model.QuickEntry
 import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.ui.shortcut.toTileParams
@@ -37,6 +39,7 @@ internal class HomeViewModel
         settings: SettingsRepository,
         private val quickEntries: QuickEntryRepository,
         private val bills: ObserveBillsCardUseCase,
+        private val netWorth: ObserveNetWorthUseCase,
         private val clock: Clock,
     ) : ViewModel() {
         private val hideOverride = MutableStateFlow<Boolean?>(null)
@@ -55,8 +58,8 @@ internal class HomeViewModel
             )
 
         // FR-137: the snapshot paired with the Tagihan card, so one emission carries every Beranda input
-        private val snapshotWithBills: Flow<Pair<HomeSnapshot, BillsCard>> =
-            combine(snapshot, bills()) { data, card -> data to card }
+        private val snapshotWithBills: Flow<Triple<HomeSnapshot, BillsCard, NetWorth>> =
+            combine(snapshot, bills(), netWorth()) { data, card, worth -> Triple(data, card, worth) }
 
         // S-03: Loading until the first snapshot, then Success; toggle, drawer and undo are screen-local state
         val state: StateFlow<HomeUiState> =
@@ -66,8 +69,8 @@ internal class HomeViewModel
                 drawer,
                 quickEntries.observeAll(),
                 removedShortcut,
-            ) { (data, card), hide, open, entries, gone ->
-                HomeCalculator.success(data, card, hide, open, clock).copy(
+            ) { (data, card, worth), hide, open, entries, gone ->
+                HomeCalculator.success(data, card, worth, hide, open, clock).copy(
                     shortcuts = entries.toTileParams(data.wallets.associate { it.walletId to it.profile.name }),
                     removedShortcut = gone,
                 )

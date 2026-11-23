@@ -17,13 +17,12 @@ import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
-import com.meqlause.fintrack.core.designsystem.component.FintrackCard
 import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.model.Money
-import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.wallet.component.WalletEditorSheet
 import com.meqlause.fintrack.feature.wallet.component.WalletItemCard
+import com.meqlause.fintrack.feature.wallet.component.WalletLoanRow
+import com.meqlause.fintrack.feature.wallet.component.WalletNetWorthCard
 import com.meqlause.fintrack.feature.wallet.component.WalletPickerOverlay
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
@@ -84,7 +83,7 @@ private fun WalletBody(
     }
 }
 
-// S-09: the total, the groups with their balances, then the collapsed archived section
+// S-09: Kekayaan bersih, the groups with their balances, Pinjaman, then the collapsed archived section
 @Composable
 private fun WalletList(
     state: WalletUiState.Success,
@@ -95,7 +94,7 @@ private fun WalletList(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
-        item(key = "total") { TotalCard(total = state.total) }
+        item(key = "net-worth") { WalletNetWorthCard(netWorth = state.netWorth) }
         state.sections.forEach { section ->
             item(key = "group-${section.group.name}") { GroupHeading(group = section.group) }
             items(section.items, key = { it.wallet.walletId.value }) { row ->
@@ -106,6 +105,7 @@ private fun WalletList(
                 )
             }
         }
+        item(key = "loans") { WalletLoanRow(onOpen = callbacks.onOpenLoans) }
         archivedItems(state = state, callbacks = callbacks)
     }
 }
@@ -127,23 +127,6 @@ private fun LazyListScope.archivedItems(
                 onEdit = { callbacks.onEdit(row) },
             )
         }
-    }
-}
-
-// FR-014: the total of the included, non-archived wallets
-@Composable
-private fun TotalCard(total: Money) {
-    FintrackCard {
-        Text(
-            text = stringResource(R.string.wallet_total_label),
-            style = FintrackTheme.typography.bodyMedium,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-        )
-        Text(
-            text = MoneyFormatter.format(total),
-            style = FintrackTheme.typography.numberLarge,
-            color = FintrackTheme.colors.texts.onSurface,
-        )
     }
 }
 

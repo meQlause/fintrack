@@ -488,7 +488,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - [x] done · Refs: FR-137, FR-146 · Commit: `feat(dashboard): add bills card [P7, FR-137]`
 
 ### T7.8 — Net worth (Dompet) + Ringkasan drawer data
-- [ ] done · Refs: FR-160, FR-161, BR-043, BR-053 · Aset vs Utang bar and columns.
+- [x] done · Refs: FR-160, FR-161, BR-043, BR-053 · Aset vs Utang bar and columns.
 - Commit: `feat(wallet): add net worth breakdown [P7, BR-053]`
 
 ### T7.9 — Reminders (bills, loans, investments)

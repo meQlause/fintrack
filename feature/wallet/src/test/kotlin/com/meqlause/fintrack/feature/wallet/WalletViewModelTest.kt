@@ -3,6 +3,9 @@ package com.meqlause.fintrack.feature.wallet
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
+import com.meqlause.fintrack.core.domain.usecase.ObserveInvestmentPortfolioUseCase
+import com.meqlause.fintrack.core.domain.usecase.ObserveLoansUseCase
+import com.meqlause.fintrack.core.domain.usecase.ObserveNetWorthUseCase
 import com.meqlause.fintrack.core.domain.validation.WalletNameError
 import com.meqlause.fintrack.core.domain.validation.WalletNameValidator
 import com.meqlause.fintrack.core.model.Appearance
@@ -15,6 +18,10 @@ import com.meqlause.fintrack.core.model.WalletProfile
 import com.meqlause.fintrack.core.model.WalletStatus
 import com.meqlause.fintrack.core.model.WalletTerms
 import com.meqlause.fintrack.core.model.WalletType
+import com.meqlause.fintrack.core.testing.repository.FakeInstallmentPlanRepository
+import com.meqlause.fintrack.core.testing.repository.FakeLoanRepository
+import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
+import com.meqlause.fintrack.core.testing.repository.FakeValuationRepository
 import com.meqlause.fintrack.core.testing.repository.FakeWalletRepository
 import com.meqlause.fintrack.core.testing.time.FakeClock
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +54,20 @@ class WalletViewModelTest {
     }
 
     private fun viewModel(repository: FakeWalletRepository): WalletViewModel =
-        WalletViewModel(repository, WalletNameValidator(), FakeClock(Instant.parse("2026-01-01T00:00:00Z")))
+        WalletViewModel(repository, WalletNameValidator(), netWorth(repository), clock)
+
+    private fun netWorth(repository: FakeWalletRepository): ObserveNetWorthUseCase =
+        ObserveNetWorthUseCase(
+            wallets = repository,
+            transactions = FakeTransactionRepository(),
+            plans = FakeInstallmentPlanRepository(),
+            loans = ObserveLoansUseCase(FakeLoanRepository(), FakeTransactionRepository()),
+            investments =
+                ObserveInvestmentPortfolioUseCase(repository, FakeTransactionRepository(), FakeValuationRepository()),
+            clock = clock,
+        )
+
+    private val clock = FakeClock(Instant.parse("2026-01-01T00:00:00Z"))
 
     // FR-010: with no wallet stored, the state is Empty
     @Test
@@ -114,7 +134,7 @@ class WalletViewModelTest {
             advanceUntilIdle()
 
             val success = viewModel.state.value as WalletUiState.Success
-            assertThat(success.total).isEqualTo(Money(0L))
+            assertThat(success.netWorth.saldo).isEqualTo(Money(0L))
             assertThat(
                 success.archived
                     .single()
@@ -123,13 +143,30 @@ class WalletViewModelTest {
             collector.cancel()
         }
 
+    // BR-053: Saldo leaves out investment wallets, so their balance never reaches the Dompet total
+    @Test
+    fun givenInvestmentWalletWhenStateBuiltThenSaldoCountsOnlyCash() =
+        runTest {
+            val repository = FakeWalletRepository()
+            repository.insert(walletNamed("Dompet tunai", balance = 100_000L))
+            repository.insert(walletNamed("Reksa dana", balance = 900_000L, type = WalletType.INVESTMENT))
+            val viewModel = viewModel(repository)
+            val collector = backgroundScope.launch { viewModel.state.collect {} }
+            advanceUntilIdle()
+
+            val success = viewModel.state.value as WalletUiState.Success
+            assertThat(success.netWorth.saldo).isEqualTo(Money(100_000L))
+            collector.cancel()
+        }
+
     private fun walletNamed(
         name: String,
         balance: Long,
+        type: WalletType = WalletType.CASH,
     ): Wallet =
         Wallet(
             walletId = WalletId(0L),
-            kind = WalletKind(type = WalletType.CASH, investKind = null),
+            kind = WalletKind(type = type, investKind = null),
             terms = WalletTerms(initialBalance = Money(balance), credit = null),
             profile =
                 WalletProfile(

@@ -8,6 +8,7 @@ import com.meqlause.fintrack.core.model.WalletType
 internal data class WalletCallbacks(
     val onAdd: () -> Unit = {},
     val onOpenDetail: (WalletId, WalletType) -> Unit = { _, _ -> },
+    val onOpenLoans: () -> Unit = {},
     val onEdit: (WalletItem) -> Unit = {},
     val onToggleArchived: () -> Unit = {},
     val onNameChange: (String) -> Unit = {},

@@ -2,7 +2,9 @@ package com.meqlause.fintrack.feature.wallet
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
+import com.meqlause.fintrack.core.domain.usecase.ObserveNetWorthUseCase
 import com.meqlause.fintrack.core.domain.validation.WalletNameValidator
 import com.meqlause.fintrack.core.model.InvestKind
 import com.meqlause.fintrack.core.model.Money
@@ -29,6 +31,7 @@ internal class WalletViewModel
     constructor(
         private val wallets: WalletRepository,
         private val validator: WalletNameValidator,
+        private val netWorth: ObserveNetWorthUseCase,
         private val clock: Clock,
     ) : ViewModel() {
         private val editor = MutableStateFlow<WalletEditor?>(null)
@@ -38,13 +41,14 @@ internal class WalletViewModel
         // S-09: Loading until the first list arrives, then Empty or Success with the total and the sections
         val state: StateFlow<WalletUiState> =
             combine(
-                wallets.observeAll(),
-                wallets.observeBalances(),
+                combine(wallets.observeAll(), wallets.observeBalances(), netWorth()) { all, balances, worth ->
+                    Triple(all, balances, worth)
+                },
                 editor,
                 picker,
                 archivedExpanded,
-            ) { all, balances, draft, open, expanded ->
-                buildState(all, balances, draft, open, expanded)
+            ) { (all, balances, worth), draft, open, expanded ->
+                buildState(all, balances, worth, draft, open, expanded)
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), WalletUiState.Loading)
 
         // S-09: the archived section opens and closes in place
@@ -149,6 +153,7 @@ internal class WalletViewModel
         private fun buildState(
             all: List<Wallet>,
             balances: Map<WalletId, Money>,
+            worth: NetWorth,
             draft: WalletEditor?,
             open: WalletPicker?,
             expanded: Boolean,
@@ -157,11 +162,7 @@ internal class WalletViewModel
             val items = all.map { WalletItem(wallet = it, balance = balances[it.walletId] ?: it.terms.initialBalance) }
             val active = items.filterNot { it.wallet.status.isArchived }
             return WalletUiState.Success(
-                total =
-                    active.filter { it.wallet.status.isIncludedInTotal }.fold(Money(0L)) { sum, item ->
-                        sum +
-                            item.balance
-                    },
+                netWorth = worth,
                 sections = sectionsOf(active),
                 archived = items.filter { it.wallet.status.isArchived },
                 archivedExpanded = expanded,

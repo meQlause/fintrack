@@ -12,6 +12,7 @@ import com.meqlause.fintrack.core.model.WalletType
 @Composable
 public fun WalletRoute(
     onOpenDetail: (WalletId, WalletType) -> Unit,
+    onOpenLoans: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: WalletViewModel = hiltViewModel()
@@ -22,6 +23,7 @@ public fun WalletRoute(
             WalletCallbacks(
                 onAdd = viewModel::startCreate,
                 onOpenDetail = onOpenDetail,
+                onOpenLoans = onOpenLoans,
                 onEdit = viewModel::startEdit,
                 onToggleArchived = viewModel::toggleArchivedSection,
                 onNameChange = viewModel::changeName,

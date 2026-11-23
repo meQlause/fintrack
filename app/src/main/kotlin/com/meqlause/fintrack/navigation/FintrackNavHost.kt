@@ -23,6 +23,7 @@ import com.meqlause.fintrack.feature.investment.navigation.InvestmentDetailDesti
 import com.meqlause.fintrack.feature.investment.navigation.investmentDestination
 import com.meqlause.fintrack.feature.investment.navigation.investmentDetailDestination
 import com.meqlause.fintrack.feature.loan.navigation.LoanDetailDestination
+import com.meqlause.fintrack.feature.loan.navigation.LoanListDestination
 import com.meqlause.fintrack.feature.loan.navigation.loanDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
@@ -91,13 +92,17 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onBack = { navController.popBackStack() },
         onTransfer = { navController.navigate(EditTransactionDestination()) },
     )
-    walletDestination(onOpenDetail = { id, type ->
-        if (type.isCredit()) {
-            navController.navigate(CreditDetailDestination(id.value))
-        } else {
-            navController.navigate(WalletDetailDestination(id.value))
-        }
-    })
+    walletDestination(
+        onOpenDetail = { id, type ->
+            if (type.isCredit()) {
+                navController.navigate(CreditDetailDestination(id.value))
+            } else {
+                navController.navigate(WalletDetailDestination(id.value))
+            }
+        },
+        // FR-150, S-09: the Pinjaman row opens the loan list S-17
+        onOpenLoans = { navController.navigate(LoanListDestination) },
+    )
     // FR-017, S-19: Pakai and Transfer open the add sheet (S-04); preselecting the wallet/type is a later step
     walletDetailDestination(
         onBack = { navController.popBackStack() },
