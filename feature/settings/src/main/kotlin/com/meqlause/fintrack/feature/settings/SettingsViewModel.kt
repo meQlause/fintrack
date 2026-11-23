@@ -31,6 +31,7 @@ internal class SettingsViewModel
                 SettingsUiState(
                     themeMode = stored.preferences.themeMode,
                     periodStartDay = stored.preferences.periodStartDay,
+                    pinEnabled = stored.security.pinLock.pinHash != null,
                     sheet = open,
                 )
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), SettingsUiState())

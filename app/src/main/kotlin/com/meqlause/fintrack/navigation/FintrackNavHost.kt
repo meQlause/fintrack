@@ -25,6 +25,9 @@ import com.meqlause.fintrack.feature.investment.navigation.investmentDetailDesti
 import com.meqlause.fintrack.feature.loan.navigation.LoanDetailDestination
 import com.meqlause.fintrack.feature.loan.navigation.LoanListDestination
 import com.meqlause.fintrack.feature.loan.navigation.loanDestination
+import com.meqlause.fintrack.feature.lock.navigation.PinSetupDestination
+import com.meqlause.fintrack.feature.lock.navigation.PinSetupMode
+import com.meqlause.fintrack.feature.lock.navigation.pinSetupDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.MonitoredAppsDestination
@@ -58,7 +61,7 @@ internal fun FintrackNavHost(
     }
 }
 
-// DOC-03: the routes of the app; onboarding leads to Beranda and its PIN offer has no screen until feature:lock
+// DOC-03: the routes of the app; onboarding leads to Beranda and its PIN offer opens the PIN setup
 private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     onboardingGraph(
         onFinished = {
@@ -66,8 +69,13 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
                 popUpTo<OnboardingDestination> { inclusive = true }
             }
         },
-        // FR-003: the PIN setup screen arrives with feature:lock (T8.1); until then the offer does nothing
-        onSetupPin = {},
+        // FR-003: the optional PIN offer opens the PIN setup; leaving it returns to the security page
+        onSetupPin = { navController.navigate(PinSetupDestination(PinSetupMode.SET)) },
+    )
+    // FR-100, FR-103, S-02: PIN set, change and remove screen; leaving it returns to the screen it came from
+    pinSetupDestination(
+        onDone = { navController.popBackStack() },
+        onCancel = { navController.popBackStack() },
     )
     // DOC-09, FR-040..043: Beranda (S-03); Catat cepat opens the add sheet, a row opens its S-06 detail
     homeDestination(
@@ -126,6 +134,10 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenCategories = { navController.navigate(CategoryDestination) },
         onOpenBudgets = { navController.navigate(BudgetDestination) },
         onOpenMonitoredApps = { navController.navigate(MonitoredAppsDestination) },
+        // FR-100, S-12: Keamanan rows open the PIN setup in the mode they need
+        onOpenPinSetup = { navController.navigate(PinSetupDestination(PinSetupMode.SET)) },
+        onOpenPinChange = { navController.navigate(PinSetupDestination(PinSetupMode.CHANGE)) },
+        onOpenPinRemove = { navController.navigate(PinSetupDestination(PinSetupMode.REMOVE)) },
     )
     // FR-070 … FR-074, S-11: Anggaran is opened from the Data group of Pengaturan
     budgetDestination(onBack = { navController.popBackStack() })
