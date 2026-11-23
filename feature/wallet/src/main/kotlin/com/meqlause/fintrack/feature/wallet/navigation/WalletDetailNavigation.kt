@@ -6,12 +6,15 @@ import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.feature.wallet.detail.WalletDetailRoute
 
 // FR-017, S-19: registers the wallet detail destination; Pakai and Transfer are handed to the host
-public fun NavGraphBuilder.walletDetailDestination(
-    onBack: () -> Unit,
-    onUse: (WalletId) -> Unit,
-    onTransfer: (WalletId) -> Unit,
-) {
-    composable<WalletDetailDestination> {
-        WalletDetailRoute(onBack = onBack, onUse = onUse, onTransfer = onTransfer)
+public object WalletDetailNavigation {
+    public fun register(
+        builder: NavGraphBuilder,
+        onBack: () -> Unit,
+        onUse: (WalletId) -> Unit,
+        onTransfer: (WalletId) -> Unit,
+    ) {
+        builder.composable<WalletDetailDestination> {
+            WalletDetailRoute(onBack = onBack, onUse = onUse, onTransfer = onTransfer)
+        }
     }
 }

@@ -6,12 +6,15 @@ import androidx.navigation.toRoute
 import com.meqlause.fintrack.feature.transaction.detail.TransactionDetailRoute
 
 // FR-034, FR-035, S-06: registers the transaction detail; Ubah hands the id to the host, which opens the S-04 sheet
-public fun NavGraphBuilder.transactionDetailDestination(
-    onBack: () -> Unit,
-    onEdit: (Long) -> Unit,
-) {
-    composable<TransactionDetailDestination> { entry ->
-        val destination = entry.toRoute<TransactionDetailDestination>()
-        TransactionDetailRoute(transactionId = destination.transactionId, onBack = onBack, onEdit = onEdit)
+public object TransactionDetailNavigation {
+    public fun register(
+        builder: NavGraphBuilder,
+        onBack: () -> Unit,
+        onEdit: (Long) -> Unit,
+    ) {
+        builder.composable<TransactionDetailDestination> { entry ->
+            val destination = entry.toRoute<TransactionDetailDestination>()
+            TransactionDetailRoute(transactionId = destination.transactionId, onBack = onBack, onEdit = onEdit)
+        }
     }
 }

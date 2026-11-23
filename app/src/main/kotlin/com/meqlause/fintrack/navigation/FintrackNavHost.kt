@@ -8,44 +8,44 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.feature.budget.navigation.BudgetDestination
-import com.meqlause.fintrack.feature.budget.navigation.budgetDestination
+import com.meqlause.fintrack.feature.budget.navigation.BudgetNavigation
 import com.meqlause.fintrack.feature.category.navigation.CategoryDestination
-import com.meqlause.fintrack.feature.category.navigation.categoryDestination
+import com.meqlause.fintrack.feature.category.navigation.CategoryNavigation
 import com.meqlause.fintrack.feature.credit.navigation.CreditDetailDestination
+import com.meqlause.fintrack.feature.credit.navigation.CreditNavigation
 import com.meqlause.fintrack.feature.credit.navigation.InstalmentDetailDestination
 import com.meqlause.fintrack.feature.credit.navigation.InstalmentListDestination
-import com.meqlause.fintrack.feature.credit.navigation.creditDetailDestination
 import com.meqlause.fintrack.feature.dashboard.navigation.HomeDestination
-import com.meqlause.fintrack.feature.dashboard.navigation.homeDestination
+import com.meqlause.fintrack.feature.dashboard.navigation.HomeNavigation
 import com.meqlause.fintrack.feature.inbox.navigation.InboxDestination
-import com.meqlause.fintrack.feature.inbox.navigation.inboxDestination
+import com.meqlause.fintrack.feature.inbox.navigation.InboxNavigation
 import com.meqlause.fintrack.feature.investment.navigation.InvestmentDetailDestination
-import com.meqlause.fintrack.feature.investment.navigation.investmentDestination
-import com.meqlause.fintrack.feature.investment.navigation.investmentDetailDestination
+import com.meqlause.fintrack.feature.investment.navigation.InvestmentDetailNavigation
+import com.meqlause.fintrack.feature.investment.navigation.InvestmentNavigation
 import com.meqlause.fintrack.feature.loan.navigation.LoanDetailDestination
 import com.meqlause.fintrack.feature.loan.navigation.LoanListDestination
-import com.meqlause.fintrack.feature.loan.navigation.loanDestination
+import com.meqlause.fintrack.feature.loan.navigation.LoanNavigation
 import com.meqlause.fintrack.feature.lock.navigation.PinSetupDestination
 import com.meqlause.fintrack.feature.lock.navigation.PinSetupMode
-import com.meqlause.fintrack.feature.lock.navigation.pinSetupDestination
+import com.meqlause.fintrack.feature.lock.navigation.PinSetupNavigation
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
-import com.meqlause.fintrack.feature.onboarding.onboardingGraph
+import com.meqlause.fintrack.feature.onboarding.OnboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.AboutDestination
+import com.meqlause.fintrack.feature.settings.navigation.AboutNavigation
 import com.meqlause.fintrack.feature.settings.navigation.BatteryHelpDestination
+import com.meqlause.fintrack.feature.settings.navigation.BatteryHelpNavigation
 import com.meqlause.fintrack.feature.settings.navigation.MonitoredAppsDestination
+import com.meqlause.fintrack.feature.settings.navigation.MonitoredAppsNavigation
 import com.meqlause.fintrack.feature.settings.navigation.SettingsDestination
-import com.meqlause.fintrack.feature.settings.navigation.aboutDestination
-import com.meqlause.fintrack.feature.settings.navigation.batteryHelpDestination
-import com.meqlause.fintrack.feature.settings.navigation.monitoredAppsDestination
-import com.meqlause.fintrack.feature.settings.navigation.settingsDestination
+import com.meqlause.fintrack.feature.settings.navigation.SettingsNavigation
 import com.meqlause.fintrack.feature.transaction.detail.navigation.TransactionDetailDestination
-import com.meqlause.fintrack.feature.transaction.detail.navigation.transactionDetailDestination
+import com.meqlause.fintrack.feature.transaction.detail.navigation.TransactionDetailNavigation
 import com.meqlause.fintrack.feature.transaction.edit.navigation.EditTransactionDestination
-import com.meqlause.fintrack.feature.transaction.edit.navigation.editTransactionDestination
-import com.meqlause.fintrack.feature.transaction.history.navigation.historyDestination
+import com.meqlause.fintrack.feature.transaction.edit.navigation.EditTransactionNavigation
+import com.meqlause.fintrack.feature.transaction.history.navigation.HistoryNavigation
 import com.meqlause.fintrack.feature.wallet.navigation.WalletDetailDestination
-import com.meqlause.fintrack.feature.wallet.navigation.walletDestination
-import com.meqlause.fintrack.feature.wallet.navigation.walletDetailDestination
+import com.meqlause.fintrack.feature.wallet.navigation.WalletDetailNavigation
+import com.meqlause.fintrack.feature.wallet.navigation.WalletNavigation
 
 // DOC-03: app owns the NavHost; onboarding (FR-001) starts when it is needed, otherwise Beranda is the start
 @Composable
@@ -67,7 +67,8 @@ internal fun FintrackNavHost(
 
 // DOC-03: the routes of the app; onboarding leads to Beranda and its PIN offer opens the PIN setup
 private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
-    onboardingGraph(
+    OnboardingGraph.register(
+        builder = this,
         onFinished = {
             navController.navigate(HomeDestination) {
                 popUpTo<OnboardingDestination> { inclusive = true }
@@ -77,12 +78,14 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onSetupPin = { navController.navigate(PinSetupDestination(PinSetupMode.SET)) },
     )
     // FR-100, FR-103, S-02: PIN set, change and remove screen; leaving it returns to the screen it came from
-    pinSetupDestination(
+    PinSetupNavigation.register(
+        builder = this,
         onDone = { navController.popBackStack() },
         onCancel = { navController.popBackStack() },
     )
     // DOC-09, FR-040..043: Beranda (S-03); Catat cepat opens the add sheet, a row opens its S-06 detail
-    homeDestination(
+    HomeNavigation.register(
+        builder = this,
         onOpenSettings = { navController.navigate(SettingsDestination) },
         onOpenInbox = { navController.navigate(InboxDestination) },
         onOpenWallet = { navController.navigate(WalletDetailDestination(it.value)) },
@@ -95,16 +98,21 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenTransaction = { navController.navigate(TransactionDetailDestination(transactionId = it.value)) },
     )
     // DOC-09, FR-036: Riwayat (S-05); a tapped row opens the S-06 detail for that transaction
-    historyDestination(onOpenTransaction = { id ->
+    HistoryNavigation.register(builder = this, onOpenTransaction = { id ->
         navController.navigate(TransactionDetailDestination(transactionId = id))
     })
     // DOC-09, FR-173: Investasi tab (S-08); an account opens S-20, which leaves to the add sheet for transfers
-    investmentDestination(onOpenAccount = { navController.navigate(InvestmentDetailDestination(it.value)) })
-    investmentDetailDestination(
+    InvestmentNavigation.register(
+        builder = this,
+        onOpenAccount = { navController.navigate(InvestmentDetailDestination(it.value)) },
+    )
+    InvestmentDetailNavigation.register(
+        builder = this,
         onBack = { navController.popBackStack() },
         onTransfer = { navController.navigate(EditTransactionDestination()) },
     )
-    walletDestination(
+    WalletNavigation.register(
+        builder = this,
         onOpenDetail = { id, type ->
             if (type.isCredit()) {
                 navController.navigate(CreditDetailDestination(id.value))
@@ -116,24 +124,28 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenLoans = { navController.navigate(LoanListDestination) },
     )
     // FR-017, S-19: Pakai and Transfer open the add sheet (S-04); preselecting the wallet/type is a later step
-    walletDetailDestination(
+    WalletDetailNavigation.register(
+        builder = this,
         onBack = { navController.popBackStack() },
         onUse = { navController.navigate(EditTransactionDestination()) },
         onTransfer = { navController.navigate(EditTransactionDestination()) },
     )
     // FR-131, S-14: a card or paylater wallet opens its credit detail; Bayar tagihan is the S-15 sheet inside it
-    creditDetailDestination(
+    CreditNavigation.register(
+        builder = this,
         onBack = { navController.popBackStack() },
         onOpenInstalment = { planId -> navController.navigate(InstalmentDetailDestination(planId)) },
         onOpenInstalments = { navController.navigate(InstalmentListDestination) },
     )
     // FR-150 … FR-158, S-17: the Pinjaman list and the loan detail with repayments and write-off
-    loanDestination(
+    LoanNavigation.register(
+        builder = this,
         onBack = { navController.popBackStack() },
         onOpenLoan = { loanId -> navController.navigate(LoanDetailDestination(loanId)) },
     )
     // DOC-09, S-12: Pengaturan is opened from the Beranda header; its Kategori row leads to S-10 (FR-020)
-    settingsDestination(
+    SettingsNavigation.register(
+        builder = this,
         onBack = { navController.popBackStack() },
         onOpenCategories = { navController.navigate(CategoryDestination) },
         onOpenBudgets = { navController.navigate(BudgetDestination) },
@@ -148,23 +160,24 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenPinRemove = { navController.navigate(PinSetupDestination(PinSetupMode.REMOVE)) },
     )
     // FR-070 … FR-074, S-11: Anggaran is opened from the Data group of Pengaturan
-    budgetDestination(onBack = { navController.popBackStack() })
+    BudgetNavigation.register(builder = this, onBack = { navController.popBackStack() })
     // FR-081, FR-082, FR-090: Aplikasi dipantau (S-13) is opened from the Deteksi otomatis group of Pengaturan
-    monitoredAppsDestination(onBack = { navController.popBackStack() })
+    MonitoredAppsNavigation.register(builder = this, onBack = { navController.popBackStack() })
     // FR-123, S-12: Tentang is opened from the Tentang group of Pengaturan
-    aboutDestination(onBack = { navController.popBackStack() })
+    AboutNavigation.register(builder = this, onBack = { navController.popBackStack() })
     // DOC-07, S-12: the battery-optimisation help page is opened from the Deteksi otomatis group of Pengaturan
-    batteryHelpDestination(onBack = { navController.popBackStack() })
-    categoryDestination(onBack = { navController.popBackStack() })
+    BatteryHelpNavigation.register(builder = this, onBack = { navController.popBackStack() })
+    CategoryNavigation.register(builder = this, onBack = { navController.popBackStack() })
     // FR-084 … FR-091, S-07: Kotak Masuk is opened from the bell in the Beranda header
-    inboxDestination(onBack = { navController.popBackStack() })
+    InboxNavigation.register(builder = this, onBack = { navController.popBackStack() })
     // FR-034, S-06: the detail leaves on delete or duplicate; Ubah opens the S-04 sheet above it
-    transactionDetailDestination(
+    TransactionDetailNavigation.register(
+        builder = this,
         onBack = { navController.popBackStack() },
         onEdit = { id -> navController.navigate(EditTransactionDestination(transactionId = id)) },
     )
     // DOC-09, S-04: the add or edit sheet returns to the screen it was opened from
-    editTransactionDestination(onDismiss = { navController.popBackStack() })
+    EditTransactionNavigation.register(builder = this, onDismiss = { navController.popBackStack() })
 }
 
 // BR-031: card and paylater wallets are the credit wallets and open S-14 instead of S-19
