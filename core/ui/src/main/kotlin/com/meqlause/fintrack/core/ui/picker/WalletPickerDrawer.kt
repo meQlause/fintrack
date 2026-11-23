@@ -66,7 +66,7 @@ private fun sampleRows(limit: String): List<WalletPickerRow> {
 private data class SampleWallet(
     val nameRes: Int,
     val type: WalletType,
-    val balance: String,
+    val shownText: String,
     val isSelected: Boolean = false,
     val isBlocked: Boolean = false,
 )
@@ -77,7 +77,7 @@ private fun SampleWallet.toRow(rowId: Long): WalletPickerRow =
         walletId = WalletId(rowId),
         name = stringResource(nameRes),
         type = type,
-        shownBalanceText = balance,
+        shownBalanceText = shownText,
         isSelected = isSelected,
         isBlocked = isBlocked,
     )

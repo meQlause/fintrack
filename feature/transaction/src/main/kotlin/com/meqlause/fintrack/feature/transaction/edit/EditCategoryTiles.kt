@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
-import com.meqlause.fintrack.core.designsystem.component.SheetBleed
+import com.meqlause.fintrack.core.designsystem.component.sheetBleed
 import com.meqlause.fintrack.core.designsystem.icon.TintedIconBox
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
@@ -35,7 +35,7 @@ internal fun EditCategoryTiles(
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
-        modifier = modifier.then(SheetBleed.modifier(FintrackScreenSizes.screenGutter)),
+        modifier = modifier.sheetBleed(FintrackScreenSizes.screenGutter),
         contentPadding =
             PaddingValues(horizontal = FintrackScreenSizes.screenGutter, vertical = FintrackTheme.spacing.xSmall),
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xxSmall),
