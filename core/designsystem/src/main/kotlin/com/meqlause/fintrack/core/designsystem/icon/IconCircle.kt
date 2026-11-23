@@ -22,7 +22,7 @@ fun IconCircle(
     modifier: Modifier = Modifier,
     tile: IconBox? = null,
 ) {
-    val box = tile ?: categoryTile()
+    val shape = tile ?: categoryTile()
     val surface = FintrackTheme.colors.surfaces.background
     val tint = CategoryPalette.colorFor(colorKey = look.colorKey, surface = surface)
     val alpha =
@@ -34,8 +34,8 @@ fun IconCircle(
     Box(
         modifier =
             modifier
-                .size(box.size)
-                .clip(box.shape)
+                .size(shape.size)
+                .clip(shape.shape)
                 .background(tint.copy(alpha = alpha)),
         contentAlignment = Alignment.Center,
     ) {
@@ -43,7 +43,7 @@ fun IconCircle(
             painter = painterResource(FintrackIcons.drawableFor(look.iconKey)),
             contentDescription = null,
             tint = tint,
-            modifier = Modifier.size(box.glyph),
+            modifier = Modifier.size(shape.glyph),
         )
     }
 }

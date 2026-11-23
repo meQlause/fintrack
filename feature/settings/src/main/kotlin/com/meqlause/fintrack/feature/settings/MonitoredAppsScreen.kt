@@ -77,22 +77,28 @@ private fun MonitoredAppsContent(
             )
         }
         SettingsSection(title = stringResource(R.string.monitored_section_diagnostics), padded = true) {
-            Text(
-                text =
-                    pluralStringResource(
-                        R.plurals.monitored_counts_value,
-                        state.ignoredCount,
-                        state.ignoredCount,
-                        state.unrecognizedCount,
-                    ),
-                style = FintrackTheme.typography.labelLarge,
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-            )
+            DiagnosticCounts(state = state)
         }
         SettingsSection(title = stringResource(R.string.monitored_section_apps), padded = true) {
             state.apps.forEach { row -> AppRow(monitoredApp = row, callbacks = callbacks) }
         }
     }
+}
+
+// FR-090: how many notifications were ignored and how many were not recognised
+@Composable
+private fun DiagnosticCounts(state: MonitoredAppsUiState) {
+    Text(
+        text =
+            pluralStringResource(
+                R.plurals.monitored_counts_value,
+                state.ignoredCount,
+                state.ignoredCount,
+                state.unrecognizedCount,
+            ),
+        style = FintrackTheme.typography.labelLarge,
+        color = FintrackTheme.colors.texts.onSurfaceVariant,
+    )
 }
 
 // FR-082: the wallet drawer of the app whose default wallet is being chosen, the current one marked
