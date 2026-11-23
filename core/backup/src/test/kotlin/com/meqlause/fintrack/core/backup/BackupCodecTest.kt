@@ -7,6 +7,7 @@ import com.meqlause.fintrack.core.domain.backup.BackupFailure
 import org.junit.Test
 
 // DOC-11: round trip and the tamper tests that must each fail cleanly
+
 /** Backup codec tests. */
 class BackupCodecTest {
     private val password = "rahasia-123"

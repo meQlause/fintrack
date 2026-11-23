@@ -12,6 +12,7 @@ import com.meqlause.fintrack.core.model.WalletId
 import org.junit.Test
 
 // DOC-11: every business rule violation in a crafted payload is rejected before anything is replaced
+
 /** Backup validator tests. */
 class BackupValidatorTest {
     /** Valid sample is accepted. */

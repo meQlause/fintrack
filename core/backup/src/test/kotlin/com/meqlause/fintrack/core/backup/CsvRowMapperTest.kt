@@ -20,6 +20,7 @@ import java.time.Instant
 import java.time.ZoneId
 
 // FR-113, DOC-11: the CSV cells of a transaction follow the fixed column order and Indonesian labels
+
 /** Csv row mapper tests. */
 class CsvRowMapperTest {
     private val zone = ZoneId.of("Asia/Jakarta")

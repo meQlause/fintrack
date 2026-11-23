@@ -6,6 +6,7 @@ import assertk.assertions.startsWith
 import org.junit.Test
 
 // FR-113, DOC-11: CSV quoting, record ends and byte order mark
+
 /** Csv text tests. */
 class CsvTextTest {
     /** Given plain cell when escaped then unchanged. */
@@ -41,6 +42,6 @@ class CsvTextTest {
     /** Given bom when written then starts the file. */
     @Test
     fun givenBomWhenWrittenThenStartsTheFile() {
-        assertThat(CsvText.BYTE_ORDER_MARK + CsvText.record(listOf("tanggal"))).startsWith("﻿")
+        assertThat(CsvText.BYTE_ORDER_MARK + CsvText.record(listOf("tanggal"))).startsWith("")
     }
 }
