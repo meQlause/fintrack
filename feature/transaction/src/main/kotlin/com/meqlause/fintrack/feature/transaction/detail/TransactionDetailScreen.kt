@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
 import com.meqlause.fintrack.core.designsystem.component.UndoSnackbar
+import com.meqlause.fintrack.core.designsystem.icon.IconCircle
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.money.MoneyText
 import com.meqlause.fintrack.feature.transaction.R
@@ -76,14 +79,31 @@ private fun TransactionDetailBody(
     onDuplicate: () -> Unit,
     onDelete: () -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium)) {
-        MoneyText(money = detail.amount, type = detail.type, modifier = Modifier.fillMaxWidth())
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        IconCircle(
+            iconKey = detail.appearance.iconKey,
+            colorKey = detail.appearance.colorKey,
+            size = FintrackTheme.sizes.detailIcon,
+            glyph = FintrackTheme.sizes.detailGlyph,
+            shape = FintrackTheme.shapes.card,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),
+        )
+        MoneyText(
+            money = detail.amount,
+            type = detail.type,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
+            style = FintrackTheme.typography.numberDetail,
+        )
         Text(
             text = detail.title,
-            style = FintrackTheme.typography.bodyLarge,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
+            style = FintrackTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
-        FintrackCard(modifier = Modifier.fillMaxWidth()) {
+        FintrackCard(
+            modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.section),
+            contentPadding = PaddingValues(),
+        ) {
             DetailRows(detail = detail)
         }
         ActionRow(
@@ -91,6 +111,7 @@ private fun TransactionDetailBody(
             onEdit = onEdit,
             onDuplicate = onDuplicate,
             onDelete = onDelete,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.stack),
         )
     }
 }

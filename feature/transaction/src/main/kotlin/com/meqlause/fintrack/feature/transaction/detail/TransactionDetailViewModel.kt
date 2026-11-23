@@ -62,6 +62,7 @@ internal class TransactionDetailViewModel
                                 walletNames = walletList.associate { it.walletId to it.profile.name },
                                 categoryNames = categoryList.associate { it.categoryId to it.profile.name },
                                 clock = clock,
+                                appearances = categoryList.associate { it.categoryId to it.profile.appearance },
                             ),
                     isDeletePending = pending,
                     isClosed = isClosed,

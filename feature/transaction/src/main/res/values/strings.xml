@@ -87,7 +87,7 @@
     <string name="transaction_detail_source_manual">Dicatat manual</string>
     <string name="transaction_detail_source_notification">Terdeteksi dari notifikasi</string>
     <string name="transaction_detail_edit">Ubah</string>
-    <string name="transaction_detail_duplicate">Catat lagi</string>
+    <string name="transaction_detail_duplicate">Ulangi</string>
     <string name="transaction_detail_delete">Hapus</string>
     <string name="transaction_detail_deleted">Transaksi dihapus</string>
     <!-- FR-039: shortcut copy that belongs to the add sheet -->

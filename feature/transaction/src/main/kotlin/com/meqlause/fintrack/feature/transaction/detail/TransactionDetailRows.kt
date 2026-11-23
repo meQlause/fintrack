@@ -1,18 +1,17 @@
 package com.meqlause.fintrack.feature.transaction.detail
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.meqlause.fintrack.core.designsystem.component.FintrackCard
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.TransactionSource
 import com.meqlause.fintrack.core.model.TransactionType
@@ -28,8 +27,10 @@ internal fun DetailRows(detail: TransactionDetail) {
         } else {
             R.string.transaction_detail_wallet
         }
-    DetailRow(label = stringResource(walletLabel), value = detail.walletLabel)
-    detail.categoryName?.let { DetailRow(label = stringResource(R.string.transaction_detail_category), value = it) }
+    detail.categoryName?.let {
+        DetailRow(label = stringResource(R.string.transaction_detail_category), value = it, isFirst = true)
+    }
+    DetailRow(label = stringResource(walletLabel), value = detail.walletLabel, isFirst = detail.categoryName == null)
     if (!detail.feeAmount.isZero) {
         DetailRow(
             label = stringResource(R.string.transaction_fee_label),
@@ -53,77 +54,33 @@ internal fun DetailRows(detail: TransactionDetail) {
     )
 }
 
-// FR-034, FR-035, FR-038: Ubah, Catat lagi (not for loan-linked rows) and Hapus, sharing the row equally
-@Composable
-internal fun ActionRow(
-    isLoanLinked: Boolean,
-    onEdit: () -> Unit,
-    onDuplicate: () -> Unit,
-    onDelete: () -> Unit,
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-    ) {
-        ActionCard(
-            text = stringResource(R.string.transaction_detail_edit),
-            onClick = onEdit,
-            modifier = Modifier.weight(1f),
-        )
-        if (!isLoanLinked) {
-            ActionCard(
-                text = stringResource(R.string.transaction_detail_duplicate),
-                onClick = onDuplicate,
-                modifier = Modifier.weight(1f),
-            )
-        }
-        ActionCard(
-            text = stringResource(R.string.transaction_detail_delete),
-            onClick = onDelete,
-            modifier = Modifier.weight(1f),
-            color = FintrackTheme.colors.semantics.error,
-        )
-    }
-}
-
 @Composable
 private fun DetailRow(
     label: String,
     value: String,
+    isFirst: Boolean = false,
 ) {
+    if (!isFirst) {
+        HorizontalDivider(thickness = FintrackTheme.sizes.hairline, color = FintrackTheme.colors.surfaces.outline)
+    }
     Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = FintrackTheme.spacing.small),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = FintrackTheme.sizes.rowInset, vertical = FintrackTheme.spacing.medium),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = label,
-            style = FintrackTheme.typography.bodyMedium,
+            style = FintrackTheme.typography.tabWide.copy(fontWeight = FontWeight.Normal),
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
         Text(
             text = value,
-            style = FintrackTheme.typography.labelLarge,
+            style = FintrackTheme.typography.tabWide,
             color = FintrackTheme.colors.texts.onSurface,
             textAlign = TextAlign.End,
             modifier = Modifier.weight(1f).padding(start = FintrackTheme.spacing.medium),
-        )
-    }
-}
-
-@Composable
-private fun ActionCard(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    color: Color = FintrackTheme.colors.texts.onSurface,
-) {
-    FintrackCard(modifier = modifier, onClick = onClick) {
-        Text(
-            text = text,
-            style = FintrackTheme.typography.labelLarge,
-            color = color,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth().padding(vertical = FintrackTheme.spacing.medium),
         )
     }
 }

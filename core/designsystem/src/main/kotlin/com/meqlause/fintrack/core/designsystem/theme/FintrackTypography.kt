@@ -40,6 +40,7 @@ class FintrackTypography {
     val micro: TextStyle = typeStyle(size = 11f, lineHeight = 14f, weight = 600, tabular = true)
     val numberLarge: TextStyle = typeStyle(size = 28f, lineHeight = 36f, weight = 700, tabular = true)
     val numberTotal: TextStyle = typeStyle(size = 20f, lineHeight = 26f, weight = 700, tabular = true)
+    val numberDetail: TextStyle = typeStyle(size = 30f, lineHeight = 38f, weight = 700, tabular = true)
     val numberMedium: TextStyle = typeStyle(size = 18f, lineHeight = 24f, weight = 700, tabular = true)
 
     // DOC-09: prototype wallet chip balance, 15 px bold

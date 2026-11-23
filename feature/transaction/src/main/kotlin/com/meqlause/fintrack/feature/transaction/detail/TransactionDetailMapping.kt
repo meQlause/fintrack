@@ -1,9 +1,11 @@
 package com.meqlause.fintrack.feature.transaction.detail
 
+import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.ui.format.DateFormatter
+import com.meqlause.fintrack.core.ui.transaction.rowAppearanceOf
 import java.time.Clock
 import java.time.LocalDateTime
 
@@ -12,6 +14,7 @@ internal fun Transaction.toDetail(
     walletNames: Map<WalletId, String>,
     categoryNames: Map<CategoryId, String>,
     clock: Clock,
+    appearances: Map<CategoryId, Appearance> = emptyMap(),
 ): TransactionDetail {
     val local = LocalDateTime.ofInstant(timing.occurredAt, clock.zone)
     val categoryName = routing.categoryId?.let { categoryNames[it] }
@@ -30,5 +33,6 @@ internal fun Transaction.toDetail(
         timeLabel = DateFormatter.timeLabel(local.toLocalTime()),
         source = origin.source,
         isLoanLinked = routing.loanId != null,
+        appearance = rowAppearanceOf(movement.type, routing.categoryId?.let(appearances::get)),
     )
 }

@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.transaction.detail
 
+import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionSource
 import com.meqlause.fintrack.core.model.TransactionType
@@ -18,4 +19,5 @@ internal data class TransactionDetail(
     val timeLabel: String,
     val source: TransactionSource,
     val isLoanLinked: Boolean,
+    val appearance: Appearance = Appearance("other", "gray"),
 )
