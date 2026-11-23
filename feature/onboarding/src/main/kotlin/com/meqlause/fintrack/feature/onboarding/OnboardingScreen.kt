@@ -37,7 +37,7 @@ internal fun OnboardingScreen(
             modifier
                 .fillMaxSize()
                 .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = spacing.large, vertical = spacing.large),
+                .padding(horizontal = spacing.gutter, vertical = spacing.large),
     ) {
         SkipAction(
             visible = state == OnboardingUiState.Welcome,

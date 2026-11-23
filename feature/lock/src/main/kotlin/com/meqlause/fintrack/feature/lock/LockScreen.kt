@@ -33,7 +33,7 @@ internal fun LockScreen(
             modifier
                 .fillMaxSize()
                 .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
+                .padding(horizontal = FintrackTheme.spacing.gutter),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
