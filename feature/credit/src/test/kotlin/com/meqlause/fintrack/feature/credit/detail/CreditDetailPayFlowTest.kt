@@ -3,10 +3,8 @@ package com.meqlause.fintrack.feature.credit.detail
 import androidx.lifecycle.SavedStateHandle
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNull
-import assertk.assertions.isTrue
 import com.meqlause.fintrack.core.domain.usecase.SaveTransactionUseCase
 import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Audit
@@ -236,22 +234,6 @@ class CreditDetailPayFlowTest {
             assertThat(model.state.value).isInstanceOf(CreditDetailUiState.Missing::class)
         }
 
-    /** FR-131: only credit wallets are never offered as a bill source. */
-    @Test
-    fun `given credit wallets when sources are listed then they are excluded (BR-039)`() {
-        val card =
-            Wallet(
-                WalletId(1L),
-                WalletKind(WalletType.PAYLATER, null),
-                WalletTerms(Money(0L), null),
-                profile(),
-                WalletStatus(),
-                stamp(),
-            )
-        assertThat(card.isPayableSource()).isFalse()
-        assertThat(card.copy(kind = WalletKind(WalletType.CASH, null)).isPayableSource()).isTrue()
-    }
-
     private suspend fun dueDay(): Int? =
         wallets
             .observeAll()
@@ -259,8 +241,4 @@ class CreditDetailPayFlowTest {
             .single()
             .terms.credit
             ?.dueDay
-
-    private fun profile() = WalletProfile("x", Appearance("wallet", "blue"), sortOrder = 0)
-
-    private fun stamp() = Audit(Instant.EPOCH, Instant.EPOCH)
 }

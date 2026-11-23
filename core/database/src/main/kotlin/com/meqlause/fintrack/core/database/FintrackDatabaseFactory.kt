@@ -10,14 +10,15 @@ object FintrackDatabaseFactory {
     private const val SQLCIPHER_LIBRARY = "sqlcipher"
 
     // ADR-009: sqlcipher-android does not load its native library itself; it must be loaded before the first open
-    private val nativeLibrary by lazy { System.loadLibrary(SQLCIPHER_LIBRARY) }
+    private fun loadSqlcipher() = System.loadLibrary(SQLCIPHER_LIBRARY)
 
     /** NFR-003: opens the encrypted database; no destructive migration fallback exists (NFR-009). */
     fun open(
         context: Context,
         passphrase: ByteArray,
+        loadNativeLibrary: () -> Unit = ::loadSqlcipher,
     ): FintrackDatabase {
-        nativeLibrary
+        loadNativeLibrary()
         return Room
             .databaseBuilder(context, FintrackDatabase::class.java, DATABASE_NAME)
             .openHelperFactory(SupportOpenHelperFactory(passphrase))

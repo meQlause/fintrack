@@ -40,27 +40,27 @@ class EditStateLogicTest {
     private val audit = Audit(Instant.EPOCH, Instant.EPOCH)
 
     private fun wallet(
-        key: Long,
+        walletKey: Long,
         type: WalletType,
         archived: Boolean = false,
     ): Wallet =
         Wallet(
-            WalletId(key),
+            WalletId(walletKey),
             WalletKind(type, investKind = null),
             WalletTerms(Money(0L), credit = null),
-            WalletProfile("Dompet $key", Appearance("bank", "blue"), sortOrder = key.toInt()),
+            WalletProfile("Dompet $walletKey", Appearance("bank", "blue"), sortOrder = walletKey.toInt()),
             WalletStatus(isArchived = archived),
             audit,
         )
 
     private fun category(
-        key: Long,
+        catKey: Long,
         kind: CategoryKind,
         archived: Boolean = false,
     ): Category =
         Category(
-            CategoryId(key),
-            CategoryProfile("Kategori $key", kind, Appearance("food", "orange"), sortOrder = -key.toInt()),
+            CategoryId(catKey),
+            CategoryProfile("Kategori $catKey", kind, Appearance("food", "orange"), sortOrder = -catKey.toInt()),
             CategoryState(isDefault = false, isArchived = archived),
             audit,
         )

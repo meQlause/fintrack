@@ -82,7 +82,8 @@ class TransactionDetailMappingTest {
         assertThat(storedRow().withLoan().toDetail(walletNames, categoryNames, clock).isLoanLinked).isTrue()
     }
 
-    private fun Transaction.withFee(fee: Long): Transaction = copy(movement = movement.copy(feeAmount = Money(fee)))
+    private fun Transaction.withFee(feeRupiah: Long): Transaction =
+        copy(movement = movement.copy(feeAmount = Money(feeRupiah)))
 
     private fun Transaction.withLoan(): Transaction = copy(routing = routing.copy(loanId = LoanId(1L)))
 }
