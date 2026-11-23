@@ -22,7 +22,7 @@ internal fun BudgetPickerDrawer(
     categories: List<Category>,
     callbacks: BudgetCallbacks,
 ) {
-    PickerDrawer(title = stringResource(R.string.budget_pick_title), onClose = callbacks.onDismissEditor) {
+    PickerDrawer(title = stringResource(R.string.budget_pick_title), onClose = callbacks.editor.onDismissEditor) {
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),

@@ -22,15 +22,24 @@ private fun sampleRow(
     return BudgetRow(BudgetTarget(categoryId, name), BudgetStatus(budget, Money(spent)))
 }
 
+private const val OVERALL_LIMIT = 5_000_000L
+private const val OVERALL_SPENT = 3_900_000L
+private const val FOOD_LIMIT = 1_000_000L
+private const val FOOD_SPENT = 1_100_000L
+private const val TRANSPORT_LIMIT = 500_000L
+private const val TRANSPORT_SPENT = 400_000L
+private const val SHOPPING_LIMIT = 800_000L
+private const val SHOPPING_SPENT = 640_000L
+
 private val sampleSuccess =
     BudgetUiState(
         loaded = true,
-        overall = sampleRow(1L, null, 5_000_000L, 3_900_000L),
+        overall = sampleRow(rowId = 1L, name = null, limit = OVERALL_LIMIT, spent = OVERALL_SPENT),
         rows =
             listOf(
-                sampleRow(2L, "Makanan", 1_000_000L, 1_100_000L),
-                sampleRow(3L, "Transportasi", 500_000L, 400_000L),
-                sampleRow(4L, "Belanja", 800_000L, 640_000L),
+                sampleRow(rowId = 2L, name = "Makanan", limit = FOOD_LIMIT, spent = FOOD_SPENT),
+                sampleRow(rowId = 3L, name = "Transportasi", limit = TRANSPORT_LIMIT, spent = TRANSPORT_SPENT),
+                sampleRow(rowId = 4L, name = "Belanja", limit = SHOPPING_LIMIT, spent = SHOPPING_SPENT),
             ),
     )
 
