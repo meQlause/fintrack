@@ -48,7 +48,7 @@ internal data class InboxCardText(
 
 // FR-087, FR-091: a wallet or category of a card or pair side; id is null until the user or a suggestion picks one
 internal data class InboxSlot(
-    val id: Long?,
+    val slotId: Long?,
     val name: String?,
 )
 
@@ -57,7 +57,7 @@ internal data class InboxPairUi(
     val fromItemId: Long,
     val toItemId: Long,
     val from: InboxSlot,
-    val to: InboxSlot,
+    val target: InboxSlot,
     val amount: Money,
 )
 

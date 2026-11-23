@@ -53,8 +53,8 @@ internal class InboxViewModel
             val card =
                 state.value.pending.cards
                     .firstOrNull { it.itemId == itemId } ?: return
-            val walletId = card.wallet.id?.let(::WalletId)
-            val categoryId = card.category.id?.let(::CategoryId)
+            val walletId = card.wallet.slotId?.let(::WalletId)
+            val categoryId = card.category.slotId?.let(::CategoryId)
             viewModelScope.launch { commands.confirm(InboxChoice(InboxItemId(itemId), walletId, categoryId)) }
         }
 
@@ -66,9 +66,9 @@ internal class InboxViewModel
             val choice =
                 InboxChoice(
                     itemId = InboxItemId(pair.fromItemId),
-                    walletId = pair.from.id?.let(::WalletId),
+                    walletId = pair.from.slotId?.let(::WalletId),
                     categoryId = null,
-                    targetWalletId = pair.to.id?.let(::WalletId),
+                    targetWalletId = pair.target.slotId?.let(::WalletId),
                     asTransfer = true,
                 )
             viewModelScope.launch { commands.confirm(choice) }

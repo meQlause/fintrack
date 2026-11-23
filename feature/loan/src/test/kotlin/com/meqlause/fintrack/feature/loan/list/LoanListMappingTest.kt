@@ -24,7 +24,7 @@ import java.time.ZoneId
 class LoanListMappingTest {
     private val zone = ZoneId.of("Asia/Jakarta")
     private val today = LocalDate.of(2026, 11, 23)
-    private val now = Instant.parse("2026-11-01T00:00:00Z")
+    private val nowStamp = Instant.parse("2026-11-01T00:00:00Z")
 
     private fun entry(
         person: String,
@@ -41,13 +41,13 @@ class LoanListMappingTest {
                             direction = LoanDirection.LENT,
                             personName = person,
                             principal = Money(principal),
-                            startDate = now,
+                            startDate = nowStamp,
                             dueDate = dueDate,
                             note = "",
                         ),
                     status = status,
                     closedAt = null,
-                    audit = Audit(now, now),
+                    audit = Audit(nowStamp, nowStamp),
                 ),
             movements = emptyList(),
         )
@@ -56,8 +56,8 @@ class LoanListMappingTest {
     fun givenAnOpenLoanPastItsDueDateWhenMappedThenItIsOverdue() {
         val row = entry("Budi", 300_000L, dueDate = Instant.parse("2026-11-10T00:00:00Z")).toListRow(today, zone)
 
-        assertThat(row.due.overdue).isTrue()
-        assertThat(row.due.date).isEqualTo(LocalDate.of(2026, 11, 10))
+        assertThat(row.dueInfo.overdue).isTrue()
+        assertThat(row.dueInfo.date).isEqualTo(LocalDate.of(2026, 11, 10))
         assertThat(row.personName).isEqualTo("Budi")
         assertThat(row.status).isEqualTo(LoanStatus.OPEN)
     }
@@ -68,15 +68,15 @@ class LoanListMappingTest {
             entry("Sari", 300_000L, LoanStatus.SETTLED, dueDate = Instant.parse("2026-11-10T00:00:00Z"))
                 .toListRow(today, zone)
 
-        assertThat(row.due.overdue).isFalse()
+        assertThat(row.dueInfo.overdue).isFalse()
     }
 
     @Test
     fun givenALoanWithoutDueDateWhenMappedThenItHasNoDateAndIsNotOverdue() {
         val row = entry("Dimas", 300_000L).toListRow(today, zone)
 
-        assertThat(row.due.date).isNull()
-        assertThat(row.due.overdue).isFalse()
+        assertThat(row.dueInfo.date).isNull()
+        assertThat(row.dueInfo.overdue).isFalse()
         assertThat(row.progress).isEqualTo(0f)
     }
 

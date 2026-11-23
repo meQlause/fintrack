@@ -24,7 +24,7 @@ private fun sampleState(): LoanListUiState {
                 personName = "Andi",
                 outstanding = Money(ANDI_OUTSTANDING),
                 progress = 0f,
-                due = LoanDue(date = dueDate, overdue = false),
+                dueInfo = LoanDue(date = dueDate, overdue = false),
                 status = LoanStatus.OPEN,
             ),
             LoanListRow(
@@ -32,7 +32,7 @@ private fun sampleState(): LoanListUiState {
                 personName = "Dimas",
                 outstanding = Money(DIMAS_OUTSTANDING),
                 progress = 0f,
-                due = LoanDue(date = null, overdue = false),
+                dueInfo = LoanDue(date = null, overdue = false),
                 status = LoanStatus.OPEN,
             ),
         )

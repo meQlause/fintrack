@@ -66,6 +66,7 @@ interface BackupWriteDao {
     /** DOC-11: inserts quick entries. */
     @Insert
     suspend fun quickEntries(rows: List<QuickEntryEntity>)
+
     /** DOC-11: removes quick entries. */
     @Query("DELETE FROM quick_entry")
     suspend fun clearQuickEntries()

@@ -153,9 +153,9 @@ internal object HomeCalculator {
 
     // FR-043: the category colour and icon of the row, or the plain type look when it has no category
     private fun appearanceOf(
-        row: Transaction,
+        entry: Transaction,
         appearances: Map<CategoryId, Appearance>,
-    ): Appearance = RowAppearance.of(row.movement.type, row.routing.categoryId?.let(appearances::get))
+    ): Appearance = RowAppearance.of(entry.movement.type, entry.routing.categoryId?.let(appearances::get))
 
     private fun titleOf(
         transaction: Transaction,

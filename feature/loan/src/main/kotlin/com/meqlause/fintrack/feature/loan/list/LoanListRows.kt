@@ -55,7 +55,11 @@ internal fun LoanRowItem(
 @Composable
 private fun LoanRowTexts(loanRow: LoanListRow) {
     val dueColor =
-        if (loanRow.due.overdue) FintrackTheme.colors.semantics.error else FintrackTheme.colors.texts.onSurfaceVariant
+        if (loanRow.dueInfo.overdue) {
+            FintrackTheme.colors.semantics.error
+        } else {
+            FintrackTheme.colors.texts.onSurfaceVariant
+        }
     Text(
         text = loanRow.personName,
         style = FintrackScreenText.style(size = 14f, weight = 600),
@@ -113,7 +117,7 @@ private fun dueText(loanRow: LoanListRow): String =
     when {
         loanRow.status == LoanStatus.SETTLED -> stringResource(R.string.loan_status_settled)
         loanRow.status == LoanStatus.WRITTEN_OFF -> stringResource(R.string.loan_status_written_off)
-        loanRow.due.overdue -> stringResource(R.string.loan_due_overdue)
-        loanRow.due.date == null -> stringResource(R.string.loan_due_none)
-        else -> stringResource(R.string.loan_due_on, loanRow.due.date.loanDateLabel())
+        loanRow.dueInfo.overdue -> stringResource(R.string.loan_due_overdue)
+        loanRow.dueInfo.date == null -> stringResource(R.string.loan_due_none)
+        else -> stringResource(R.string.loan_due_on, loanRow.dueInfo.date.loanDateLabel())
     }

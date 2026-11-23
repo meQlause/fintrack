@@ -20,7 +20,7 @@ import java.time.Instant
 
 // FR-152, FR-155: the form and the screen state answer what the user may do with the loan
 class LoanDetailStateTest {
-    private val now = Instant.parse("2026-11-23T07:05:00Z")
+    private val nowStamp = Instant.parse("2026-11-23T07:05:00Z")
 
     private fun entry(
         status: LoanStatus,
@@ -35,13 +35,13 @@ class LoanDetailStateTest {
                             direction = direction,
                             personName = "Budi",
                             principal = Money(300_000L),
-                            startDate = now,
+                            startDate = nowStamp,
                             dueDate = null,
                             note = "",
                         ),
                     status = status,
                     closedAt = null,
-                    audit = Audit(now, now),
+                    audit = Audit(nowStamp, nowStamp),
                 ),
             movements = emptyList(),
         )

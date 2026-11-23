@@ -22,24 +22,24 @@ private val sampleCards =
             text = InboxCardText(sourceLabel = "BCA", timeLabel = "09:42", merchant = "INDOMARET KEMANG"),
             amount = Money(BELANJA_AMOUNT),
             type = TransactionType.EXPENSE,
-            wallet = InboxSlot(id = 1L, name = "BCA"),
-            category = InboxSlot(id = 2L, name = "Belanja"),
+            wallet = InboxSlot(slotId = 1L, name = "BCA"),
+            category = InboxSlot(slotId = 2L, name = "Belanja"),
         ),
         InboxCardUi(
             itemId = 2L,
             text = InboxCardText(sourceLabel = "GoPay", timeLabel = "09:15", merchant = "KOPI KENANGAN"),
             amount = Money(KOPI_AMOUNT),
             type = TransactionType.EXPENSE,
-            wallet = InboxSlot(id = 2L, name = "GoPay"),
-            category = InboxSlot(id = 1L, name = "Makanan"),
+            wallet = InboxSlot(slotId = 2L, name = "GoPay"),
+            category = InboxSlot(slotId = 1L, name = "Makanan"),
         ),
         InboxCardUi(
             itemId = 3L,
             text = InboxCardText(sourceLabel = "DANA", timeLabel = "08:03", merchant = "Transfer masuk dari XXXX"),
             amount = Money(TRANSFER_IN_AMOUNT),
             type = TransactionType.INCOME,
-            wallet = InboxSlot(id = 3L, name = "DANA"),
-            category = InboxSlot(id = 3L, name = "Lainnya"),
+            wallet = InboxSlot(slotId = 3L, name = "DANA"),
+            category = InboxSlot(slotId = 3L, name = "Lainnya"),
         ),
     )
 
@@ -47,8 +47,8 @@ private val samplePair =
     InboxPairUi(
         fromItemId = 3L,
         toItemId = 4L,
-        from = InboxSlot(id = 1L, name = "BCA"),
-        to = InboxSlot(id = 5L, name = "GoPay"),
+        from = InboxSlot(slotId = 1L, name = "BCA"),
+        target = InboxSlot(slotId = 5L, name = "GoPay"),
         amount = Money(PAIR_AMOUNT),
     )
 

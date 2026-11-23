@@ -53,34 +53,8 @@ class LoanDetailScreenUiTest {
     val composeRule = createComposeRule()
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
-    private val now = Instant.parse("2026-11-23T07:05:00Z")
 
-    private fun text(id: Int): String = context.getString(id)
-
-    private fun entry(
-        status: LoanStatus = LoanStatus.OPEN,
-        direction: LoanDirection = LoanDirection.LENT,
-        dueDate: Instant? = null,
-    ): LoanEntry =
-        LoanEntry(
-            loan =
-                Loan(
-                    loanId = LoanId(1L),
-                    agreement =
-                        Agreement(
-                            direction = direction,
-                            personName = "Budi",
-                            principal = Money(300_000L),
-                            startDate = now,
-                            dueDate = dueDate,
-                            note = "",
-                        ),
-                    status = status,
-                    closedAt = null,
-                    audit = Audit(now, now),
-                ),
-            movements = emptyList(),
-        )
+    private fun text(resId: Int): String = context.getString(resId)
 
     private fun show(
         state: LoanDetailUiState,
@@ -95,7 +69,7 @@ class LoanDetailScreenUiTest {
     @Test
     fun givenAnOpenLoanWhenRepayPressedThenTheRepaymentSheetIsRequested() {
         val events = mutableListOf<LoanDetailEvent>()
-        show(LoanDetailUiState(entry = entry(), isLoaded = true), events)
+        show(LoanDetailUiState(entry = loanEntry(), isLoaded = true), events)
 
         composeRule.onNodeWithText(text(R.string.loan_repay)).performClick()
 
@@ -105,7 +79,7 @@ class LoanDetailScreenUiTest {
     @Test
     fun givenAnOpenLoanWhenWriteOffPressedThenTheWriteOffDialogIsRequested() {
         val events = mutableListOf<LoanDetailEvent>()
-        show(LoanDetailUiState(entry = entry(), isLoaded = true), events)
+        show(LoanDetailUiState(entry = loanEntry(), isLoaded = true), events)
 
         composeRule.onNodeWithText(text(R.string.loan_write_off)).performClick()
 
@@ -115,7 +89,7 @@ class LoanDetailScreenUiTest {
     @Test
     fun givenAnOpenLoanWhenDeletePressedThenTheDeleteDialogIsRequested() {
         val events = mutableListOf<LoanDetailEvent>()
-        show(LoanDetailUiState(entry = entry(), isLoaded = true), events)
+        show(LoanDetailUiState(entry = loanEntry(), isLoaded = true), events)
 
         composeRule.onNodeWithText(text(R.string.loan_delete)).performClick()
 
@@ -125,7 +99,7 @@ class LoanDetailScreenUiTest {
     @Test
     fun givenAnOpenLoanWhenDueRowPressedThenTheDueSheetIsRequested() {
         val events = mutableListOf<LoanDetailEvent>()
-        show(LoanDetailUiState(entry = entry(), isLoaded = true), events)
+        show(LoanDetailUiState(entry = loanEntry(), isLoaded = true), events)
 
         composeRule.onNodeWithText(text(R.string.loan_due_change)).performClick()
 
@@ -134,7 +108,7 @@ class LoanDetailScreenUiTest {
 
     @Test
     fun givenASettledLoanThenItShowsItsStatusAndNoRepaymentAction() {
-        show(LoanDetailUiState(entry = entry(status = LoanStatus.SETTLED), isLoaded = true))
+        show(LoanDetailUiState(entry = loanEntry(status = LoanStatus.SETTLED), isLoaded = true))
 
         composeRule.onNodeWithText(text(R.string.loan_status_settled)).assertExists()
         composeRule.onNodeWithText(text(R.string.loan_repay)).assertDoesNotExist()
@@ -142,14 +116,14 @@ class LoanDetailScreenUiTest {
 
     @Test
     fun givenAWrittenOffLoanThenItShowsItsStatus() {
-        show(LoanDetailUiState(entry = entry(status = LoanStatus.WRITTEN_OFF), isLoaded = true))
+        show(LoanDetailUiState(entry = loanEntry(status = LoanStatus.WRITTEN_OFF), isLoaded = true))
 
         composeRule.onNodeWithText(text(R.string.loan_status_written_off)).assertExists()
     }
 
     @Test
     fun givenABorrowedLoanThenItShowsTheBorrowedStatus() {
-        show(LoanDetailUiState(entry = entry(direction = LoanDirection.BORROWED), isLoaded = true))
+        show(LoanDetailUiState(entry = loanEntry(direction = LoanDirection.BORROWED), isLoaded = true))
 
         composeRule.onNodeWithText(text(R.string.loan_status_borrowed)).assertExists()
         composeRule.onNodeWithText(text(R.string.loan_writeoff_title)).assertDoesNotExist()
@@ -160,7 +134,7 @@ class LoanDetailScreenUiTest {
         val events = mutableListOf<LoanDetailEvent>()
         show(
             LoanDetailUiState(
-                entry = entry(),
+                entry = loanEntry(),
                 isLoaded = true,
                 overlay = LoanOverlay(dialog = LoanDialog.WRITE_OFF),
             ),
@@ -178,7 +152,7 @@ class LoanDetailScreenUiTest {
         val events = mutableListOf<LoanDetailEvent>()
         show(
             LoanDetailUiState(
-                entry = entry(),
+                entry = loanEntry(),
                 isLoaded = true,
                 overlay = LoanOverlay(dialog = LoanDialog.DELETE),
             ),
@@ -190,211 +164,4 @@ class LoanDetailScreenUiTest {
 
         assertThat(events).containsExactly(LoanDetailEvent.DialogDismissed)
     }
-
-    @Test
-    fun givenTheDueSheetWhenAnOptionIsPickedThenItIsSent() {
-        val events = mutableListOf<LoanDetailEvent>()
-        show(
-            LoanDetailUiState(
-                entry = entry(),
-                isLoaded = true,
-                overlay = LoanOverlay(sheet = LoanDetailSheet.DUE_DATE),
-            ),
-            events,
-        )
-
-        composeRule.onNodeWithText(text(R.string.loan_due_one_week)).performClick()
-
-        assertThat(events).containsExactly(LoanDetailEvent.DuePicked(LoanDueOption.ONE_WEEK))
-    }
-
-    @Test
-    fun givenTheRepaymentSheetWhenADigitIsTypedThenItIsSent() {
-        val events = mutableListOf<LoanDetailEvent>()
-        show(
-            LoanDetailUiState(
-                entry = entry(),
-                isLoaded = true,
-                overlay = LoanOverlay(sheet = LoanDetailSheet.REPAYMENT),
-                repayment = RepaymentForm(errors = setOf(RepaymentError.AMOUNT_REQUIRED)),
-            ),
-            events,
-        )
-
-        composeRule.onNodeWithText(text(R.string.loan_repay_amount_required)).assertExists()
-        composeRule.onNodeWithText("7").performClick()
-
-        assertThat(events).containsExactly(LoanDetailEvent.DigitTyped("7"))
-    }
-
-    @Test
-    fun givenNoLoanYetThenNothingIsShownButTheBackButton() {
-        show(LoanDetailUiState(entry = null, isLoaded = true))
-
-        composeRule.onNodeWithText(text(R.string.loan_repay)).assertDoesNotExist()
-        composeRule.onNodeWithText(text(R.string.loan_back)).assertExists()
-    }
-
-    @Test
-    fun givenAWalletAndAnAmountThenSaveIsEnabled() {
-        show(
-            LoanDetailUiState(
-                entry = entry(),
-                isLoaded = true,
-                wallets = listOf(wallet(id = 1L, name = "BCA")),
-                overlay = LoanOverlay(sheet = LoanDetailSheet.REPAYMENT),
-                repayment = RepaymentForm(rupiahDigits = "5", walletId = WalletId(1L)),
-            ),
-        )
-
-        composeRule.onNodeWithText(text(R.string.loan_repay_save)).assertIsEnabled()
-    }
-
-    @Test
-    fun givenNoWalletThenSaveIsDisabled() {
-        show(
-            LoanDetailUiState(
-                entry = entry(),
-                isLoaded = true,
-                wallets = listOf(wallet(id = 1L, name = "BCA")),
-                overlay = LoanOverlay(sheet = LoanDetailSheet.REPAYMENT),
-                repayment = RepaymentForm(rupiahDigits = "5"),
-            ),
-        )
-
-        composeRule.onNodeWithText(text(R.string.loan_repay_save)).assertIsNotEnabled()
-    }
-
-    @Test
-    fun givenAZeroPrincipalLoanThenItsProgressIsEmpty() {
-        val zero =
-            entry().copy(
-                loan = entry().loan.copy(agreement = entry().loan.agreement.copy(principal = Money(0L))),
-            )
-        show(LoanDetailUiState(entry = zero, isLoaded = true))
-
-        composeRule.onNodeWithText(text(R.string.loan_repay)).assertExists()
-    }
-
-    @Test
-    fun givenALoanWithADueDateThenTheDueSheetCanClearIt() {
-        val events = mutableListOf<LoanDetailEvent>()
-        show(
-            LoanDetailUiState(
-                entry = entry(dueDate = Instant.parse("2026-12-05T00:00:00Z")),
-                isLoaded = true,
-                overlay = LoanOverlay(sheet = LoanDetailSheet.DUE_DATE),
-            ),
-            events,
-        )
-
-        composeRule.onNodeWithText(text(R.string.loan_due_none)).performClick()
-
-        assertThat(events).containsExactly(LoanDetailEvent.DuePicked(LoanDueOption.NONE))
-    }
-
-    @Test
-    fun givenEveryRepaymentErrorThenEachReasonIsShown() {
-        show(
-            LoanDetailUiState(
-                entry = entry(),
-                isLoaded = true,
-                overlay = LoanOverlay(sheet = LoanDetailSheet.REPAYMENT),
-                repayment = RepaymentForm(errors = RepaymentError.entries.toSet()),
-            ),
-        )
-
-        RepaymentError.entries.forEach { error ->
-            composeRule.onNodeWithText(text(error.messageRes())).assertExists()
-        }
-    }
-
-    @Test
-    fun givenTheDueSheetThenEachLongerChoiceSendsItsOption() {
-        val events = mutableListOf<LoanDetailEvent>()
-        show(
-            LoanDetailUiState(
-                entry = entry(),
-                isLoaded = true,
-                overlay = LoanOverlay(sheet = LoanDetailSheet.DUE_DATE),
-            ),
-            events,
-        )
-
-        listOf(
-            R.string.loan_due_two_weeks to LoanDueOption.TWO_WEEKS,
-            R.string.loan_due_one_month to LoanDueOption.ONE_MONTH,
-            R.string.loan_due_two_months to LoanDueOption.TWO_MONTHS,
-            R.string.loan_due_three_months to LoanDueOption.THREE_MONTHS,
-        ).forEach { (label, option) ->
-            composeRule.onNodeWithText(text(label)).performClick()
-            assertThat(events.last()).isEqualTo(LoanDetailEvent.DuePicked(option))
-        }
-    }
-
-    @Test
-    fun givenRepaymentsWhenShownThenTheTimelineListsEveryMovementKind() {
-        val movements =
-            listOf(
-                movement(TransactionType.LEND, 300_000L),
-                movement(TransactionType.REPAY, 100_000L),
-                movement(TransactionType.COLLECT, 50_000L),
-                movement(TransactionType.BORROW, 10_000L),
-            )
-        show(LoanDetailUiState(entry = entry().copy(movements = movements), isLoaded = true))
-
-        composeRule.onNodeWithText(context.getString(R.string.loan_movement_lend, "Budi")).assertExists()
-        composeRule.onNodeWithText(context.getString(R.string.loan_movement_repay, "Budi")).assertExists()
-        composeRule.onNodeWithText(context.getString(R.string.loan_movement_collect, "Budi")).assertExists()
-        composeRule.onNodeWithText(context.getString(R.string.loan_movement_borrow, "Budi")).assertExists()
-    }
-
-    @Test
-    fun givenAWalletWhenRepaymentSheetIsOpenThenPickingAndSavingSendsTheChoices() {
-        val events = mutableListOf<LoanDetailEvent>()
-        val wallet = wallet(id = 1L, name = "BCA")
-        show(
-            LoanDetailUiState(
-                entry = entry(),
-                isLoaded = true,
-                wallets = listOf(wallet),
-                overlay = LoanOverlay(sheet = LoanDetailSheet.REPAYMENT),
-                repayment = RepaymentForm(rupiahDigits = "5", errors = setOf(RepaymentError.WALLET_REQUIRED)),
-            ),
-            events,
-        )
-
-        composeRule.onNodeWithText(text(R.string.loan_repay_wallet_required)).assertExists()
-        composeRule.onNodeWithText("BCA").performClick()
-
-        assertThat(events).containsExactly(
-            LoanDetailEvent.WalletPicked(WalletId(1L)),
-        )
-    }
-
-    private fun movement(
-        type: TransactionType,
-        amount: Long,
-    ): Transaction =
-        Transaction(
-            transactionId = TransactionId(amount),
-            movement = Movement(type, Money(amount)),
-            routing = Routing(WalletId(1L), null, null, LoanId(1L)),
-            memo = Memo(),
-            origin = Origin(TransactionSource.MANUAL, null),
-            timing = Timing(now, Audit(now, now)),
-        )
-
-    private fun wallet(
-        id: Long,
-        name: String,
-    ): Wallet =
-        Wallet(
-            walletId = WalletId(id),
-            kind = WalletKind(type = WalletType.CASH, investKind = null),
-            terms = WalletTerms(initialBalance = Money(0L), credit = null),
-            profile = WalletProfile(name = name, appearance = Appearance("wallet", "blue"), sortOrder = 0),
-            status = WalletStatus(),
-            audit = Audit(now, now),
-        )
 }

@@ -156,7 +156,7 @@ private fun CardButtons(
         description = stringResource(R.string.inbox_confirm),
         onClick = { actions.onConfirm(card.itemId) },
         filled = true,
-        enabled = card.wallet.id != null && card.category.id != null,
+        enabled = card.wallet.slotId != null && card.category.slotId != null,
     )
 }
 

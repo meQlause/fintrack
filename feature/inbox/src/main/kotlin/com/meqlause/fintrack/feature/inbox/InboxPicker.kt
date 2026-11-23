@@ -71,9 +71,9 @@ private fun selectedKey(
     val card = state.pending.cards.firstOrNull { it.itemId == picker.itemId }
     val pair = state.pending.pairs.firstOrNull { it.fromItemId == picker.itemId || it.toItemId == picker.itemId }
     return when (picker.kind) {
-        PickKind.CATEGORY -> card?.category?.id?.toString()
-        PickKind.WALLET -> card?.wallet?.id?.toString() ?: pair?.from?.id?.toString()
-        PickKind.TARGET_WALLET -> pair?.to?.id?.toString()
+        PickKind.CATEGORY -> card?.category?.slotId?.toString()
+        PickKind.WALLET -> card?.wallet?.slotId?.toString() ?: pair?.from?.slotId?.toString()
+        PickKind.TARGET_WALLET -> pair?.target?.slotId?.toString()
     }
 }
 

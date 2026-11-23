@@ -30,7 +30,7 @@ class LoanListScreenUiTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
-    private fun text(id: Int): String = context.getString(id)
+    private fun text(resId: Int): String = context.getString(resId)
 
     private fun row(
         loanId: Long,
@@ -42,7 +42,7 @@ class LoanListScreenUiTest {
             personName = person,
             outstanding = Money(150_000L),
             progress = 0.5f,
-            due = LoanDue(date = null, overdue = false),
+            dueInfo = LoanDue(date = null, overdue = false),
             status = status,
         )
 
@@ -179,7 +179,7 @@ class LoanListScreenUiTest {
                     listOf(
                         LoanPersonGroup(
                             personName = "Andi",
-                            rows = listOf(row(5L, "Andi").copy(due = LoanDue(date = date, overdue = false))),
+                            rows = listOf(row(5L, "Andi").copy(dueInfo = LoanDue(date = date, overdue = false))),
                         ),
                     ),
                 settled = emptyList(),
@@ -194,7 +194,7 @@ class LoanListScreenUiTest {
     @Test
     fun givenOverdueAndWrittenOffLoansThenEachRowSaysItsState() {
         val overdue =
-            row(3L, "Andi").copy(due = LoanDue(date = LocalDate.of(2026, 11, 1), overdue = true))
+            row(3L, "Andi").copy(dueInfo = LoanDue(date = LocalDate.of(2026, 11, 1), overdue = true))
         val state =
             LoanListUiState(
                 direction = LoanDirection.LENT,

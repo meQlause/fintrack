@@ -35,7 +35,7 @@ internal fun InboxPairCard(
     modifier: Modifier = Modifier,
 ) {
     val fromName = pair.from.name.orEmpty()
-    val toName = pair.to.name.orEmpty()
+    val toName = pair.target.name.orEmpty()
     ScreenCard(modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(FintrackScreenSizes.rowPaddingHorizontal)) {
             InboxHeaderRow(
@@ -68,7 +68,7 @@ private fun PairActions(
             contentColor = transfer,
         )
         ScreenPill(
-            label = pair.to.name ?: stringResource(R.string.inbox_pick_wallet),
+            label = pair.target.name ?: stringResource(R.string.inbox_pick_wallet),
             onClick = { onPick(InboxPicker(pair.toItemId, PickKind.TARGET_WALLET)) },
             contentColor = transfer,
         )
@@ -100,6 +100,6 @@ private fun PairButtons(
         description = stringResource(R.string.inbox_pair_confirm),
         onClick = { actions.onConfirmPair(pair.fromItemId) },
         filled = true,
-        enabled = pair.from.id != null && pair.to.id != null,
+        enabled = pair.from.slotId != null && pair.target.slotId != null,
     )
 }

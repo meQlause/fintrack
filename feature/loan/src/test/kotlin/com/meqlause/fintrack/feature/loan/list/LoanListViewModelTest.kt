@@ -87,12 +87,12 @@ class LoanListViewModelTest {
             val state = viewModel().state.first { it.groups.isNotEmpty() }
             val rows = state.groups.flatMap { it.rows }.associateBy { it.personName }
 
-            assertThat(rows.getValue("Budi").due.overdue).isTrue()
-            assertThat(rows.getValue("Budi").due.date).isEqualTo(
+            assertThat(rows.getValue("Budi").dueInfo.overdue).isTrue()
+            assertThat(rows.getValue("Budi").dueInfo.date).isEqualTo(
                 Instant.parse("2026-11-01T00:00:00Z").atZone(clock.zone).toLocalDate(),
             )
-            assertThat(rows.getValue("Dimas").due.overdue).isFalse()
-            assertThat(rows.getValue("Dimas").due.date).isNull()
+            assertThat(rows.getValue("Dimas").dueInfo.overdue).isFalse()
+            assertThat(rows.getValue("Dimas").dueInfo.date).isNull()
         }
 
     @Test

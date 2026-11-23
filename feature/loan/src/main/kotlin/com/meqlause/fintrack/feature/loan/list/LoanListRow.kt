@@ -10,7 +10,7 @@ internal data class LoanListRow(
     val personName: String,
     val outstanding: Money,
     val progress: Float,
-    val due: LoanDue,
+    val dueInfo: LoanDue,
     val status: LoanStatus,
 )
 

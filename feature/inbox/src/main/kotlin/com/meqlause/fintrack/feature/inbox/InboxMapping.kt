@@ -134,7 +134,7 @@ private fun pairCard(
         fromItemId = from.inboxItemId.value,
         toItemId = toItem.inboxItemId.value,
         from = InboxSlot(fromWallet, fromWallet?.let { names.wallets[it] }),
-        to = InboxSlot(toWallet, toWallet?.let { names.wallets[it] }),
+        target = InboxSlot(toWallet, toWallet?.let { names.wallets[it] }),
         amount = from.parsed.amount,
     )
 }

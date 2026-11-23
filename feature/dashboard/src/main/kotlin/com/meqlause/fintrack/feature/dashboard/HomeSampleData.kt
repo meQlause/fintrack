@@ -117,21 +117,21 @@ private fun sampleShortcuts(): List<ShortcutTileParams> = listOf(PARKIR, KOPI, O
 
 private fun sampleWallets(): List<HomeWallet> =
     listOf(
-        wallet(id = 1L, name = "Tunai", balance = 223_000L, appearance = Appearance("cash", "green")),
-        wallet(id = 2L, name = "BCA", balance = 10_000_000L, appearance = Appearance("bank", "blue")),
-        wallet(id = 3L, name = "GoPay", balance = 222_000L, appearance = Appearance("ewallet", "teal")),
-        wallet(id = 4L, name = "DANA", balance = 300_000L, appearance = Appearance("ewallet", "indigo")),
-        wallet(id = 5L, name = "Tabungan", balance = 2_800_000L, appearance = Appearance("bank", "amber")),
+        wallet(walletKey = 1L, name = "Tunai", balance = 223_000L, appearance = Appearance("cash", "green")),
+        wallet(walletKey = 2L, name = "BCA", balance = 10_000_000L, appearance = Appearance("bank", "blue")),
+        wallet(walletKey = 3L, name = "GoPay", balance = 222_000L, appearance = Appearance("ewallet", "teal")),
+        wallet(walletKey = 4L, name = "DANA", balance = 300_000L, appearance = Appearance("ewallet", "indigo")),
+        wallet(walletKey = 5L, name = "Tabungan", balance = 2_800_000L, appearance = Appearance("bank", "amber")),
     )
 
 private fun wallet(
-    id: Long,
+    walletKey: Long,
     name: String,
     balance: Long,
     appearance: Appearance,
 ): HomeWallet =
     HomeWallet(
-        walletId = WalletId(value = id),
+        walletId = WalletId(value = walletKey),
         name = name,
         balance = Money(rupiah = balance),
         appearance = appearance,
