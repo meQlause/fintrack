@@ -12,7 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
+import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.settings.R
 
@@ -23,30 +24,29 @@ internal fun AboutScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-    ) {
-        FintrackTabHeader(
+    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+        ScreenBackHeader(
             title = stringResource(R.string.about_title),
-            leading = { BackLabel(onBack = onBack) },
+            backLabel = stringResource(R.string.settings_back),
+            onBack = onBack,
         )
         Column(
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = FintrackScreenSizes.screenGutter)
+                    .padding(bottom = FintrackScreenSizes.screenBottom),
+            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
         ) {
             AboutHeader(version = version)
-            SettingsSection(title = stringResource(R.string.about_section_privacy)) {
+            SettingsSection(title = stringResource(R.string.about_section_privacy), padded = true) {
                 AboutBody(text = stringResource(R.string.about_privacy_statement))
             }
-            SettingsSection(title = stringResource(R.string.about_section_storage)) {
+            SettingsSection(title = stringResource(R.string.about_section_storage), padded = true) {
                 AboutStorage()
             }
-            SettingsSection(title = stringResource(R.string.about_section_licenses)) {
+            SettingsSection(title = stringResource(R.string.about_section_licenses), padded = true) {
                 AboutBody(text = stringResource(R.string.about_license_font))
             }
         }

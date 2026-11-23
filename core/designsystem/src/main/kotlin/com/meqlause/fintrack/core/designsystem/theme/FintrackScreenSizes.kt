@@ -28,6 +28,8 @@ object FintrackScreenSizes {
     val primaryButtonHeight: Dp = Dp(value = 44f)
     val chevron: Dp = Dp(value = 16f)
     val thinBar: Dp = Dp(value = 3f)
+    val rowTall: Dp = Dp(value = 15f)
+    val rowSwitch: Dp = Dp(value = 13f)
     val iconButton: Dp = Dp(value = 40f)
     val backGlyph: Dp = Dp(value = 20f)
     val badgeCorner: Dp = Dp(value = 7f)

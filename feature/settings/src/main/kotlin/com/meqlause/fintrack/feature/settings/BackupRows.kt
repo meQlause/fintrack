@@ -3,7 +3,6 @@ package com.meqlause.fintrack.feature.settings
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FormRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import java.time.Instant
 import java.time.LocalDate
@@ -16,22 +15,25 @@ internal fun BackupRows(
     backup: BackupUiState,
     callbacks: SettingsCallbacks,
 ) {
-    FormRow(
+    SettingsRow(
         label = stringResource(R.string.settings_backup_create_label),
         value = "",
         onClick = callbacks.onBackupCreate,
     )
-    FormRow(
+    SettingsRow(
+        showDivider = true,
         label = stringResource(R.string.settings_backup_restore_label),
         value = "",
         onClick = callbacks.onBackupRestore,
     )
-    FormRow(
+    SettingsRow(
+        showDivider = true,
         label = stringResource(R.string.settings_backup_reminder_label),
         value = reminderValue(backup.reminderDays),
         onClick = callbacks.onBackupReminder,
     )
-    FormRow(
+    SettingsRow(
+        showDivider = true,
         label = stringResource(R.string.settings_backup_csv_label),
         value = "",
         onClick = callbacks.onBackupCsv,

@@ -1,7 +1,6 @@
 package com.meqlause.fintrack.feature.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,9 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FintrackCard
-import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
-import com.meqlause.fintrack.core.designsystem.component.FormRow
+import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.component.ScreenGroup
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.settings.R
 
@@ -26,53 +25,54 @@ internal fun SettingsScreen(
     modifier: Modifier = Modifier,
     backup: BackupUiState = BackupUiState(),
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-    ) {
-        FintrackTabHeader(
+    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+        ScreenBackHeader(
             title = stringResource(R.string.settings_title),
-            leading = { BackLabel(onBack = callbacks.onBack) },
+            backLabel = stringResource(R.string.settings_back),
+            onBack = callbacks.onBack,
         )
         Column(
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = FintrackScreenSizes.screenGutter)
+                    .padding(bottom = FintrackScreenSizes.screenBottom),
         ) {
             SettingsSection(title = stringResource(R.string.settings_section_general)) {
-                FormRow(
+                SettingsRow(
                     label = stringResource(R.string.settings_theme_label),
                     value = themeLabel(state.themeMode),
                     onClick = { callbacks.onOpenSheet(SettingsSheet.THEME) },
                 )
-                FormRow(
+                SettingsRow(
+                    showDivider = true,
                     label = stringResource(R.string.settings_period_label),
                     value = stringResource(R.string.settings_period_value, state.periodStartDay),
                     onClick = { callbacks.onOpenSheet(SettingsSheet.PERIOD_DAY) },
                 )
             }
             SettingsSection(title = stringResource(R.string.settings_section_data)) {
-                FormRow(
+                SettingsRow(
                     label = stringResource(R.string.settings_categories_label),
                     value = "",
                     onClick = callbacks.onOpenCategories,
                 )
-                FormRow(
+                SettingsRow(
+                    showDivider = true,
                     label = stringResource(R.string.settings_budgets_label),
                     value = "",
                     onClick = callbacks.onOpenBudgets,
                 )
             }
             SettingsSection(title = stringResource(R.string.settings_section_detection)) {
-                FormRow(
+                SettingsRow(
                     label = stringResource(R.string.settings_monitored_label),
                     value = "",
                     onClick = callbacks.onOpenMonitoredApps,
                 )
-                FormRow(
+                SettingsRow(
+                    showDivider = true,
                     label = stringResource(R.string.settings_battery_label),
                     value = "",
                     onClick = callbacks.onOpenBatteryHelp,
@@ -82,7 +82,7 @@ internal fun SettingsScreen(
                 SecurityRows(state = state, callbacks = callbacks)
             }
             SettingsSection(title = stringResource(R.string.settings_section_about)) {
-                FormRow(
+                SettingsRow(
                     label = stringResource(R.string.settings_about_label),
                     value = "",
                     onClick = callbacks.onOpenAbout,
@@ -96,19 +96,19 @@ internal fun SettingsScreen(
     SettingsSheetHost(state = state, callbacks = callbacks)
 }
 
-// FR-120, FR-121: a grey section label above its rows
+// FR-120, FR-121: a grey section label above one card of rows
 @Composable
 internal fun SettingsSection(
     title: String,
+    padded: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    Column {
-        Text(
-            text = title,
-            style = FintrackTheme.typography.labelLarge,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-        )
-        content()
+    ScreenGroup(label = title) {
+        if (padded) {
+            Column(modifier = Modifier.padding(FintrackScreenSizes.rowPaddingHorizontal)) { content() }
+        } else {
+            content()
+        }
     }
 }
 
@@ -119,18 +119,19 @@ internal fun SecurityRows(
     callbacks: SettingsCallbacks,
 ) {
     if (state.pinEnabled) {
-        FormRow(
+        SettingsRow(
             label = stringResource(R.string.settings_pin_change_label),
             value = "",
             onClick = callbacks.onOpenPinChange,
         )
-        FormRow(
+        SettingsRow(
             label = stringResource(R.string.settings_pin_remove_label),
             value = "",
             onClick = callbacks.onOpenPinRemove,
+            showDivider = true,
         )
     } else {
-        FormRow(
+        SettingsRow(
             label = stringResource(R.string.settings_pin_setup_label),
             value = "",
             onClick = callbacks.onOpenPinSetup,
@@ -140,24 +141,14 @@ internal fun SecurityRows(
         SwitchRow(
             label = stringResource(R.string.settings_biometric_label),
             checked = state.biometricEnabled,
+            showDivider = true,
             onCheckedChange = callbacks.onToggleBiometric,
         )
     }
     SwitchRow(
         label = stringResource(R.string.settings_hide_recents_label),
         checked = state.hideFromRecents,
+        showDivider = true,
         onCheckedChange = callbacks.onToggleHideFromRecents,
     )
-}
-
-// S-12: the back action of the header, shared look with the Kategori screen
-@Composable
-internal fun BackLabel(onBack: () -> Unit) {
-    FintrackCard(onClick = onBack) {
-        Text(
-            text = stringResource(R.string.settings_back),
-            style = FintrackTheme.typography.labelLarge,
-            color = FintrackTheme.colors.texts.onSurface,
-        )
-    }
 }

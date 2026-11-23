@@ -15,8 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
-import com.meqlause.fintrack.core.designsystem.component.FormRow
+import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.picker.OptionsDrawer
 import com.meqlause.fintrack.feature.settings.R
@@ -38,37 +38,36 @@ internal fun MonitoredAppsScreen(
     callbacks: MonitoredAppsCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-    ) {
-        FintrackTabHeader(
+    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+        ScreenBackHeader(
             title = stringResource(R.string.monitored_title),
-            leading = { BackLabel(onBack = callbacks.onBack) },
+            backLabel = stringResource(R.string.settings_back),
+            onBack = callbacks.onBack,
         )
         Column(
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = FintrackScreenSizes.screenGutter)
+                    .padding(bottom = FintrackScreenSizes.screenBottom),
+            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
         ) {
             SettingsSection(title = stringResource(R.string.monitored_section_access)) {
-                FormRow(
+                SettingsRow(
                     label = stringResource(R.string.monitored_access_label),
                     value = accessLabel(state.accessGranted),
                     onClick = callbacks.onOpenAccessSettings,
                 )
             }
-            SettingsSection(title = stringResource(R.string.monitored_section_diagnostics)) {
+            SettingsSection(title = stringResource(R.string.monitored_section_diagnostics), padded = true) {
                 Text(
                     text = stringResource(R.string.monitored_counts_value, state.ignoredCount, state.unrecognizedCount),
                     style = FintrackTheme.typography.labelLarge,
                     color = FintrackTheme.colors.texts.onSurfaceVariant,
                 )
             }
-            SettingsSection(title = stringResource(R.string.monitored_section_apps)) {
+            SettingsSection(title = stringResource(R.string.monitored_section_apps), padded = true) {
                 state.apps.forEach { row -> AppRow(monitoredApp = row, callbacks = callbacks) }
             }
         }
@@ -108,7 +107,7 @@ private fun AppRow(
                 onCheckedChange = { callbacks.onToggle(monitoredApp.packageName, it) },
             )
         }
-        FormRow(
+        SettingsRow(
             label = stringResource(R.string.monitored_wallet_label),
             value = monitoredApp.defaultWalletName ?: stringResource(R.string.monitored_wallet_none),
             onClick = { callbacks.onOpenPicker(monitoredApp.packageName) },
