@@ -7,15 +7,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.model.WalletId
 
 // FR-040: the wallet tiles under the hero, one per active wallet, scrolled sideways edge to edge
 @Composable
 internal fun HomeWalletRow(
     wallets: List<HomeWallet>,
     hidden: Boolean,
-    onOpenWallet: (WalletId) -> Unit,
-    onOpenCreditWallet: (WalletId) -> Unit,
+    callbacks: HomeCallbacks,
     modifier: Modifier = Modifier,
 ) {
     val positiveTotal = wallets.sumOf { it.balance.rupiah.coerceAtLeast(0L) }
@@ -25,7 +23,7 @@ internal fun HomeWalletRow(
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
         items(items = wallets, key = { it.walletId.value }) { wallet ->
-            val open = if (wallet.isCredit) onOpenCreditWallet else onOpenWallet
+            val open = if (wallet.isCredit) callbacks.onOpenCreditWallet else callbacks.onOpenWallet
             HomeWalletChip(
                 wallet = wallet,
                 hidden = hidden,

@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import com.meqlause.fintrack.core.designsystem.theme.FintrackAppBadges
@@ -50,7 +51,7 @@ internal fun HomeInboxBanner(
     ) {
         BannerBadges(sources = inbox.sources)
         Text(
-            text = stringResource(R.string.home_inbox_banner, inbox.count),
+            text = pluralStringResource(R.plurals.home_inbox_banner, inbox.count, inbox.count),
             style = FintrackScreenText.style(size = 13.5f, weight = 700),
             color = brands.onPrimaryContainer,
             modifier = Modifier.weight(1f),

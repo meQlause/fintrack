@@ -3,7 +3,6 @@ package com.meqlause.fintrack.feature.dashboard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
-import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutManageList
 import com.meqlause.fintrack.core.ui.R as UiR
 

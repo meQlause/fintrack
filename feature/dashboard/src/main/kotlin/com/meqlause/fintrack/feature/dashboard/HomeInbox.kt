@@ -12,7 +12,7 @@ internal data class HomeInbox(
     val sources: List<String> = emptyList(),
 ) {
     companion object {
-        fun of(items: List<InboxItem>): HomeInbox {
+        fun fromItems(items: List<InboxItem>): HomeInbox {
             val pending = items.filter { it.resolution.status == InboxStatus.PENDING }
             val sources = pending.map { InboxSourceLabel.of(it.notice.packageName) }.distinct().take(BADGE_LIMIT)
             return HomeInbox(count = pending.size, sources = sources)

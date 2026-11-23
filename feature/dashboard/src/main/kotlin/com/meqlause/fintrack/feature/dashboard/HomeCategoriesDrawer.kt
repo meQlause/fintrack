@@ -18,7 +18,6 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.model.Money
 
 // FR-042, S-03: the Kategori drawer: every expense category with its share, count and amount
 @Composable
@@ -29,9 +28,7 @@ internal fun HomeCategoriesDrawer(
     PickerDrawer(title = stringResource(R.string.home_categories_title), onClose = onClose) {
         state.categories.forEachIndexed { index, share ->
             CategoryLine(
-                name = share.name ?: stringResource(R.string.home_category_none),
-                count = share.count,
-                amount = share.amount,
+                share = share,
                 percent = HomeCalculator.percentOf(share.amount, state.period.expense),
                 hidden = state.hidden,
                 color = homeSegmentColor(FintrackTheme.colors, index),
@@ -43,9 +40,7 @@ internal fun HomeCategoriesDrawer(
 // S-03: one category line: colour dot, name with count, then amount and percent
 @Composable
 private fun CategoryLine(
-    name: String,
-    count: Int,
-    amount: Money,
+    share: HomeCategoryShare,
     percent: Int,
     hidden: Boolean,
     color: Color,
@@ -56,28 +51,42 @@ private fun CategoryLine(
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
         Box(modifier = Modifier.size(FintrackTheme.spacing.small).clip(FintrackTheme.shapes.full).background(color))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = name,
-                style = FintrackTheme.typography.bodyLarge,
-                color = FintrackTheme.colors.texts.onSurface,
-            )
-            Text(
-                text = pluralStringResource(R.plurals.home_category_count, count, count),
-                style = FintrackTheme.typography.labelMedium,
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-            )
-        }
+        CategoryName(
+            name = share.name ?: stringResource(R.string.home_category_none),
+            count = share.count,
+            modifier = Modifier.weight(1f),
+        )
         Column(
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xxSmall),
         ) {
-            HomeAmountText(money = amount, hidden = hidden, style = FintrackTheme.typography.bodyLarge)
+            HomeAmountText(money = share.amount, hidden = hidden, style = FintrackTheme.typography.bodyLarge)
             Text(
                 text = stringResource(R.string.home_percent, percent),
                 style = FintrackTheme.typography.labelMedium,
                 color = FintrackTheme.colors.texts.onSurfaceVariant,
             )
         }
+    }
+}
+
+// S-03: the category name over the count of its expenses
+@Composable
+private fun CategoryName(
+    name: String,
+    count: Int,
+    modifier: Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = name,
+            style = FintrackTheme.typography.bodyLarge,
+            color = FintrackTheme.colors.texts.onSurface,
+        )
+        Text(
+            text = pluralStringResource(R.plurals.home_category_count, count, count),
+            style = FintrackTheme.typography.labelMedium,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
     }
 }

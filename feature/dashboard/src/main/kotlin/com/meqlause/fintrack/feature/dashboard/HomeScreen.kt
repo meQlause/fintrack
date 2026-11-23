@@ -59,36 +59,39 @@ private fun HomeBody(
         }
         HomeQuickEntry(
             shortcuts = state.shortcuts,
-            onNewEntry = callbacks.onQuickEntry,
-            onApplyShortcut = callbacks.onApplyShortcut,
-            onManage = callbacks.onOpenShortcuts,
+            callbacks = callbacks,
             modifier = Modifier.padding(top = FintrackTheme.spacing.section),
         )
-        if (state.bills.bills.isNotEmpty()) {
-            HomeBillsCard(
-                bills = state.bills,
-                receivable = state.netWorth.piutang,
-                payable = state.netWorth.hutang,
-                hidden = state.hidden,
-                onOpenCreditWallet = callbacks.onOpenCreditWallet,
-                onOpenInstalments = callbacks.onOpenInstalments,
-                onOpenLoans = callbacks.onOpenLoans,
-                modifier = gutter.padding(top = FintrackTheme.spacing.stack),
-            )
-        }
-        if (state.categories.isNotEmpty()) {
-            HomeCategoryCard(
-                state = state,
-                onOpen = callbacks.onOpenCategories,
-                modifier = gutter.padding(top = FintrackTheme.spacing.stack),
-            )
-        }
+        HomeCards(state = state, callbacks = callbacks)
         HomeRecentList(
             state = state,
             callbacks = callbacks,
             modifier = gutter.padding(top = FintrackTheme.spacing.block),
         )
         HomeShortcutUndo(state = state, callbacks = callbacks)
+    }
+}
+
+// FR-137, FR-042: the Tagihan card and the category card, each shown only when it has rows
+@Composable
+private fun HomeCards(
+    state: HomeUiState.Success,
+    callbacks: HomeCallbacks,
+) {
+    val gutter = Modifier.padding(horizontal = FintrackTheme.spacing.gutter)
+    if (state.bills.bills.isNotEmpty()) {
+        HomeBillsCard(
+            state = state,
+            callbacks = callbacks,
+            modifier = gutter.padding(top = FintrackTheme.spacing.stack),
+        )
+    }
+    if (state.categories.isNotEmpty()) {
+        HomeCategoryCard(
+            state = state,
+            onOpen = callbacks.onOpenCategories,
+            modifier = gutter.padding(top = FintrackTheme.spacing.stack),
+        )
     }
 }
 

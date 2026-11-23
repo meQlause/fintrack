@@ -33,27 +33,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutTile
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutTileParams
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
-private val DASH_INTERVALS = floatArrayOf(10f, 8f)
+private const val DASH_ON = 10f
+private const val DASH_OFF = 8f
+private val DASH_INTERVALS = floatArrayOf(DASH_ON, DASH_OFF)
 
 // DOC-09, S-03, FR-039: "Catat cepat" row of shortcut tiles, a dashed "Baru" tile and "Atur" for the manager drawer
 @Composable
 internal fun HomeQuickEntry(
     shortcuts: List<ShortcutTileParams>,
-    onNewEntry: () -> Unit,
-    onApplyShortcut: (QuickEntryId) -> Unit,
-    onManage: () -> Unit,
+    callbacks: HomeCallbacks,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
-        QuickEntryHeader(onManage = onManage)
+        QuickEntryHeader(onManage = callbacks.onOpenShortcuts)
         Row(
             modifier =
                 Modifier
@@ -65,11 +64,11 @@ internal fun HomeQuickEntry(
             shortcuts.forEach { params ->
                 ShortcutTile(
                     params = params,
-                    onClick = { onApplyShortcut(params.quickEntryId) },
+                    onClick = { callbacks.onApplyShortcut(params.quickEntryId) },
                     modifier = Modifier.width(FintrackTheme.sizes.shortcutTileWidth),
                 )
             }
-            NewShortcutTile(onClick = onNewEntry)
+            NewShortcutTile(onClick = callbacks.onQuickEntry)
         }
     }
 }
@@ -92,19 +91,25 @@ private fun NewShortcutTile(onClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Icon(
-            painter = painterResource(DesignR.drawable.ic_plus),
-            contentDescription = null,
-            tint = FintrackTheme.colors.texts.onSurfaceVariant,
-            modifier = Modifier.size(FintrackTheme.sizes.iconSmall),
-        )
-        Spacer(modifier = Modifier.height(FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall))
-        Text(
-            text = stringResource(R.string.home_quick_add),
-            style = FintrackTheme.typography.captionWide,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-        )
+        NewShortcutLabel()
     }
+}
+
+// FR-039: the plus icon and its caption inside the dashed tile
+@Composable
+private fun NewShortcutLabel() {
+    Icon(
+        painter = painterResource(DesignR.drawable.ic_plus),
+        contentDescription = null,
+        tint = FintrackTheme.colors.texts.onSurfaceVariant,
+        modifier = Modifier.size(FintrackTheme.sizes.iconSmall),
+    )
+    Spacer(modifier = Modifier.height(FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall))
+    Text(
+        text = stringResource(R.string.home_quick_add),
+        style = FintrackTheme.typography.captionWide,
+        color = FintrackTheme.colors.texts.onSurfaceVariant,
+    )
 }
 
 // FR-039: the stroke is inset by half its width so the dashes are not cut by the tile edge

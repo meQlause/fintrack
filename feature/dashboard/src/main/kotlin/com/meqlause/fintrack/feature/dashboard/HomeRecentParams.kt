@@ -9,13 +9,13 @@ import com.meqlause.fintrack.core.ui.transaction.TransactionRowParams
 @Composable
 internal fun HomeRecent.toParams(): TransactionRowParams =
     TransactionRowParams(
-        iconKey = appearance.iconKey,
-        colorKey = appearance.colorKey,
+        iconKey = style.appearance.iconKey,
+        colorKey = style.appearance.colorKey,
         title = title ?: stringResource(typeLabelOf(type)),
-        subtitle = stringResource(R.string.home_row_subtitle, walletName, whenLabel),
+        subtitle = stringResource(R.string.home_row_subtitle, stamp.walletName, stamp.whenLabel),
         amount = amount,
         type = type,
-        auto = auto,
+        auto = style.auto,
     )
 
 private fun typeLabelOf(type: TransactionType): Int =

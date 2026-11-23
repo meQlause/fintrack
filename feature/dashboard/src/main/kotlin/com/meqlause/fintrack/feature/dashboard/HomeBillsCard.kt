@@ -22,19 +22,13 @@ import androidx.compose.ui.text.font.FontWeight
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.Money
-import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 
 // FR-137, FR-146, S-03: the Tagihan card; a bill opens its credit wallet (S-14), the footer cells open S-16 and S-17
 @Composable
 internal fun HomeBillsCard(
-    bills: HomeBills,
-    receivable: Money,
-    payable: Money,
-    hidden: Boolean,
-    onOpenCreditWallet: (WalletId) -> Unit,
-    onOpenInstalments: () -> Unit,
-    onOpenLoans: () -> Unit,
+    state: HomeUiState.Success,
+    callbacks: HomeCallbacks,
     modifier: Modifier = Modifier,
 ) {
     FintrackCard(modifier = modifier.fillMaxWidth(), contentPadding = PaddingValues()) {
@@ -44,43 +38,74 @@ internal fun HomeBillsCard(
             style = FintrackTheme.typography.caption,
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
-        bills.bills.forEach { bill ->
+        state.bills.bills.forEach { bill ->
             HorizontalDivider(thickness = FintrackTheme.sizes.hairline, color = FintrackTheme.colors.surfaces.outline)
-            HomeBillRow(bill = bill, hidden = hidden, onClick = { onOpenCreditWallet(bill.walletId) })
+            HomeBillRow(
+                bill = bill,
+                hidden = state.hidden,
+                onClick = { callbacks.onOpenCreditWallet(bill.walletId) },
+            )
         }
         HorizontalDivider(thickness = FintrackTheme.sizes.hairline, color = FintrackTheme.colors.surfaces.outline)
-        Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-            HomeFooterCell(
-                label = stringResource(R.string.home_bills_instalments),
-                onClick = onOpenInstalments,
-                modifier = Modifier.weight(1f),
-            ) {
-                Text(
-                    text =
-                        if (hidden) {
-                            stringResource(
-                                R.string.home_amount_hidden,
-                            )
-                        } else {
-                            MoneyFormatter.format(bills.instalmentsDue)
-                        },
-                    style = FintrackTheme.typography.numberSmall,
-                    color = FintrackTheme.colors.texts.onSurface,
-                )
-            }
-            Box(
-                modifier =
-                    Modifier
-                        .width(FintrackTheme.sizes.hairline)
-                        .fillMaxHeight()
-                        .background(FintrackTheme.colors.surfaces.outline),
+        HomeBillsFooter(state = state, callbacks = callbacks)
+    }
+}
+
+// FR-146: the instalments cell and the loans cell at the foot of the Tagihan card
+@Composable
+private fun HomeBillsFooter(
+    state: HomeUiState.Success,
+    callbacks: HomeCallbacks,
+) {
+    Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+        InstalmentsCell(
+            state = state,
+            onClick = callbacks.onOpenInstalments,
+            modifier = Modifier.weight(1f),
+        )
+        Box(
+            modifier =
+                Modifier
+                    .width(FintrackTheme.sizes.hairline)
+                    .fillMaxHeight()
+                    .background(FintrackTheme.colors.surfaces.outline),
+        )
+        HomeFooterCell(
+            label = stringResource(R.string.home_bills_loans),
+            onClick = callbacks.onOpenLoans,
+            modifier = Modifier.weight(1f),
+        ) {
+            HomeLoansText(
+                receivable = state.netWorth.piutang,
+                payable = state.netWorth.hutang,
+                hidden = state.hidden,
             )
-            HomeFooterCell(
-                label = stringResource(R.string.home_bills_loans),
-                onClick = onOpenLoans,
-                modifier = Modifier.weight(1f),
-            ) { HomeLoansText(receivable = receivable, payable = payable, hidden = hidden) }
         }
+    }
+}
+
+// FR-146: the instalments due this month, masked while amounts are hidden
+@Composable
+private fun InstalmentsCell(
+    state: HomeUiState.Success,
+    onClick: () -> Unit,
+    modifier: Modifier,
+) {
+    HomeFooterCell(
+        label = stringResource(R.string.home_bills_instalments),
+        onClick = onClick,
+        modifier = modifier,
+    ) {
+        Text(
+            text =
+                if (state.hidden) {
+                    stringResource(R.string.home_amount_hidden)
+                } else {
+                    MoneyFormatter.format(state.bills.instalmentsDue)
+                },
+            style = FintrackTheme.typography.numberSmall,
+            color = FintrackTheme.colors.texts.onSurface,
+        )
     }
 }
 

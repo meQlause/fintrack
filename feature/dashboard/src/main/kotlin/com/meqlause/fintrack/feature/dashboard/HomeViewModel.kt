@@ -4,18 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.meqlause.fintrack.core.domain.bills.BillsCard
 import com.meqlause.fintrack.core.domain.networth.NetWorth
-import com.meqlause.fintrack.core.domain.repository.CategoryRepository
-import com.meqlause.fintrack.core.domain.repository.InboxRepository
-import com.meqlause.fintrack.core.domain.repository.QuickEntryRepository
-import com.meqlause.fintrack.core.domain.repository.SettingsRepository
-import com.meqlause.fintrack.core.domain.repository.TransactionRepository
-import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import com.meqlause.fintrack.core.domain.usecase.ObserveBillsCardUseCase
 import com.meqlause.fintrack.core.domain.usecase.ObserveNetWorthUseCase
 import com.meqlause.fintrack.core.model.QuickEntry
 import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.model.ThemeMode
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutTileMapping
+import com.meqlause.fintrack.core.ui.shortcut.ShortcutTileParams
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -35,16 +30,13 @@ import javax.inject.Inject
 internal class HomeViewModel
     @Inject
     constructor(
-        wallets: WalletRepository,
-        transactions: TransactionRepository,
-        categories: CategoryRepository,
-        private val settings: SettingsRepository,
-        inboxItems: InboxRepository,
-        private val quickEntries: QuickEntryRepository,
+        private val repositories: HomeRepositories,
         private val bills: ObserveBillsCardUseCase,
         private val netWorth: ObserveNetWorthUseCase,
         private val clock: Clock,
     ) : ViewModel() {
+        private val settings = repositories.settings
+        private val quickEntries = repositories.quickEntries
         private val hideOverride = MutableStateFlow<Boolean?>(null)
         private val drawer = MutableStateFlow<HomeDrawer?>(null)
         private val removedShortcut = MutableStateFlow<QuickEntry?>(null)
@@ -52,10 +44,10 @@ internal class HomeViewModel
 
         private val snapshot: Flow<HomeSnapshot> =
             combine(
-                wallets.observeAll(),
-                wallets.observeBalances(),
-                transactions.observeAll(),
-                categories.observeAll(),
+                repositories.wallets.observeAll(),
+                repositories.wallets.observeBalances(),
+                repositories.transactions.observeAll(),
+                repositories.categories.observeAll(),
                 settings.observe(),
                 ::HomeSnapshot,
             )
@@ -70,23 +62,32 @@ internal class HomeViewModel
                 snapshotWithBills,
                 hideOverride,
                 drawer,
-                combine(quickEntries.observeAll(), inboxItems.observeAll(), ::Pair),
+                combine(quickEntries.observeAll(), repositories.inboxItems.observeAll(), ::Pair),
                 removedShortcut,
             ) { (data, card, worth), hide, open, (entries, pending), gone ->
-                HomeCalculator.success(data, card, worth, hide, open, clock).copy(
-                    shortcuts =
-                        ShortcutTileMapping.toTileParams(
-                            entries,
-                            data.wallets.associate {
-                                it.walletId to
-                                    it.profile.name
-                            },
-                            data.categories.associate { it.categoryId to it.profile.appearance },
+                val base = HomeCalculator.success(data, card, worth, clock)
+                base.copy(
+                    hidden = hide ?: data.settings.preferences.hideAmountsByDefault,
+                    drawer = open,
+                    extras =
+                        base.extras.copy(
+                            shortcuts = shortcutTiles(data, entries),
+                            removedShortcut = gone,
+                            inbox = HomeInbox.fromItems(pending),
                         ),
-                    removedShortcut = gone,
-                    inbox = HomeInbox.of(pending),
                 )
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), HomeUiState.Loading)
+
+        // FR-039: the catat cepat tiles, named after their wallet and category
+        private fun shortcutTiles(
+            data: HomeSnapshot,
+            entries: List<QuickEntry>,
+        ): List<ShortcutTileParams> =
+            ShortcutTileMapping.toTileParams(
+                entries,
+                data.wallets.associate { it.walletId to it.profile.name },
+                data.categories.associate { it.categoryId to it.profile.appearance },
+            )
 
         // FR-040: flips the privacy toggle for this session; the stored hide-by-default setting is not changed
         fun toggleHidden() {
