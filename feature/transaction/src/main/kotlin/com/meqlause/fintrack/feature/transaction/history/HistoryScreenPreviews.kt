@@ -85,13 +85,13 @@ internal fun sampleHistoryState(): HistoryUiState =
     )
 
 private fun sampleRow(
-    id: Long,
+    rowId: Long,
     title: String,
     amount: Long,
     subtitle: String,
     appearance: Appearance,
     auto: Boolean = false,
-): HistoryRowItem = HistoryRowItem(id, TransactionType.EXPENSE, Money(amount), title, subtitle, appearance, auto)
+): HistoryRowItem = HistoryRowItem(rowId, TransactionType.EXPENSE, Money(amount), title, subtitle, appearance, auto)
 
 // NFR-010: font scale 2.0 variant for the screenshot tests
 @Preview(name = "History font 200", showBackground = true, fontScale = 2f)

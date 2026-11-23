@@ -73,7 +73,7 @@ internal fun StatisticsDailyBars(statistics: PeriodStatistics) {
                 amounts = statistics.dailyTotals.map { it.rupiah },
                 filled = colors.brands.primary,
                 idle = colors.texts.onSurface.copy(alpha = IDLE_ALPHA),
-                gap = gapDp.toPx(),
+                spacing = gapDp.toPx(),
                 radius = radiusDp.toPx(),
             )
         }
@@ -102,17 +102,17 @@ private fun DrawScope.drawDailyBars(
     amounts: List<Long>,
     filled: Color,
     idle: Color,
-    gap: Float,
+    spacing: Float,
     radius: Float,
 ) {
     val peak = (amounts.maxOrNull() ?: 0L).coerceAtLeast(1L)
     val count = amounts.size.coerceAtLeast(1)
-    val barWidth = (size.width - gap * (count - 1)) / count
+    val barWidth = (size.width - spacing * (count - 1)) / count
     amounts.forEachIndexed { index, rupiah ->
         val height = if (rupiah == 0L) radius else size.height * (rupiah.toFloat() / peak)
         drawRoundRect(
             color = if (index == amounts.lastIndex) filled else idle,
-            topLeft = Offset(index * (barWidth + gap), size.height - height),
+            topLeft = Offset(index * (barWidth + spacing), size.height - height),
             size = Size(barWidth, height),
             cornerRadius = CornerRadius(radius),
         )

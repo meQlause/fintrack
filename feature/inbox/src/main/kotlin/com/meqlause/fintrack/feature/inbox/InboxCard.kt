@@ -109,7 +109,7 @@ private fun CardBody(
             ScreenPill(
                 label = card.categoryName ?: stringResource(R.string.inbox_pick_category),
                 onClick = onPickCategory,
-                dot = if (card.categoryName != null) FintrackTheme.colors.texts.faint else null,
+                dotColor = if (card.categoryName != null) FintrackTheme.colors.texts.faint else null,
             )
             ScreenPill(label = card.walletName ?: stringResource(R.string.inbox_pick_wallet), onClick = onPickWallet)
             Spacer(modifier = Modifier.weight(1f))

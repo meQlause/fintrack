@@ -25,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
-import com.meqlause.fintrack.core.designsystem.icon.categoryColorOf
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.ui.format.DateFormatter
@@ -103,7 +102,7 @@ private fun CategoryBar(
                     Modifier
                         .weight(share.amount.rupiah.toFloat())
                         .fillMaxHeight()
-                        .background(categoryColorOf(share.colorKey)),
+                        .background(FintrackTheme.colors.categoryColor(share.colorKey)),
             )
         }
     }
@@ -128,7 +127,7 @@ private fun CategoryLegend(
                         Modifier
                             .size(FintrackTheme.sizes.smallDot)
                             .clip(FintrackTheme.shapes.full)
-                            .background(categoryColorOf(share.colorKey)),
+                            .background(FintrackTheme.colors.categoryColor(share.colorKey)),
                 )
                 Text(
                     text = legendText(share = share, total = total),

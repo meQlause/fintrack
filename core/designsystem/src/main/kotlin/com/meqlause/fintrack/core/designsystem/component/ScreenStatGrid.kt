@@ -15,13 +15,6 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
-// DOC-08: one cell of a stat grid; a null color shows the value in the normal text colour
-data class ScreenStat(
-    val label: String,
-    val value: String,
-    val color: Color? = null,
-)
-
 // DOC-08: prototype card with equal columns split by 1 px dividers, a label over a 15 px bold value
 @Composable
 fun ScreenStatGrid(

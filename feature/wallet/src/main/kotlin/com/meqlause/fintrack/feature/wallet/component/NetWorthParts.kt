@@ -10,7 +10,7 @@ internal class NetWorthParts private constructor(
     val assets: List<NetWorthPart>,
     val debts: List<NetWorthPart>,
 ) {
-    val all: List<NetWorthPart> = assets + debts
+    val every: List<NetWorthPart> = assets + debts
     val assetTotal: String = "Rp" + MoneyFormatter.formatCompact(Money(positiveSum(assets)))
     val debtTotal: String = "−" + MoneyFormatter.formatCompact(Money(positiveSum(debts)))
 

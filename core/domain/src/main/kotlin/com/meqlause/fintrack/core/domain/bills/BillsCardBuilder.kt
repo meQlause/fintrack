@@ -23,15 +23,15 @@ public object BillsCardBuilder {
     public fun build(
         snapshot: CreditSnapshot,
         period: Period,
-        day: DayContext,
+        dayContext: DayContext,
     ): BillsCard {
         val accounts =
             snapshot.wallets
                 .filter { it.terms.credit != null && !it.status.isArchived }
-                .map { wallet -> wallet to accountOf(wallet, snapshot, day.zone) }
+                .map { wallet -> wallet to accountOf(wallet, snapshot, dayContext.zone) }
         val bills =
             accounts
-                .map { (wallet, account) -> billOf(wallet, account, day.today) }
+                .map { (wallet, account) -> billOf(wallet, account, dayContext.today) }
                 .sortedWith(billOrder)
         val instalments = accounts.fold(Money(0L)) { total, (_, account) -> total + instalmentsDueIn(account, period) }
         return BillsCard(bills, instalments)

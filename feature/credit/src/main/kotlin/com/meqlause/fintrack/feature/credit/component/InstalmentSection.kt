@@ -36,7 +36,7 @@ internal fun InstalmentSection(
 ) {
     ScreenGroup(label = stringResource(R.string.instalment_section_title), modifier = modifier) {
         instalments.forEachIndexed { index, row ->
-            InstalmentCard(row = row, showDivider = index > 0, onClick = { onOpenInstalment(row.planId) })
+            InstalmentCard(item = row, showDivider = index > 0, onClick = { onOpenInstalment(row.planId) })
         }
         if (instalments.isEmpty()) {
             Text(
@@ -62,7 +62,7 @@ internal fun InstalmentSection(
 // S-14: plan title, "Rp500.000/bln" line with a 3 px progress bar, and the billed count with the principal left
 @Composable
 private fun InstalmentCard(
-    row: InstalmentRow,
+    item: InstalmentRow,
     showDivider: Boolean,
     onClick: () -> Unit,
 ) {
@@ -73,7 +73,7 @@ private fun InstalmentCard(
         trailing = {
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = stringResource(R.string.instalment_progress, row.billed, row.tenor),
+                    text = stringResource(R.string.instalment_progress, item.billed, item.tenor),
                     style = FintrackScreenText.number(size = 14.5f, weight = 700),
                     color = FintrackTheme.colors.texts.onSurface,
                 )
@@ -81,7 +81,7 @@ private fun InstalmentCard(
                     text =
                         stringResource(
                             R.string.instalment_remaining,
-                            "Rp" + MoneyFormatter.formatCompact(row.remaining),
+                            "Rp" + MoneyFormatter.formatCompact(item.remaining),
                         ),
                     style = FintrackScreenText.rowSub(),
                     color = FintrackTheme.colors.texts.onSurfaceVariant,
@@ -90,16 +90,16 @@ private fun InstalmentCard(
         },
     ) {
         Text(
-            text = row.title,
+            text = item.title,
             style = FintrackScreenText.rowTitle(),
             color = FintrackTheme.colors.texts.onSurface,
         )
         Text(
-            text = stringResource(R.string.instalment_monthly, MoneyFormatter.format(row.monthly)),
+            text = stringResource(R.string.instalment_monthly, MoneyFormatter.format(item.monthly)),
             style = FintrackScreenText.rowSubNumber(),
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
-        ProgressLine(fraction = if (row.tenor > 0) row.billed.toFloat() / row.tenor else 0f)
+        ProgressLine(fraction = if (item.tenor > 0) item.billed.toFloat() / item.tenor else 0f)
     }
 }
 

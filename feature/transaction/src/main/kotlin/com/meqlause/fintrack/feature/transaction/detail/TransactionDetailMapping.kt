@@ -5,7 +5,7 @@ import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.ui.format.DateFormatter
-import com.meqlause.fintrack.core.ui.transaction.rowAppearanceOf
+import com.meqlause.fintrack.core.ui.transaction.RowAppearance
 import java.time.Clock
 import java.time.LocalDateTime
 
@@ -33,6 +33,6 @@ internal fun Transaction.toDetail(
         timeLabel = DateFormatter.timeLabel(local.toLocalTime()),
         source = origin.source,
         isLoanLinked = routing.loanId != null,
-        appearance = rowAppearanceOf(movement.type, routing.categoryId?.let(appearances::get)),
+        appearance = RowAppearance.of(movement.type, routing.categoryId?.let(appearances::get)),
     )
 }

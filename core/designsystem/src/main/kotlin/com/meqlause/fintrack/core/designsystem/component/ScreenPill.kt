@@ -26,7 +26,7 @@ fun ScreenPill(
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    dot: Color? = null,
+    dotColor: Color? = null,
     contentColor: Color = FintrackTheme.colors.texts.onSurface,
     selected: Boolean = false,
     height: Dp = FintrackScreenSizes.pillTall,
@@ -48,8 +48,8 @@ fun ScreenPill(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small - FintrackTheme.spacing.xxSmall),
     ) {
-        if (dot != null) {
-            Row(modifier = Modifier.size(FintrackScreenSizes.pillDot).clip(CircleShape).background(dot)) {}
+        if (dotColor != null) {
+            Row(modifier = Modifier.size(FintrackScreenSizes.pillDot).clip(CircleShape).background(dotColor)) {}
         }
         Text(
             text = label,

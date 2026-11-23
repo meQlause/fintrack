@@ -85,7 +85,11 @@ private fun StatisticsExpandToggle(
                 Alignment.CenterHorizontally,
             ),
     ) {
-        Text(text = label, style = FintrackTheme.typography.tab, color = FintrackTheme.colors.texts.onSurfaceVariant)
+        Text(
+            text = label,
+            style = FintrackTheme.typography.tabLabel,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
         Icon(
             painter = painterResource(if (isExpanded) DesignR.drawable.ic_chev_u else DesignR.drawable.ic_chev_d),
             contentDescription = null,

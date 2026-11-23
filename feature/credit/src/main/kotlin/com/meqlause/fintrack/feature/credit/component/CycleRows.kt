@@ -28,7 +28,7 @@ internal fun CycleRows(
     ScreenGroup(label = stringResource(R.string.credit_cycle_title), modifier = modifier) {
         CycleRow(
             label = stringResource(R.string.credit_cycle_statement),
-            day = terms.statementDay,
+            dayNumber = terms.statementDay,
             note = stringResource(R.string.credit_cycle_every_month),
             iconRes = DesignR.drawable.ic_calendar,
             showDivider = false,
@@ -36,7 +36,7 @@ internal fun CycleRows(
         )
         CycleRow(
             label = stringResource(R.string.credit_cycle_due),
-            day = terms.dueDay,
+            dayNumber = terms.dueDay,
             note = stringResource(R.string.credit_cycle_next_month),
             iconRes = DesignR.drawable.ic_clock,
             showDivider = true,
@@ -49,7 +49,7 @@ internal fun CycleRows(
 @Composable
 private fun CycleRow(
     label: String,
-    day: Int,
+    dayNumber: Int,
     note: String,
     iconRes: Int,
     showDivider: Boolean,
@@ -79,7 +79,7 @@ private fun CycleRow(
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
         Text(
-            text = stringResource(R.string.credit_cycle_day, day),
+            text = stringResource(R.string.credit_cycle_day, dayNumber),
             style = FintrackScreenText.rowTitle(),
             color = FintrackTheme.colors.texts.onSurface,
         )

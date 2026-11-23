@@ -68,29 +68,31 @@ private const val EMAS_PUT_IN = 2_000_000L
 
 // design/screens/invest.png: the prototype seed on 2026-11-22
 private fun previewPortfolio(): InvestmentPortfolio {
+    val bibitValued = Instant.parse("2026-11-20T09:00:00Z")
+    val emasValued = Instant.parse("2026-11-10T09:00:00Z")
     val bibit =
         previewAccount(
             previewWallet(BIBIT_KEY, "Bibit", InvestKind.MUTUAL_FUND),
             BIBIT_VALUE,
-            Instant.parse("2026-11-20T09:00:00Z"),
+            bibitValued,
         )
     val emas =
         previewAccount(
             previewWallet(EMAS_KEY, "Emas Pegadaian", InvestKind.GOLD, "amber"),
             EMAS_VALUE,
-            Instant.parse("2026-11-10T09:00:00Z"),
+            emasValued,
         )
     val recent =
         listOf(
             InvestmentActivity(
                 WalletId(BIBIT_KEY),
-                bibit.valuation.lastValuedAt!!,
+                bibitValued,
                 ActivityKind.VALUATION,
                 Money(BIBIT_VALUE),
             ),
             InvestmentActivity(
                 WalletId(EMAS_KEY),
-                emas.valuation.lastValuedAt!!,
+                emasValued,
                 ActivityKind.VALUATION,
                 Money(EMAS_VALUE),
             ),

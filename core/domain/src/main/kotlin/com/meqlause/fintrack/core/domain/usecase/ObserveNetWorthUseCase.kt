@@ -39,7 +39,7 @@ public class ObserveNetWorthUseCase
                     ledger = data,
                     loans = loanRows,
                     investments = portfolio.total.currentValue,
-                    day = DayContext(LocalDate.now(clock), clock.zone),
+                    dayContext = DayContext(LocalDate.now(clock), clock.zone),
                 )
             }
         }

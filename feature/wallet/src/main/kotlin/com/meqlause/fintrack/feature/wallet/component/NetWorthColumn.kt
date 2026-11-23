@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.meqlause.fintrack.core.designsystem.icon.categoryColorOf
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -61,7 +60,7 @@ private fun NetWorthLegendRow(part: NetWorthPart) {
                 Modifier
                     .size(FintrackScreenSizes.legendDot)
                     .clip(CircleShape)
-                    .background(categoryColorOf(part.colorKey)),
+                    .background(FintrackTheme.colors.categoryColor(part.colorKey)),
         ) {}
         Text(
             text = stringResource(part.labelRes),

@@ -20,7 +20,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
-import com.meqlause.fintrack.core.designsystem.icon.categoryColorOf
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -103,7 +102,7 @@ private fun AllocationBar(portfolio: InvestmentPortfolio) {
                         .weight(value.rupiah.toFloat())
                         .fillMaxHeight()
                         .clip(RoundedCornerShape(FintrackScreenSizes.allocCorner))
-                        .background(categoryColorOf(kindColorKey(kind))),
+                        .background(FintrackTheme.colors.categoryColor(kindColorKey(kind))),
             ) {}
         }
     }
@@ -127,7 +126,7 @@ private fun AllocationRow(
                 Modifier
                     .size(FintrackScreenSizes.legendDot)
                     .clip(CircleShape)
-                    .background(categoryColorOf(kindColorKey(kind))),
+                    .background(FintrackTheme.colors.categoryColor(kindColorKey(kind))),
         ) {}
         Text(
             text = stringResource(InvestmentLabels.kindRes(kind)),

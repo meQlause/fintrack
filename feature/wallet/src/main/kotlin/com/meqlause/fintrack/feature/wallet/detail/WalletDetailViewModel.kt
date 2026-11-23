@@ -14,7 +14,7 @@ import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.Wallet
 import com.meqlause.fintrack.core.model.WalletId
-import com.meqlause.fintrack.core.ui.transaction.rowAppearanceOf
+import com.meqlause.fintrack.core.ui.transaction.RowAppearance
 import com.meqlause.fintrack.feature.wallet.WalletItem
 import com.meqlause.fintrack.feature.wallet.navigation.WalletDetailDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -91,7 +91,7 @@ internal class WalletDetailViewModel
                 subtitle = subtitleOf(names),
                 amount = movement.amount,
                 type = movement.type,
-                appearance = rowAppearanceOf(movement.type, routing.categoryId?.let(appearances::get)),
+                appearance = RowAppearance.of(movement.type, routing.categoryId?.let(appearances::get)),
             )
 
         private fun Transaction.subtitleOf(names: Map<WalletId, String>): String {

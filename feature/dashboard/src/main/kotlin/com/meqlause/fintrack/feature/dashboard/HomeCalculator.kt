@@ -15,7 +15,7 @@ import com.meqlause.fintrack.core.model.Wallet
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.core.ui.format.DateFormatter
-import com.meqlause.fintrack.core.ui.transaction.rowAppearanceOf
+import com.meqlause.fintrack.core.ui.transaction.RowAppearance
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
@@ -137,7 +137,7 @@ internal object HomeCalculator {
                     whenLabel = whenLabelOf(row.timing.occurredAt, clock),
                     amount = row.movement.amount,
                     type = row.movement.type,
-                    appearance = rowAppearanceOf(row.movement.type, row.routing.categoryId?.let(appearances::get)),
+                    appearance = RowAppearance.of(row.movement.type, row.routing.categoryId?.let(appearances::get)),
                     auto = row.origin.source == TransactionSource.NOTIFICATION,
                 )
             }

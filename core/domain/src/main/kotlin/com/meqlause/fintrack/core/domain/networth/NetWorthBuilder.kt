@@ -20,10 +20,10 @@ internal object NetWorthBuilder {
         ledger: NetWorthLedger,
         loans: List<LoanEntry>,
         investments: Money,
-        day: DayContext,
+        dayContext: DayContext,
     ): NetWorth {
-        val today = day.today
-        val zone = day.zone
+        val today = dayContext.today
+        val zone = dayContext.zone
         val active = ledger.wallets.filterNot { it.status.isArchived }
         return NetWorth(
             saldo = saldoOf(active, ledger.moneyByWallet),

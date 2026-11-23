@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
-import com.meqlause.fintrack.core.designsystem.icon.categoryColorOf
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.domain.networth.NetWorth
@@ -31,7 +30,7 @@ internal fun WalletNetWorthCard(
     val parts = NetWorthParts.of(netWorth)
     ScreenCard(modifier = modifier) {
         Column(modifier = Modifier.padding(FintrackTheme.spacing.large)) {
-            NetWorthBar(parts = parts.all)
+            NetWorthBar(parts = parts.every)
             Row(
                 modifier =
                     Modifier
@@ -76,7 +75,7 @@ private fun NetWorthBar(parts: List<NetWorthPart>) {
                     Modifier
                         .weight(part.amount.toFloat())
                         .fillMaxHeight()
-                        .background(categoryColorOf(part.colorKey)),
+                        .background(FintrackTheme.colors.categoryColor(part.colorKey)),
             ) {}
         }
     }

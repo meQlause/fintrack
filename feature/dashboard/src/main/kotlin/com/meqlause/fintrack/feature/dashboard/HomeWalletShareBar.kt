@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import com.meqlause.fintrack.core.designsystem.icon.categoryColorOf
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // FR-040: each wallet's share of the positive balances as slim rounded segments in the wallet colours
@@ -32,7 +31,7 @@ internal fun HomeWalletShareBar(
                         .weight(wallet.balance.rupiah.toFloat())
                         .fillMaxHeight()
                         .clip(FintrackTheme.shapes.full)
-                        .background(categoryColorOf(wallet.appearance.colorKey)),
+                        .background(FintrackTheme.colors.categoryColor(wallet.appearance.colorKey)),
             )
         }
     }

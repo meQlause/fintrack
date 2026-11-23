@@ -11,21 +11,21 @@ public object CardBillReminders {
     /** FR-135: reminders for the current statement of every active credit wallet. */
     public fun collect(
         snapshot: CreditSnapshot,
-        day: DayContext,
+        dayContext: DayContext,
     ): List<CardBillReminder> =
         snapshot.wallets
             .filter { it.terms.credit != null && !it.status.isArchived }
-            .mapNotNull { wallet -> reminderOf(wallet, snapshot, day) }
+            .mapNotNull { wallet -> reminderOf(wallet, snapshot, dayContext) }
 
     private fun reminderOf(
         wallet: Wallet,
         snapshot: CreditSnapshot,
-        day: DayContext,
+        dayContext: DayContext,
     ): CardBillReminder? {
-        val account = CreditAccountFactory.build(wallet, snapshot.transactions, snapshot.plans, day.zone)
-        val statement = StatementCalculator.current(account, day.today)
+        val account = CreditAccountFactory.build(wallet, snapshot.transactions, snapshot.plans, dayContext.zone)
+        val statement = StatementCalculator.current(account, dayContext.today)
         val dueDate = statement.period.dueDate
-        val lead = ReminderRules.leadOf(dueDate, day.today)
+        val lead = ReminderRules.leadOf(dueDate, dayContext.today)
         val remaining = statement.breakdown.remainingDue
         if (lead == null || remaining.rupiah <= 0L) return null
         return CardBillReminder(wallet.walletId, wallet.profile.name, remaining, dueDate, lead)

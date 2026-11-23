@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
-import com.meqlause.fintrack.core.designsystem.icon.categoryColorOf
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -77,7 +76,7 @@ private fun Bars(
                 when {
                     day > stats.today -> FintrackTheme.colors.surfaces.outline
                     day == stats.today -> FintrackTheme.colors.brands.primary
-                    else -> categoryColorOf(colorKey)
+                    else -> FintrackTheme.colors.categoryColor(colorKey)
                 }
             Bar(value = value, peak = peak, color = color, modifier = Modifier.weight(1f))
         }

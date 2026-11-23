@@ -2,28 +2,15 @@ package com.meqlause.fintrack.core.designsystem.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
-import com.meqlause.fintrack.core.designsystem.R
 
 private const val TABULAR_NUMBERS = "tnum"
 
 // DOC-08: typography table; Plus Jakarta Sans is bundled as one variable font (OFL, assets/licenses)
 @Immutable
 class FintrackTypography {
-    private val family =
-        FontFamily(
-            bundledFont(weight = 400),
-            bundledFont(weight = 500),
-            bundledFont(weight = 600),
-            bundledFont(weight = 700),
-            bundledFont(weight = 800),
-        )
-
     val numberHero: TextStyle = typeStyle(size = 40f, lineHeight = 48f, weight = 800, tabular = true)
 
     // DOC-08: mockup hero balance digits (44 px / 700) and the muted Rp prefix (20 px / 600)
@@ -35,7 +22,7 @@ class FintrackTypography {
     val captionWide: TextStyle = typeStyle(size = 12.5f, lineHeight = 16f, weight = 600)
     val numberCompact: TextStyle = typeStyle(size = 13.5f, lineHeight = 18f, weight = 700, tabular = true)
     val badge: TextStyle = typeStyle(size = 10.5f, lineHeight = 14f, weight = 700)
-    val tab: TextStyle = typeStyle(size = 13f, lineHeight = 18f, weight = 600)
+    val tabLabel: TextStyle = typeStyle(size = 13f, lineHeight = 18f, weight = 600)
     val tabWide: TextStyle = typeStyle(size = 13.5f, lineHeight = 18f, weight = 600)
     val micro: TextStyle = typeStyle(size = 11f, lineHeight = 14f, weight = 600, tabular = true)
     val numberLarge: TextStyle = typeStyle(size = 28f, lineHeight = 36f, weight = 700, tabular = true)
@@ -66,17 +53,10 @@ class FintrackTypography {
         tabular: Boolean = false,
     ): TextStyle =
         TextStyle(
-            fontFamily = family,
+            fontFamily = FintrackFont.family,
             fontWeight = FontWeight(weight = weight),
             fontSize = TextUnit(value = size, type = TextUnitType.Sp),
             lineHeight = TextUnit(value = lineHeight, type = TextUnitType.Sp),
             fontFeatureSettings = if (tabular) TABULAR_NUMBERS else null,
-        )
-
-    private fun bundledFont(weight: Int): Font =
-        Font(
-            resId = R.font.plus_jakarta_sans,
-            weight = FontWeight(weight = weight),
-            variationSettings = FontVariation.Settings(FontVariation.weight(weight)),
         )
 }

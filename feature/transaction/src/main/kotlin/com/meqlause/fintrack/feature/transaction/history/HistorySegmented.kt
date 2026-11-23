@@ -88,7 +88,7 @@ private fun HistorySegment(
                     modifier = Modifier.size(FintrackTheme.sizes.segmentGlyph),
                 )
             }
-            Text(text = label, style = FintrackTheme.typography.tab, color = tone)
+            Text(text = label, style = FintrackTheme.typography.tabLabel, color = tone)
         }
     }
 }

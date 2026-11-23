@@ -103,7 +103,7 @@ private fun MonthPill(
     ) {
         Text(
             text = label,
-            style = FintrackTheme.typography.tab,
+            style = FintrackTheme.typography.tabLabel,
             color = if (selected) colors.surfaces.background else colors.texts.onSurfaceVariant,
         )
     }

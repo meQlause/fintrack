@@ -27,7 +27,7 @@ class WalletDetailStatsTest {
 
     private fun tx(
         type: TransactionType,
-        day: String,
+        stamp: String,
         rupiah: Long,
         target: WalletId? = null,
     ): Transaction =
@@ -37,7 +37,7 @@ class WalletDetailStatsTest {
             routing = Routing(walletId = mine, targetWalletId = target, categoryId = null, loanId = null),
             memo = Memo(note = "", merchant = ""),
             origin = Origin(source = TransactionSource.MANUAL, inboxItemId = null),
-            timing = Timing(occurredAt = Instant.parse("$day:00Z"), audit = audit),
+            timing = Timing(occurredAt = Instant.parse("$stamp:00Z"), audit = audit),
         )
 
     // S-19: income lands as Masuk, expense and a transfer out as Keluar; other months are ignored
