@@ -82,9 +82,25 @@ private fun ActivityMark(kind: ActivityKind) {
         contentAlignment = Alignment.Center,
     ) {
         Icon(
-            painter = painterResource(if (kind == ActivityKind.VALUATION) DesignR.drawable.ic_trend else DesignR.drawable.ic_plus),
+            painter =
+                painterResource(
+                    if (kind ==
+                        ActivityKind.VALUATION
+                    ) {
+                        DesignR.drawable.ic_trend
+                    } else {
+                        DesignR.drawable.ic_plus
+                    },
+                ),
             contentDescription = null,
-            tint = if (kind == ActivityKind.VALUATION) FintrackTheme.colors.brands.primary else FintrackTheme.colors.texts.onSurface,
+            tint =
+                if (kind ==
+                    ActivityKind.VALUATION
+                ) {
+                    FintrackTheme.colors.brands.primary
+                } else {
+                    FintrackTheme.colors.texts.onSurface
+                },
             modifier = Modifier.size(FintrackScreenSizes.smallGlyph),
         )
     }

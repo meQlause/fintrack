@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.inbox
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,30 +8,29 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
+import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.core.designsystem.R as DesignR
-import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // S-07: the body under the header; the states are Loading (blank), AccessOff, Empty and Success
 @Composable
@@ -106,7 +106,10 @@ private fun InboxList(
                 horizontal = FintrackScreenSizes.screenGutter,
                 vertical = FintrackTheme.spacing.xSmall,
             ),
-        verticalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap + FintrackTheme.spacing.xSmall - FintrackTheme.spacing.xxSmall),
+        verticalArrangement =
+            Arrangement.spacedBy(
+                FintrackScreenSizes.pillGap + FintrackTheme.spacing.xSmall - FintrackTheme.spacing.xxSmall,
+            ),
     ) {
         if (infoShown) {
             item(key = "info") { InfoCard(onDismiss = onInfoDismiss) }
@@ -199,7 +202,10 @@ private fun ResolvedRow(
         leading = {},
         trailing = {
             Icon(
-                painter = painterResource(if (resolvedRow.isConfirmed) DesignR.drawable.ic_check else DesignR.drawable.ic_close),
+                painter =
+                    painterResource(
+                        if (resolvedRow.isConfirmed) DesignR.drawable.ic_check else DesignR.drawable.ic_close,
+                    ),
                 contentDescription = null,
                 tint =
                     if (resolvedRow.isConfirmed) {

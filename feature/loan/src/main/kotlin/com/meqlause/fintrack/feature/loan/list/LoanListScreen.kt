@@ -70,7 +70,13 @@ private fun LoanTotal(state: LoanListUiState) {
         Text(
             text =
                 stringResource(
-                    if (state.direction == LoanDirection.LENT) R.string.loan_total_lent else R.string.loan_total_borrowed,
+                    if (state.direction ==
+                        LoanDirection.LENT
+                    ) {
+                        R.string.loan_total_lent
+                    } else {
+                        R.string.loan_total_borrowed
+                    },
                 ),
             style = FintrackScreenText.label(),
             color = FintrackTheme.colors.texts.onSurfaceVariant,

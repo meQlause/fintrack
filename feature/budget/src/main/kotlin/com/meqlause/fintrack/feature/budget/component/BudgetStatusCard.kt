@@ -1,18 +1,18 @@
 package com.meqlause.fintrack.feature.budget.component
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.ProgressBar
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
-import com.meqlause.fintrack.core.designsystem.component.ProgressBar
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.domain.budget.BudgetStatus
 import com.meqlause.fintrack.core.model.BudgetState

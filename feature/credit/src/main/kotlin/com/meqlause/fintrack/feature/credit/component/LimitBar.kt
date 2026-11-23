@@ -64,7 +64,10 @@ internal fun LimitBar(
                 modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.small),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Figure(label = stringResource(R.string.credit_limit_used), value = MoneyFormatter.format(state.outstanding))
+                Figure(
+                    label = stringResource(R.string.credit_limit_used),
+                    value = MoneyFormatter.format(state.outstanding),
+                )
                 Figure(label = stringResource(R.string.credit_limit_left), value = availableText(state, over))
             }
         }

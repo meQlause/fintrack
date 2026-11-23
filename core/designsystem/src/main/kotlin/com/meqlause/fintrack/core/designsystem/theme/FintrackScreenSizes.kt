@@ -51,6 +51,7 @@ object FintrackScreenSizes {
     val appBadgeSmall: Dp = Dp(value = 30f)
     val appBadgeSmallCorner: Dp = Dp(value = 9f)
     val footerTop: Dp = Dp(value = 28f)
+
     // the switch already has a 48 px touch target, so the 50 px prototype row only needs a hairline of inset
     val rowSwitchInset: Dp = Dp(value = 1f)
     val actionTall: Dp = Dp(value = 64f)

@@ -12,9 +12,42 @@ import com.meqlause.fintrack.core.ui.picker.PickerOption
 // design/screens/inbox.png: the prototype inbox seed
 private val sampleCards =
     listOf(
-        InboxCardUi(1L, "BCA", "09:42", Money(25_000L), TransactionType.EXPENSE, "INDOMARET KEMANG", 1L, "BCA", 2L, "Belanja"),
-        InboxCardUi(2L, "GoPay", "09:15", Money(32_000L), TransactionType.EXPENSE, "KOPI KENANGAN", 2L, "GoPay", 1L, "Makanan"),
-        InboxCardUi(3L, "DANA", "08:03", Money(150_000L), TransactionType.INCOME, "Transfer masuk dari XXXX", 3L, "DANA", 3L, "Lainnya"),
+        InboxCardUi(
+            1L,
+            "BCA",
+            "09:42",
+            Money(25_000L),
+            TransactionType.EXPENSE,
+            "INDOMARET KEMANG",
+            1L,
+            "BCA",
+            2L,
+            "Belanja",
+        ),
+        InboxCardUi(
+            2L,
+            "GoPay",
+            "09:15",
+            Money(32_000L),
+            TransactionType.EXPENSE,
+            "KOPI KENANGAN",
+            2L,
+            "GoPay",
+            1L,
+            "Makanan",
+        ),
+        InboxCardUi(
+            3L,
+            "DANA",
+            "08:03",
+            Money(150_000L),
+            TransactionType.INCOME,
+            "Transfer masuk dari XXXX",
+            3L,
+            "DANA",
+            3L,
+            "Lainnya",
+        ),
     )
 
 private val samplePair =

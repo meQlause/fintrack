@@ -78,7 +78,11 @@ private fun InstalmentCard(
                     color = FintrackTheme.colors.texts.onSurface,
                 )
                 Text(
-                    text = stringResource(R.string.instalment_remaining, "Rp" + MoneyFormatter.formatCompact(row.remaining)),
+                    text =
+                        stringResource(
+                            R.string.instalment_remaining,
+                            "Rp" + MoneyFormatter.formatCompact(row.remaining),
+                        ),
                     style = FintrackScreenText.rowSub(),
                     color = FintrackTheme.colors.texts.onSurfaceVariant,
                 )

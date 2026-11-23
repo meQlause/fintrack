@@ -82,10 +82,30 @@ private fun previewPortfolio(): InvestmentPortfolio {
         )
     val recent =
         listOf(
-            InvestmentActivity(WalletId(BIBIT_KEY), bibit.valuation.lastValuedAt!!, ActivityKind.VALUATION, Money(BIBIT_VALUE)),
-            InvestmentActivity(WalletId(EMAS_KEY), emas.valuation.lastValuedAt!!, ActivityKind.VALUATION, Money(EMAS_VALUE)),
-            InvestmentActivity(WalletId(BIBIT_KEY), Instant.parse("2026-11-02T09:00:00Z"), ActivityKind.PUT_IN, Money(BIBIT_PUT_IN)),
-            InvestmentActivity(WalletId(EMAS_KEY), Instant.parse("2026-10-15T09:00:00Z"), ActivityKind.PUT_IN, Money(EMAS_PUT_IN)),
+            InvestmentActivity(
+                WalletId(BIBIT_KEY),
+                bibit.valuation.lastValuedAt!!,
+                ActivityKind.VALUATION,
+                Money(BIBIT_VALUE),
+            ),
+            InvestmentActivity(
+                WalletId(EMAS_KEY),
+                emas.valuation.lastValuedAt!!,
+                ActivityKind.VALUATION,
+                Money(EMAS_VALUE),
+            ),
+            InvestmentActivity(
+                WalletId(BIBIT_KEY),
+                Instant.parse("2026-11-02T09:00:00Z"),
+                ActivityKind.PUT_IN,
+                Money(BIBIT_PUT_IN),
+            ),
+            InvestmentActivity(
+                WalletId(EMAS_KEY),
+                Instant.parse("2026-10-15T09:00:00Z"),
+                ActivityKind.PUT_IN,
+                Money(EMAS_PUT_IN),
+            ),
         )
     return InvestmentPortfolio(accounts = listOf(bibit, emas), recent = recent)
 }
@@ -140,7 +160,8 @@ internal fun InvestmentDetailDarkPreview() {
 @Composable
 private fun DetailSample() {
     val account = previewAccount(previewWallet(BIBIT_KEY, "Bibit", InvestKind.MUTUAL_FUND), BIBIT_VALUE)
-    val activity = listOf(InvestmentActivity(WalletId(BIBIT_KEY), previewTime, ActivityKind.PUT_IN, Money(BIBIT_PUT_IN)))
+    val activity =
+        listOf(InvestmentActivity(WalletId(BIBIT_KEY), previewTime, ActivityKind.PUT_IN, Money(BIBIT_PUT_IN)))
     val state = InvestmentDetailUiState(loaded = true, detail = InvestmentDetail(account, activity))
     InvestmentDetailScreen(state = state, callbacks = detailCallbacks())
 }

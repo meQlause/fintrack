@@ -76,7 +76,14 @@ private fun CreditDetailBody(
                     .padding(top = FintrackTheme.spacing.small, bottom = FintrackTheme.spacing.xxLarge),
         ) {
             BillCard(state = state, onPay = callbacks.onOpenPay)
-            LimitBar(state = state, modifier = Modifier.padding(top = FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall))
+            LimitBar(
+                state = state,
+                modifier =
+                    Modifier.padding(
+                        top =
+                            FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall,
+                    ),
+            )
             CycleRows(terms = state.terms, onOpenPicker = callbacks.onOpenPicker)
             InstalmentSection(
                 instalments = state.instalments,

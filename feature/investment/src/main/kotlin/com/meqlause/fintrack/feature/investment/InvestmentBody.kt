@@ -1,8 +1,8 @@
 package com.meqlause.fintrack.feature.investment
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -61,7 +61,16 @@ private fun PortfolioList(
         contentPadding = PaddingValues(bottom = FintrackScreenSizes.screenBottom),
     ) {
         item { PortfolioHero(portfolio = portfolio) }
-        item { AllocationCard(portfolio = portfolio, modifier = Modifier.padding(top = FintrackScreenSizes.screenTop + 2.dp)) }
+        item {
+            AllocationCard(
+                portfolio = portfolio,
+                modifier =
+                    Modifier.padding(
+                        top =
+                            FintrackScreenSizes.screenTop + 2.dp,
+                    ),
+            )
+        }
         item {
             ScreenGroup(label = stringResource(R.string.investment_accounts_title)) {
                 portfolio.accounts.forEachIndexed { index, account ->

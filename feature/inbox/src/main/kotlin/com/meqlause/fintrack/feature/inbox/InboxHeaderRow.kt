@@ -80,9 +80,19 @@ internal fun InboxAmount(
     val semantics = FintrackTheme.colors.semantics
     val (sign, color) =
         when (type) {
-            TransactionType.EXPENSE, TransactionType.LEND, TransactionType.REPAY -> AmountSign.MINUS to semantics.expense
-            TransactionType.INCOME, TransactionType.BORROW, TransactionType.COLLECT -> AmountSign.PLUS to semantics.income
-            TransactionType.TRANSFER -> AmountSign.NONE to semantics.transfer
+            TransactionType.EXPENSE, TransactionType.LEND, TransactionType.REPAY -> {
+                AmountSign.MINUS to
+                    semantics.expense
+            }
+
+            TransactionType.INCOME, TransactionType.BORROW, TransactionType.COLLECT -> {
+                AmountSign.PLUS to
+                    semantics.income
+            }
+
+            TransactionType.TRANSFER -> {
+                AmountSign.NONE to semantics.transfer
+            }
         }
     Text(
         text = MoneyFormatter.formatSigned(money, sign),

@@ -53,4 +53,7 @@ internal fun SettingsRow(
 }
 
 private fun rowPadding(): PaddingValues =
-    PaddingValues(horizontal = FintrackScreenSizes.rowPaddingHorizontal, vertical = FintrackScreenSizes.rowPaddingVertical)
+    PaddingValues(
+        horizontal = FintrackScreenSizes.rowPaddingHorizontal,
+        vertical = FintrackScreenSizes.rowPaddingVertical,
+    )

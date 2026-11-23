@@ -62,7 +62,16 @@ internal fun ValueSummary(valuation: InvestmentValuation) {
                     ),
                     ScreenStat(
                         label = stringResource(R.string.investment_gain_label),
-                        value = (if (valuation.gain.rupiah < 0L) "" else "+") + MoneyFormatter.formatCompact(valuation.gain),
+                        value =
+                            (
+                                if (valuation.gain.rupiah <
+                                    0L
+                                ) {
+                                    ""
+                                } else {
+                                    "+"
+                                }
+                            ) + MoneyFormatter.formatCompact(valuation.gain),
                         color = gainColor,
                     ),
                 ),
