@@ -31,7 +31,10 @@ internal fun EditTransactionRoutingRows(
     onEvent: (EditTransactionEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+    ) {
         if (state.form.isTransfer) {
             TransferRoute(state = state, onEvent = onEvent)
             FormRow(
@@ -57,7 +60,10 @@ private fun TransferRoute(
     onEvent: (EditTransactionEvent) -> Unit,
 ) {
     val swapLabel = stringResource(R.string.transaction_swap_description)
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+    ) {
         WalletCard(
             label = stringResource(R.string.transaction_transfer_from),
             name = walletName(state, state.form.walletId),
@@ -128,4 +134,9 @@ private fun CategoryChips(
 internal fun walletName(
     state: EditTransactionUiState,
     walletId: WalletId?,
-): String = state.catalog.wallets.firstOrNull { it.walletId == walletId }?.profile?.name.orEmpty()
+): String =
+    state.catalog.wallets
+        .firstOrNull { it.walletId == walletId }
+        ?.profile
+        ?.name
+        .orEmpty()

@@ -1,9 +1,8 @@
 package com.meqlause.fintrack.feature.transaction.edit
 
 import assertk.assertThat
-import assertk.assertions.containsExactly
-
 import assertk.assertions.contains
+import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import com.meqlause.fintrack.core.domain.transaction.TransactionError
@@ -30,6 +29,7 @@ import com.meqlause.fintrack.core.testing.repository.FakeSettingsRepository
 import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
 import com.meqlause.fintrack.core.testing.repository.FakeWalletRepository
 import com.meqlause.fintrack.core.testing.time.FakeClock
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -38,6 +38,7 @@ import org.junit.Test
 import java.time.Instant
 
 // FR-030..FR-033, BR-001..BR-003, BR-039: the sheet's validation messages and the save path, driven through fakes
+@OptIn(ExperimentalCoroutinesApi::class)
 class EditTransactionViewModelTest {
     @get:Rule
     val dispatcherRule = MainDispatcherRule()

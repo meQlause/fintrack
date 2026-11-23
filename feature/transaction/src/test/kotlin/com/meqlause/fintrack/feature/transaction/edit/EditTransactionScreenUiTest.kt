@@ -4,8 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -96,9 +96,23 @@ class EditTransactionScreenUiTest {
     ): EditTransactionUiState {
         val form = state.form
         return when (event) {
-            is EditTransactionEvent.DigitTyped -> state.copy(form = form.copy(amountDigits = form.amountDigits + event.digit))
-            is EditTransactionEvent.CategoryPicked -> state.copy(form = form.copy(categoryId = event.categoryId))
-            else -> state
+            is EditTransactionEvent.DigitTyped -> {
+                state.copy(
+                    form =
+                        form.copy(
+                            amountDigits =
+                                form.amountDigits + event.digit,
+                        ),
+                )
+            }
+
+            is EditTransactionEvent.CategoryPicked -> {
+                state.copy(form = form.copy(categoryId = event.categoryId))
+            }
+
+            else -> {
+                state
+            }
         }
     }
 }

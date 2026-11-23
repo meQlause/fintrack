@@ -67,17 +67,56 @@ internal class EditTransactionViewModel
 
         fun onEvent(event: EditTransactionEvent) {
             when (event) {
-                is EditTransactionEvent.DigitTyped -> editActiveField { (it + event.digit).trimStart('0').take(MAX_DIGITS) }
-                EditTransactionEvent.BackspacePressed -> editActiveField { it.dropLast(1) }
-                is EditTransactionEvent.TypeSelected -> selectType(event.type)
-                is EditTransactionEvent.FieldFocused -> mutableState.update { it.copy(keypadField = event.field) }
-                is EditTransactionEvent.SheetOpened -> mutableState.update { it.copy(openSheet = event.sheet) }
-                EditTransactionEvent.SheetDismissed -> mutableState.update { it.copy(openSheet = null) }
-                is EditTransactionEvent.WalletPicked -> pickWallet(event.walletId)
-                is EditTransactionEvent.CategoryPicked -> updateForm { it.copy(categoryId = event.categoryId) }
-                EditTransactionEvent.WalletsSwapped -> updateForm { it.copy(walletId = it.targetWalletId, targetWalletId = it.walletId) }
-                is EditTransactionEvent.NoteChanged -> updateForm { it.copy(note = event.note.take(MAX_NOTE_LENGTH)) }
-                EditTransactionEvent.SaveRequested -> save()
+                is EditTransactionEvent.DigitTyped -> {
+                    editActiveField {
+                        (it + event.digit)
+                            .trimStart(
+                                '0',
+                            ).take(MAX_DIGITS)
+                    }
+                }
+
+                EditTransactionEvent.BackspacePressed -> {
+                    editActiveField { it.dropLast(1) }
+                }
+
+                is EditTransactionEvent.TypeSelected -> {
+                    selectType(event.type)
+                }
+
+                is EditTransactionEvent.FieldFocused -> {
+                    mutableState.update { it.copy(keypadField = event.field) }
+                }
+
+                is EditTransactionEvent.SheetOpened -> {
+                    mutableState.update { it.copy(openSheet = event.sheet) }
+                }
+
+                EditTransactionEvent.SheetDismissed -> {
+                    mutableState.update { it.copy(openSheet = null) }
+                }
+
+                is EditTransactionEvent.WalletPicked -> {
+                    pickWallet(event.walletId)
+                }
+
+                is EditTransactionEvent.CategoryPicked -> {
+                    updateForm { it.copy(categoryId = event.categoryId) }
+                }
+
+                EditTransactionEvent.WalletsSwapped -> {
+                    updateForm {
+                        it.copy(walletId = it.targetWalletId, targetWalletId = it.walletId)
+                    }
+                }
+
+                is EditTransactionEvent.NoteChanged -> {
+                    updateForm { it.copy(note = event.note.take(MAX_NOTE_LENGTH)) }
+                }
+
+                EditTransactionEvent.SaveRequested -> {
+                    save()
+                }
             }
         }
 
@@ -98,7 +137,10 @@ internal class EditTransactionViewModel
         private fun recordFor(existing: Transaction?): EditRecord {
             val instant = existing?.timing?.occurredAt ?: Instant.now(clock)
             val zoned = instant.atZone(clock.zone)
-            val label = "${DateFormatter.dayLabel(zoned.toLocalDate(), clock)}, ${DateFormatter.timeLabel(zoned.toLocalTime())}"
+            val label = "${DateFormatter.dayLabel(
+                zoned.toLocalDate(),
+                clock,
+            )}, ${DateFormatter.timeLabel(zoned.toLocalTime())}"
             return EditRecord(existing = existing, occurredAt = instant, dateLabel = label)
         }
 
@@ -123,7 +165,11 @@ internal class EditTransactionViewModel
             mutableState.update { current ->
                 val kind = type.categoryKind()
                 val form = current.form
-                val fitsKind = current.catalog.categories.any { it.categoryId == form.categoryId && it.profile.kind == kind }
+                val fitsKind =
+                    current.catalog.categories.any {
+                        it.categoryId == form.categoryId &&
+                            it.profile.kind == kind
+                    }
                 val edited =
                     form.copy(
                         type = type,
@@ -138,7 +184,13 @@ internal class EditTransactionViewModel
         private fun pickWallet(walletId: WalletId) {
             val sheet = mutableState.value.openSheet
             updateForm { form ->
-                if (sheet == EditSheet.TARGET_WALLET) form.copy(targetWalletId = walletId) else form.copy(walletId = walletId)
+                if (sheet ==
+                    EditSheet.TARGET_WALLET
+                ) {
+                    form.copy(targetWalletId = walletId)
+                } else {
+                    form.copy(walletId = walletId)
+                }
             }
             mutableState.update { it.copy(openSheet = null) }
         }
@@ -152,7 +204,9 @@ internal class EditTransactionViewModel
                         mutableState.update { it.copy(isSaved = true) }
                     }
 
-                    is SaveTransactionResult.Rejected -> mutableState.update { it.copy(errors = result.errors) }
+                    is SaveTransactionResult.Rejected -> {
+                        mutableState.update { it.copy(errors = result.errors) }
+                    }
                 }
             }
         }

@@ -31,7 +31,10 @@ internal fun EditTransactionFormBody(
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
         Text(
-            text = stringResource(if (state.isEditing) R.string.transaction_title_edit else R.string.transaction_title_add),
+            text =
+                stringResource(
+                    if (state.isEditing) R.string.transaction_title_edit else R.string.transaction_title_add,
+                ),
             style = FintrackTheme.typography.titleMedium,
             color = FintrackTheme.colors.texts.onSurface,
         )

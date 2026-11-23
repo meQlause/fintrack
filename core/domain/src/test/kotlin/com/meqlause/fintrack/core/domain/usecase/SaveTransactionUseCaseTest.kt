@@ -46,7 +46,9 @@ class SaveTransactionUseCaseTest {
     fun `given zero amount when saving then amount required is reported (BR-001)`() =
         runBlocking {
             val draft = expense(amount = 0L, categoryId = foodId())
-            assertThat(useCase(draft)).isEqualTo(SaveTransactionResult.Rejected(setOf(TransactionError.AMOUNT_REQUIRED)))
+            assertThat(
+                useCase(draft),
+            ).isEqualTo(SaveTransactionResult.Rejected(setOf(TransactionError.AMOUNT_REQUIRED)))
         }
 
     /** BR-001: an amount above 999,999,999,999 is rejected as too large. */
@@ -54,7 +56,9 @@ class SaveTransactionUseCaseTest {
     fun `given amount above the bound when saving then amount too large is reported (BR-001)`() =
         runBlocking {
             val draft = expense(amount = 1_000_000_000_000L, categoryId = foodId())
-            assertThat(useCase(draft)).isEqualTo(SaveTransactionResult.Rejected(setOf(TransactionError.AMOUNT_TOO_LARGE)))
+            assertThat(
+                useCase(draft),
+            ).isEqualTo(SaveTransactionResult.Rejected(setOf(TransactionError.AMOUNT_TOO_LARGE)))
         }
 
     /** BR-002: an expense without a category is rejected. */
@@ -62,7 +66,9 @@ class SaveTransactionUseCaseTest {
     fun `given expense without category when saving then category required is reported (BR-002)`() =
         runBlocking {
             val draft = expense(amount = 25_000L, categoryId = null)
-            assertThat(useCase(draft)).isEqualTo(SaveTransactionResult.Rejected(setOf(TransactionError.CATEGORY_REQUIRED)))
+            assertThat(
+                useCase(draft),
+            ).isEqualTo(SaveTransactionResult.Rejected(setOf(TransactionError.CATEGORY_REQUIRED)))
         }
 
     /** BR-006: an income category cannot classify an expense. */
@@ -70,7 +76,9 @@ class SaveTransactionUseCaseTest {
     fun `given income category on expense when saving then kind mismatch is reported (BR-006)`() =
         runBlocking {
             val draft = expense(amount = 25_000L, categoryId = salaryId())
-            assertThat(useCase(draft)).isEqualTo(SaveTransactionResult.Rejected(setOf(TransactionError.CATEGORY_KIND_MISMATCH)))
+            assertThat(
+                useCase(draft),
+            ).isEqualTo(SaveTransactionResult.Rejected(setOf(TransactionError.CATEGORY_KIND_MISMATCH)))
         }
 
     /** BR-003: a transfer needs source different from target. */
