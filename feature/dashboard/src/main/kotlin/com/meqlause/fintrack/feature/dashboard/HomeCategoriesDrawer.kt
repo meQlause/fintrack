@@ -68,7 +68,10 @@ private fun CategoryLine(
                 color = FintrackTheme.colors.texts.onSurfaceVariant,
             )
         }
-        Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xxSmall)) {
+        Column(
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xxSmall),
+        ) {
             HomeAmountText(money = amount, hidden = hidden, style = FintrackTheme.typography.bodyLarge)
             Text(
                 text = stringResource(R.string.home_percent, percent),

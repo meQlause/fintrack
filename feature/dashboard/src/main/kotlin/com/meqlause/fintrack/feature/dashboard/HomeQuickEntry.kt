@@ -26,7 +26,10 @@ internal fun HomeQuickEntry(
     onQuickEntry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall)) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
+    ) {
         Text(
             text = stringResource(R.string.home_quick_title),
             style = FintrackTheme.typography.labelLarge,

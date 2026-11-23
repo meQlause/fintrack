@@ -20,13 +20,15 @@ internal fun CountUpMoney(
     modifier: Modifier = Modifier,
 ) {
     val progress = remember { Animatable(0f) }
+    val duration = FintrackTheme.motion.slow.durationMillis
+    val easing = FintrackTheme.motion.slow.easing
     LaunchedEffect(Unit) {
         progress.animateTo(
             targetValue = 1f,
             animationSpec =
                 tween(
-                    durationMillis = FintrackTheme.motion.slow.durationMillis,
-                    easing = FintrackTheme.motion.slow.easing,
+                    durationMillis = duration,
+                    easing = easing,
                 ),
         )
     }

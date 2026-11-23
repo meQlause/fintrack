@@ -397,7 +397,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - [x] done · Refs: FR-034, FR-035, FR-038 · Commit: `feat(transaction): add transaction detail [P4, FR-034]`
 
 ### T4.10 — Home (S-03)
-- [ ] done
+- [x] done
 - Refs: FR-040 … FR-045 (inbox/budget parts later), DOC-09 Home simplification, DOC-08 principle 7
 - Include: hero (Saldo + count-up, hide toggle, wallet cards, share bar), summary pill → Ringkasan drawer (sections sorted, fixed header), Catat cepat, category card → Kategori drawer, recent list.
 - Commit: `feat(dashboard): add home screen [P4, FR-040]`

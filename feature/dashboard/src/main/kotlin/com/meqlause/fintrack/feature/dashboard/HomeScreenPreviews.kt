@@ -86,8 +86,7 @@ internal fun HomeHiddenLightPreview() = HomeSample(state = sampleSuccess(hidden 
 
 @Preview(name = "Beranda empty light", showBackground = true, heightDp = 720)
 @Composable
-internal fun HomeEmptyLightPreview() =
-    HomeSample(state = sampleSuccess(recent = emptyList()), darkTheme = false)
+internal fun HomeEmptyLightPreview() = HomeSample(state = sampleSuccess(recent = emptyList()), darkTheme = false)
 
 @Preview(name = "Beranda empty dark", showBackground = true, heightDp = 720)
 @Composable

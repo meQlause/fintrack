@@ -73,15 +73,21 @@ private fun HomeDrawers(
     callbacks: HomeCallbacks,
 ) {
     when (state.drawer) {
-        HomeDrawer.SUMMARY ->
+        HomeDrawer.SUMMARY -> {
             HomeSummaryDrawer(
                 state = state,
                 onClose = callbacks.onCloseDrawer,
                 onOpenWallets = callbacks.onOpenWallets,
             )
-        HomeDrawer.CATEGORIES ->
+        }
+
+        HomeDrawer.CATEGORIES -> {
             HomeCategoriesDrawer(state = state, onClose = callbacks.onCloseDrawer)
-        null -> Unit
+        }
+
+        null -> {
+            Unit
+        }
     }
 }
 

@@ -31,7 +31,11 @@ internal object HomeCalculator {
         val names = snapshot.categories.associate { it.categoryId to it.profile.name }
         val walletNames = snapshot.wallets.associate { it.walletId to it.profile.name }
         val active = snapshot.wallets.filterNot { it.status.isArchived }
-        val inPeriod = snapshot.transactions.filter { dateOf(it.timing.occurredAt, clock) in period.startDate..period.endDate }
+        val inPeriod =
+            snapshot.transactions.filter {
+                dateOf(it.timing.occurredAt, clock) in
+                    period.startDate..period.endDate
+            }
         return HomeUiState.Success(
             hidden = hideOverride ?: snapshot.settings.preferences.hideAmountsByDefault,
             total = totalOf(active, snapshot.balances),
