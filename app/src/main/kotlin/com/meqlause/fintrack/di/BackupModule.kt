@@ -3,6 +3,7 @@ package com.meqlause.fintrack.di
 import android.content.Context
 import com.meqlause.fintrack.core.backup.ContentBackupFiles
 import com.meqlause.fintrack.core.backup.FileBackupRepository
+import com.meqlause.fintrack.core.backup.FileTransactionCsvRepository
 import com.meqlause.fintrack.core.common.coroutines.IoDispatcher
 import com.meqlause.fintrack.core.common.time.ClockProvider
 import com.meqlause.fintrack.core.data.repository.LocalBackupStore
@@ -10,7 +11,12 @@ import com.meqlause.fintrack.core.database.FintrackDatabase
 import com.meqlause.fintrack.core.domain.repository.BackupFiles
 import com.meqlause.fintrack.core.domain.repository.BackupRepository
 import com.meqlause.fintrack.core.domain.repository.BackupStore
+import com.meqlause.fintrack.core.domain.repository.CategoryRepository
+import com.meqlause.fintrack.core.domain.repository.LoanRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
+import com.meqlause.fintrack.core.domain.repository.TransactionCsvRepository
+import com.meqlause.fintrack.core.domain.repository.TransactionRepository
+import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,6 +43,17 @@ object BackupModule {
     fun provideBackupFiles(
         @ApplicationContext context: Context,
     ): BackupFiles = ContentBackupFiles(context)
+
+    @Provides
+    @Singleton
+    fun provideCsvRepository(
+        transactions: TransactionRepository,
+        wallets: WalletRepository,
+        categories: CategoryRepository,
+        loans: LoanRepository,
+        files: BackupFiles,
+        @IoDispatcher io: CoroutineDispatcher,
+    ): TransactionCsvRepository = FileTransactionCsvRepository(transactions, wallets, categories, loans, files, io)
 
     @Provides
     @Singleton

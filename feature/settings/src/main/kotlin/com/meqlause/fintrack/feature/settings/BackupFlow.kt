@@ -7,17 +7,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.domain.backup.BackupFailure
 import com.meqlause.fintrack.core.model.BackupSnapshot
+import com.meqlause.fintrack.core.ui.picker.OptionsDrawer
+import com.meqlause.fintrack.core.ui.picker.PickerOption
+import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-// FR-110, FR-111: the backup dialogs of S-12, shown one at a time for the step the flow is in
+private val REMINDER_CHOICES = listOf(0, 3, 7, 14, 30)
+
+// FR-110..FR-113: the backup dialogs of S-12, shown one at a time for the step the flow is in
 @Composable
 internal fun BackupFlow(
     state: BackupUiState,
     onPasswordForExport: (String) -> Unit,
     onPasswordForImport: (String) -> Unit,
     onConfirmRestore: () -> Unit,
+    onCsvRangePicked: (ClosedRange<LocalDate>) -> Unit,
+    onReminderDaysPicked: (Int) -> Unit,
     onDismissStep: () -> Unit,
     onDismissOutcome: () -> Unit,
 ) {
@@ -34,12 +42,39 @@ internal fun BackupFlow(
             RestoreSummaryDialog(snapshot = step.snapshot, onConfirm = onConfirmRestore, onDismiss = onDismissStep)
         }
 
+        is BackupStep.CsvRange -> {
+            BackupCsvDialog(range = step.range, onConfirm = onCsvRangePicked, onDismiss = onDismissStep)
+        }
+
+        BackupStep.ReminderDays -> {
+            OptionsDrawer(
+                title = stringResource(R.string.settings_backup_reminder_sheet_title),
+                options = reminderOptions(),
+                selectedKey = state.reminderDays.toString(),
+                onPick = { option -> onReminderDaysPicked(option.key.toInt()) },
+                onClose = onDismissStep,
+            )
+        }
+
         null -> {
             Unit
         }
     }
     state.outcome?.let { outcome -> OutcomeDialog(outcome = outcome, onDismiss = onDismissOutcome) }
 }
+
+// FR-112: the reminder choices; 0 means reminders are off
+@Composable
+private fun reminderOptions(): List<PickerOption> =
+    REMINDER_CHOICES.map { days ->
+        val label =
+            if (days == 0) {
+                stringResource(R.string.settings_backup_reminder_off)
+            } else {
+                stringResource(R.string.settings_backup_reminder_value, days)
+            }
+        PickerOption(key = days.toString(), label = label)
+    }
 
 // FR-111: the summary of a validated backup; nothing has been replaced yet
 @Composable
@@ -58,7 +93,7 @@ private fun RestoreSummaryDialog(
                         R.string.backup_restore_summary,
                         snapshot.ledger.wallets.size,
                         snapshot.ledger.transactions.size,
-                        formatDate(snapshot),
+                        formatDate(snapshot.createdAt),
                     ) + "\n" + stringResource(R.string.backup_restore_warning),
             )
         },
@@ -71,7 +106,7 @@ private fun RestoreSummaryDialog(
     )
 }
 
-// FR-110, FR-111: the result of an export or restore, or the human reason it failed
+// FR-110..FR-113: the result of an export or restore, or the human reason it failed
 @Composable
 private fun OutcomeDialog(
     outcome: BackupOutcome,
@@ -90,6 +125,7 @@ private fun outcomeRes(outcome: BackupOutcome): Int =
     when (outcome) {
         BackupOutcome.Saved -> R.string.backup_saved
         BackupOutcome.Restored -> R.string.backup_restored
+        BackupOutcome.CsvSaved -> R.string.backup_csv_saved
         is BackupOutcome.Failed -> failureRes(outcome.failure)
     }
 
@@ -107,8 +143,8 @@ private fun failureRes(failure: BackupFailure): Int =
     }
 
 // FR-111: the creation date of a backup as "20 Nov 2026"
-private fun formatDate(snapshot: BackupSnapshot): String =
+private fun formatDate(createdAt: Instant): String =
     DateTimeFormatter
         .ofPattern("d MMM yyyy", Locale.forLanguageTag("id-ID"))
         .withZone(ZoneId.systemDefault())
-        .format(snapshot.createdAt)
+        .format(createdAt)

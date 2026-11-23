@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit
 
 private const val REMINDER_WORK_NAME = "due-reminders"
 private const val REMINDER_INTERVAL_DAYS = 1L
+private const val BACKUP_REMINDER_WORK_NAME = "backup-reminder"
 
 // BR-045: schedules the daily reminder job for 09:00; KEEP leaves an existing schedule untouched
 public object ReminderScheduler {
@@ -23,6 +24,17 @@ public object ReminderScheduler {
         WorkManager
             .getInstance(context)
             .enqueueUniquePeriodicWork(REMINDER_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request)
+    }
+
+    /** FR-112: schedules the daily backup reminder job at the same run hour; KEEP leaves an existing schedule untouched. */
+    public fun scheduleBackupReminder(context: Context) {
+        val request =
+            PeriodicWorkRequestBuilder<BackupReminderWorker>(REMINDER_INTERVAL_DAYS, TimeUnit.DAYS)
+                .setInitialDelay(delayUntilNextRun(ZonedDateTime.now()))
+                .build()
+        WorkManager
+            .getInstance(context)
+            .enqueueUniquePeriodicWork(BACKUP_REMINDER_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request)
     }
 
     private fun delayUntilNextRun(now: ZonedDateTime): Duration {

@@ -20,4 +20,7 @@
     <string name="reminder_loan_text">%1$d hari lagi · sisa %2$s</string>
     <string name="reminder_invest_title">Update nilai investasi</string>
     <string name="reminder_invest_text">Perbarui nilai investasi Anda bulan ini</string>
+    <string name="backup_reminder_channel_name">Pengingat cadangan</string>
+    <string name="backup_reminder_title">Pengingat cadangan</string>
+    <string name="backup_reminder_text">Sudah %1$d hari sejak cadangan terakhir. Cadangkan sekarang?</string>
 </resources>

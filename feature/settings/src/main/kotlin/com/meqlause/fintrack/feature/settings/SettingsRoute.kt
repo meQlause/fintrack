@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import java.time.LocalDate
+import java.time.YearMonth
 
 // DOC-03, FR-100, FR-110, FR-111, FR-120, FR-121: stateful entry of S-12; the only composable touching its view models
 @Composable
@@ -30,8 +32,13 @@ internal fun SettingsRoute(
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             backup.onImportPicked(uri?.toString())
         }
+    val csvLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(CSV_MIME_TYPE)) { uri ->
+            backup.onCsvTarget(uri?.toString())
+        }
     SettingsScreen(
         state = state,
+        backup = backupState,
         callbacks =
             SettingsCallbacks(
                 onBack = onBack,
@@ -47,6 +54,8 @@ internal fun SettingsRoute(
                 onDismissSheet = viewModel::dismissSheet,
                 onBackupCreate = backup::startExport,
                 onBackupRestore = { openLauncher.launch(arrayOf(BACKUP_OPEN_MIME_TYPE)) },
+                onBackupReminder = backup::startReminderPick,
+                onBackupCsv = backup::startCsvExport,
             ),
     )
     BackupFlow(
@@ -57,10 +66,21 @@ internal fun SettingsRoute(
         },
         onPasswordForImport = backup::onImportPassword,
         onConfirmRestore = backup::confirmRestore,
+        onCsvRangePicked = { range ->
+            backup.onCsvRangePicked(range)
+            csvLauncher.launch(csvFileName(range.start))
+        },
+        onReminderDaysPicked = backup::onReminderDaysPicked,
         onDismissStep = backup::dismissStep,
         onDismissOutcome = backup::dismissOutcome,
     )
 }
+
+// FR-113: the file name offered by the CSV save picker, for example fintrack-2026-11.csv
+private fun csvFileName(start: LocalDate): String = "fintrack-${YearMonth.from(start)}.csv"
+
+// FR-113: the CSV is plain text, so the picker offers CSV files
+private const val CSV_MIME_TYPE = "text/csv"
 
 // FR-110: the file name offered by the save picker; the user may rename it
 private const val BACKUP_FILE_NAME = "fintrack-backup.fintrack"

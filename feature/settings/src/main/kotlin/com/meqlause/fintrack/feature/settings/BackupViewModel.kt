@@ -3,18 +3,28 @@ package com.meqlause.fintrack.feature.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.meqlause.fintrack.core.domain.backup.BackupException
+import com.meqlause.fintrack.core.domain.period.PeriodCalculator
+import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.domain.usecase.ExportBackupUseCase
+import com.meqlause.fintrack.core.domain.usecase.ExportCsvUseCase
 import com.meqlause.fintrack.core.domain.usecase.ReadBackupUseCase
 import com.meqlause.fintrack.core.domain.usecase.RestoreBackupUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
-// FR-110, FR-111: drives the backup and restore dialogs of S-12; the file itself is picked by the screen
+private const val STOP_TIMEOUT_MS = 5_000L
+
+// FR-110..FR-113: drives the backup rows and dialogs of S-12; the files themselves are picked by the screen
 @HiltViewModel
 internal class BackupViewModel
     @Inject
@@ -22,11 +32,18 @@ internal class BackupViewModel
         private val exportBackup: ExportBackupUseCase,
         private val readBackup: ReadBackupUseCase,
         private val restoreBackup: RestoreBackupUseCase,
+        private val exportCsv: ExportCsvUseCase,
+        private val settings: SettingsRepository,
     ) : ViewModel() {
         private val mutable = MutableStateFlow(BackupUiState())
         private var exportPassword: String? = null
+        private var pendingCsv: ClosedRange<LocalDate>? = null
 
-        val state: StateFlow<BackupUiState> = mutable.asStateFlow()
+        // S-12: the dialog state, plus the stored backup time and reminder length shown in the rows
+        val state: StateFlow<BackupUiState> =
+            combine(mutable, settings.observe()) { ui, stored ->
+                ui.copy(lastBackupAt = stored.backup.lastBackupAt, reminderDays = stored.backup.backupReminderDays)
+            }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), BackupUiState())
 
         // FR-110: "Buat cadangan" opens the password dialog first; the file picker comes after it
         fun startExport() {
@@ -79,9 +96,53 @@ internal class BackupViewModel
             }
         }
 
+        // FR-113: "Ekspor CSV" opens the date range dialog, prefilled with the current budget period
+        fun startCsvExport() {
+            viewModelScope.launch {
+                val startDay =
+                    settings
+                        .observe()
+                        .first()
+                        .preferences.periodStartDay
+                val period = PeriodCalculator.periodContaining(LocalDate.now(), startDay)
+                mutable.update { it.copy(step = BackupStep.CsvRange(period.startDate..period.endDate), outcome = null) }
+            }
+        }
+
+        // FR-113: the range is kept until the save picker returns a file
+        fun onCsvRangePicked(range: ClosedRange<LocalDate>) {
+            pendingCsv = range
+            mutable.update { it.copy(step = null) }
+        }
+
+        // FR-113: writes the CSV to the picked file; a cancelled picker just forgets the range
+        fun onCsvTarget(uri: String?) {
+            val range = pendingCsv
+            pendingCsv = null
+            if (uri == null || range == null) return
+            runOperation {
+                exportCsv(uri, range.start, range.endInclusive)
+                BackupOutcome.CsvSaved
+            }
+        }
+
+        // FR-112: "Pengingat cadangan" opens the day choice; the stored length changes only on a pick
+        fun startReminderPick() {
+            mutable.update { it.copy(step = BackupStep.ReminderDays, outcome = null) }
+        }
+
+        // FR-112: the chosen length is stored at once; 0 turns the reminder off
+        fun onReminderDaysPicked(days: Int) {
+            mutable.update { it.copy(step = null) }
+            viewModelScope.launch {
+                settings.update { stored -> stored.copy(backup = stored.backup.copy(backupReminderDays = days)) }
+            }
+        }
+
         // S-12: closing a backup dialog without going on changes nothing
         fun dismissStep() {
             exportPassword = null
+            pendingCsv = null
             mutable.update { it.copy(step = null) }
         }
 

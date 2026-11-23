@@ -60,4 +60,19 @@
     <string name="backup_error_write">Cadangan gagal disimpan. Coba lagi.</string>
     <string name="backup_cancel">Batal</string>
     <string name="backup_ok">Oke</string>
+    <string name="settings_backup_reminder_label">Pengingat cadangan (hari)</string>
+    <string name="settings_backup_reminder_off">Nonaktif</string>
+    <string name="settings_backup_reminder_value">%1$d hari</string>
+    <string name="settings_backup_reminder_sheet_title">Pengingat cadangan</string>
+    <string name="settings_backup_last_never">Cadangan terakhir: belum pernah</string>
+    <string name="settings_backup_last_today">Cadangan terakhir: hari ini</string>
+    <string name="settings_backup_last_days">Cadangan terakhir: %1$d hari lalu</string>
+    <string name="settings_backup_csv_label">Ekspor CSV</string>
+    <string name="backup_csv_title">Ekspor CSV</string>
+    <string name="backup_csv_start_label">Dari tanggal (tttt-bb-hh)</string>
+    <string name="backup_csv_end_label">Sampai tanggal (tttt-bb-hh)</string>
+    <string name="backup_csv_hint">Contoh: 2026-11-01. Tanggal mulai tidak boleh setelah tanggal selesai.</string>
+    <string name="backup_csv_warning">File CSV tidak terenkripsi.</string>
+    <string name="backup_csv_action">Simpan</string>
+    <string name="backup_csv_saved">Ekspor CSV berhasil disimpan</string>
 </resources>
