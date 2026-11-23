@@ -91,10 +91,10 @@ class CategoryViewModelTest {
     fun givenUnusedCategoryWhenDeleteRequestedThenItIsRemoved() =
         runTest {
             val repository = FakeCategoryRepository()
-            val id = repository.insert(sample("Hiburan"))
+            val categoryId = repository.insert(sample("Hiburan"))
             val viewModel = CategoryViewModel(repository)
 
-            viewModel.requestDelete(sample("Hiburan").copy(categoryId = id))
+            viewModel.requestDelete(sample("Hiburan").copy(categoryId = categoryId))
             advanceUntilIdle()
 
             assertThat(repository.observeAll().first()).isEqualTo(emptyList())
@@ -105,11 +105,11 @@ class CategoryViewModelTest {
     fun givenUsedCategoryWhenDeleteRequestedThenArchiveOfferIsRaised() =
         runTest {
             val repository = FakeCategoryRepository()
-            val id = repository.insert(sample("Makan"))
-            repository.markInUse(id)
+            val categoryId = repository.insert(sample("Makan"))
+            repository.markInUse(categoryId)
             val viewModel = CategoryViewModel(repository)
             val collector = backgroundScope.launch { viewModel.state.collect {} }
-            val used = sample("Makan").copy(categoryId = id)
+            val used = sample("Makan").copy(categoryId = categoryId)
 
             viewModel.requestDelete(used)
             advanceUntilIdle()

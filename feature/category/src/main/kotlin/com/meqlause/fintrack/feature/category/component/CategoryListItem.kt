@@ -35,13 +35,13 @@ internal fun CategoryListItem(
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium)) {
-            ActionLabel(R.string.category_edit) { callbacks.onEdit(category) }
-            ActionLabel(R.string.category_move_up) { callbacks.onMoveUp(category) }
-            ActionLabel(R.string.category_move_down) { callbacks.onMoveDown(category) }
+            ActionLabel(R.string.category_edit) { callbacks.list.onEdit(category) }
+            ActionLabel(R.string.category_move_up) { callbacks.list.onMoveUp(category) }
+            ActionLabel(R.string.category_move_down) { callbacks.list.onMoveDown(category) }
             ActionLabel(if (archived) R.string.category_restore else R.string.category_archive) {
-                callbacks.onSetArchived(category, !archived)
+                callbacks.list.onSetArchived(category, !archived)
             }
-            ActionLabel(R.string.category_delete) { callbacks.onDelete(category) }
+            ActionLabel(R.string.category_delete) { callbacks.list.onDelete(category) }
         }
     }
 }

@@ -3,13 +3,8 @@ package com.meqlause.fintrack.feature.category
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
-import com.meqlause.fintrack.core.model.Appearance
-import com.meqlause.fintrack.core.model.Audit
 import com.meqlause.fintrack.core.model.Category
-import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.CategoryKind
-import com.meqlause.fintrack.core.model.CategoryProfile
-import com.meqlause.fintrack.core.model.CategoryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -57,7 +52,7 @@ internal class CategoryViewModel
 
         // FR-021: opens the editor for an existing category
         fun startEdit(category: Category) {
-            editor.value = CategoryEditor.of(category)
+            editor.value = CategoryEditor.draftOf(category)
         }
 
         fun changeName(name: String) = editor.update { it?.copy(name = name) }
@@ -75,13 +70,14 @@ internal class CategoryViewModel
             val draft = editor.value ?: return
             if (draft.name.isBlank()) return
             viewModelScope.launch {
-                val all = categories.observeAll().first()
-                val now = Instant.now()
-                val existing = all.firstOrNull { it.categoryId == draft.categoryId }
+                val stored = categories.observeAll().first()
+                val currentTime = Instant.now()
+                val existing = stored.firstOrNull { it.categoryId == draft.categoryId }
                 if (existing == null) {
-                    categories.insert(newCategory(draft, nextSortOrder(all), now))
+                    val sortOrder = CategoryDrafts.nextSortOrder(stored)
+                    categories.insert(CategoryDrafts.newCategory(draft, sortOrder, currentTime))
                 } else {
-                    categories.update(existing.withDraft(draft, now))
+                    categories.update(CategoryDrafts.withDraft(existing, draft, currentTime))
                 }
                 editor.value = null
             }
@@ -127,44 +123,10 @@ internal class CategoryViewModel
                 val ofKind = categories.observeAll().first().filter { it.profile.kind == category.profile.kind }
                 val index = ofKind.indexOfFirst { it.categoryId == category.categoryId }
                 val target = ofKind.getOrNull(if (upward) index - 1 else index + 1) ?: return@launch
-                categories.update(category.withOrder(target.profile.sortOrder))
-                categories.update(target.withOrder(category.profile.sortOrder))
+                categories.update(CategoryDrafts.withOrder(category, target.profile.sortOrder))
+                categories.update(CategoryDrafts.withOrder(target, category.profile.sortOrder))
             }
         }
-
-        private fun nextSortOrder(existingCategories: List<Category>): Int =
-            (existingCategories.maxOfOrNull { it.profile.sortOrder } ?: -1) + 1
-
-        private fun newCategory(
-            draft: CategoryEditor,
-            sortOrder: Int,
-            currentTime: Instant,
-        ): Category =
-            Category(
-                categoryId = CategoryId(0L),
-                profile = draft.toProfile(sortOrder),
-                state = CategoryState(isDefault = false, isArchived = false),
-                audit = Audit(createdAt = currentTime, updatedAt = currentTime),
-            )
-
-        private fun Category.withDraft(
-            draft: CategoryEditor,
-            currentTime: Instant,
-        ): Category =
-            copy(
-                profile = draft.toProfile(profile.sortOrder),
-                audit = audit.copy(updatedAt = currentTime),
-            )
-
-        private fun Category.withOrder(sortOrder: Int): Category = copy(profile = profile.copy(sortOrder = sortOrder))
-
-        private fun CategoryEditor.toProfile(sortOrder: Int): CategoryProfile =
-            CategoryProfile(
-                name = name.trim(),
-                kind = kind,
-                appearance = Appearance(iconKey = iconKey, colorKey = colorKey),
-                sortOrder = sortOrder,
-            )
 
         private companion object {
             const val STOP_TIMEOUT_MS = 5_000L
