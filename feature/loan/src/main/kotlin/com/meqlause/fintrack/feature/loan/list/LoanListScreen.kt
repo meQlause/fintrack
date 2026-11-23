@@ -1,22 +1,25 @@
 package com.meqlause.fintrack.feature.loan.list
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FintrackChip
+import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.component.ScreenCard
+import com.meqlause.fintrack.core.designsystem.component.ScreenSegments
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.LoanDirection
+import com.meqlause.fintrack.core.model.Money
+import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.loan.R
 
 // S-17, FR-153: the loan list with its Piutang and Hutang segments; stateless, previews drive it with plain values
@@ -28,81 +31,98 @@ internal fun LoanListScreen(
     onOpenLoan: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-    ) {
-        Text(
-            text = stringResource(R.string.loan_back),
-            style = FintrackTheme.typography.bodyMedium,
-            color = FintrackTheme.colors.brands.primary,
-            modifier = Modifier.clickable(onClick = onBack).padding(vertical = FintrackTheme.spacing.small),
+    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+        ScreenBackHeader(
+            title = stringResource(R.string.loan_title),
+            backLabel = stringResource(R.string.loan_back),
+            onBack = onBack,
         )
-        Text(
-            text = stringResource(R.string.loan_title),
-            style = FintrackTheme.typography.headlineSmall,
-            color = FintrackTheme.colors.texts.onSurface,
-        )
-        DirectionChips(selected = state.direction, onPick = onPickDirection)
-        LoanListItems(state = state, onOpenLoan = onOpenLoan)
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = FintrackScreenSizes.screenGutter),
+            contentPadding = PaddingValues(top = FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),
+        ) {
+            item { DirectionSegments(selected = state.direction, onPick = onPickDirection) }
+            item { LoanTotal(state = state) }
+            item { OpenLoans(state = state, onOpenLoan = onOpenLoan) }
+            item { SettledLoans(state = state, onOpenLoan = onOpenLoan) }
+        }
     }
 }
 
 // S-17: the Piutang and Hutang segments
 @Composable
-private fun DirectionChips(
+private fun DirectionSegments(
     selected: LoanDirection,
     onPick: (LoanDirection) -> Unit,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-        FintrackChip(
-            label = stringResource(R.string.loan_tab_lent),
-            selected = selected == LoanDirection.LENT,
-            onClick = { onPick(LoanDirection.LENT) },
+    ScreenSegments(
+        labels = listOf(stringResource(R.string.loan_tab_lent), stringResource(R.string.loan_tab_borrowed)),
+        selected = if (selected == LoanDirection.LENT) 0 else 1,
+        onSelect = { onPick(if (it == 0) LoanDirection.LENT else LoanDirection.BORROWED) },
+    )
+}
+
+// S-17: "Total piutang" or "Total hutang" with the sum still outstanding, 18 px under the segments
+@Composable
+private fun LoanTotal(state: LoanListUiState) {
+    val total = state.groups.sumOf { group -> group.rows.sumOf { it.outstanding.rupiah } }
+    Column(modifier = Modifier.padding(top = FintrackTheme.spacing.large + FintrackTheme.spacing.xxSmall)) {
+        Text(
+            text =
+                stringResource(
+                    if (state.direction == LoanDirection.LENT) R.string.loan_total_lent else R.string.loan_total_borrowed,
+                ),
+            style = FintrackScreenText.label(),
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
-        FintrackChip(
-            label = stringResource(R.string.loan_tab_borrowed),
-            selected = selected == LoanDirection.BORROWED,
-            onClick = { onPick(LoanDirection.BORROWED) },
+        Text(
+            text = MoneyFormatter.format(Money(total)),
+            style = FintrackScreenText.number(size = 28f, weight = 700),
+            color = FintrackTheme.colors.texts.onSurface,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
         )
     }
 }
 
-// S-17: the open loans grouped by person, then the settled ones; an empty note when there is nothing
+// S-17: the open loans in one card, or "Tidak ada" when there are none
 @Composable
-private fun LoanListItems(
+private fun OpenLoans(
     state: LoanListUiState,
     onOpenLoan: (Long) -> Unit,
 ) {
-    if (state.groups.isEmpty() && state.settled.isEmpty()) {
-        Text(
-            text = stringResource(R.string.loan_list_empty),
-            style = FintrackTheme.typography.bodyLarge,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-        )
-        return
-    }
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-    ) {
-        items(items = state.groups, key = { it.personName }) { group ->
-            PersonGroupItem(group = group, onOpenLoan = onOpenLoan)
+    val rows = state.groups.flatMap { it.rows }
+    ScreenCard(modifier = Modifier.padding(top = FintrackScreenSizes.rowPaddingHorizontal)) {
+        rows.forEachIndexed { index, row ->
+            LoanRowItem(loanRow = row, showDivider = index > 0, onClick = { onOpenLoan(row.loanId) })
         }
-        if (state.settled.isNotEmpty()) {
-            item(key = "settled") {
-                Text(
-                    text = stringResource(R.string.loan_section_settled),
-                    style = FintrackTheme.typography.labelMedium,
-                    color = FintrackTheme.colors.texts.onSurfaceVariant,
-                )
-            }
-            items(items = state.settled, key = { it.loanId }) { row ->
-                LoanRowItem(loanRow = row, onClick = { onOpenLoan(row.loanId) })
+        if (rows.isEmpty()) {
+            Text(
+                text = stringResource(R.string.loan_list_empty),
+                style = FintrackScreenText.style(size = 13f, weight = 400),
+                color = FintrackTheme.colors.texts.onSurfaceVariant,
+                modifier = Modifier.fillMaxWidth().padding(FintrackScreenSizes.billInset),
+            )
+        }
+    }
+}
+
+// S-17: the settled loans under "Selesai", each a muted line with its status
+@Composable
+private fun SettledLoans(
+    state: LoanListUiState,
+    onOpenLoan: (Long) -> Unit,
+) {
+    if (state.settled.isEmpty()) return
+    Column(modifier = Modifier.padding(top = FintrackScreenSizes.groupGap)) {
+        Text(
+            text = stringResource(R.string.loan_section_settled),
+            style = FintrackScreenText.label(),
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = FintrackScreenSizes.groupLabelBottom),
+        )
+        ScreenCard {
+            state.settled.forEachIndexed { index, row ->
+                LoanRowItem(loanRow = row, showDivider = index > 0, onClick = { onOpenLoan(row.loanId) })
             }
         }
     }

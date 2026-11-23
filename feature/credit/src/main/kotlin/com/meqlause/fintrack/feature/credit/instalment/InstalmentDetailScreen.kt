@@ -1,7 +1,6 @@
 package com.meqlause.fintrack.feature.credit.instalment
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -20,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
 import com.meqlause.fintrack.core.designsystem.component.ProgressBar
+import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.credit.R
@@ -31,24 +32,22 @@ internal fun InstalmentDetailScreen(
     callbacks: InstalmentDetailCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-    ) {
-        Text(
-            text = stringResource(R.string.credit_back),
-            style = FintrackTheme.typography.bodyMedium,
-            color = FintrackTheme.colors.brands.primary,
-            modifier = Modifier.clickable(onClick = callbacks.onBack).padding(vertical = FintrackTheme.spacing.small),
+    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+        val title = (state as? InstalmentDetailUiState.Success)?.instalmentRow?.title.orEmpty()
+        ScreenBackHeader(
+            title = title,
+            backLabel = stringResource(R.string.credit_back),
+            onBack = callbacks.onBack,
         )
-        when (state) {
-            InstalmentDetailUiState.Loading, InstalmentDetailUiState.Closed -> Unit
-            InstalmentDetailUiState.Missing -> MissingNote()
-            is InstalmentDetailUiState.Success -> InstalmentDetailBody(state = state, callbacks = callbacks)
+        Column(
+            modifier = Modifier.weight(1f).padding(horizontal = FintrackScreenSizes.screenGutter),
+            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+        ) {
+            when (state) {
+                InstalmentDetailUiState.Loading, InstalmentDetailUiState.Closed -> Unit
+                InstalmentDetailUiState.Missing -> MissingNote()
+                is InstalmentDetailUiState.Success -> InstalmentDetailBody(state = state, callbacks = callbacks)
+            }
         }
     }
 }
