@@ -13,6 +13,7 @@ internal fun LockPreviewScreen(darkTheme: Boolean) {
             state = LockUiState(digits = "1234", notice = PinNotice.WRONG, shakeCount = 0),
             onDigit = {},
             onBackspace = {},
+            onBiometric = {},
         )
     }
 }

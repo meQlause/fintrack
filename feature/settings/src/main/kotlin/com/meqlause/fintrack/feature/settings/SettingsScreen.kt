@@ -132,6 +132,18 @@ internal fun SecurityRows(
             onClick = callbacks.onOpenPinSetup,
         )
     }
+    if (state.pinEnabled && state.biometricSupported) {
+        SwitchRow(
+            label = stringResource(R.string.settings_biometric_label),
+            checked = state.biometricEnabled,
+            onCheckedChange = callbacks.onToggleBiometric,
+        )
+    }
+    SwitchRow(
+        label = stringResource(R.string.settings_hide_recents_label),
+        checked = state.hideFromRecents,
+        onCheckedChange = callbacks.onToggleHideFromRecents,
+    )
 }
 
 // S-12: the back action of the header, shared look with the Kategori screen

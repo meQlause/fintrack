@@ -13,4 +13,7 @@
     <string name="pin_setup_warning">PIN tidak bisa dipulihkan. Jika lupa, hapus data aplikasi lalu pulihkan dari cadangan.</string>
     <string name="pin_setup_mismatch">PIN tidak sama. Ulangi dari awal.</string>
     <string name="pin_setup_cancel">Batal</string>
+    <string name="lock_biometric_title">Buka Fintrack</string>
+    <string name="lock_biometric_negative">Gunakan PIN</string>
+    <string name="lock_biometric_button">Gunakan sidik jari</string>
 </resources>

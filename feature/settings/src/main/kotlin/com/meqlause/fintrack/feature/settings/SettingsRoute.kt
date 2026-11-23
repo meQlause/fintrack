@@ -47,6 +47,8 @@ internal fun SettingsRoute(
                 onDismissSheet = viewModel::dismissSheet,
                 onBackupCreate = backup::startExport,
                 onBackupRestore = { openLauncher.launch(arrayOf(BACKUP_OPEN_MIME_TYPE)) },
+                onToggleBiometric = viewModel::toggleBiometric,
+                onToggleHideFromRecents = viewModel::toggleHideFromRecents,
             ),
     )
     BackupFlow(

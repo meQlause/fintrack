@@ -9,6 +9,8 @@
     <string name="settings_pin_setup_label">Atur PIN</string>
     <string name="settings_pin_change_label">Ubah PIN</string>
     <string name="settings_pin_remove_label">Hapus PIN</string>
+    <string name="settings_biometric_label">Buka dengan sidik jari/biometrik</string>
+    <string name="settings_hide_recents_label">Sembunyikan dari aplikasi terbaru</string>
     <string name="settings_theme_label">Tampilan</string>
     <string name="settings_theme_sheet_title">Tampilan</string>
     <string name="settings_theme_system">Sistem</string>

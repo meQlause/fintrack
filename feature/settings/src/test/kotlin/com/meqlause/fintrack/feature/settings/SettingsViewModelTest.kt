@@ -2,9 +2,14 @@ package com.meqlause.fintrack.feature.settings
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
 import assertk.assertions.isNull
+import assertk.assertions.isTrue
+import com.meqlause.fintrack.core.domain.repository.SettingsRepository
+import com.meqlause.fintrack.core.domain.usecase.SetBiometricUseCase
 import com.meqlause.fintrack.core.model.ThemeMode
 import com.meqlause.fintrack.core.testing.repository.FakeSettingsRepository
+import com.meqlause.fintrack.core.testing.security.FakeBiometricAvailability
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -23,6 +28,9 @@ import org.junit.Test
 class SettingsViewModelTest {
     private val dispatcher = StandardTestDispatcher()
 
+    private fun viewModelWith(repository: SettingsRepository) =
+        SettingsViewModel(repository, FakeBiometricAvailability(), SetBiometricUseCase(repository))
+
     @Before
     fun setMainDispatcher() {
         Dispatchers.setMain(dispatcher)
@@ -37,7 +45,7 @@ class SettingsViewModelTest {
     @Test
     fun givenNothingStoredWhenScreenOpensThenDefaultsAreShown() =
         runTest(dispatcher) {
-            val viewModel = SettingsViewModel(FakeSettingsRepository())
+            val viewModel = viewModelWith(FakeSettingsRepository())
             val collector = backgroundScope.launch { viewModel.state.collect {} }
             advanceUntilIdle()
 
@@ -51,7 +59,7 @@ class SettingsViewModelTest {
     fun givenThemePickedWhenSavedThenSettingIsStoredAndDrawerCloses() =
         runTest(dispatcher) {
             val repository = FakeSettingsRepository()
-            val viewModel = SettingsViewModel(repository)
+            val viewModel = viewModelWith(repository)
             val collector = backgroundScope.launch { viewModel.state.collect {} }
             viewModel.openSheet(SettingsSheet.THEME)
 
@@ -73,7 +81,7 @@ class SettingsViewModelTest {
     fun givenPeriodDayPickedWhenSavedThenSettingIsStored() =
         runTest(dispatcher) {
             val repository = FakeSettingsRepository()
-            val viewModel = SettingsViewModel(repository)
+            val viewModel = viewModelWith(repository)
             val collector = backgroundScope.launch { viewModel.state.collect {} }
 
             viewModel.pickPeriodStartDay(25)
@@ -93,7 +101,7 @@ class SettingsViewModelTest {
     fun givenDrawerOpenWhenDismissedThenNothingIsChanged() =
         runTest(dispatcher) {
             val repository = FakeSettingsRepository()
-            val viewModel = SettingsViewModel(repository)
+            val viewModel = viewModelWith(repository)
             val collector = backgroundScope.launch { viewModel.state.collect {} }
             viewModel.openSheet(SettingsSheet.PERIOD_DAY)
 
@@ -107,6 +115,38 @@ class SettingsViewModelTest {
                     .preferences.periodStartDay,
             ).isEqualTo(1)
             assertThat(viewModel.state.value.sheet).isNull()
+            collector.cancel()
+        }
+
+    // FR-101: biometric unlock cannot be switched on while no PIN is set
+    @Test
+    fun givenNoPinWhenBiometricSwitchedOnThenItStaysOff() =
+        runTest(dispatcher) {
+            val repository = FakeSettingsRepository()
+            val viewModel = viewModelWith(repository)
+            val collector = backgroundScope.launch { viewModel.state.collect {} }
+            viewModel.toggleBiometric(true)
+            advanceUntilIdle()
+
+            assertThat(
+                repository
+                    .observe()
+                    .first()
+                    .security.biometricEnabled,
+            ).isFalse()
+            collector.cancel()
+        }
+
+    // FR-104: the recents switch stores the option and the state shows it
+    @Test
+    fun givenRecentsSwitchedOnWhenStateIsReadThenItIsShown() =
+        runTest(dispatcher) {
+            val viewModel = viewModelWith(FakeSettingsRepository())
+            val collector = backgroundScope.launch { viewModel.state.collect {} }
+            viewModel.toggleHideFromRecents(true)
+            advanceUntilIdle()
+
+            assertThat(viewModel.state.value.hideFromRecents).isTrue()
             collector.cancel()
         }
 }

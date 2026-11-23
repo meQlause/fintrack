@@ -17,4 +17,6 @@ internal data class SettingsCallbacks(
     val onDismissSheet: () -> Unit = {},
     val onBackupCreate: () -> Unit = {},
     val onBackupRestore: () -> Unit = {},
+    val onToggleBiometric: (Boolean) -> Unit = {},
+    val onToggleHideFromRecents: (Boolean) -> Unit = {},
 )

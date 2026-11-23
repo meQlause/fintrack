@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.meqlause.fintrack.core.domain.security.PinCheck
 import com.meqlause.fintrack.core.domain.security.PinPolicy
+import com.meqlause.fintrack.core.domain.usecase.ObserveBiometricEnabledUseCase
 import com.meqlause.fintrack.core.domain.usecase.ObservePinLockUseCase
 import com.meqlause.fintrack.core.domain.usecase.VerifyPinUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,10 +33,12 @@ internal class LockViewModel
     constructor(
         private val verifyPin: VerifyPinUseCase,
         observePinLock: ObservePinLockUseCase,
+        observeBiometric: ObserveBiometricEnabledUseCase,
         private val clock: Clock,
     ) : ViewModel() {
         private val entry = MutableStateFlow(LockEntry())
         private val lockedUntil = observePinLock().map { it.lockedUntil }
+        private val biometric = observeBiometric()
         private val ticks =
             flow {
                 while (true) {
@@ -46,9 +49,14 @@ internal class LockViewModel
 
         // S-02: the typed digits, the countdown and the shake count, emitted again after every change
         val state: StateFlow<LockUiState> =
-            combine(entry, lockedUntil, ticks) { current, until, instant ->
-                current.toUiState(remainingSeconds(instant, until))
+            combine(entry, lockedUntil, ticks, biometric) { current, until, instant, enabled ->
+                current.toUiState(remainingSeconds(instant, until), enabled)
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), LockUiState())
+
+        // FR-101: a correct biometric unlock opens the app at once and clears the typed digits
+        fun onBiometricSucceeded() {
+            entry.update { it.copy(digits = "", unlocked = true) }
+        }
 
         // S-02: a digit is added; the sixth digit is checked at once and ignored during a lockout
         fun onDigit(digit: String) {
@@ -76,13 +84,17 @@ internal class LockViewModel
         private fun failed(current: LockEntry): LockEntry =
             current.copy(digits = "", notice = PinNotice.WRONG, shakeCount = current.shakeCount + 1)
 
-        private fun LockEntry.toUiState(remainingSeconds: Long): LockUiState =
+        private fun LockEntry.toUiState(
+            remainingSeconds: Long,
+            biometricEnabled: Boolean,
+        ): LockUiState =
             LockUiState(
                 digits = digits,
                 notice = notice,
                 remainingSeconds = remainingSeconds,
                 shakeCount = shakeCount,
                 unlocked = unlocked,
+                biometricEnabled = biometricEnabled,
             )
 
         // FR-103: the seconds left of a lockout, 0 when the PIN can be tried again

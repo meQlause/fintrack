@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.hilt.work)
     implementation(libs.work.runtime.ktx)
     implementation(libs.androidx.annotation)
+    implementation(libs.biometric)
     implementation(libs.datastore.core)
     implementation(libs.javax.inject)
     implementation(libs.lifecycle.common)

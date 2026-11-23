@@ -509,7 +509,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - [x] done · Refs: FR-100, FR-102, FR-103 · Commit: `feat(lock): add pin lock [P8, FR-100]`
 
 ### T8.2 — Biometrics + hide from recents
-- [ ] done · Refs: FR-101, FR-104 · Commit: `feat(lock): add biometric unlock [P8, FR-101]`
+- [x] done · Refs: FR-101, FR-104 · Commit: `feat(lock): add biometric unlock [P8, FR-101]`
 
 ### T8.3 — Encrypted backup & restore
 - [x] done · Refs: FR-110, FR-111, DOC-11 (all tests listed there) · includes plans, loans, valuations, quick entries.

@@ -24,6 +24,8 @@ dependencies {
     implementation(libs.navigation.common)
     api(libs.serialization.core)
     implementation(libs.coroutines.core)
+    implementation(libs.biometric)
+    implementation(libs.fragment)
     implementation(libs.hilt.android)
     implementation(libs.hilt.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.runtime.compose)

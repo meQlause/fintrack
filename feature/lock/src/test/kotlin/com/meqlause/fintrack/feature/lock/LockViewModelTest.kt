@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
+import com.meqlause.fintrack.core.domain.usecase.ObserveBiometricEnabledUseCase
 import com.meqlause.fintrack.core.domain.usecase.ObservePinLockUseCase
 import com.meqlause.fintrack.core.domain.usecase.SetPinUseCase
 import com.meqlause.fintrack.core.domain.usecase.VerifyPinUseCase
@@ -35,6 +36,7 @@ class LockViewModelTest {
         LockViewModel(
             verifyPin = VerifyPinUseCase(settings, hasher, clock),
             observePinLock = ObservePinLockUseCase(settings),
+            observeBiometric = ObserveBiometricEnabledUseCase(settings),
             clock = clock,
         )
 

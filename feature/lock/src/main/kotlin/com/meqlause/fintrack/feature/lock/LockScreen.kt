@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ internal fun LockScreen(
     state: LockUiState,
     onDigit: (String) -> Unit,
     onBackspace: () -> Unit,
+    onBiometric: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val shake = rememberPinShake(state.shakeCount)
@@ -49,6 +51,15 @@ internal fun LockScreen(
             showTripleZero = false,
             modifier = Modifier.fillMaxWidth().padding(bottom = FintrackTheme.spacing.xxLarge),
         )
+        if (state.biometricEnabled) {
+            TextButton(onClick = onBiometric) {
+                Text(
+                    text = stringResource(R.string.lock_biometric_button),
+                    style = FintrackTheme.typography.labelLarge,
+                    color = FintrackTheme.colors.texts.onSurface,
+                )
+            }
+        }
     }
 }
 
