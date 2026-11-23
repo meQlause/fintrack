@@ -18,6 +18,7 @@ import com.meqlause.fintrack.core.designsystem.component.ScreenGroup
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.domain.investment.InvestmentActivity
 import com.meqlause.fintrack.core.domain.investment.InvestmentDetail
 import com.meqlause.fintrack.core.model.InvestKind
 import com.meqlause.fintrack.feature.investment.InvestmentLabels
@@ -96,20 +97,24 @@ private fun DetailList(
     ) {
         item { ValueSummary(valuation = detail.account.valuation) }
         item { InvestmentActions(callbacks = callbacks) }
-        item {
-            ScreenGroup(label = stringResource(R.string.investment_timeline_title)) {
-                detail.activity.forEachIndexed { index, activity ->
-                    ActivityRow(activity = activity, accountName = null, showDivider = index > 0)
-                }
-                if (detail.activity.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.investment_activity_none),
-                        style = FintrackScreenText.style(size = 13f, weight = 400),
-                        color = FintrackTheme.colors.texts.onSurfaceVariant,
-                        modifier = Modifier.padding(FintrackScreenSizes.screenGutter),
-                    )
-                }
-            }
+        item { ActivityTimeline(activities = detail.activity) }
+    }
+}
+
+// S-20: every transfer and valuation of the account, or a line saying there is none yet
+@Composable
+private fun ActivityTimeline(activities: List<InvestmentActivity>) {
+    ScreenGroup(label = stringResource(R.string.investment_timeline_title)) {
+        activities.forEachIndexed { index, activity ->
+            ActivityRow(activity = activity, accountName = null, showDivider = index > 0)
+        }
+        if (activities.isEmpty()) {
+            Text(
+                text = stringResource(R.string.investment_activity_none),
+                style = FintrackScreenText.style(size = 13f, weight = 400),
+                color = FintrackTheme.colors.texts.onSurfaceVariant,
+                modifier = Modifier.padding(FintrackScreenSizes.screenGutter),
+            )
         }
     }
 }

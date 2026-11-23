@@ -54,7 +54,6 @@ private fun PortfolioList(
     onOpenAccount: (WalletId) -> Unit,
     modifier: Modifier,
 ) {
-    val names = portfolio.accounts.associate { it.wallet.walletId to it.wallet.profile.name }
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         contentPadding = PaddingValues(bottom = FintrackScreenSizes.screenBottom),
@@ -63,31 +62,42 @@ private fun PortfolioList(
         item {
             AllocationCard(
                 portfolio = portfolio,
-                modifier =
-                    Modifier.padding(top = FintrackScreenSizes.screenTop),
+                modifier = Modifier.padding(top = FintrackScreenSizes.screenTop),
             )
         }
-        item {
-            ScreenGroup(label = stringResource(R.string.investment_accounts_title)) {
-                portfolio.accounts.forEachIndexed { index, account ->
-                    AccountRow(
-                        account = account,
-                        showDivider = index > 0,
-                        onClick = { onOpenAccount(account.wallet.walletId) },
-                    )
-                }
-            }
+        item { AccountsGroup(portfolio = portfolio, onOpenAccount = onOpenAccount) }
+        item { RecentGroup(portfolio = portfolio) }
+    }
+}
+
+// S-08: every account of the portfolio, each one opens its detail
+@Composable
+private fun AccountsGroup(
+    portfolio: InvestmentPortfolio,
+    onOpenAccount: (WalletId) -> Unit,
+) {
+    ScreenGroup(label = stringResource(R.string.investment_accounts_title)) {
+        portfolio.accounts.forEachIndexed { index, account ->
+            AccountRow(
+                account = account,
+                showDivider = index > 0,
+                onClick = { onOpenAccount(account.wallet.walletId) },
+            )
         }
-        item {
-            ScreenGroup(label = stringResource(R.string.investment_activity_title)) {
-                portfolio.recent.forEachIndexed { index, activity ->
-                    ActivityRow(
-                        activity = activity,
-                        accountName = names[activity.walletId].orEmpty(),
-                        showDivider = index > 0,
-                    )
-                }
-            }
+    }
+}
+
+// S-08: the newest activity of the portfolio, named with the account it belongs to
+@Composable
+private fun RecentGroup(portfolio: InvestmentPortfolio) {
+    val names = portfolio.accounts.associate { it.wallet.walletId to it.wallet.profile.name }
+    ScreenGroup(label = stringResource(R.string.investment_activity_title)) {
+        portfolio.recent.forEachIndexed { index, activity ->
+            ActivityRow(
+                activity = activity,
+                accountName = names[activity.walletId].orEmpty(),
+                showDivider = index > 0,
+            )
         }
     }
 }

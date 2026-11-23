@@ -26,10 +26,7 @@ internal fun AccountRow(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val kind = account.wallet.kind.investKind ?: InvestKind.OTHER
     val appearance = account.wallet.profile.appearance
-    val kindLabel = stringResource(InvestmentLabels.kindRes(kind))
-    val updated = account.valuation.lastValuedAt
     ScreenRow(
         modifier = modifier,
         showDivider = showDivider,
@@ -45,18 +42,22 @@ internal fun AccountRow(
             overflow = TextOverflow.Ellipsis,
         )
         Text(
-            text =
-                if (updated == null) {
-                    stringResource(R.string.investment_account_never, kindLabel)
-                } else {
-                    stringResource(R.string.investment_account_sub, kindLabel, InvestmentDates.dayMonth(updated))
-                },
+            text = accountSubtitle(account),
             style = FintrackScreenText.rowSub(),
             color = FintrackTheme.colors.texts.onSurfaceVariant,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
     }
+}
+
+// FR-174: the kind of the account and the day of its last update, or "belum diperbarui" when never valued
+@Composable
+private fun accountSubtitle(account: InvestmentAccount): String {
+    val kind = account.wallet.kind.investKind ?: InvestKind.OTHER
+    val kindLabel = stringResource(InvestmentLabels.kindRes(kind))
+    val updated = account.valuation.lastValuedAt ?: return stringResource(R.string.investment_account_never, kindLabel)
+    return stringResource(R.string.investment_account_sub, kindLabel, InvestmentDates.dayMonth(updated))
 }
 
 @Composable

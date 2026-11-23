@@ -19,62 +19,74 @@ import com.meqlause.fintrack.feature.investment.component.GainText
 // S-20: "Nilai sekarang" (34 px), the gain line, the last update, then the Modal and Untung card
 @Composable
 internal fun ValueSummary(valuation: InvestmentValuation) {
-    val colors = FintrackTheme.colors
-    val small = FintrackTheme.spacing.xSmall
     Column(modifier = Modifier.padding(top = FintrackTheme.spacing.small)) {
-        Text(
-            text = stringResource(R.string.investment_value_label),
-            style = FintrackScreenText.label(),
-            color = colors.texts.onSurfaceVariant,
-        )
-        Text(
-            text = MoneyFormatter.format(valuation.currentValue),
-            style = FintrackScreenText.number(size = 34f, weight = 700),
-            color = colors.texts.onSurface,
-            maxLines = 1,
-            modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
-        )
-        GainText(
-            valuation = valuation,
-            style = FintrackScreenText.number(size = 14f, weight = 700),
-            modifier = Modifier.padding(top = small),
-        )
-        val updated = valuation.lastValuedAt
-        Text(
-            text =
-                if (updated == null) {
-                    stringResource(R.string.investment_never_updated)
-                } else {
-                    stringResource(R.string.investment_last_update, InvestmentDates.shortDate(updated))
-                },
-            style = FintrackScreenText.rowSub(),
-            color = colors.texts.onSurfaceVariant,
-            modifier = Modifier.padding(top = small),
-        )
-        val gainColor = if (valuation.gain.rupiah < 0L) colors.semantics.expense else colors.semantics.income
-        ScreenStatGrid(
-            modifier = Modifier.padding(top = FintrackTheme.spacing.large),
-            stats =
-                listOf(
-                    ScreenStat(
-                        label = stringResource(R.string.investment_modal_label),
-                        value = MoneyFormatter.format(valuation.modal),
-                    ),
-                    ScreenStat(
-                        label = stringResource(R.string.investment_gain_label),
-                        value =
-                            (
-                                if (valuation.gain.rupiah <
-                                    0L
-                                ) {
-                                    ""
-                                } else {
-                                    "+"
-                                }
-                            ) + MoneyFormatter.formatCompact(valuation.gain),
-                        color = gainColor,
-                    ),
-                ),
-        )
+        ValueLines(valuation)
+        ValueStats(valuation)
     }
+}
+
+// S-20: the label, the current value, the gain and the last update, one under the other
+@Composable
+private fun ValueLines(valuation: InvestmentValuation) {
+    val colors = FintrackTheme.colors
+    Text(
+        text = stringResource(R.string.investment_value_label),
+        style = FintrackScreenText.label(),
+        color = colors.texts.onSurfaceVariant,
+    )
+    Text(
+        text = MoneyFormatter.format(valuation.currentValue),
+        style = FintrackScreenText.number(size = 34f, weight = 700),
+        color = colors.texts.onSurface,
+        maxLines = 1,
+        modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
+    )
+    UpdateLines(valuation)
+}
+
+// S-20: the gain line under the value, then the day of the last update, or "belum diperbarui"
+@Composable
+private fun UpdateLines(valuation: InvestmentValuation) {
+    val small = FintrackTheme.spacing.xSmall
+    GainText(
+        valuation = valuation,
+        style = FintrackScreenText.number(size = 14f, weight = 700),
+        modifier = Modifier.padding(top = small),
+    )
+    val updated = valuation.lastValuedAt
+    Text(
+        text =
+            if (updated == null) {
+                stringResource(R.string.investment_never_updated)
+            } else {
+                stringResource(R.string.investment_last_update, InvestmentDates.shortDate(updated))
+            },
+        style = FintrackScreenText.rowSub(),
+        color = FintrackTheme.colors.texts.onSurfaceVariant,
+        modifier = Modifier.padding(top = small),
+    )
+}
+
+// S-20: the Modal and the Untung stats; a loss is shown in the expense colour without a plus
+@Composable
+private fun ValueStats(valuation: InvestmentValuation) {
+    val colors = FintrackTheme.colors
+    val isLoss = valuation.gain.rupiah < 0L
+    val gainColor = if (isLoss) colors.semantics.expense else colors.semantics.income
+    val gainSign = if (isLoss) "" else "+"
+    ScreenStatGrid(
+        modifier = Modifier.padding(top = FintrackTheme.spacing.large),
+        stats =
+            listOf(
+                ScreenStat(
+                    label = stringResource(R.string.investment_modal_label),
+                    value = MoneyFormatter.format(valuation.modal),
+                ),
+                ScreenStat(
+                    label = stringResource(R.string.investment_gain_label),
+                    value = gainSign + MoneyFormatter.formatCompact(valuation.gain),
+                    color = gainColor,
+                ),
+            ),
+    )
 }
