@@ -6,7 +6,7 @@ import java.util.Base64
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 
-// DOC-10: PBKDF2WithHmacSHA256, 210,000 iterations, 16-byte salt, 32-byte hash; both stored Base64 encoded
+/** DOC-10: PBKDF2WithHmacSHA256, 210,000 iterations, 16-byte salt, 32-byte hash; both stored Base64 encoded. */
 public class Pbkdf2PinHasher(
     private val random: SecureRandom = SecureRandom(),
 ) {
