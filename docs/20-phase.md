@@ -449,7 +449,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(statistics): add statistics view in history [P6, FR-060]`
 
 ### T6.2 — Budgets (S-11) + alerts
-- [ ] done · Refs: FR-070 … FR-074, BR-020, BR-021 · Commit: `feat(budget): add budgets and alerts [P6, FR-070]`
+- [x] done · Refs: FR-070 … FR-074, BR-020, BR-021 · Commit: `feat(budget): add budgets and alerts [P6, FR-070]`
 
 ---
 

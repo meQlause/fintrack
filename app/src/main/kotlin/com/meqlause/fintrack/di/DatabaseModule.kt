@@ -3,6 +3,8 @@ package com.meqlause.fintrack.di
 import android.content.Context
 import com.meqlause.fintrack.core.database.FintrackDatabase
 import com.meqlause.fintrack.core.database.FintrackDatabaseFactory
+import com.meqlause.fintrack.core.database.dao.BudgetAlertLogDao
+import com.meqlause.fintrack.core.database.dao.BudgetDao
 import com.meqlause.fintrack.core.database.dao.CategoryDao
 import com.meqlause.fintrack.core.database.dao.InboxItemDao
 import com.meqlause.fintrack.core.database.dao.InstallmentPlanDao
@@ -45,6 +47,13 @@ object DatabaseModule {
     // FR-140: instalment plans are read and written through Room
     @Provides
     fun provideInstallmentPlanDao(database: FintrackDatabase): InstallmentPlanDao = database.installmentPlanDao()
+
+    // FR-070, FR-073: budget limits and the sent-alert log
+    @Provides
+    fun provideBudgetDao(database: FintrackDatabase): BudgetDao = database.budgetDao()
+
+    @Provides
+    fun provideBudgetAlertLogDao(database: FintrackDatabase): BudgetAlertLogDao = database.budgetAlertLogDao()
 
     // FR-039: shortcuts are read and written through the Room DAO
     @Provides

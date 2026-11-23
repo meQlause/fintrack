@@ -14,6 +14,7 @@
     <string name="settings_period_sheet_title">Awal periode</string>
     <string name="settings_period_value">Tanggal %1$d</string>
     <string name="settings_categories_label">Kategori</string>
+    <string name="settings_budgets_label">Anggaran</string>
     <string name="settings_section_detection">Deteksi otomatis</string>
     <string name="settings_monitored_label">Aplikasi dipantau</string>
     <string name="monitored_title">Aplikasi dipantau</string>

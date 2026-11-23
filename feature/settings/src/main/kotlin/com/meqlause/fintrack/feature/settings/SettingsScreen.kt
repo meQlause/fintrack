@@ -59,6 +59,11 @@ internal fun SettingsScreen(
                     value = "",
                     onClick = callbacks.onOpenCategories,
                 )
+                FormRow(
+                    label = stringResource(R.string.settings_budgets_label),
+                    value = "",
+                    onClick = callbacks.onOpenBudgets,
+                )
             }
             SettingsSection(title = stringResource(R.string.settings_section_detection)) {
                 FormRow(
