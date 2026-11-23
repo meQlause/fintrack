@@ -9,7 +9,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 
-private val SHAKE_STEPS = listOf(-12f, 12f, -8f, 8f, 0f)
+private const val SHAKE_WIDE_DP = 12f
+private const val SHAKE_NARROW_DP = 8f
+private val SHAKE_STEPS = listOf(-SHAKE_WIDE_DP, SHAKE_WIDE_DP, -SHAKE_NARROW_DP, SHAKE_NARROW_DP, 0f)
 private const val SHAKE_STEP_MILLIS = 40
 
 // S-02: a wrong PIN shakes the dots once and gives a haptic tap; the returned offset is in dp
