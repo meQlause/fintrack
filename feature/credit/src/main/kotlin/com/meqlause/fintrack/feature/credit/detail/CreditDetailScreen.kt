@@ -128,10 +128,10 @@ private fun CreditDetailCards(
     }
 }
 
-private fun pickerTitle(creditDay: CreditDay): Int =
+internal fun pickerTitle(creditDay: CreditDay): Int =
     if (creditDay == CreditDay.STATEMENT) R.string.credit_statement_picker_title else R.string.credit_due_picker_title
 
-private fun dayOf(
+internal fun dayOf(
     state: CreditDetailUiState.Success,
     creditDay: CreditDay,
 ): Int = if (creditDay == CreditDay.STATEMENT) state.terms.statementDay else state.terms.dueDay
