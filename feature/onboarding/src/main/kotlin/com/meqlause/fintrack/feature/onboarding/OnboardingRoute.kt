@@ -33,9 +33,12 @@ internal fun OnboardingRoute(
     }
     OnboardingScreen(
         state = state,
-        onAction = viewModel::onAction,
-        onEnableNotifications = { NotificationAccess.openSettings(context) },
-        onSetupPin = onSetupPin,
+        callbacks =
+            OnboardingCallbacks(
+                onAction = viewModel::onAction,
+                onEnableNotifications = { NotificationAccess.openSettings(context) },
+                onSetupPin = onSetupPin,
+            ),
         modifier = modifier,
     )
 }

@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackLogo
-import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 /** S-01, FR-001: page 1, offline and private. */
 @Composable

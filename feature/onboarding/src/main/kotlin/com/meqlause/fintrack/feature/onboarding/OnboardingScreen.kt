@@ -11,6 +11,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,13 +28,10 @@ import com.meqlause.fintrack.core.designsystem.theme.MotionToken
 @Composable
 internal fun OnboardingScreen(
     state: OnboardingUiState,
-    onAction: (OnboardingAction) -> Unit,
-    onEnableNotifications: () -> Unit,
-    onSetupPin: () -> Unit,
+    callbacks: OnboardingCallbacks,
     modifier: Modifier = Modifier,
 ) {
     val spacing = FintrackTheme.spacing
-    val motion = FintrackTheme.motion.medium
     Column(
         modifier =
             modifier
@@ -43,24 +41,28 @@ internal fun OnboardingScreen(
     ) {
         SkipAction(
             visible = state == OnboardingUiState.Welcome,
-            onSkip = { onAction(OnboardingAction.SkipIntro) },
+            onSkip = { callbacks.onAction(OnboardingAction.SkipIntro) },
         )
-        AnimatedContent(
-            targetState = state,
-            modifier = Modifier.weight(1f).fillMaxWidth(),
-            transitionSpec = { pageTransition(motion) },
-            contentKey = { it.page },
-            label = "onboardingPage",
-        ) { current ->
-            OnboardingPageContent(current = current, onAction = onAction)
-        }
+        OnboardingPages(state = state, onAction = callbacks.onAction)
         PageDots(current = state.page.ordinal, count = OnboardingPage.entries.size)
-        OnboardingActions(
-            state = state,
-            onAction = onAction,
-            onEnableNotifications = onEnableNotifications,
-            onSetupPin = onSetupPin,
-        )
+        OnboardingActions(state = state, callbacks = callbacks)
+    }
+}
+
+@Composable
+private fun ColumnScope.OnboardingPages(
+    state: OnboardingUiState,
+    onAction: (OnboardingAction) -> Unit,
+) {
+    val motion = FintrackTheme.motion.medium
+    AnimatedContent(
+        targetState = state,
+        modifier = Modifier.weight(1f).fillMaxWidth(),
+        transitionSpec = { pageTransition(motion) },
+        contentKey = { it.page },
+        label = "onboardingPage",
+    ) { current ->
+        OnboardingPageContent(current = current, onAction = onAction)
     }
 }
 

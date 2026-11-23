@@ -12,12 +12,7 @@ internal fun OnboardingPreviewScreen(
     darkTheme: Boolean,
 ) {
     FintrackTheme(darkTheme = darkTheme) {
-        OnboardingScreen(
-            state = state,
-            onAction = {},
-            onEnableNotifications = {},
-            onSetupPin = {},
-        )
+        OnboardingScreen(state = state, callbacks = OnboardingCallbacks())
     }
 }
 

@@ -48,9 +48,7 @@ class OnboardingInteractionTest {
             FintrackTheme(darkTheme = false) {
                 OnboardingScreen(
                     state = state,
-                    onAction = { actions.add(it) },
-                    onEnableNotifications = {},
-                    onSetupPin = {},
+                    callbacks = OnboardingCallbacks(onAction = { actions.add(it) }),
                 )
             }
         }

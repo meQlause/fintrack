@@ -14,9 +14,7 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 @Composable
 internal fun OnboardingActions(
     state: OnboardingUiState,
-    onAction: (OnboardingAction) -> Unit,
-    onEnableNotifications: () -> Unit,
-    onSetupPin: () -> Unit,
+    callbacks: OnboardingCallbacks,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -26,19 +24,15 @@ internal fun OnboardingActions(
     ) {
         when (state) {
             OnboardingUiState.Welcome, is OnboardingUiState.FirstWallet -> {
-                NextButton(onClick = { onAction(OnboardingAction.Continue) })
+                NextButton(onClick = { callbacks.onAction(OnboardingAction.Continue) })
             }
 
             is OnboardingUiState.NotificationAccess -> {
-                NotificationButtons(
-                    isGranted = state.isGranted,
-                    onAction = onAction,
-                    onEnableNotifications = onEnableNotifications,
-                )
+                NotificationButtons(isGranted = state.isGranted, callbacks = callbacks)
             }
 
             is OnboardingUiState.Security -> {
-                SecurityButtons(isSaving = state.isSaving, onAction = onAction, onSetupPin = onSetupPin)
+                SecurityButtons(isSaving = state.isSaving, callbacks = callbacks)
             }
 
             OnboardingUiState.Completed -> {
@@ -57,17 +51,19 @@ private fun NextButton(onClick: () -> Unit) {
 @Composable
 private fun NotificationButtons(
     isGranted: Boolean,
-    onAction: (OnboardingAction) -> Unit,
-    onEnableNotifications: () -> Unit,
+    callbacks: OnboardingCallbacks,
 ) {
     if (isGranted) {
-        NextButton(onClick = { onAction(OnboardingAction.Continue) })
+        NextButton(onClick = { callbacks.onAction(OnboardingAction.Continue) })
         return
     }
-    FintrackButton(text = stringResource(R.string.onboarding_notification_enable), onClick = onEnableNotifications)
+    FintrackButton(
+        text = stringResource(R.string.onboarding_notification_enable),
+        onClick = callbacks.onEnableNotifications,
+    )
     TextAction(
         label = stringResource(R.string.onboarding_later),
-        onClick = { onAction(OnboardingAction.Continue) },
+        onClick = { callbacks.onAction(OnboardingAction.Continue) },
     )
 }
 
@@ -75,13 +71,12 @@ private fun NotificationButtons(
 @Composable
 private fun SecurityButtons(
     isSaving: Boolean,
-    onAction: (OnboardingAction) -> Unit,
-    onSetupPin: () -> Unit,
+    callbacks: OnboardingCallbacks,
 ) {
     FintrackButton(
         text = stringResource(R.string.onboarding_start),
-        onClick = { onAction(OnboardingAction.Finish) },
+        onClick = { callbacks.onAction(OnboardingAction.Finish) },
         enabled = !isSaving,
     )
-    TextAction(label = stringResource(R.string.onboarding_pin_setup), onClick = onSetupPin)
+    TextAction(label = stringResource(R.string.onboarding_pin_setup), onClick = callbacks.onSetupPin)
 }
