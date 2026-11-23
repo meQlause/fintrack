@@ -20,4 +20,12 @@ public class FakeInstallmentPlanRepository : InstallmentPlanRepository {
         InstallmentPlanId(
             store.append(plan) { existing -> existing.purchase.transactionId == plan.purchase.transactionId },
         )
+
+    override suspend fun update(plan: InstallmentPlan) {
+        store.replace(plan)
+    }
+
+    override suspend fun delete(installmentPlanId: InstallmentPlanId) {
+        store.remove(installmentPlanId.value)
+    }
 }

@@ -6,6 +6,7 @@ import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import com.meqlause.fintrack.core.domain.transaction.TransactionError
+import com.meqlause.fintrack.core.domain.usecase.SaveInstalmentPurchaseUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveQuickEntryUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveTransactionUseCase
 import com.meqlause.fintrack.core.model.Appearance
@@ -15,6 +16,7 @@ import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.CategoryKind
 import com.meqlause.fintrack.core.model.CategoryProfile
 import com.meqlause.fintrack.core.model.CategoryState
+import com.meqlause.fintrack.core.model.CreditTerms
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.Wallet
@@ -26,10 +28,12 @@ import com.meqlause.fintrack.core.model.WalletTerms
 import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.core.testing.coroutine.MainDispatcherRule
 import com.meqlause.fintrack.core.testing.repository.FakeCategoryRepository
+import com.meqlause.fintrack.core.testing.repository.FakeInstallmentPlanRepository
 import com.meqlause.fintrack.core.testing.repository.FakeQuickEntryRepository
 import com.meqlause.fintrack.core.testing.repository.FakeSettingsRepository
 import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
 import com.meqlause.fintrack.core.testing.repository.FakeWalletRepository
+import com.meqlause.fintrack.core.testing.repository.PassthroughAtomicRunner
 import com.meqlause.fintrack.core.testing.time.FakeClock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -51,6 +55,38 @@ class EditTransactionViewModelTest {
     private val categories = FakeCategoryRepository()
     private val settings = FakeSettingsRepository()
     private val quickEntries = FakeQuickEntryRepository()
+    private val plans = FakeInstallmentPlanRepository()
+    private val saveTransaction = SaveTransactionUseCase(transactions, wallets, categories, clock)
+    private val saveInstalment =
+        SaveInstalmentPurchaseUseCase(
+            saveTransaction = saveTransaction,
+            wallets = wallets,
+            categories = categories,
+            plans = plans,
+            atomic = PassthroughAtomicRunner(),
+            clock = clock,
+        )
+
+    /** FR-140, BR-035: Cicilan on an expense of a credit card stores the purchase and a 6-month plan. */
+    @Test
+    fun givenCicilanOnCreditCardWhenSavingThenPlanIsStored() =
+        runTest {
+            seedCreditCard()
+            val category = seedCategory(CategoryKind.EXPENSE)
+            val viewModel = newViewModel()
+            viewModel.open(null)
+            advanceUntilIdle()
+            viewModel.onEvent(EditTransactionEvent.TypeSelected(TransactionType.EXPENSE))
+            "3000000".forEach { viewModel.onEvent(EditTransactionEvent.DigitTyped(it.toString())) }
+            viewModel.onEvent(EditTransactionEvent.CategoryPicked(category))
+            viewModel.onEvent(EditTransactionEvent.InstalmentToggled(true))
+            viewModel.onEvent(EditTransactionEvent.SaveRequested)
+            advanceUntilIdle()
+            val plan = plans.observeAll().first().single()
+            assertThat(plan.schedule.tenorMonths).isEqualTo(6)
+            assertThat(plan.purchase.principal).isEqualTo(Money(3_000_000L))
+            assertThat(viewModel.state.value.isSaved).isTrue()
+        }
 
     private fun newViewModel(): EditTransactionViewModel =
         EditTransactionViewModel(
@@ -58,7 +94,7 @@ class EditTransactionViewModelTest {
             walletRepository = wallets,
             categoryRepository = categories,
             settingsRepository = settings,
-            saveTransaction = SaveTransactionUseCase(transactions, wallets, categories, clock),
+            instalments = EditInstalmentController(saveTransaction, saveInstalment),
             quickEntries = quickEntries,
             saveQuickEntry = SaveQuickEntryUseCase(quickEntries),
             clock = clock,
@@ -151,6 +187,18 @@ class EditTransactionViewModelTest {
                 kind = WalletKind(type, null),
                 terms = WalletTerms(Money(0L), null),
                 profile = WalletProfile("Dompet", Appearance("wallet", "teal"), 0),
+                status = WalletStatus(),
+                audit = Audit(clock.instant(), clock.instant()),
+            ),
+        )
+
+    private suspend fun seedCreditCard(): WalletId =
+        wallets.insert(
+            Wallet(
+                walletId = WalletId(0L),
+                kind = WalletKind(WalletType.CREDIT_CARD, null),
+                terms = WalletTerms(Money(0L), CreditTerms(Money(10_000_000L), statementDay = 25, dueDay = 10)),
+                profile = WalletProfile("Kartu", Appearance("card", "teal"), 0),
                 status = WalletStatus(),
                 audit = Audit(clock.instant(), clock.instant()),
             ),

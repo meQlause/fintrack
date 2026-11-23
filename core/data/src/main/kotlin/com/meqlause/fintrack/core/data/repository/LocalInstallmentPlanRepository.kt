@@ -18,4 +18,12 @@ public class LocalInstallmentPlanRepository(
 
     override suspend fun insert(plan: InstallmentPlan): InstallmentPlanId =
         InstallmentPlanId(installmentPlanDao.insert(plan.toEntity()))
+
+    override suspend fun update(plan: InstallmentPlan) {
+        installmentPlanDao.update(plan.toEntity())
+    }
+
+    override suspend fun delete(installmentPlanId: InstallmentPlanId) {
+        installmentPlanDao.delete(installmentPlanId.value)
+    }
 }

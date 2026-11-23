@@ -61,5 +61,9 @@ private fun EditTransactionSheetContent(
         EditSheet.WALLET, EditSheet.TARGET_WALLET -> {
             EditTransactionWalletPicker(state = state, sheet = openSheet, onEvent = onEvent)
         }
+
+        EditSheet.TENOR -> {
+            EditInstalmentTenorDrawer(state = state, onEvent = onEvent)
+        }
     }
 }

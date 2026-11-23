@@ -15,4 +15,6 @@ internal data class CreditDetailCallbacks(
     val onOpenPicker: (CreditDay) -> Unit = {},
     val onDismissPicker: () -> Unit = {},
     val onPickDay: (Int) -> Unit = {},
+    val onOpenInstalment: (Long) -> Unit = {},
+    val onOpenInstalments: () -> Unit = {},
 )

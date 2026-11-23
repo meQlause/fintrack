@@ -6,4 +6,5 @@ internal enum class EditSheet {
     TARGET_WALLET,
     SHORTCUTS,
     SHORTCUT_MANAGE,
+    TENOR,
 }

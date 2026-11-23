@@ -4,6 +4,7 @@ import com.meqlause.fintrack.core.domain.credit.StatementSummary
 import com.meqlause.fintrack.core.model.CreditTerms
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.WalletType
+import com.meqlause.fintrack.feature.credit.instalment.InstalmentRow
 import java.time.LocalDate
 
 // FR-131, FR-138, S-14: what the credit wallet detail shows; Missing when the id is not a credit wallet
@@ -23,5 +24,6 @@ internal sealed interface CreditDetailUiState {
         val sources: List<PaySource>,
         val pay: PayDraft?,
         val picker: CreditDay?,
+        val instalments: List<InstalmentRow> = emptyList(),
     ) : CreditDetailUiState
 }

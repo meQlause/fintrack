@@ -21,6 +21,7 @@ import com.meqlause.fintrack.core.ui.picker.DayGridDrawer
 import com.meqlause.fintrack.feature.credit.R
 import com.meqlause.fintrack.feature.credit.component.BillCard
 import com.meqlause.fintrack.feature.credit.component.CycleRows
+import com.meqlause.fintrack.feature.credit.component.InstalmentSection
 import com.meqlause.fintrack.feature.credit.component.LimitBar
 import com.meqlause.fintrack.feature.credit.component.PayBillSheet
 
@@ -79,6 +80,11 @@ private fun CreditDetailBody(
             BillCard(state = state, onPay = callbacks.onOpenPay)
             LimitBar(state = state)
             CycleRows(terms = state.terms, onOpenPicker = callbacks.onOpenPicker)
+            InstalmentSection(
+                instalments = state.instalments,
+                onOpenInstalment = callbacks.onOpenInstalment,
+                onOpenAll = callbacks.onOpenInstalments,
+            )
         }
         state.picker?.let { day ->
             DayGridDrawer(

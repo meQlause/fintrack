@@ -56,4 +56,12 @@ internal sealed interface EditTransactionEvent {
     data class ShortcutToggled(
         val keep: Boolean,
     ) : EditTransactionEvent
+
+    data class InstalmentToggled(
+        val enabled: Boolean,
+    ) : EditTransactionEvent
+
+    data class InstalmentTenorPicked(
+        val months: Int?,
+    ) : EditTransactionEvent
 }

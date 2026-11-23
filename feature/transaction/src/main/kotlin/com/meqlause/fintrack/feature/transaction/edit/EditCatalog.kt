@@ -5,6 +5,7 @@ import com.meqlause.fintrack.core.model.CategoryKind
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.Wallet
 import com.meqlause.fintrack.core.model.WalletId
+import com.meqlause.fintrack.core.model.WalletType
 
 // S-04, S-18: the wallets, balances and categories the sheet can choose from; archived ones are never offered (BR-007)
 internal data class EditCatalog(
@@ -13,6 +14,12 @@ internal data class EditCatalog(
     val categories: List<Category> = emptyList(),
 ) {
     fun activeWallets(): List<Wallet> = wallets.filterNot { it.status.isArchived }
+
+    // FR-140: only a credit card or paylater wallet can carry instalments
+    fun isCreditWallet(walletId: WalletId?): Boolean {
+        val type = wallets.firstOrNull { it.walletId == walletId }?.kind?.type
+        return type == WalletType.CREDIT_CARD || type == WalletType.PAYLATER
+    }
 
     fun categoriesOf(kind: CategoryKind): List<Category> =
         categories

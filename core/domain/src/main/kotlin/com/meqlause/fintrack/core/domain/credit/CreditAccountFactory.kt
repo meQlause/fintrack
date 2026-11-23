@@ -27,7 +27,8 @@ public object CreditAccountFactory {
             initialBalance = wallet.terms.initialBalance,
             createdOn = wallet.audit.createdAt.toLocalDate(zone),
             entries = transactions.mapNotNull { entryOf(it, id, zone) },
-            instalments = plans.mapNotNull { instalmentOf(it, id, transactions, zone) },
+            instalments =
+                plans.filter { it.purchase.walletId == id }.mapNotNull { instalmentOf(it, transactions, zone) },
         )
     }
 
@@ -63,15 +64,13 @@ public object CreditAccountFactory {
         }
     }
 
-    // BR-035, BR-036: a plan bought on this card; the purchase date comes from its stored purchase transaction
-    private fun instalmentOf(
+    // BR-035, BR-036: the statement input of a plan; the purchase date comes from its stored purchase transaction
+    public fun instalmentOf(
         plan: InstallmentPlan,
-        walletId: WalletId,
         transactions: List<Transaction>,
         zone: ZoneId,
     ): CreditInstalment? {
         val purchase = plan.purchase
-        if (purchase.walletId != walletId) return null
         val purchaseTx = transactions.firstOrNull { it.transactionId == purchase.transactionId } ?: return null
         return CreditInstalment(
             purchaseDate = purchaseTx.timing.occurredAt.toLocalDate(zone),

@@ -470,7 +470,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(credit): add credit wallet and bill payment [P7, FR-131]`
 
 ### T7.4 — Instalments in the editor + S-16
-- [ ] done · Refs: FR-140 … FR-146 · tenor via drawer, admin fee, schedule sheet, "Lunasi sekarang".
+- [x] done · Refs: FR-140 … FR-146 · tenor via drawer, admin fee, schedule sheet, "Lunasi sekarang".
 - Commit: `feat(credit): add instalment plans [P7, FR-140]`
 
 ### T7.5 — Loans (S-17) + Pinjaman tab in the editor

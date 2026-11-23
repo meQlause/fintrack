@@ -49,6 +49,9 @@ internal fun EditTransactionRoutingRows(
                 value = walletName(state, state.form.walletId),
                 onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.WALLET)) },
             )
+            if (state.offersInstalment) {
+                EditInstalmentRows(state = state, onEvent = onEvent)
+            }
         }
     }
 }

@@ -4,4 +4,6 @@ package com.meqlause.fintrack.feature.transaction.edit
 internal enum class KeypadField {
     AMOUNT,
     FEE,
+    TENOR,
+    INSTALMENT_FEE,
 }

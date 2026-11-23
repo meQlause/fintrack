@@ -9,7 +9,6 @@ import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import com.meqlause.fintrack.core.domain.transaction.SaveTransactionResult
 import com.meqlause.fintrack.core.domain.usecase.SaveQuickEntryUseCase
-import com.meqlause.fintrack.core.domain.usecase.SaveTransactionUseCase
 import com.meqlause.fintrack.core.model.LastUsed
 import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.TransactionType
@@ -39,7 +38,7 @@ internal class EditTransactionViewModel
         private val walletRepository: WalletRepository,
         private val categoryRepository: CategoryRepository,
         private val settingsRepository: SettingsRepository,
-        private val saveTransaction: SaveTransactionUseCase,
+        private val instalments: EditInstalmentController,
         quickEntries: QuickEntryRepository,
         saveQuickEntry: SaveQuickEntryUseCase,
         private val clock: Clock,
@@ -143,6 +142,14 @@ internal class EditTransactionViewModel
                     mutableState.update { it.copy(keepAsShortcut = event.keep) }
                 }
 
+                is EditTransactionEvent.InstalmentToggled -> {
+                    mutableState.update { instalments.toggled(it, event.enabled) }
+                }
+
+                is EditTransactionEvent.InstalmentTenorPicked -> {
+                    mutableState.update { instalments.tenorPicked(it, event.months) }
+                }
+
                 EditTransactionEvent.SaveRequested -> {
                     save()
                 }
@@ -178,15 +185,7 @@ internal class EditTransactionViewModel
         }
 
         private fun editActiveField(transform: (String) -> String) {
-            mutableState.update { current ->
-                val form = current.form
-                val edited =
-                    when (current.keypadField) {
-                        KeypadField.AMOUNT -> form.copy(amountDigits = transform(form.amountDigits))
-                        KeypadField.FEE -> form.copy(feeDigits = transform(form.feeDigits))
-                    }
-                current.copy(form = edited, errors = emptySet())
-            }
+            mutableState.update { it.withEditedField(transform) }
         }
 
         // S-04: a transfer keeps a target wallet; a category is kept only while its kind still fits the type
@@ -228,7 +227,7 @@ internal class EditTransactionViewModel
             viewModelScope.launch {
                 val current = mutableState.value
                 if (!shortcuts.storeIfKept(current, Instant.now(clock))) return@launch
-                when (val result = saveTransaction(current.toDraft())) {
+                when (val result = instalments.store(current)) {
                     is SaveTransactionResult.Saved -> {
                         rememberLastUsed(current.form)
                         mutableState.update { it.copy(isSaved = true) }

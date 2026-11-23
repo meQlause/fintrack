@@ -89,4 +89,13 @@
     <!-- FR-039: shortcut copy that belongs to the add sheet -->
     <string name="shortcut_keep_label">Simpan sebagai pintasan</string>
     <string name="shortcut_title_invalid">Judul pintasan 1–24 karakter, jumlah 1 sampai 999 miliar</string>
+    <string name="instalment_switch_label">Cicilan 0%</string>
+    <string name="instalment_tenor_label">Tenor</string>
+    <string name="instalment_tenor_value">%d bulan</string>
+    <string name="instalment_tenor_custom">Lainnya (2–36 bulan)</string>
+    <string name="instalment_tenor_drawer_title">Tenor cicilan</string>
+    <string name="instalment_fee_label">Biaya admin (opsional)</string>
+    <string name="instalment_preview">%1$s × %2$d bulan</string>
+    <string name="instalment_per_month">%s / bulan</string>
+    <string name="instalment_amount_first">Isi jumlah dulu</string>
 </resources>

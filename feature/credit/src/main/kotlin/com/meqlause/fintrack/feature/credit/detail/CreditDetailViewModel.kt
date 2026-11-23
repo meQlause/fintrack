@@ -14,6 +14,7 @@ import com.meqlause.fintrack.core.domain.transaction.SaveTransactionResult
 import com.meqlause.fintrack.core.domain.transaction.TransactionDraft
 import com.meqlause.fintrack.core.domain.usecase.SaveTransactionUseCase
 import com.meqlause.fintrack.core.model.Audit
+import com.meqlause.fintrack.core.model.CreditTerms
 import com.meqlause.fintrack.core.model.InstallmentPlan
 import com.meqlause.fintrack.core.model.Memo
 import com.meqlause.fintrack.core.model.Money
@@ -23,6 +24,8 @@ import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.Wallet
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.model.WalletType
+import com.meqlause.fintrack.feature.credit.instalment.InstalmentRow
+import com.meqlause.fintrack.feature.credit.instalment.toRow
 import com.meqlause.fintrack.feature.credit.navigation.CreditDetailDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -182,8 +185,22 @@ internal class CreditDetailViewModel
                 sources = all.filter { isPayable(it) }.map { PaySource(it.walletId, it.profile.name) },
                 pay = current.pay,
                 picker = current.picker,
+                instalments = activeInstalments(wallet, terms, planRows, rows, today),
             )
         }
+
+        // S-14: the plans of this card that still have portions to bill, shown in the Cicilan aktif section
+        private fun activeInstalments(
+            wallet: Wallet,
+            terms: CreditTerms,
+            planRows: List<InstallmentPlan>,
+            rows: List<Transaction>,
+            today: LocalDate,
+        ): List<InstalmentRow> =
+            planRows
+                .filter { it.purchase.walletId == walletId }
+                .mapNotNull { it.toRow(wallet.profile.name, rows, terms.statementDay, today, clock.zone) }
+                .filterNot { it.isFinished }
 
         // BR-039: a credit wallet can never be the source of a bill payment, so only other wallets are offered
         private fun isPayable(wallet: Wallet): Boolean =

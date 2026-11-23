@@ -4,6 +4,7 @@ import com.meqlause.fintrack.core.domain.quickentry.QuickEntryError
 import com.meqlause.fintrack.core.domain.transaction.TransactionError
 import com.meqlause.fintrack.core.model.Category
 import com.meqlause.fintrack.core.model.QuickEntry
+import com.meqlause.fintrack.core.model.TransactionType
 import java.time.Instant
 
 // S-04: everything the add or edit sheet shows; the ViewModel owns it and the screen only reads it
@@ -20,9 +21,17 @@ internal data class EditTransactionUiState(
     val keepAsShortcut: Boolean = false,
     val appliedShortcut: Boolean = false,
     val shortcutErrors: Set<QuickEntryError> = emptySet(),
+    val instalment: InstalmentForm = InstalmentForm(),
 ) {
     val isEditing: Boolean
         get() = record.existing != null
+
+    // FR-140: the Cicilan block is offered for a new expense on a credit wallet only
+    val offersInstalment: Boolean
+        get() = !isEditing && form.type == TransactionType.EXPENSE && catalog.isCreditWallet(form.walletId)
+
+    val instalmentActive: Boolean
+        get() = offersInstalment && instalment.enabled
 
     // FR-039, BR-047: the "Simpan sebagai pintasan" checkbox is offered for a new expense or income only
     val canKeepShortcut: Boolean
@@ -30,7 +39,11 @@ internal data class EditTransactionUiState(
 
     // S-04: Simpan is enabled when the amount is above zero, a wallet and the required route are chosen
     val canSave: Boolean
-        get() = form.amount.rupiah > 0L && form.walletId != null && isRouteChosen()
+        get() =
+            form.amount.rupiah > 0L &&
+                form.walletId != null &&
+                isRouteChosen() &&
+                (!instalmentActive || instalment.tenor != null)
 
     // S-04: categories of the kind the type needs; a transfer has no category
     val categoryChoices: List<Category>

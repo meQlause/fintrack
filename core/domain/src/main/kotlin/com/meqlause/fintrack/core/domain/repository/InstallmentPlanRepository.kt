@@ -11,4 +11,10 @@ public interface InstallmentPlanRepository {
 
     /** FR-140: stores a plan and returns its generated id; the installmentPlanId of [plan] is ignored. */
     public suspend fun insert(plan: InstallmentPlan): InstallmentPlanId
+
+    /** FR-144: stores the changed schedule or status of a plan; the installmentPlanId of [plan] selects the row. */
+    public suspend fun update(plan: InstallmentPlan)
+
+    /** FR-145: removes the plan with the given id; an unknown id is ignored. */
+    public suspend fun delete(installmentPlanId: InstallmentPlanId)
 }

@@ -12,6 +12,8 @@ import com.meqlause.fintrack.feature.budget.navigation.budgetDestination
 import com.meqlause.fintrack.feature.category.navigation.CategoryDestination
 import com.meqlause.fintrack.feature.category.navigation.categoryDestination
 import com.meqlause.fintrack.feature.credit.navigation.CreditDetailDestination
+import com.meqlause.fintrack.feature.credit.navigation.InstalmentDetailDestination
+import com.meqlause.fintrack.feature.credit.navigation.InstalmentListDestination
 import com.meqlause.fintrack.feature.credit.navigation.creditDetailDestination
 import com.meqlause.fintrack.feature.dashboard.navigation.HomeDestination
 import com.meqlause.fintrack.feature.dashboard.navigation.homeDestination
@@ -92,7 +94,11 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onTransfer = { navController.navigate(EditTransactionDestination()) },
     )
     // FR-131, S-14: a card or paylater wallet opens its credit detail; Bayar tagihan is the S-15 sheet inside it
-    creditDetailDestination(onBack = { navController.popBackStack() })
+    creditDetailDestination(
+        onBack = { navController.popBackStack() },
+        onOpenInstalment = { planId -> navController.navigate(InstalmentDetailDestination(planId)) },
+        onOpenInstalments = { navController.navigate(InstalmentListDestination) },
+    )
     // DOC-09, S-12: Pengaturan is opened from the Beranda header; its Kategori row leads to S-10 (FR-020)
     settingsDestination(
         onBack = { navController.popBackStack() },

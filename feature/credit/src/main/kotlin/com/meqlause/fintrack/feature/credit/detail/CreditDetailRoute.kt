@@ -10,6 +10,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 internal fun CreditDetailRoute(
     onBack: () -> Unit,
+    onOpenInstalment: (Long) -> Unit,
+    onOpenInstalments: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: CreditDetailViewModel = hiltViewModel()
@@ -29,6 +31,8 @@ internal fun CreditDetailRoute(
                 onOpenPicker = viewModel::openPicker,
                 onDismissPicker = viewModel::dismissPicker,
                 onPickDay = viewModel::pickDay,
+                onOpenInstalment = onOpenInstalment,
+                onOpenInstalments = onOpenInstalments,
             ),
         modifier = modifier,
     )
