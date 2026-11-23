@@ -72,6 +72,11 @@ internal fun SettingsScreen(
                     value = "",
                     onClick = callbacks.onOpenMonitoredApps,
                 )
+                FormRow(
+                    label = stringResource(R.string.settings_battery_label),
+                    value = "",
+                    onClick = callbacks.onOpenBatteryHelp,
+                )
             }
             SettingsSection(title = stringResource(R.string.settings_section_security)) {
                 SecurityRows(state = state, callbacks = callbacks)

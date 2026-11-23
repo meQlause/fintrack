@@ -533,7 +533,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `fix(app): accessibility pass [P9, NFR-010]`
 
 ### T9.3 — Battery-optimisation help page
-- [ ] done · Refs: DOC-07 (OEM battery killers) · Commit: `feat(settings): add battery optimisation help [P9, DOC-07]`
+- [x] done · Refs: DOC-07 (OEM battery killers) · Commit: `feat(settings): add battery optimisation help [P9, DOC-07]`
 
 ### T9.4 — Launcher icon from the logo
 - [ ] done · Refs: DOC-08 (Logo) · adaptive icon from `design/assets/fintrack-logo.svg`.

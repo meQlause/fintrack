@@ -31,9 +31,11 @@ import com.meqlause.fintrack.feature.lock.navigation.pinSetupDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.AboutDestination
+import com.meqlause.fintrack.feature.settings.navigation.BatteryHelpDestination
 import com.meqlause.fintrack.feature.settings.navigation.MonitoredAppsDestination
 import com.meqlause.fintrack.feature.settings.navigation.SettingsDestination
 import com.meqlause.fintrack.feature.settings.navigation.aboutDestination
+import com.meqlause.fintrack.feature.settings.navigation.batteryHelpDestination
 import com.meqlause.fintrack.feature.settings.navigation.monitoredAppsDestination
 import com.meqlause.fintrack.feature.settings.navigation.settingsDestination
 import com.meqlause.fintrack.feature.transaction.detail.navigation.TransactionDetailDestination
@@ -138,6 +140,8 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenMonitoredApps = { navController.navigate(MonitoredAppsDestination) },
         // FR-123, S-12: the Tentang row opens the About and privacy screen
         onOpenAbout = { navController.navigate(AboutDestination) },
+        // DOC-07, S-12: the Bantuan optimasi baterai row opens the OEM help page
+        onOpenBatteryHelp = { navController.navigate(BatteryHelpDestination) },
         // FR-100, S-12: Keamanan rows open the PIN setup in the mode they need
         onOpenPinSetup = { navController.navigate(PinSetupDestination(PinSetupMode.SET)) },
         onOpenPinChange = { navController.navigate(PinSetupDestination(PinSetupMode.CHANGE)) },
@@ -149,6 +153,8 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     monitoredAppsDestination(onBack = { navController.popBackStack() })
     // FR-123, S-12: Tentang is opened from the Tentang group of Pengaturan
     aboutDestination(onBack = { navController.popBackStack() })
+    // DOC-07, S-12: the battery-optimisation help page is opened from the Deteksi otomatis group of Pengaturan
+    batteryHelpDestination(onBack = { navController.popBackStack() })
     categoryDestination(onBack = { navController.popBackStack() })
     // FR-084 … FR-091, S-07: Kotak Masuk is opened from the bell in the Beranda header
     inboxDestination(onBack = { navController.popBackStack() })
