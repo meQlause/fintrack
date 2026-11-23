@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -27,15 +28,21 @@ fun ScreenPill(
     modifier: Modifier = Modifier,
     dot: Color? = null,
     contentColor: Color = FintrackTheme.colors.texts.onSurface,
+    selected: Boolean = false,
+    height: Dp = FintrackScreenSizes.pillTall,
 ) {
     val shape = CircleShape
+    val colors = FintrackTheme.colors
+    val fill = if (selected) colors.texts.onSurface else colors.surfaces.surface
+    val border = if (selected) colors.texts.onSurface else colors.surfaces.outline
+    val textColor = if (selected) colors.surfaces.background else contentColor
     Row(
         modifier =
             modifier
-                .height(FintrackScreenSizes.pillTall)
+                .height(height)
                 .clip(shape)
-                .background(FintrackTheme.colors.surfaces.surface)
-                .border(FintrackTheme.sizes.hairline, FintrackTheme.colors.surfaces.outline, shape)
+                .background(fill)
+                .border(FintrackTheme.sizes.hairline, border, shape)
                 .clickable(onClick = onClick)
                 .padding(horizontal = FintrackTheme.spacing.medium),
         verticalAlignment = Alignment.CenterVertically,
@@ -47,7 +54,7 @@ fun ScreenPill(
         Text(
             text = label,
             style = FintrackScreenText.style(size = 12.5f, weight = 600),
-            color = contentColor,
+            color = textColor,
             maxLines = 1,
         )
     }

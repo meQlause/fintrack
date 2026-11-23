@@ -61,7 +61,7 @@ class SettingsViewModelTest {
             val repository = FakeSettingsRepository()
             val viewModel = viewModelWith(repository)
             val collector = backgroundScope.launch { viewModel.state.collect {} }
-            viewModel.openSheet(SettingsSheet.THEME)
+            viewModel.openSheet(SettingsSheet.PERIOD_DAY)
 
             viewModel.pickThemeMode(ThemeMode.DARK)
             advanceUntilIdle()

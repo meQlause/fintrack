@@ -46,11 +46,11 @@ internal fun SettingsRow(
     ) {
         Text(
             text = label,
-            style = FintrackScreenText.style(size = 15f, weight = 400),
+            style = FintrackScreenText.style(size = 14f, weight = 500),
             color = FintrackTheme.colors.texts.onSurface,
         )
     }
 }
 
 private fun rowPadding(): PaddingValues =
-    PaddingValues(horizontal = FintrackScreenSizes.rowPaddingHorizontal, vertical = FintrackScreenSizes.rowTall)
+    PaddingValues(horizontal = FintrackScreenSizes.rowPaddingHorizontal, vertical = FintrackScreenSizes.rowPaddingVertical)

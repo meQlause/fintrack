@@ -3,16 +3,14 @@
 <resources>
     <string name="settings_title">Pengaturan</string>
     <string name="settings_back">Kembali</string>
-    <string name="settings_section_general">Umum</string>
+    <string name="settings_section_appearance">Tampilan</string>
     <string name="settings_section_data">Data</string>
     <string name="settings_section_security">Keamanan</string>
-    <string name="settings_pin_setup_label">Atur PIN</string>
+    <string name="settings_pin_label">PIN</string>
     <string name="settings_pin_change_label">Ubah PIN</string>
-    <string name="settings_pin_remove_label">Hapus PIN</string>
     <string name="settings_biometric_label">Buka dengan sidik jari/biometrik</string>
     <string name="settings_hide_recents_label">Sembunyikan dari aplikasi terbaru</string>
-    <string name="settings_theme_label">Tampilan</string>
-    <string name="settings_theme_sheet_title">Tampilan</string>
+    <string name="settings_theme_label">Tema</string>
     <string name="settings_theme_system">Sistem</string>
     <string name="settings_theme_light">Terang</string>
     <string name="settings_theme_dark">Gelap</string>
@@ -66,9 +64,10 @@
     <string name="settings_backup_reminder_off">Nonaktif</string>
     <string name="settings_backup_reminder_value">%1$d hari</string>
     <string name="settings_backup_reminder_sheet_title">Pengingat cadangan</string>
-    <string name="settings_backup_last_never">Cadangan terakhir: belum pernah</string>
-    <string name="settings_backup_last_today">Cadangan terakhir: hari ini</string>
-    <string name="settings_backup_last_days">Cadangan terakhir: %1$d hari lalu</string>
+    <string name="settings_backup_last_never">Belum</string>
+    <string name="settings_backup_last_today">Hari ini</string>
+    <string name="settings_backup_last_label">Terakhir</string>
+    <string name="settings_footer">Offline · v%1$s</string>
     <string name="settings_backup_csv_label">Ekspor CSV</string>
     <string name="backup_csv_title">Ekspor CSV</string>
     <string name="backup_csv_start_label">Dari tanggal (tttt-bb-hh)</string>

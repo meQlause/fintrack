@@ -13,7 +13,7 @@ import org.robolectric.annotation.GraphicsMode
 // FR-120, FR-121, S-12: screenshot references of the Pengaturan previews in light and dark themes
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(qualifiers = "w411dp-h720dp")
+@Config(qualifiers = "w390dp-h1200dp")
 class SettingsScreenScreenshotTest {
     @get:Rule
     val composeRule = createComposeRule()

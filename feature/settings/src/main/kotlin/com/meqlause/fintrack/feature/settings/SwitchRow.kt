@@ -25,14 +25,14 @@ internal fun SwitchRow(
         contentPadding =
             PaddingValues(
                 horizontal = FintrackScreenSizes.rowPaddingHorizontal,
-                vertical = FintrackScreenSizes.rowSwitch,
+                vertical = FintrackScreenSizes.rowSwitchInset,
             ),
         leading = {},
         trailing = { FintrackSwitch(checked = checked, onCheckedChange = onCheckedChange) },
     ) {
         Text(
             text = label,
-            style = FintrackScreenText.style(size = 15f, weight = 400),
+            style = FintrackScreenText.style(size = 14f, weight = 500),
             color = FintrackTheme.colors.texts.onSurface,
         )
     }
