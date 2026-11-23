@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:category"))
     implementation(project(":feature:settings"))
+    implementation(project(":feature:transaction"))
     implementation(libs.navigation.compose)
     implementation(libs.navigation.runtime)
     implementation(libs.navigation.common)

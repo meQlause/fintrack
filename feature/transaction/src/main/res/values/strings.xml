@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-08, FR-030..FR-034: Indonesian copy of S-04 Catat / Ubah Transaksi -->
+<resources>
+    <string name="transaction_title_add">Catat Transaksi</string>
+    <string name="transaction_title_edit">Ubah Transaksi</string>
+    <string name="transaction_type_expense">Pengeluaran</string>
+    <string name="transaction_type_income">Pemasukan</string>
+    <string name="transaction_type_transfer">Transfer</string>
+    <string name="transaction_pay_with">Bayar pakai</string>
+    <string name="transaction_income_into">Masuk ke</string>
+    <string name="transaction_transfer_from">Dari</string>
+    <string name="transaction_transfer_to">Ke</string>
+    <string name="transaction_fee_label">Biaya admin</string>
+    <string name="transaction_note_hint">Catatan</string>
+    <string name="transaction_save">Simpan</string>
+    <string name="transaction_swap_description">Tukar dompet asal dan tujuan</string>
+    <string name="transaction_error_amount_required">Masukkan jumlah</string>
+    <string name="transaction_error_amount_too_large">Jumlah terlalu besar</string>
+    <string name="transaction_error_fee_invalid">Biaya admin tidak valid</string>
+    <string name="transaction_error_wallet_required">Pilih dompet</string>
+    <string name="transaction_error_target_wallet_required">Pilih dompet tujuan</string>
+    <string name="transaction_error_category_required">Pilih kategori</string>
+    <string name="transaction_error_category_kind_mismatch">Kategori tidak sesuai jenis transaksi</string>
+    <string name="transaction_error_same_wallet">Dompet asal dan tujuan harus berbeda</string>
+    <string name="transaction_error_credit_source">Kartu kredit tidak bisa jadi sumber transfer</string>
+    <string name="transaction_error_date_too_far">Tanggal terlalu jauh di masa depan</string>
+</resources>

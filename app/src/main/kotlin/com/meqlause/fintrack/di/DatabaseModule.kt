@@ -4,6 +4,7 @@ import android.content.Context
 import com.meqlause.fintrack.core.database.FintrackDatabase
 import com.meqlause.fintrack.core.database.FintrackDatabaseFactory
 import com.meqlause.fintrack.core.database.dao.CategoryDao
+import com.meqlause.fintrack.core.database.dao.TransactionDao
 import com.meqlause.fintrack.core.database.dao.WalletDao
 import com.meqlause.fintrack.core.security.AndroidKeystoreWrapper
 import com.meqlause.fintrack.core.security.DatabaseKeyProvider
@@ -32,4 +33,7 @@ object DatabaseModule {
 
     @Provides
     fun provideCategoryDao(database: FintrackDatabase): CategoryDao = database.categoryDao()
+
+    @Provides
+    fun provideTransactionDao(database: FintrackDatabase): TransactionDao = database.transactionDao()
 }

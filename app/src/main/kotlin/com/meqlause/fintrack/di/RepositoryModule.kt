@@ -2,12 +2,15 @@ package com.meqlause.fintrack.di
 
 import com.meqlause.fintrack.core.data.repository.LocalCategoryRepository
 import com.meqlause.fintrack.core.data.repository.LocalSettingsRepository
+import com.meqlause.fintrack.core.data.repository.LocalTransactionRepository
 import com.meqlause.fintrack.core.data.repository.LocalWalletRepository
 import com.meqlause.fintrack.core.database.dao.CategoryDao
+import com.meqlause.fintrack.core.database.dao.TransactionDao
 import com.meqlause.fintrack.core.database.dao.WalletDao
 import com.meqlause.fintrack.core.datastore.SettingsDataSource
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
+import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import dagger.Module
 import dagger.Provides
@@ -31,4 +34,10 @@ object RepositoryModule {
     @Singleton
     fun provideSettingsRepository(dataSource: SettingsDataSource): SettingsRepository =
         LocalSettingsRepository(dataSource)
+
+    // FR-030..FR-034: money movements written by the transaction editor (S-04)
+    @Provides
+    @Singleton
+    fun provideTransactionRepository(transactionDao: TransactionDao): TransactionRepository =
+        LocalTransactionRepository(transactionDao)
 }

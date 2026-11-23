@@ -1,0 +1,44 @@
+package com.meqlause.fintrack.feature.transaction.edit
+
+import com.meqlause.fintrack.core.model.CategoryId
+import com.meqlause.fintrack.core.model.TransactionType
+import com.meqlause.fintrack.core.model.WalletId
+
+// S-04: everything the sheet can ask its ViewModel to do; the screen keeps no state of its own
+internal sealed interface EditTransactionEvent {
+    data class DigitTyped(
+        val digit: String,
+    ) : EditTransactionEvent
+
+    data object BackspacePressed : EditTransactionEvent
+
+    data class TypeSelected(
+        val type: TransactionType,
+    ) : EditTransactionEvent
+
+    data class FieldFocused(
+        val field: KeypadField,
+    ) : EditTransactionEvent
+
+    data class SheetOpened(
+        val sheet: EditSheet,
+    ) : EditTransactionEvent
+
+    data object SheetDismissed : EditTransactionEvent
+
+    data class WalletPicked(
+        val walletId: WalletId,
+    ) : EditTransactionEvent
+
+    data class CategoryPicked(
+        val categoryId: CategoryId,
+    ) : EditTransactionEvent
+
+    data object WalletsSwapped : EditTransactionEvent
+
+    data class NoteChanged(
+        val note: String,
+    ) : EditTransactionEvent
+
+    data object SaveRequested : EditTransactionEvent
+}

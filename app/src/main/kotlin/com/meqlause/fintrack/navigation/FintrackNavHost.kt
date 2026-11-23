@@ -12,6 +12,7 @@ import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.SettingsDestination
 import com.meqlause.fintrack.feature.settings.navigation.settingsDestination
+import com.meqlause.fintrack.feature.transaction.edit.navigation.editTransactionDestination
 import com.meqlause.fintrack.tab.PlaceholderTabScreen
 
 // DOC-03: app owns the NavHost; onboarding (FR-001) starts when it is needed, otherwise Beranda is the start
@@ -58,4 +59,6 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenCategories = { navController.navigate(CategoryDestination) },
     )
     categoryDestination(onBack = { navController.popBackStack() })
+    // DOC-09, S-04: the add or edit sheet returns to the screen it was opened from
+    editTransactionDestination(onDismiss = { navController.popBackStack() })
 }
