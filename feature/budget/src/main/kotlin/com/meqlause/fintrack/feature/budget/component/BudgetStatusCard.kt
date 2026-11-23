@@ -33,23 +33,7 @@ internal fun BudgetStatusCard(
     val isOver = status.spent > status.budget.limitAmount
     ScreenCard(modifier = modifier.clickable(onClick = onClick)) {
         Column(modifier = Modifier.padding(FintrackTheme.spacing.large)) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(
-                    text = title,
-                    style = FintrackScreenText.style(size = 13f, weight = 600),
-                    color = colors.texts.onSurface,
-                )
-                Text(
-                    text =
-                        stringResource(
-                            R.string.budget_used,
-                            MoneyFormatter.format(status.spent),
-                            MoneyFormatter.format(status.budget.limitAmount),
-                        ),
-                    style = FintrackScreenText.number(size = 13f, weight = 400),
-                    color = colors.texts.onSurfaceVariant,
-                )
-            }
+            UsageRow(title, status)
             ProgressBar(
                 fraction = status.percent.toFloat() / PERCENT_SCALE,
                 color = barColor(status.state),
@@ -62,6 +46,32 @@ internal fun BudgetStatusCard(
                 modifier = Modifier.padding(top = FintrackTheme.spacing.small),
             )
         }
+    }
+}
+
+// FR-071: the budget name at the left, the spent and the limit at the right
+@Composable
+private fun UsageRow(
+    title: String,
+    status: BudgetStatus,
+) {
+    val colors = FintrackTheme.colors
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(
+            text = title,
+            style = FintrackScreenText.style(size = 13f, weight = 600),
+            color = colors.texts.onSurface,
+        )
+        Text(
+            text =
+                stringResource(
+                    R.string.budget_used,
+                    MoneyFormatter.format(status.spent),
+                    MoneyFormatter.format(status.budget.limitAmount),
+                ),
+            style = FintrackScreenText.number(size = 13f, weight = 400),
+            color = colors.texts.onSurfaceVariant,
+        )
     }
 }
 
