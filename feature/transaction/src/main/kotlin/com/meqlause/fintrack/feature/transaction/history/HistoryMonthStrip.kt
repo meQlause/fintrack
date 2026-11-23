@@ -37,7 +37,7 @@ internal fun HistoryMonthStrip(
     val selectedIndex = month.monthValue - 1
     val motion = FintrackTheme.motion.medium
     val indicatorOffset by animateDpAsState(
-        targetValue = FintrackTheme.sizes.touchTarget * selectedIndex.toFloat(),
+        targetValue = FintrackTheme.sizes.monthPillWidth * selectedIndex.toFloat(),
         animationSpec = tween(durationMillis = motion.durationMillis, easing = motion.easing),
         label = "history-month-indicator",
     )
@@ -53,7 +53,7 @@ internal fun HistoryMonthStrip(
             modifier =
                 Modifier
                     .offset(x = indicatorOffset)
-                    .size(width = FintrackTheme.sizes.touchTarget, height = FintrackTheme.sizes.chipHeight)
+                    .size(width = FintrackTheme.sizes.monthPillWidth, height = FintrackTheme.sizes.monthPillHeight)
                     .clip(FintrackTheme.shapes.full)
                     .background(FintrackTheme.colors.brands.primaryContainer),
         )
@@ -79,8 +79,8 @@ private fun MonthPill(
     Box(
         modifier =
             Modifier
-                .width(FintrackTheme.sizes.touchTarget)
-                .height(FintrackTheme.sizes.chipHeight)
+                .width(FintrackTheme.sizes.monthPillWidth)
+                .height(FintrackTheme.sizes.monthPillHeight)
                 .selectable(selected = selected, role = Role.Tab, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {

@@ -36,7 +36,7 @@ internal fun StatisticsDailyBars(statistics: PeriodStatistics) {
                 Modifier
                     .fillMaxWidth()
                     .padding(top = FintrackTheme.spacing.small)
-                    .height(FintrackTheme.sizes.shortcutTileWidth),
+                    .height(FintrackTheme.sizes.statisticsBarAreaHeight),
         ) {
             drawDailyBars(
                 amounts = statistics.dailyTotals.map { it.rupiah },

@@ -19,7 +19,7 @@ internal fun Modifier.historyMonthSwipe(
 ): Modifier {
     val previousLabel = stringResource(R.string.history_month_previous)
     val nextLabel = stringResource(R.string.history_month_next)
-    val swipeThreshold = FintrackTheme.spacing.xxxLarge
+    val swipeThreshold = FintrackTheme.sizes.monthSwipeThreshold
     return pointerInput(Unit) {
         var travel = 0f
         detectHorizontalDragGestures(

@@ -20,8 +20,8 @@ internal fun StatisticsDonut(
     modifier: Modifier = Modifier,
 ) {
     val palette = statisticsPalette(FintrackTheme.colors)
-    val donutStroke = FintrackTheme.sizes.switchHeight
-    Canvas(modifier = modifier.size(FintrackTheme.sizes.shortcutTileWidth)) {
+    val donutStroke = FintrackTheme.sizes.donutStrokeWidth
+    Canvas(modifier = modifier.size(FintrackTheme.sizes.donutSize)) {
         val strokePx = donutStroke.toPx()
         val inset = strokePx / 2f
         val arcSize = Size(size.width - strokePx, size.height - strokePx)

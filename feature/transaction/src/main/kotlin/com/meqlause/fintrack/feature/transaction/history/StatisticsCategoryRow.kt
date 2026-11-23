@@ -43,7 +43,7 @@ internal fun StatisticsCategoryRow(
                 .clickable(enabled = onClick != null) { onClick?.invoke() },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(modifier = Modifier.size(FintrackTheme.spacing.small).clip(FintrackTheme.shapes.full).background(color))
+        Box(modifier = Modifier.size(FintrackTheme.sizes.categoryDotSize).clip(FintrackTheme.shapes.full).background(color))
         Column(modifier = Modifier.weight(1f).padding(start = FintrackTheme.spacing.small)) {
             Text(
                 text = name,
@@ -79,7 +79,7 @@ private fun ShareBar(
             Modifier
                 .padding(top = FintrackTheme.spacing.xxSmall)
                 .fillMaxWidth()
-                .height(FintrackTheme.spacing.xSmall)
+                .height(FintrackTheme.sizes.shareBarHeight)
                 .clip(FintrackTheme.shapes.full)
                 .background(FintrackTheme.colors.surfaces.outline),
     ) {
