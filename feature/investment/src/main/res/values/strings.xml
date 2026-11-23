@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- DOC-09, FR-173: the Investasi tab (S-08) -->
+    <string name="investment_tab_title">Investasi</string>
+    <string name="investment_total_title">Total nilai</string>
+    <string name="investment_allocation_title">Alokasi</string>
+    <string name="investment_accounts_title">Rekening</string>
+    <string name="investment_activity_title">Aktivitas terbaru</string>
+    <string name="investment_activity_none">Belum ada aktivitas</string>
+    <string name="investment_empty_title">Belum ada investasi</string>
+    <string name="investment_empty_body">Catat dana yang kamu tanamkan, lalu perbarui nilainya secara berkala.</string>
+    <string name="investment_add">Tambah investasi</string>
+
+    <!-- ADR-017: investment kinds -->
+    <string name="investment_kind_mutual_fund">Reksa dana</string>
+    <string name="investment_kind_stock">Saham</string>
+    <string name="investment_kind_gold">Emas</string>
+    <string name="investment_kind_deposit">Deposito</string>
+    <string name="investment_kind_crypto">Kripto</string>
+    <string name="investment_kind_other">Lainnya</string>
+
+    <!-- FR-170: creating an investment account -->
+    <string name="investment_create_title">Investasi baru</string>
+    <string name="investment_name_label">Nama</string>
+    <string name="investment_kind_label">Jenis</string>
+    <string name="investment_kind_pick">Pilih jenis</string>
+    <string name="investment_kind_drawer_title">Jenis investasi</string>
+    <string name="investment_selected">Dipilih</string>
+    <string name="investment_invested_label">Modal awal</string>
+    <string name="investment_name_rejected">Nama kosong, lebih dari 30 karakter, atau sudah dipakai</string>
+    <string name="investment_save">Simpan</string>
+
+    <!-- FR-172: updating the current value -->
+    <string name="investment_value_title">Update nilai</string>
+    <string name="investment_value_hint">Masukkan nilai sekarang</string>
+    <string name="investment_value_label">Nilai sekarang</string>
+    <string name="investment_last_update">Terakhir update %1$s</string>
+    <string name="investment_never_updated">Belum pernah diupdate</string>
+
+    <!-- FR-173: the investment detail (S-20) -->
+    <string name="investment_modal_label">Modal</string>
+    <string name="investment_gain_label">Untung/Rugi</string>
+    <string name="investment_action_update">Update nilai</string>
+    <string name="investment_action_add">Tambah dana</string>
+    <string name="investment_action_withdraw">Tarik</string>
+    <string name="investment_timeline_title">Riwayat</string>
+    <string name="investment_put_in">Dana masuk</string>
+    <string name="investment_take_out">Dana keluar</string>
+    <string name="investment_valued">Update nilai</string>
+    <string name="investment_back">Kembali</string>
+    <string name="investment_missing_title">Investasi tidak ditemukan</string>
+    <string name="investment_missing_body">Rekening ini sudah dihapus atau bukan investasi.</string>
+</resources>

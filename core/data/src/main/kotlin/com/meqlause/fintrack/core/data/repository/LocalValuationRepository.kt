@@ -18,4 +18,8 @@ public class LocalValuationRepository(
 
     override suspend fun insert(valuation: ValuationEntry): ValuationEntryId =
         ValuationEntryId(valuationEntryDao.insert(valuation.toEntity()))
+
+    override suspend fun delete(valuationId: ValuationEntryId) {
+        valuationEntryDao.delete(valuationId.value)
+    }
 }

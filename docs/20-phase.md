@@ -478,7 +478,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(loan): add loans and repayments [P7, FR-150]`
 
 ### T7.6 — Investments (S-20) + Investasi tab
-- [ ] done
+- [x] done
 - Refs: FR-170 … FR-177, BR-050 … BR-055, ADR-017
 - Create: `InvestmentCalculator` (timestamps, not just dates — BR-051), valuation sheet with live gain preview, portfolio tab (total, allocation by kind, accounts, activity).
 - Tests: worked example in 19; same-day withdraw after an update keeps the gain.

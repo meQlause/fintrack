@@ -12,6 +12,7 @@ import com.meqlause.fintrack.core.database.dao.MerchantRuleDao
 import com.meqlause.fintrack.core.database.dao.MonitoredAppDao
 import com.meqlause.fintrack.core.database.dao.QuickEntryDao
 import com.meqlause.fintrack.core.database.dao.TransactionDao
+import com.meqlause.fintrack.core.database.dao.ValuationEntryDao
 import com.meqlause.fintrack.core.database.dao.WalletDao
 import com.meqlause.fintrack.core.security.AndroidKeystoreWrapper
 import com.meqlause.fintrack.core.security.DatabaseKeyProvider
@@ -68,4 +69,8 @@ object DatabaseModule {
 
     @Provides
     fun provideMonitoredAppDao(database: FintrackDatabase): MonitoredAppDao = database.monitoredAppDao()
+
+    // FR-172: manual valuations of investment wallets
+    @Provides
+    fun provideValuationEntryDao(database: FintrackDatabase): ValuationEntryDao = database.valuationEntryDao()
 }
