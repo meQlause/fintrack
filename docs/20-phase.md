@@ -466,7 +466,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(domain): add instalment scheduler [P7, BR-036]`
 
 ### T7.3 — Credit wallet screens (S-14, S-15)
-- [ ] done · Refs: FR-130 … FR-139 · bill card, pay sheet, limit bar, "Siklus" rows with day-grid drawers.
+- [x] done · Refs: FR-130 … FR-139 · bill card, pay sheet, limit bar, "Siklus" rows with day-grid drawers.
 - Commit: `feat(credit): add credit wallet and bill payment [P7, FR-131]`
 
 ### T7.4 — Instalments in the editor + S-16

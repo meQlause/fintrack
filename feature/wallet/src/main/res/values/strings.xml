@@ -41,6 +41,8 @@
     <string name="wallet_field_debt">Utang saat ini</string>
     <string name="wallet_field_limit">Limit</string>
     <string name="wallet_field_statement_day">Tutup buku</string>
+    <string name="wallet_cycle_title">Siklus</string>
+    <string name="wallet_not_issued">Belum terbit</string>
     <string name="wallet_field_due_day">Jatuh tempo</string>
     <string name="wallet_day_value">Tanggal %1$d</string>
     <string name="wallet_include_total">Hitung di total saldo</string>

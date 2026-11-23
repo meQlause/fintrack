@@ -6,8 +6,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.feature.category.navigation.CategoryDestination
 import com.meqlause.fintrack.feature.category.navigation.categoryDestination
+import com.meqlause.fintrack.feature.credit.navigation.CreditDetailDestination
+import com.meqlause.fintrack.feature.credit.navigation.creditDetailDestination
 import com.meqlause.fintrack.feature.dashboard.navigation.HomeDestination
 import com.meqlause.fintrack.feature.dashboard.navigation.homeDestination
 import com.meqlause.fintrack.feature.inbox.navigation.InboxDestination
@@ -73,13 +76,21 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         navController.navigate(TransactionDetailDestination(transactionId = id))
     })
     composable<InvestmentRoute> { PlaceholderTabScreen(mainTab = MainTab.INVESTMENT) }
-    walletDestination(onOpenDetail = { navController.navigate(WalletDetailDestination(it.value)) })
+    walletDestination(onOpenDetail = { id, type ->
+        if (type.isCredit()) {
+            navController.navigate(CreditDetailDestination(id.value))
+        } else {
+            navController.navigate(WalletDetailDestination(id.value))
+        }
+    })
     // FR-017, S-19: Pakai and Transfer open the add sheet (S-04); preselecting the wallet/type is a later step
     walletDetailDestination(
         onBack = { navController.popBackStack() },
         onUse = { navController.navigate(EditTransactionDestination()) },
         onTransfer = { navController.navigate(EditTransactionDestination()) },
     )
+    // FR-131, S-14: a card or paylater wallet opens its credit detail; Bayar tagihan is the S-15 sheet inside it
+    creditDetailDestination(onBack = { navController.popBackStack() })
     // DOC-09, S-12: Pengaturan is opened from the Beranda header; its Kategori row leads to S-10 (FR-020)
     settingsDestination(
         onBack = { navController.popBackStack() },
@@ -99,3 +110,6 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     // DOC-09, S-04: the add or edit sheet returns to the screen it was opened from
     editTransactionDestination(onDismiss = { navController.popBackStack() })
 }
+
+// BR-031: card and paylater wallets are the credit wallets and open S-14 instead of S-19
+private fun WalletType.isCredit(): Boolean = this == WalletType.CREDIT_CARD || this == WalletType.PAYLATER

@@ -5,6 +5,7 @@ import com.meqlause.fintrack.core.database.FintrackDatabase
 import com.meqlause.fintrack.core.database.FintrackDatabaseFactory
 import com.meqlause.fintrack.core.database.dao.CategoryDao
 import com.meqlause.fintrack.core.database.dao.InboxItemDao
+import com.meqlause.fintrack.core.database.dao.InstallmentPlanDao
 import com.meqlause.fintrack.core.database.dao.MerchantRuleDao
 import com.meqlause.fintrack.core.database.dao.MonitoredAppDao
 import com.meqlause.fintrack.core.database.dao.QuickEntryDao
@@ -40,6 +41,10 @@ object DatabaseModule {
 
     @Provides
     fun provideTransactionDao(database: FintrackDatabase): TransactionDao = database.transactionDao()
+
+    // FR-140: instalment plans are read and written through Room
+    @Provides
+    fun provideInstallmentPlanDao(database: FintrackDatabase): InstallmentPlanDao = database.installmentPlanDao()
 
     // FR-039: shortcuts are read and written through the Room DAO
     @Provides

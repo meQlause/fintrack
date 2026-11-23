@@ -6,11 +6,12 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.meqlause.fintrack.core.model.WalletId
+import com.meqlause.fintrack.core.model.WalletType
 
 // DOC-03, FR-010: stateful entry of S-09; the only composable that touches WalletViewModel
 @Composable
 public fun WalletRoute(
-    onOpenDetail: (WalletId) -> Unit,
+    onOpenDetail: (WalletId, WalletType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: WalletViewModel = hiltViewModel()

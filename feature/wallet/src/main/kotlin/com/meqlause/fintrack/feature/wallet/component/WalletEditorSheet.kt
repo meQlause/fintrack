@@ -149,11 +149,23 @@ private fun CreditFields(
         if (draft.limitError) {
             ErrorText(text = stringResource(R.string.wallet_limit_invalid))
         }
+        Text(
+            text = stringResource(R.string.wallet_cycle_title),
+            style = FintrackTheme.typography.labelLarge,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
         FormRow(
             label = stringResource(R.string.wallet_field_statement_day),
             value = stringResource(R.string.wallet_day_value, draft.statementDay),
             onClick = { callbacks.onOpenPicker(WalletPicker.STATEMENT_DAY) },
         )
+        if (draft.walletId == null) {
+            Text(
+                text = stringResource(R.string.wallet_not_issued),
+                style = FintrackTheme.typography.bodyMedium,
+                color = FintrackTheme.colors.texts.onSurfaceVariant,
+            )
+        }
         FormRow(
             label = stringResource(R.string.wallet_field_due_day),
             value = stringResource(R.string.wallet_day_value, draft.dueDay),

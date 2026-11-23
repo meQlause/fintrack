@@ -101,7 +101,7 @@ private fun WalletList(
             items(section.items, key = { it.wallet.walletId.value }) { row ->
                 WalletItemCard(
                     item = row,
-                    onOpen = { callbacks.onOpenDetail(row.wallet.walletId) },
+                    onOpen = { callbacks.onOpenDetail(row.wallet.walletId, row.wallet.kind.type) },
                     onEdit = { callbacks.onEdit(row) },
                 )
             }
@@ -123,7 +123,7 @@ private fun LazyListScope.archivedItems(
         items(state.archived, key = { it.wallet.walletId.value }) { row ->
             WalletItemCard(
                 item = row,
-                onOpen = { callbacks.onOpenDetail(row.wallet.walletId) },
+                onOpen = { callbacks.onOpenDetail(row.wallet.walletId, row.wallet.kind.type) },
                 onEdit = { callbacks.onEdit(row) },
             )
         }

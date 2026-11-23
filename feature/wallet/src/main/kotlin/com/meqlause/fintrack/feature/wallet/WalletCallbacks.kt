@@ -7,7 +7,7 @@ import com.meqlause.fintrack.core.model.WalletType
 // FR-010..016: every user action of S-09, passed to the stateless screen as plain lambdas
 internal data class WalletCallbacks(
     val onAdd: () -> Unit = {},
-    val onOpenDetail: (WalletId) -> Unit = {},
+    val onOpenDetail: (WalletId, WalletType) -> Unit = { _, _ -> },
     val onEdit: (WalletItem) -> Unit = {},
     val onToggleArchived: () -> Unit = {},
     val onNameChange: (String) -> Unit = {},

@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":feature:dashboard"))
     implementation(project(":feature:inbox"))
     implementation(project(":feature:wallet"))
+    implementation(project(":feature:credit"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:transaction"))
     implementation(libs.navigation.compose)

@@ -2,6 +2,7 @@ package com.meqlause.fintrack.di
 
 import com.meqlause.fintrack.core.data.repository.LocalCategoryRepository
 import com.meqlause.fintrack.core.data.repository.LocalInboxRepository
+import com.meqlause.fintrack.core.data.repository.LocalInstallmentPlanRepository
 import com.meqlause.fintrack.core.data.repository.LocalMerchantRuleRepository
 import com.meqlause.fintrack.core.data.repository.LocalMonitoredAppRepository
 import com.meqlause.fintrack.core.data.repository.LocalQuickEntryRepository
@@ -12,6 +13,7 @@ import com.meqlause.fintrack.core.data.repository.RoomAtomicRunner
 import com.meqlause.fintrack.core.database.FintrackDatabase
 import com.meqlause.fintrack.core.database.dao.CategoryDao
 import com.meqlause.fintrack.core.database.dao.InboxItemDao
+import com.meqlause.fintrack.core.database.dao.InstallmentPlanDao
 import com.meqlause.fintrack.core.database.dao.MerchantRuleDao
 import com.meqlause.fintrack.core.database.dao.MonitoredAppDao
 import com.meqlause.fintrack.core.database.dao.QuickEntryDao
@@ -21,6 +23,7 @@ import com.meqlause.fintrack.core.datastore.SettingsDataSource
 import com.meqlause.fintrack.core.domain.repository.AtomicRunner
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.InboxRepository
+import com.meqlause.fintrack.core.domain.repository.InstallmentPlanRepository
 import com.meqlause.fintrack.core.domain.repository.MerchantRuleRepository
 import com.meqlause.fintrack.core.domain.repository.MonitoredAppRepository
 import com.meqlause.fintrack.core.domain.repository.QuickEntryRepository
@@ -59,6 +62,12 @@ object RepositoryModule {
     @Singleton
     fun provideSettingsRepository(dataSource: SettingsDataSource): SettingsRepository =
         LocalSettingsRepository(dataSource)
+
+    // FR-140: instalment plans, read by the credit wallet detail (FR-131)
+    @Provides
+    @Singleton
+    fun provideInstallmentPlanRepository(installmentPlanDao: InstallmentPlanDao): InstallmentPlanRepository =
+        LocalInstallmentPlanRepository(installmentPlanDao)
 
     // FR-084 … FR-091: detection pipeline storage
     @Provides
