@@ -27,9 +27,9 @@ class CreateInvestmentUseCaseTest {
     @Test
     fun givenValidNameWhenCreatedThenInvestmentWalletWithDefaultLookIsStored() {
         runBlocking {
-            val id = create("Reksa", InvestKind.MUTUAL_FUND, Money(500_000L), current)
+            val walletId = create("Reksa", InvestKind.MUTUAL_FUND, Money(500_000L), current)
             val stored = wallets.observeAll().first().single()
-            assertThat(id).isEqualTo(stored.walletId)
+            assertThat(walletId).isEqualTo(stored.walletId)
             assertThat(stored.kind.type).isEqualTo(WalletType.INVESTMENT)
             assertThat(stored.kind.investKind).isEqualTo(InvestKind.MUTUAL_FUND)
             assertThat(stored.terms.initialBalance).isEqualTo(Money(500_000L))

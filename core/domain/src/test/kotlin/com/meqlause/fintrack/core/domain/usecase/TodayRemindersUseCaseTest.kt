@@ -67,7 +67,7 @@ class TodayRemindersUseCaseTest {
         }
     }
 
-    /** BR-055: given investment reminder on and an investment wallet on the first when collected then it is returned. */
+    /** BR-055: given investment reminder on and an investment wallet first when collected then it is returned. */
     @Test
     fun givenInvestReminderOnAndInvestmentOnFirstWhenCollectedThenMonthlyReminderIsReturned() {
         runBlocking {
@@ -88,8 +88,8 @@ class TodayRemindersUseCaseTest {
     }
 
     private suspend fun addLoan(dueOn: LocalDate) {
-        val due = dueOn.atStartOfDay(zone).toInstant()
-        val agreement = Agreement(LoanDirection.LENT, "Andi", Money(100_000L), stamp, due, "")
+        val dueDate = dueOn.atStartOfDay(zone).toInstant()
+        val agreement = Agreement(LoanDirection.LENT, "Andi", Money(100_000L), stamp, dueDate, "")
         loans.insert(Loan(LoanId(0L), agreement, LoanStatus.OPEN, null, Audit(stamp, stamp)))
     }
 

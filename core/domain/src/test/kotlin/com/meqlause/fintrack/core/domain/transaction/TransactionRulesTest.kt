@@ -65,15 +65,25 @@ class TransactionRulesTest {
     /** BR-004: a transfer fee above the bound is invalid. */
     @Test
     fun `given a transfer fee above the bound when checked then the fee is invalid`() {
-        val fee = 1_000_000_000_000L
-        val result = check(draft(TransactionType.TRANSFER, 10_000L, DraftRouting(bank, cash, null), fees = fee))
+        val feeAmount = 1_000_000_000_000L
+        val candidate =
+            TransactionDraft(null, transferWithFee(feeAmount), DraftRouting(bank, cash, null), Memo(), current)
+        val result = check(candidate)
         assertThat(result).containsOnly(TransactionError.FEE_INVALID)
     }
 
     /** BR-004: a fee on an expense is not checked, only a transfer uses it. */
     @Test
     fun `given a negative fee on an expense when checked then the fee is not checked`() {
-        val result = check(draft(TransactionType.EXPENSE, 10_000L, DraftRouting(cash, null, food), fees = -1L))
+        val candidate =
+            TransactionDraft(
+                null,
+                Movement(TransactionType.EXPENSE, Money(10_000L), Money(-1L)),
+                DraftRouting(cash, null, food),
+                Memo(),
+                current,
+            )
+        val result = check(candidate)
         assertThat(result).isEmpty()
     }
 
@@ -156,10 +166,11 @@ class TransactionRulesTest {
         type: TransactionType,
         amount: Long,
         routing: DraftRouting,
-        fees: Long = 0L,
         occurredAt: Instant = current,
-    ): TransactionDraft =
-        TransactionDraft(null, Movement(type, Money(amount), Money(fees)), routing, Memo(), occurredAt)
+    ): TransactionDraft = TransactionDraft(null, Movement(type, Money(amount), Money(0L)), routing, Memo(), occurredAt)
+
+    private fun transferWithFee(feeAmount: Long): Movement =
+        Movement(TransactionType.TRANSFER, Money(10_000L), Money(feeAmount))
 
     private fun wallet(
         walletId: WalletId,

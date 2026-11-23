@@ -93,9 +93,9 @@ class LoanRemindersTest {
         status: LoanStatus = LoanStatus.OPEN,
         direction: LoanDirection = LoanDirection.LENT,
     ): LoanEntry {
-        val due = dueOn?.let { LocalDate.parse(it).atStartOfDay(zone).toInstant() }
+        val dueDate = dueOn?.let { LocalDate.parse(it).atStartOfDay(zone).toInstant() }
         val stamp = Instant.parse("2026-11-01T00:00:00Z")
-        val agreement = Agreement(direction, "Andi", Money(100_000L), stamp, due, "")
+        val agreement = Agreement(direction, "Andi", Money(100_000L), stamp, dueDate, "")
         val loan = Loan(LoanId(7L), agreement, status, null, Audit(stamp, stamp))
         val movements = if (repaid > 0L) listOf(repayment(repaid)) else emptyList()
         return LoanEntry(loan, movements)
