@@ -43,17 +43,27 @@ internal fun CategoryListItem(
                         color = FintrackTheme.colors.texts.faint,
                     )
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium)) {
-                    ActionLabel(R.string.category_edit) { callbacks.list.onEdit(category) }
-                    ActionLabel(R.string.category_move_up) { callbacks.list.onMoveUp(category) }
-                    ActionLabel(R.string.category_move_down) { callbacks.list.onMoveDown(category) }
-                    ActionLabel(if (archived) R.string.category_restore else R.string.category_archive) {
-                        callbacks.list.onSetArchived(category, !archived)
-                    }
-                    ActionLabel(R.string.category_delete) { callbacks.list.onDelete(category) }
-                }
+                ActionRow(category, callbacks, archived)
             }
         }
+    }
+}
+
+// FR-021: the five text actions of one category, edit, move, archive or restore, and delete
+@Composable
+private fun ActionRow(
+    category: Category,
+    callbacks: CategoryCallbacks,
+    archived: Boolean,
+) {
+    Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium)) {
+        ActionLabel(R.string.category_edit) { callbacks.list.onEdit(category) }
+        ActionLabel(R.string.category_move_up) { callbacks.list.onMoveUp(category) }
+        ActionLabel(R.string.category_move_down) { callbacks.list.onMoveDown(category) }
+        ActionLabel(if (archived) R.string.category_restore else R.string.category_archive) {
+            callbacks.list.onSetArchived(category, !archived)
+        }
+        ActionLabel(R.string.category_delete) { callbacks.list.onDelete(category) }
     }
 }
 
