@@ -55,6 +55,14 @@ private fun HomeBody(
             onApplyShortcut = callbacks.onApplyShortcut,
             onManage = callbacks.onOpenShortcuts,
         )
+        if (state.bills.bills.isNotEmpty()) {
+            HomeBillsCard(
+                bills = state.bills,
+                hidden = state.hidden,
+                onOpenCreditWallet = callbacks.onOpenCreditWallet,
+                onOpenInstalments = callbacks.onOpenInstalments,
+            )
+        }
         if (state.categories.isNotEmpty()) {
             HomeCategoryCard(state = state, onOpen = callbacks.onOpenCategories)
         }

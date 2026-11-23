@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.dashboard
 
+import com.meqlause.fintrack.core.domain.bills.BillsCard
 import com.meqlause.fintrack.core.domain.period.Period
 import com.meqlause.fintrack.core.domain.period.PeriodCalculator
 import com.meqlause.fintrack.core.model.Category
@@ -9,6 +10,7 @@ import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.Wallet
 import com.meqlause.fintrack.core.model.WalletId
+import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.core.ui.format.DateFormatter
 import java.time.Clock
 import java.time.Instant
@@ -22,6 +24,7 @@ internal object HomeCalculator {
     // FR-040..043: the state for one snapshot; hideOverride wins over the stored hide-by-default setting
     fun success(
         snapshot: HomeSnapshot,
+        card: BillsCard,
         hideOverride: Boolean?,
         drawer: HomeDrawer?,
         clock: Clock,
@@ -39,11 +42,15 @@ internal object HomeCalculator {
         return HomeUiState.Success(
             hidden = hideOverride ?: snapshot.settings.preferences.hideAmountsByDefault,
             total = totalOf(active, snapshot.balances),
-            wallets = active.map { HomeWallet(it.walletId, it.profile.name, balanceOf(it, snapshot.balances)) },
+            wallets =
+                active.map {
+                    HomeWallet(it.walletId, it.profile.name, balanceOf(it, snapshot.balances), isCreditWallet(it))
+                },
             period = periodOf(period, inPeriod),
             categories = categoryShares(inPeriod, names),
             recent = recentOf(snapshot.transactions, names, walletNames, clock),
             drawer = drawer,
+            bills = HomeBillsMapper.map(card, clock),
         )
     }
 
@@ -61,6 +68,9 @@ internal object HomeCalculator {
         active
             .filter { it.status.isIncludedInTotal }
             .fold(Money(0L)) { running, wallet -> running + balanceOf(wallet, balances) }
+
+    private fun isCreditWallet(wallet: Wallet): Boolean =
+        wallet.kind.type == WalletType.CREDIT_CARD || wallet.kind.type == WalletType.PAYLATER
 
     private fun balanceOf(
         wallet: Wallet,

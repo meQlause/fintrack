@@ -42,4 +42,13 @@
         <item quantity="one">%1$d transaksi</item>
         <item quantity="other">%1$d transaksi</item>
     </plurals>
+    <string name="home_bills_title">Tagihan</string>
+    <string name="home_bills_instalments">Cicilan bulan ini</string>
+    <string name="home_bill_status_not_issued">Belum terbit</string>
+    <string name="home_bill_status_paid">Lunas</string>
+    <string name="home_bill_status_due">Belum dibayar</string>
+    <string name="home_bill_status_overdue">Terlambat</string>
+    <string name="home_bill_due_first">Tagihan pertama %1$s</string>
+    <string name="home_bill_due_date">Jatuh tempo %1$s</string>
+    <string name="home_bill_due_overdue">Terlambat · jatuh tempo %1$s</string>
 </resources>

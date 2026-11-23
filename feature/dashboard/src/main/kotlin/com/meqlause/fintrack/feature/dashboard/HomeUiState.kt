@@ -18,5 +18,6 @@ internal sealed interface HomeUiState {
         val drawer: HomeDrawer?,
         val shortcuts: List<ShortcutTileParams> = emptyList(),
         val removedShortcut: QuickEntry? = null,
+        val bills: HomeBills = HomeBills(emptyList(), Money(0L)),
     ) : HomeUiState
 }

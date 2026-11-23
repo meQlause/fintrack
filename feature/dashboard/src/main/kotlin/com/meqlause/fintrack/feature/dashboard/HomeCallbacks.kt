@@ -14,6 +14,8 @@ internal data class HomeCallbacks(
     val onCloseDrawer: () -> Unit = {},
     val onOpenWallet: (WalletId) -> Unit = {},
     val onOpenWallets: () -> Unit = {},
+    val onOpenCreditWallet: (WalletId) -> Unit = {},
+    val onOpenInstalments: () -> Unit = {},
     val onQuickEntry: () -> Unit = {},
     val onOpenTransaction: (TransactionId) -> Unit = {},
     val onOpenHistory: () -> Unit = {},

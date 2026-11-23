@@ -55,6 +55,7 @@ internal fun HomeHero(
             wallets = state.wallets,
             hidden = state.hidden,
             onOpenWallet = callbacks.onOpenWallet,
+            onOpenCreditWallet = callbacks.onOpenCreditWallet,
             modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
         )
     }
