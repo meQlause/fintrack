@@ -13,12 +13,12 @@ internal fun EditTransactionUiState.withEditedField(transform: (String) -> Strin
             }
 
             KeypadField.TENOR -> {
-                copy(instalment = instalment.copy(tenorDigits = transform(instalment.tenorDigits)))
+                withExtras { copy(instalment = instalment.copy(tenorDigits = transform(instalment.tenorDigits))) }
             }
 
             KeypadField.INSTALMENT_FEE -> {
-                copy(instalment = instalment.copy(feeDigits = transform(instalment.feeDigits)))
+                withExtras { copy(instalment = instalment.copy(feeDigits = transform(instalment.feeDigits))) }
             }
         }
-    return edited.copy(errors = emptySet())
+    return edited.withStatus { copy(errors = emptySet()) }
 }

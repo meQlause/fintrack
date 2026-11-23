@@ -20,54 +20,17 @@ internal fun HistorySheetHost(
     onEvent: (HistoryEvent) -> Unit,
 ) {
     val close = { onEvent(HistoryEvent.SheetDismissed) }
-    val allLabel = stringResource(R.string.history_filter_all)
     when (state.sheet) {
         HistorySheet.MONTH -> {
             HistoryMonthPicker(state = state, onEvent = onEvent)
         }
 
         HistorySheet.WALLET -> {
-            OptionsDrawer(
-                title = stringResource(R.string.history_filter_wallet_title),
-                choices =
-                    OptionChoices(
-                        options =
-                            listOf(PickerOption(ALL_KEY, allLabel)) +
-                                state.wallets.map { wallet ->
-                                    PickerOption(wallet.walletId.value.toString(), wallet.profile.name)
-                                },
-                        selectedKey =
-                            state.filter.walletId
-                                ?.value
-                                ?.toString() ?: ALL_KEY,
-                    ),
-                actions =
-                    PickerActions(onPick = { option ->
-                        onEvent(HistoryEvent.WalletPicked(option.optionKey.toLongOrNull()?.let { WalletId(it) }))
-                    }, onClose = close),
-            )
+            WalletFilterDrawer(state = state, onEvent = onEvent, onClose = close)
         }
 
         HistorySheet.CATEGORY -> {
-            OptionsDrawer(
-                title = stringResource(R.string.history_filter_category_title),
-                choices =
-                    OptionChoices(
-                        options =
-                            listOf(PickerOption(ALL_KEY, allLabel)) +
-                                state.categories.map { category ->
-                                    PickerOption(category.categoryId.value.toString(), category.profile.name)
-                                },
-                        selectedKey =
-                            state.filter.categoryId
-                                ?.value
-                                ?.toString() ?: ALL_KEY,
-                    ),
-                actions =
-                    PickerActions(onPick = { option ->
-                        onEvent(HistoryEvent.CategoryPicked(option.optionKey.toLongOrNull()?.let { CategoryId(it) }))
-                    }, onClose = close),
-            )
+            CategoryFilterDrawer(state = state, onEvent = onEvent, onClose = close)
         }
 
         HistorySheet.DAY -> {
@@ -82,4 +45,63 @@ internal fun HistorySheetHost(
             Unit
         }
     }
+}
+
+// FR-037: the wallets, with "Semua" on top; picking one filters the list
+@Composable
+private fun WalletFilterDrawer(
+    state: HistoryUiState,
+    onEvent: (HistoryEvent) -> Unit,
+    onClose: () -> Unit,
+) {
+    val everything = PickerOption(ALL_KEY, stringResource(R.string.history_filter_all))
+    val options = listOf(everything) + state.wallets.map { PickerOption(it.walletId.value.toString(), it.profile.name) }
+    OptionsDrawer(
+        title = stringResource(R.string.history_filter_wallet_title),
+        choices =
+            OptionChoices(
+                options = options,
+                selectedKey =
+                    state.filter.walletId
+                        ?.value
+                        ?.toString() ?: ALL_KEY,
+            ),
+        actions =
+            PickerActions(
+                onPick = { option ->
+                    onEvent(HistoryEvent.WalletPicked(option.optionKey.toLongOrNull()?.let { WalletId(it) }))
+                },
+                onClose = onClose,
+            ),
+    )
+}
+
+// FR-037: the categories, with "Semua" on top; picking one filters the list
+@Composable
+private fun CategoryFilterDrawer(
+    state: HistoryUiState,
+    onEvent: (HistoryEvent) -> Unit,
+    onClose: () -> Unit,
+) {
+    val everything = PickerOption(ALL_KEY, stringResource(R.string.history_filter_all))
+    val options =
+        listOf(everything) + state.categories.map { PickerOption(it.categoryId.value.toString(), it.profile.name) }
+    OptionsDrawer(
+        title = stringResource(R.string.history_filter_category_title),
+        choices =
+            OptionChoices(
+                options = options,
+                selectedKey =
+                    state.filter.categoryId
+                        ?.value
+                        ?.toString() ?: ALL_KEY,
+            ),
+        actions =
+            PickerActions(
+                onPick = { option ->
+                    onEvent(HistoryEvent.CategoryPicked(option.optionKey.toLongOrNull()?.let { CategoryId(it) }))
+                },
+                onClose = onClose,
+            ),
+    )
 }

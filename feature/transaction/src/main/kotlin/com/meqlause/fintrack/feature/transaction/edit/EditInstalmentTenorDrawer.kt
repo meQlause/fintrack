@@ -10,7 +10,10 @@ import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.transaction.R
 
-private val TENOR_OPTIONS = listOf(3, 6, 12)
+private const val TENOR_SHORT = 3
+private const val TENOR_HALF_YEAR = 6
+private const val TENOR_YEAR = 12
+private val TENOR_OPTIONS = listOf(TENOR_SHORT, TENOR_HALF_YEAR, TENOR_YEAR)
 
 // FR-140, S-04: the tenor drawer; 3, 6 and 12 months, or "Lainnya" to type any tenor from 2 to 36 on the keypad
 @Composable

@@ -47,11 +47,11 @@ internal class HistoryViewModel
                 categoryRepository.observeAll(),
                 settingsRepository.observe(),
             ) { current, transactions, wallets, categories, settings ->
-                compose(current, transactions, wallets, categories, settings.preferences.periodStartDay)
+                compose(current, HistoryData(transactions, wallets, categories), settings.preferences.periodStartDay)
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
-                initialValue = HistoryUiState(month = YearMonth.now(clock)),
+                initialValue = HistoryUiState(selection = HistorySelection(month = YearMonth.now(clock))),
             )
 
         // FR-036, FR-037: every change the screen asks for is reduced into the selection
@@ -61,48 +61,54 @@ internal class HistoryViewModel
 
         private fun compose(
             current: HistorySelection,
-            transactions: List<Transaction>,
-            wallets: List<Wallet>,
-            categories: List<Category>,
+            data: HistoryData,
             startDay: Int,
         ): HistoryUiState {
             val period = monthPeriod(current.month, startDay)
-            val names =
-                HistoryNames(
-                    wallets = wallets.associate { it.walletId to it.profile.name },
-                    categories = categories.associate { it.categoryId to it.profile.name },
-                    appearances = categories.associate { it.categoryId to it.profile.appearance },
-                )
-            val content = buildHistoryContent(transactions, current.filter, period, names, clock)
-            val statistics =
-                buildStatistics(
-                    transactions = transactions,
-                    request =
-                        StatisticsRequest(
-                            type = current.statisticsType,
-                            period = period,
-                            startDay = startDay,
-                            zone = clock.zone,
-                        ),
-                )
+            val names = namesOf(data)
+            val query = HistoryQuery(current.filter, period)
+            val content = buildHistoryContent(data.transactions, query, names, clock)
+            val request = StatisticsRequest(current.statisticsType, period, startDay, clock.zone)
             return HistoryUiState(
-                month = current.month,
+                selection = current,
                 period = period,
-                filter = current.filter,
-                isSearchOpen = current.isSearchOpen,
-                sheet = current.sheet,
-                pickerYear = current.pickerYear,
-                wallets = wallets.filterNot { it.status.isArchived },
-                categories = categories.filterNot { it.state.isArchived }.sortedBy { it.profile.sortOrder },
-                groups = content.groups,
-                totals = content.totals,
-                hasRecords = content.hasRecords,
-                activeMonths = transactions.map { YearMonth.from(it.timing.occurredAt.atZone(clock.zone)) }.toSet(),
-                isLoaded = true,
-                view = current.view,
-                statisticsType = current.statisticsType,
-                isCategoriesExpanded = current.isCategoriesExpanded,
-                statistics = statistics,
+                lists =
+                    HistoryLists(
+                        wallets = data.wallets.filterNot { it.status.isArchived },
+                        categories =
+                            data.categories
+                                .filterNot {
+                                    it.state.isArchived
+                                }.sortedBy { it.profile.sortOrder },
+                        groups = content.groups,
+                    ),
+                status =
+                    HistoryStatus(
+                        totals = content.totals,
+                        hasRecords = content.hasRecords,
+                        isLoaded = true,
+                        activeMonths = data.transactions.map { monthOf(it) }.toSet(),
+                    ),
+                statistics = buildStatistics(data.transactions, request),
             )
         }
+
+        // FR-036: the month a transaction falls in, in the device's zone
+        private fun monthOf(transaction: Transaction): YearMonth =
+            YearMonth.from(transaction.timing.occurredAt.atZone(clock.zone))
+
+        // FR-036: the names and looks the rows borrow from the wallets and categories
+        private fun namesOf(data: HistoryData): HistoryNames =
+            HistoryNames(
+                wallets = data.wallets.associate { it.walletId to it.profile.name },
+                categories = data.categories.associate { it.categoryId to it.profile.name },
+                appearances = data.categories.associate { it.categoryId to it.profile.appearance },
+            )
+
+        // FR-036: what the Riwayat joins the selection with
+        private data class HistoryData(
+            val transactions: List<Transaction>,
+            val wallets: List<Wallet>,
+            val categories: List<Category>,
+        )
     }

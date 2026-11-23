@@ -39,11 +39,9 @@ internal class EditLoanController
         ): EditTransactionUiState =
             when (change) {
                 LoanChange.TabSelected -> {
-                    state.copy(
-                        loan = state.loan ?: LoanForm(),
-                        openSheet = null,
-                        errors = emptySet(),
-                    )
+                    state
+                        .withExtras { copy(loan = loan ?: LoanForm()) }
+                        .withStatus { copy(openSheet = null, errors = emptySet()) }
                 }
 
                 is LoanChange.DirectionPicked -> {
@@ -68,10 +66,10 @@ internal class EditLoanController
             state: EditTransactionUiState,
             change: LoanChange.DuePicked,
         ): EditTransactionUiState {
-            val due = change.option.dueFrom(LocalDate.now(clock))
-            return state.withLoan { it.copy(dueDate = due) }.copy(openSheet = null)
+            val dueOn = change.option.dueFrom(LocalDate.now(clock))
+            return state.withLoan { it.copy(dueDate = dueOn) }.withStatus { copy(openSheet = null) }
         }
 
         private fun EditTransactionUiState.withLoan(transform: (LoanForm) -> LoanForm): EditTransactionUiState =
-            copy(loan = transform(loan ?: LoanForm()), errors = emptySet())
+            withExtras { copy(loan = transform(loan ?: LoanForm())) }.withStatus { copy(errors = emptySet()) }
     }

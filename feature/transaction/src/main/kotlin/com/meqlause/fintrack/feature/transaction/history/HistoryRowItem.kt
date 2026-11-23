@@ -11,6 +11,8 @@ internal data class HistoryRowItem(
     val amount: Money,
     val title: String?,
     val subtitle: String,
-    val appearance: Appearance = Appearance("other", "gray"),
-    val auto: Boolean = false,
-)
+    val mark: HistoryRowMark = HistoryRowMark(),
+) {
+    val appearance: Appearance get() = mark.appearance
+    val auto: Boolean get() = mark.auto
+}

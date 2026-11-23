@@ -30,7 +30,6 @@ internal fun EditLoanPerson(
     onChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val colors = FintrackTheme.colors
     val style = FintrackScreenText.style(size = 15f, weight = 600)
     Row(
         modifier =
@@ -41,26 +40,33 @@ internal fun EditLoanPerson(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pickRowVertical),
     ) {
-        Box(
-            modifier =
-                Modifier
-                    .size(FintrackScreenSizes.loanAvatar)
-                    .clip(CircleShape)
-                    .background(colors.surfaces.surfaceVariant),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                painter = painterResource(DesignR.drawable.ic_person),
-                contentDescription = null,
-                tint = colors.texts.onSurfaceVariant,
-                modifier = Modifier.size(FintrackScreenSizes.circleGlyph),
-            )
-        }
+        PersonAvatar()
         ScreenInput(
             value = name,
             onValueChange = onChange,
             look = InputLook(placeholder = hint, style = style),
             modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+// FR-150: the grey round avatar with a person glyph
+@Composable
+private fun PersonAvatar() {
+    val colors = FintrackTheme.colors
+    Box(
+        modifier =
+            Modifier
+                .size(FintrackScreenSizes.loanAvatar)
+                .clip(CircleShape)
+                .background(colors.surfaces.surfaceVariant),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            painter = painterResource(DesignR.drawable.ic_person),
+            contentDescription = null,
+            tint = colors.texts.onSurfaceVariant,
+            modifier = Modifier.size(FintrackScreenSizes.circleGlyph),
         )
     }
 }

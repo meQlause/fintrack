@@ -12,18 +12,21 @@ import com.meqlause.fintrack.core.model.TransactionType
 private val sampleDetail =
     TransactionDetail(
         type = TransactionType.EXPENSE,
-        amount = Money(47_000L),
-        feeAmount = Money(0L),
-        title = "Makan siang",
-        merchant = "",
-        note = "Makan siang",
-        categoryName = "Makanan & Minuman",
-        walletLabel = "DANA",
-        dateLabel = "Sel, 3 Nov",
-        timeLabel = "12:10",
-        source = TransactionSource.NOTIFICATION,
-        isLoanLinked = false,
-        appearance = Appearance("food", "orange"),
+        money = DetailMoney(amount = Money(rupiah = 47_000L), feeAmount = Money(0L)),
+        text =
+            DetailText(
+                title = "Makan siang",
+                merchant = "",
+                note = "Makan siang",
+                categoryName = "Makanan & Minuman",
+            ),
+        place = DetailPlace(walletLabel = "DANA", dateLabel = "Sel, 3 Nov", timeLabel = "12:10"),
+        origin =
+            DetailOrigin(
+                source = TransactionSource.NOTIFICATION,
+                isLoanLinked = false,
+                appearance = Appearance("food", "orange"),
+            ),
     )
 
 @Preview(name = "Transaction detail light", showBackground = true, heightDp = 720)

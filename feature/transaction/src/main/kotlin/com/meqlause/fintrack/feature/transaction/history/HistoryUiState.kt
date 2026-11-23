@@ -12,21 +12,42 @@ import java.time.YearMonth
 // FR-036, FR-037, S-05: everything the Riwayat screen draws; the screen holds no state of its own
 @Immutable
 internal data class HistoryUiState(
-    val month: YearMonth,
+    val selection: HistorySelection,
     val period: Period? = null,
-    val filter: HistoryFilter = HistoryFilter(),
-    val isSearchOpen: Boolean = false,
-    val sheet: HistorySheet? = null,
-    val pickerYear: Int = month.year,
+    val lists: HistoryLists = HistoryLists(),
+    val status: HistoryStatus = HistoryStatus(),
+    val statistics: PeriodStatistics? = null,
+) {
+    val month: YearMonth get() = selection.month
+    val filter: HistoryFilter get() = selection.filter
+    val isSearchOpen: Boolean get() = selection.isSearchOpen
+    val sheet: HistorySheet? get() = selection.sheet
+    val pickerYear: Int get() = selection.pickerYear
+    val view: HistoryView get() = selection.view
+    val statisticsType: TransactionType get() = selection.statisticsType
+    val isCategoriesExpanded: Boolean get() = selection.isCategoriesExpanded
+    val wallets: List<Wallet> get() = lists.wallets
+    val categories: List<Category> get() = lists.categories
+    val groups: List<HistoryDayGroup> get() = lists.groups
+    val totals: HistoryTotals get() = status.totals
+    val hasRecords: Boolean get() = status.hasRecords
+    val isLoaded: Boolean get() = status.isLoaded
+    val activeMonths: Set<YearMonth> get() = status.activeMonths
+}
+
+// FR-036: the wallets and categories the filters offer and the day groups of the list
+@Immutable
+internal data class HistoryLists(
     val wallets: List<Wallet> = emptyList(),
     val categories: List<Category> = emptyList(),
     val groups: List<HistoryDayGroup> = emptyList(),
+)
+
+// FR-036: the totals of the month, whether it has records, whether it loaded and which months have records
+@Immutable
+internal data class HistoryStatus(
     val totals: HistoryTotals = HistoryTotals(),
     val hasRecords: Boolean = false,
     val isLoaded: Boolean = false,
     val activeMonths: Set<YearMonth> = emptySet(),
-    val view: HistoryView = HistoryView.LIST,
-    val statisticsType: TransactionType = TransactionType.EXPENSE,
-    val isCategoriesExpanded: Boolean = false,
-    val statistics: PeriodStatistics? = null,
 )

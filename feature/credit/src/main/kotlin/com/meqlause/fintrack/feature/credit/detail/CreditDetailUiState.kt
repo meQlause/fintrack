@@ -17,7 +17,7 @@ internal sealed interface CreditDetailUiState {
         val identity: CreditIdentity,
         val figures: CreditFigures,
         val today: LocalDate,
-        val pay: PayState,
+        val payment: PayState,
         val picker: CreditDay?,
         val instalments: List<InstalmentRow> = emptyList(),
     ) : CreditDetailUiState {
@@ -27,8 +27,8 @@ internal sealed interface CreditDetailUiState {
         val statement: StatementSummary get() = figures.statement
         val outstanding: Money get() = figures.outstanding
         val availableLimit: Money get() = figures.availableLimit
-        val sources: List<PaySource> get() = pay.sources
-        val payDraft: PayDraft? get() = pay.payDraft
+        val sources: List<PaySource> get() = payment.sources
+        val payDraft: PayDraft? get() = payment.payDraft
     }
 }
 

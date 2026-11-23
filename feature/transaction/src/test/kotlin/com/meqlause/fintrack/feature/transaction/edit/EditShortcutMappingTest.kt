@@ -37,11 +37,10 @@ class EditShortcutMappingTest {
                     TransactionForm(
                         type = TransactionType.EXPENSE,
                         rupiahDigits = "25000",
-                        walletId = WalletId(2L),
-                        categoryId = CategoryId(3L),
+                        route = FormRoute(walletId = WalletId(2L), categoryId = CategoryId(3L)),
                         note = "  Kopi  ",
                     ),
-                keepAsShortcut = true,
+                shortcutState = ShortcutState(keepAsShortcut = true),
             )
 
         val shortcut = state.toShortcut(fixedNow)
@@ -52,11 +51,13 @@ class EditShortcutMappingTest {
 
     @Test
     fun `no shortcut is built when the checkbox is off or a shortcut was applied`() {
-        val form = TransactionForm(walletId = WalletId(2L), categoryId = CategoryId(3L))
+        val form = TransactionForm(route = FormRoute(walletId = WalletId(2L), categoryId = CategoryId(3L)))
         val base = EditTransactionUiState(form = form)
 
         assertThat(base.toShortcut(fixedNow)).isNull()
-        assertThat(base.copy(keepAsShortcut = true, appliedShortcut = true).toShortcut(fixedNow)).isNull()
+        assertThat(
+            base.withShortcuts { copy(keepAsShortcut = true, appliedShortcut = true) }.toShortcut(fixedNow),
+        ).isNull()
     }
 
     private fun entry(): QuickEntry =

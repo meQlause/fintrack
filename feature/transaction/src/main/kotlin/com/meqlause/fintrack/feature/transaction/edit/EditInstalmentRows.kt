@@ -30,38 +30,54 @@ internal fun EditInstalmentRows(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(R.string.instalment_switch_label),
-                style = FintrackTheme.typography.bodyMedium,
-                color = FintrackTheme.colors.texts.onSurface,
-                modifier = Modifier.weight(1f),
-            )
-            FintrackSwitch(
-                checked = instalment.enabled,
-                onCheckedChange = { enabled -> onEvent(EditTransactionEvent.InstalmentToggled(enabled)) },
-            )
-        }
-        if (instalment.enabled) {
-            FormRow(
-                label = stringResource(R.string.instalment_tenor_label),
-                value = tenorLabel(state),
-                onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.TENOR)) },
-            )
-            FormRow(
-                label = stringResource(R.string.instalment_fee_label),
-                value = MoneyFormatter.format(instalment.feeAmount),
-                onClick = { onEvent(EditTransactionEvent.FieldFocused(KeypadField.INSTALMENT_FEE)) },
-            )
-            previewLabel(state)?.let { preview ->
-                Text(
-                    text = preview,
-                    style = FintrackTheme.typography.labelMedium,
-                    color = FintrackTheme.colors.texts.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = FintrackTheme.spacing.large),
-                )
-            }
-        }
+        InstalmentSwitch(enabled = instalment.enabled, onEvent = onEvent)
+        if (instalment.enabled) InstalmentDetails(state = state, onEvent = onEvent)
+    }
+}
+
+// FR-140: the Cicilan switch and its label
+@Composable
+private fun InstalmentSwitch(
+    enabled: Boolean,
+    onEvent: (EditTransactionEvent) -> Unit,
+) {
+    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = stringResource(R.string.instalment_switch_label),
+            style = FintrackTheme.typography.bodyMedium,
+            color = FintrackTheme.colors.texts.onSurface,
+            modifier = Modifier.weight(1f),
+        )
+        FintrackSwitch(
+            checked = enabled,
+            onCheckedChange = { checked -> onEvent(EditTransactionEvent.InstalmentToggled(checked)) },
+        )
+    }
+}
+
+// FR-140: the tenor row, the admin fee row and the monthly preview, shown while the switch is on
+@Composable
+private fun InstalmentDetails(
+    state: EditTransactionUiState,
+    onEvent: (EditTransactionEvent) -> Unit,
+) {
+    FormRow(
+        label = stringResource(R.string.instalment_tenor_label),
+        value = tenorLabel(state),
+        onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.TENOR)) },
+    )
+    FormRow(
+        label = stringResource(R.string.instalment_fee_label),
+        value = MoneyFormatter.format(state.instalment.feeAmount),
+        onClick = { onEvent(EditTransactionEvent.FieldFocused(KeypadField.INSTALMENT_FEE)) },
+    )
+    previewLabel(state)?.let { preview ->
+        Text(
+            text = preview,
+            style = FintrackTheme.typography.labelMedium,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+            modifier = Modifier.padding(horizontal = FintrackTheme.spacing.large),
+        )
     }
 }
 

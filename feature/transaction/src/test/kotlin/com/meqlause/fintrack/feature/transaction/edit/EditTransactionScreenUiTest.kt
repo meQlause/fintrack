@@ -59,7 +59,7 @@ class EditTransactionScreenUiTest {
         composeRule.setContent {
             FintrackTheme(darkTheme = false) {
                 EditTransactionScreen(
-                    state = readyState().copy(errors = setOf(TransactionError.CATEGORY_REQUIRED)),
+                    state = readyState().withStatus { copy(errors = setOf(TransactionError.CATEGORY_REQUIRED)) },
                     onEvent = {},
                     onDismiss = {},
                 )
@@ -86,7 +86,7 @@ class EditTransactionScreenUiTest {
 
     private fun readyState(): EditTransactionUiState {
         val sample = expenseSample()
-        return sample.copy(form = sample.form.copy(rupiahDigits = "", categoryId = null))
+        return sample.copy(form = sample.form.copy(rupiahDigits = "").withRoute { copy(categoryId = null) })
     }
 
     // Test-only reducer: applies the events this sheet emits to a plain state, the way the ViewModel would
@@ -107,7 +107,7 @@ class EditTransactionScreenUiTest {
             }
 
             is EditTransactionEvent.CategoryPicked -> {
-                state.copy(form = form.copy(categoryId = event.categoryId))
+                state.copy(form = form.withRoute { copy(categoryId = event.categoryId) })
             }
 
             else -> {

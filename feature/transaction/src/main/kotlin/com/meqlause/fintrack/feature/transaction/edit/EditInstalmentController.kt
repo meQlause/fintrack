@@ -29,7 +29,9 @@ internal class EditInstalmentController
             state: EditTransactionUiState,
             enabled: Boolean,
         ): EditTransactionUiState =
-            state.copy(instalment = state.instalment.copy(enabled = enabled), errors = emptySet())
+            state
+                .withExtras { copy(instalment = instalment.copy(enabled = enabled)) }
+                .withStatus { copy(errors = emptySet()) }
 
         // FR-140: a months value fills the tenor; "Lainnya" clears it and focuses the keypad to type 2..36
         fun tenorPicked(
@@ -43,6 +45,8 @@ internal class EditInstalmentController
                     state.instalment.copy(tenorDigits = months.toString())
                 }
             val keypad = if (months == null) KeypadField.TENOR else state.keypadField
-            return state.copy(instalment = instalment, keypadField = keypad, openSheet = null, errors = emptySet())
+            return state
+                .withExtras { copy(instalment = instalment) }
+                .withStatus { copy(keypadField = keypad, openSheet = null, errors = emptySet()) }
         }
     }

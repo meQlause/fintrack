@@ -36,13 +36,10 @@ internal class EditShortcutController(
     fun pick(quickEntryId: QuickEntryId) {
         val entry = state.value.shortcuts.firstOrNull { it.quickEntryId == quickEntryId } ?: return
         state.update {
-            it.copy(
-                form = entry.toForm(),
-                openSheet = null,
-                appliedShortcut = true,
-                keepAsShortcut = false,
-                errors = emptySet(),
-            )
+            it
+                .copy(form = entry.toForm())
+                .withStatus { copy(openSheet = null, errors = emptySet()) }
+                .withShortcuts { copy(appliedShortcut = true, keepAsShortcut = false) }
         }
     }
 
@@ -50,12 +47,12 @@ internal class EditShortcutController(
     fun delete(quickEntryId: QuickEntryId) {
         val entry = state.value.shortcuts.firstOrNull { it.quickEntryId == quickEntryId } ?: return
         scope.launch { quickEntries.delete(quickEntryId) }
-        state.update { it.copy(removedShortcut = entry) }
+        state.update { it.withShortcuts { copy(removedShortcut = entry) } }
         undoJob?.cancel()
         undoJob =
             scope.launch {
                 delay(UNDO_WINDOW_MS)
-                state.update { it.copy(removedShortcut = null) }
+                state.update { it.withShortcuts { copy(removedShortcut = null) } }
             }
     }
 
@@ -63,7 +60,7 @@ internal class EditShortcutController(
     fun restore() {
         val entry = state.value.removedShortcut ?: return
         undoJob?.cancel()
-        state.update { it.copy(removedShortcut = null) }
+        state.update { it.withShortcuts { copy(removedShortcut = null) } }
         scope.launch { quickEntries.insert(entry) }
     }
 
@@ -79,7 +76,7 @@ internal class EditShortcutController(
             }
 
             is QuickEntryResult.Rejected -> {
-                state.update { it.copy(shortcutErrors = result.errors) }
+                state.update { it.withShortcuts { copy(shortcutErrors = result.errors) } }
                 false
             }
         }

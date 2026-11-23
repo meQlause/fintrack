@@ -37,6 +37,12 @@ internal fun DetailRows(detail: TransactionDetail) {
             value = MoneyFormatter.format(detail.feeAmount),
         )
     }
+    DetailTrailingRows(detail = detail)
+}
+
+// FR-034: the time, the merchant (when there is one), the note and where the transaction came from
+@Composable
+private fun DetailTrailingRows(detail: TransactionDetail) {
     DetailRow(
         label = stringResource(R.string.transaction_detail_time),
         value = "${detail.dateLabel}, ${detail.timeLabel}",

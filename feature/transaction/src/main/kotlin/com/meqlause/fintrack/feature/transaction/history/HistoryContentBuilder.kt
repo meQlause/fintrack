@@ -1,6 +1,5 @@
 package com.meqlause.fintrack.feature.transaction.history
 
-import com.meqlause.fintrack.core.domain.period.Period
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.TransactionType
@@ -13,13 +12,12 @@ private typealias DatedTransaction = Pair<Transaction, LocalDate>
 // FR-036, FR-037: keeps the transactions of [period] that pass [filter] and groups them by day, newest first
 internal fun buildHistoryContent(
     transactions: List<Transaction>,
-    filter: HistoryFilter,
-    period: Period,
+    query: HistoryQuery,
     names: HistoryNames,
     clock: Clock,
 ): HistoryContent {
-    val dated = transactions.map { it to it.dateIn(clock.zone) }.filter { isInPeriod(it.second, period) }
-    val shown = dated.filter { (transaction, date) -> transaction.matches(filter, date) }
+    val dated = transactions.map { it to it.dateIn(clock.zone) }.filter { isInPeriod(it.second, query.period) }
+    val shown = dated.filter { (transaction, date) -> transaction.matches(query.filter, date) }
     return HistoryContent(
         groups = shown.toDayGroups(names, clock),
         totals = shown.toTotals(),

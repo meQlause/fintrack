@@ -26,8 +26,7 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 @Composable
 internal fun <T> HistorySegmented(
     options: List<HistorySegmentOption<T>>,
-    selected: T,
-    onPick: (T) -> Unit,
+    choice: SegmentChoice<T>,
     modifier: Modifier = Modifier,
     trackHeight: Dp = FintrackTheme.sizes.segmentTrackHeight,
 ) {
@@ -42,11 +41,9 @@ internal fun <T> HistorySegmented(
     ) {
         options.forEach { option ->
             HistorySegment(
-                label = option.label,
-                iconRes = option.iconRes,
-                activeColor = option.activeColor,
-                isSelected = option.value == selected,
-                onClick = { onPick(option.value) },
+                option = option,
+                isSelected = option.value == choice.selected,
+                onClick = { choice.onPick(option.value) },
                 modifier = Modifier.weight(1f),
             )
         }
@@ -55,9 +52,7 @@ internal fun <T> HistorySegmented(
 
 @Composable
 private fun HistorySegment(
-    label: String,
-    iconRes: Int?,
-    activeColor: Color,
+    option: HistorySegmentOption<*>,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -72,21 +67,21 @@ private fun HistorySegment(
                 .selectable(selected = isSelected, role = Role.Tab, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        val active = if (activeColor == Color.Unspecified) colors.texts.onSurface else activeColor
+        val active = if (option.activeColor == Color.Unspecified) colors.texts.onSurface else option.activeColor
         val tone = if (isSelected) active else colors.texts.onSurfaceVariant
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),
         ) {
-            if (iconRes != null) {
+            if (option.iconRes != null) {
                 Icon(
-                    painter = painterResource(iconRes),
+                    painter = painterResource(option.iconRes),
                     contentDescription = null,
                     tint = tone,
                     modifier = Modifier.size(FintrackTheme.sizes.segmentGlyph),
                 )
             }
-            Text(text = label, style = FintrackTheme.typography.tabLabel, color = tone)
+            Text(text = option.label, style = FintrackTheme.typography.tabLabel, color = tone)
         }
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
@@ -46,41 +48,50 @@ internal fun HistoryTypeTabs(
             animationSpec = tween(durationMillis = motion.durationMillis, easing = motion.easing),
             label = "history-type-indicator",
         )
-        // S-05: the tab row takes the height of its labels, so the tabs never claim the list's space
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(FintrackTheme.sizes.typeTabHeight),
-        ) {
-            types.forEach { type ->
-                TypeTab(
-                    type = type,
-                    selected = type == selected,
-                    onClick = { onPick(type) },
-                    modifier = Modifier.weight(1f),
-                )
-            }
-        }
-        Box(
-            modifier =
-                Modifier
-                    .align(Alignment.BottomStart)
-                    .fillMaxWidth()
-                    .height(FintrackTheme.sizes.hairline)
-                    .background(FintrackTheme.colors.surfaces.outline),
-        )
-        Box(
-            modifier =
-                Modifier
-                    .align(Alignment.BottomStart)
-                    .offset { IntOffset(x = indicatorOffset.roundToPx(), y = 0) }
-                    .width(FintrackTheme.sizes.tabIndicatorWidth)
-                    .height(FintrackTheme.sizes.tabIndicatorHeight)
-                    .clip(FintrackTheme.shapes.full)
-                    .background(FintrackTheme.colors.texts.onSurface),
-        )
+        TabRow(selected = selected, onPick = onPick)
+        TabUnderline(offset = indicatorOffset)
     }
+}
+
+// S-05: the tab row takes the height of its labels, so the tabs never claim the list's space
+@Composable
+private fun TabRow(
+    selected: HistoryTypeFilter,
+    onPick: (HistoryTypeFilter) -> Unit,
+) {
+    Row(modifier = Modifier.fillMaxWidth().height(FintrackTheme.sizes.typeTabHeight)) {
+        HistoryTypeFilter.entries.forEach { type ->
+            TypeTab(
+                type = type,
+                selected = type == selected,
+                onClick = { onPick(type) },
+                modifier = Modifier.weight(1f),
+            )
+        }
+    }
+}
+
+// S-05: the hairline under the tabs and the short indicator on the selected one
+@Composable
+private fun BoxScope.TabUnderline(offset: Dp) {
+    Box(
+        modifier =
+            Modifier
+                .align(Alignment.BottomStart)
+                .fillMaxWidth()
+                .height(FintrackTheme.sizes.hairline)
+                .background(FintrackTheme.colors.surfaces.outline),
+    )
+    Box(
+        modifier =
+            Modifier
+                .align(Alignment.BottomStart)
+                .offset { IntOffset(x = offset.roundToPx(), y = 0) }
+                .width(FintrackTheme.sizes.tabIndicatorWidth)
+                .height(FintrackTheme.sizes.tabIndicatorHeight)
+                .clip(FintrackTheme.shapes.full)
+                .background(FintrackTheme.colors.texts.onSurface),
+    )
 }
 
 @Composable

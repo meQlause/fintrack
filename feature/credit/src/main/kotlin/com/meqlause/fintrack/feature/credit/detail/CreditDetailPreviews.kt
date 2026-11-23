@@ -42,7 +42,7 @@ private fun previewState(payDraft: PayDraft? = null): CreditDetailUiState.Succes
                 availableLimit = Money(rupiah = 5_780_000L),
             ),
         today = previewToday,
-        pay = PayState(sources = listOf(PaySource(WalletId(2L), "BCA")), payDraft = payDraft),
+        payment = PayState(sources = listOf(PaySource(WalletId(2L), "BCA")), payDraft = payDraft),
         picker = null,
         instalments = listOf(previewInstalment()),
     )
@@ -58,7 +58,7 @@ private fun previewInstalment(): InstalmentRow =
                 nextMonth = YearMonth.parse("2026-12"),
                 payoffMonth = null,
             ),
-        amounts = InstalmentAmounts(monthly = Money(rupiah = 500_000L), remaining = Money(rupiah = 2_500_000L)),
+        sums = InstalmentAmounts(monthly = Money(rupiah = 500_000L), remaining = Money(rupiah = 2_500_000L)),
         portions = emptyList(),
     )
 

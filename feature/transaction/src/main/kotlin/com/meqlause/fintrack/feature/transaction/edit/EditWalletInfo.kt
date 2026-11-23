@@ -19,7 +19,7 @@ internal data class EditWalletInfo(
     val groupRes: Int?,
 ) {
     companion object {
-        fun of(
+        fun forWallet(
             state: EditTransactionUiState,
             walletId: WalletId?,
         ): EditWalletInfo {

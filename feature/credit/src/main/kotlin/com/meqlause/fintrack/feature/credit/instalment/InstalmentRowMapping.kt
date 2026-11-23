@@ -33,7 +33,7 @@ internal fun InstallmentPlan.toRow(
             remaining = InstallmentScheduler.remainingPrincipal(instalment, current),
         )
     val info = InstalmentPlanInfo(planId = installmentPlanId.value, title = purchase.title, cardName = cardName)
-    return InstalmentRow(plan = info, progress = progress, amounts = amounts, portions = portions)
+    return InstalmentRow(plan = info, progress = progress, sums = amounts, portions = portions)
 }
 
 // FR-142: each portion of the schedule, billed once its statement month is not after the current one

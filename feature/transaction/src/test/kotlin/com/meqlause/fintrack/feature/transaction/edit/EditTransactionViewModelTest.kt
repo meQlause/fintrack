@@ -37,6 +37,7 @@ import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
 import com.meqlause.fintrack.core.testing.repository.FakeWalletRepository
 import com.meqlause.fintrack.core.testing.repository.PassthroughAtomicRunner
 import com.meqlause.fintrack.core.testing.time.FakeClock
+import com.meqlause.fintrack.feature.transaction.TransactionSources
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -92,18 +93,14 @@ class EditTransactionViewModelTest {
 
     private fun newViewModel(): EditTransactionViewModel =
         EditTransactionViewModel(
-            transactionRepository = transactions,
-            walletRepository = wallets,
-            categoryRepository = categories,
-            settingsRepository = settings,
+            sources = TransactionSources(transactions, wallets, categories, settings),
             instalments = EditInstalmentController(saveTransaction, saveInstalment),
             loans =
                 EditLoanController(
                     SaveLoanUseCase(FakeLoanRepository(), transactions, PassthroughAtomicRunner(), clock),
                     clock,
                 ),
-            quickEntries = quickEntries,
-            saveQuickEntry = SaveQuickEntryUseCase(quickEntries),
+            shortcutDeps = EditShortcutDeps(quickEntries, SaveQuickEntryUseCase(quickEntries)),
             clock = clock,
         )
 

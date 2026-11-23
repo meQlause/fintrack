@@ -7,7 +7,7 @@ import java.time.YearMonth
 internal data class InstalmentRow(
     val plan: InstalmentPlanInfo,
     val progress: InstalmentProgress,
-    val amounts: InstalmentAmounts,
+    val sums: InstalmentAmounts,
     val portions: List<InstalmentPortionRow>,
 ) {
     val planId: Long get() = plan.planId
@@ -17,8 +17,8 @@ internal data class InstalmentRow(
     val billed: Int get() = progress.billed
     val nextMonth: YearMonth? get() = progress.nextMonth
     val payoffMonth: YearMonth? get() = progress.payoffMonth
-    val monthly: Money get() = amounts.monthly
-    val remaining: Money get() = amounts.remaining
+    val monthly: Money get() = sums.monthly
+    val remaining: Money get() = sums.remaining
 
     // FR-142: a plan is finished once no principal is left to bill
     val isFinished: Boolean

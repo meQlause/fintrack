@@ -37,9 +37,12 @@ internal fun Transaction.toForm(): TransactionForm =
         type = movement.type,
         rupiahDigits = digitsOf(movement.amount),
         feeDigits = digitsOf(movement.feeAmount),
-        walletId = routing.walletId,
-        targetWalletId = routing.targetWalletId,
-        categoryId = routing.categoryId,
+        route =
+            FormRoute(
+                walletId = routing.walletId,
+                targetWalletId = routing.targetWalletId,
+                categoryId = routing.categoryId,
+            ),
         note = memo.note,
     )
 

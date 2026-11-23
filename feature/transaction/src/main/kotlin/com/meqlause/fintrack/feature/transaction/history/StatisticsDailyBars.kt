@@ -25,59 +25,68 @@ import com.meqlause.fintrack.feature.transaction.R
 
 private const val IDLE_ALPHA = 0.14f
 private const val TICK_STEP = 7
+private const val TICK_COUNT = 4
+private const val BAR_RADIUS_RATIO = 0.75f
+private val TICK_DAYS = List(TICK_COUNT) { 1 + it * TICK_STEP }
 
 // FR-061, S-08, DOC-08: the Harian card, one rounded bar per day scaled to the busiest day, with the daily average
 @Composable
 internal fun StatisticsDailyBars(statistics: PeriodStatistics) {
-    val colors = FintrackTheme.colors
     val days = statistics.dailyTotals.size.coerceAtLeast(1)
-    val gapDp = FintrackTheme.sizes.barGap
-    val radiusDp = FintrackTheme.spacing.xSmall * 3f / 4f
     FintrackCard(
-        modifier =
-            Modifier.fillMaxWidth().padding(
-                top =
-                    FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall,
-            ),
+        modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall),
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = stringResource(R.string.history_stats_daily_title),
-                style = FintrackTheme.typography.caption,
-                color = colors.texts.onSurfaceVariant,
-            )
-            Text(
-                text =
-                    stringResource(
-                        R.string.history_stats_average,
-                        MoneyFormatter.formatShort(
-                            Money(statistics.total.rupiah / days),
-                        ),
-                    ),
-                style = FintrackTheme.typography.captionWide,
-                color = colors.texts.onSurface,
-            )
-        }
-        Canvas(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = FintrackTheme.spacing.stack)
-                    .height(FintrackTheme.sizes.statisticsBarAreaHeight),
-        ) {
-            drawDailyBars(
-                amounts = statistics.dailyTotals.map { it.rupiah },
-                filled = colors.brands.primary,
-                idle = colors.texts.onSurface.copy(alpha = IDLE_ALPHA),
-                spacing = gapDp.toPx(),
-                radius = radiusDp.toPx(),
-            )
-        }
+        DailyHeader(statistics = statistics, days = days)
+        DailyCanvas(statistics = statistics)
         DayTicks(lastDay = days)
+    }
+}
+
+// FR-061: the card title and the average per day
+@Composable
+private fun DailyHeader(
+    statistics: PeriodStatistics,
+    days: Int,
+) {
+    val colors = FintrackTheme.colors
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = stringResource(R.string.history_stats_daily_title),
+            style = FintrackTheme.typography.caption,
+            color = colors.texts.onSurfaceVariant,
+        )
+        Text(
+            text =
+                stringResource(
+                    R.string.history_stats_average,
+                    MoneyFormatter.formatShort(Money(statistics.total.rupiah / days)),
+                ),
+            style = FintrackTheme.typography.captionWide,
+            color = colors.texts.onSurface,
+        )
+    }
+}
+
+// FR-061: one bar per day; the last day is drawn in the primary colour, the others faint
+@Composable
+private fun DailyCanvas(statistics: PeriodStatistics) {
+    val colors = FintrackTheme.colors
+    val barGap = FintrackTheme.sizes.barGap
+    val radius = FintrackTheme.spacing.xSmall * BAR_RADIUS_RATIO
+    Canvas(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(top = FintrackTheme.spacing.stack)
+                .height(FintrackTheme.sizes.statisticsBarAreaHeight),
+    ) {
+        val barColors =
+            BarColors(filled = colors.brands.primary, idle = colors.texts.onSurface.copy(alpha = IDLE_ALPHA))
+        drawDailyBars(statistics.dailyTotals.map { it.rupiah }, barColors, barGap.toPx(), radius.toPx())
     }
 }
 
@@ -88,7 +97,7 @@ private fun DayTicks(lastDay: Int) {
         modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.small),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        (listOf(1, 1 + TICK_STEP, 1 + 2 * TICK_STEP, 1 + 3 * TICK_STEP) + lastDay).forEach { day ->
+        (TICK_DAYS + lastDay).forEach { day ->
             Text(
                 text = day.toString(),
                 style = FintrackTheme.typography.micro,
@@ -100,8 +109,7 @@ private fun DayTicks(lastDay: Int) {
 
 private fun DrawScope.drawDailyBars(
     amounts: List<Long>,
-    filled: Color,
-    idle: Color,
+    colors: BarColors,
     spacing: Float,
     radius: Float,
 ) {
@@ -111,10 +119,16 @@ private fun DrawScope.drawDailyBars(
     amounts.forEachIndexed { index, rupiah ->
         val height = if (rupiah == 0L) radius else size.height * (rupiah.toFloat() / peak)
         drawRoundRect(
-            color = if (index == amounts.lastIndex) filled else idle,
+            color = if (index == amounts.lastIndex) colors.filled else colors.idle,
             topLeft = Offset(index * (barWidth + spacing), size.height - height),
             size = Size(barWidth, height),
             cornerRadius = CornerRadius(radius),
         )
     }
 }
+
+// DOC-08: the colour of the last bar and of every other bar
+private data class BarColors(
+    val filled: Color,
+    val idle: Color,
+)

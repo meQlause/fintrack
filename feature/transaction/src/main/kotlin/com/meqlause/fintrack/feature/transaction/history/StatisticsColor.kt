@@ -17,6 +17,6 @@ internal fun statisticsColorOf(
     change: CategoryChange,
     appearances: Map<CategoryId, Appearance>,
 ): Color {
-    val key = change.categoryId?.let { appearances[it]?.colorKey } ?: UNCATEGORIZED_COLOR_KEY
-    return FintrackTheme.colors.categoryColor(key)
+    val colorKey = change.categoryId?.let { appearances[it]?.colorKey } ?: UNCATEGORIZED_COLOR_KEY
+    return FintrackTheme.colors.categoryColor(colorKey)
 }

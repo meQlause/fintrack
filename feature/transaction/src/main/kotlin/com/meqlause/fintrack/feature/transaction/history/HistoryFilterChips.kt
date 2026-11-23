@@ -20,16 +20,6 @@ internal fun HistoryFilterChips(
     onEvent: (HistoryEvent) -> Unit,
 ) {
     val filter = state.filter
-    val walletName =
-        state.wallets
-            .firstOrNull { it.walletId == filter.walletId }
-            ?.profile
-            ?.name
-    val categoryName =
-        state.categories
-            .firstOrNull { it.categoryId == filter.categoryId }
-            ?.profile
-            ?.name
     val dayLabel = filter.dayOfMonth?.let { stringResource(R.string.history_day_label, it) }
     Row(
         modifier =
@@ -40,12 +30,12 @@ internal fun HistoryFilterChips(
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
         FintrackChip(
-            label = walletName ?: stringResource(R.string.history_filter_wallet),
+            label = state.pickedWalletName() ?: stringResource(R.string.history_filter_wallet),
             selected = filter.walletId != null,
             onClick = { onEvent(HistoryEvent.SheetOpened(HistorySheet.WALLET)) },
         )
         FintrackChip(
-            label = categoryName ?: stringResource(R.string.history_filter_category),
+            label = state.pickedCategoryName() ?: stringResource(R.string.history_filter_category),
             selected = filter.categoryId != null,
             onClick = { onEvent(HistoryEvent.SheetOpened(HistorySheet.CATEGORY)) },
         )
@@ -56,3 +46,11 @@ internal fun HistoryFilterChips(
         )
     }
 }
+
+// FR-037: the name of the wallet the filter picked, or null while no wallet is picked
+private fun HistoryUiState.pickedWalletName(): String? =
+    wallets.firstOrNull { it.walletId == filter.walletId }?.profile?.name
+
+// FR-037: the name of the category the filter picked, or null while no category is picked
+private fun HistoryUiState.pickedCategoryName(): String? =
+    categories.firstOrNull { it.categoryId == filter.categoryId }?.profile?.name

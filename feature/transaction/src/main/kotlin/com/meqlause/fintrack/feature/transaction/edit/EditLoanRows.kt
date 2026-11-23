@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import com.meqlause.fintrack.core.model.LoanDirection
 import com.meqlause.fintrack.feature.transaction.R
 import com.meqlause.fintrack.feature.transaction.history.HistorySegmentOption
 import com.meqlause.fintrack.feature.transaction.history.HistorySegmented
+import com.meqlause.fintrack.feature.transaction.history.SegmentChoice
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -39,14 +41,9 @@ internal fun EditLoanRows(
     modifier: Modifier = Modifier,
 ) {
     val loan = state.loan ?: return
-    val info = EditWalletInfo.of(state, state.form.walletId)
+    val info = EditWalletInfo.forWallet(state, state.form.walletId)
     Column(modifier = modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.xxSmall)) {
-        HistorySegmented(
-            options = directionOptions(),
-            selected = loan.direction,
-            onPick = { picked -> onEvent(EditTransactionEvent.LoanEdited(LoanChange.DirectionPicked(picked))) },
-            trackHeight = FintrackTheme.sizes.segmentTrackHeight,
-        )
+        DirectionSwitch(direction = loan.direction, onEvent = onEvent)
         ScreenCard(modifier = Modifier.padding(top = FintrackScreenSizes.sheetTop)) {
             EditLoanPerson(
                 name = loan.personName,
@@ -54,16 +51,12 @@ internal fun EditLoanRows(
                 onChange = { name -> onEvent(EditTransactionEvent.LoanEdited(LoanChange.PersonChanged(name))) },
             )
             LoanValueRow(
-                label = stringResource(walletLabelRes(loan.direction)),
-                value = info.name,
-                note = info.fundsText,
+                text = LoanRowText(stringResource(walletLabelRes(loan.direction)), info.name, info.fundsText),
                 muted = false,
                 onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.WALLET)) },
             )
             LoanValueRow(
-                label = stringResource(R.string.loan_due_label),
-                value = dueLabel(loan.dueDate),
-                note = "",
+                text = LoanRowText(stringResource(R.string.loan_due_label), dueLabel(loan.dueDate)),
                 muted = loan.dueDate == null,
                 onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.LOAN_DUE)) },
             )
@@ -71,12 +64,27 @@ internal fun EditLoanRows(
     }
 }
 
+// S-04: Pinjamkan or Pinjam
+@Composable
+private fun DirectionSwitch(
+    direction: LoanDirection,
+    onEvent: (EditTransactionEvent) -> Unit,
+) {
+    HistorySegmented(
+        options = directionOptions(),
+        choice =
+            SegmentChoice(
+                selected = direction,
+                onPick = { picked -> onEvent(EditTransactionEvent.LoanEdited(LoanChange.DirectionPicked(picked))) },
+            ),
+        trackHeight = FintrackTheme.sizes.segmentTrackHeight,
+    )
+}
+
 // S-04: one prototype .frow, a muted label, the bold value, an optional faint note and a chevron
 @Composable
 private fun LoanValueRow(
-    label: String,
-    value: String,
-    note: String,
+    text: LoanRowText,
     muted: Boolean,
     onClick: () -> Unit,
 ) {
@@ -92,32 +100,55 @@ private fun LoanValueRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pickRowVertical),
     ) {
+        LoanRowTexts(text = text, muted = muted)
+        LoanChevron()
+    }
+}
+
+// S-04: the muted label, the bold value and the optional faint note
+@Composable
+private fun RowScope.LoanRowTexts(
+    text: LoanRowText,
+    muted: Boolean,
+) {
+    val colors = FintrackTheme.colors
+    Text(
+        text = text.label,
+        style = FintrackScreenText.style(size = 14f, weight = 500),
+        color = colors.texts.onSurfaceVariant,
+        modifier = Modifier.weight(1f),
+    )
+    Text(
+        text = text.value,
+        style = FintrackScreenText.number(size = 14f, weight = 700),
+        color = if (muted) colors.texts.onSurfaceVariant else colors.texts.onSurface,
+    )
+    if (text.note.isNotEmpty()) {
         Text(
-            text = label,
-            style = FintrackScreenText.style(size = 14f, weight = 500),
-            color = colors.texts.onSurfaceVariant,
-            modifier = Modifier.weight(1f),
-        )
-        Text(
-            text = value,
-            style = FintrackScreenText.number(size = 14f, weight = 700),
-            color = if (muted) colors.texts.onSurfaceVariant else colors.texts.onSurface,
-        )
-        if (note.isNotEmpty()) {
-            Text(
-                text = note,
-                style = FintrackScreenText.number(size = 12f, weight = 500),
-                color = colors.texts.faint,
-            )
-        }
-        Icon(
-            painter = painterResource(DesignR.drawable.ic_chevron_right),
-            contentDescription = null,
-            tint = colors.texts.faint,
-            modifier = Modifier.size(FintrackScreenSizes.chevron),
+            text = text.note,
+            style = FintrackScreenText.number(size = 12f, weight = 500),
+            color = colors.texts.faint,
         )
     }
 }
+
+// S-04: the faint chevron at the end of a loan row
+@Composable
+private fun LoanChevron() {
+    Icon(
+        painter = painterResource(DesignR.drawable.ic_chevron_right),
+        contentDescription = null,
+        tint = FintrackTheme.colors.texts.faint,
+        modifier = Modifier.size(FintrackScreenSizes.chevron),
+    )
+}
+
+// S-04: the label, the bold value and the optional faint note of a loan row
+private data class LoanRowText(
+    val label: String,
+    val value: String,
+    val note: String = "",
+)
 
 // S-04: Pinjamkan (arrow up) and Pinjam (arrow down)
 @Composable

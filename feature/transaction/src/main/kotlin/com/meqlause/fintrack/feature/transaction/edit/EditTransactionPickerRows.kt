@@ -13,7 +13,7 @@ import com.meqlause.fintrack.core.ui.picker.WalletPickerDrawer
 import com.meqlause.fintrack.core.ui.picker.WalletPickerRow
 import com.meqlause.fintrack.feature.transaction.R
 
-// FR-032, S-18: the wallet drawer of the sheet; credit wallets are allowed everywhere except as a transfer source (BR-039)
+// FR-032, S-18: the wallet drawer; credit wallets are allowed except as a transfer source (BR-039)
 @Composable
 internal fun EditTransactionWalletPicker(
     state: EditTransactionUiState,

@@ -161,7 +161,7 @@ class HistoryViewModelTest {
             routing = Routing(walletId = WalletId(wallet), targetWalletId = null, categoryId = null, loanId = null),
             memo = Memo(note = note, merchant = merchant),
             origin = Origin(source = TransactionSource.MANUAL, inboxItemId = null),
-            timing = Timing(occurredAt = at(dayOfMonth), audit = audit()),
+            timing = Timing(occurredAt = instantOn(dayOfMonth), audit = audit()),
         )
 
     private fun transfer(
@@ -181,10 +181,10 @@ class HistoryViewModelTest {
                 ),
             memo = Memo(),
             origin = Origin(source = TransactionSource.MANUAL, inboxItemId = null),
-            timing = Timing(occurredAt = at(dayOfMonth), audit = audit()),
+            timing = Timing(occurredAt = instantOn(dayOfMonth), audit = audit()),
         )
 
-    private fun at(dayOfMonth: Int): Instant = Instant.parse("2026-11-%02dT05:00:00Z".format(dayOfMonth))
+    private fun instantOn(dayOfMonth: Int): Instant = Instant.parse("2026-11-%02dT05:00:00Z".format(dayOfMonth))
 
-    private fun audit(): Audit = Audit(createdAt = at(1), updatedAt = at(1))
+    private fun audit(): Audit = Audit(createdAt = instantOn(1), updatedAt = instantOn(1))
 }

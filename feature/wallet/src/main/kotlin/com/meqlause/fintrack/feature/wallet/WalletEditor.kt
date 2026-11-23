@@ -40,11 +40,11 @@ internal data class WalletEditor(
         copy(identity = identity.copy(name = text), errors = errors.copy(nameError = null))
 
     // FR-010: the opening balance, digits only
-    fun withInitialBalance(raw: String): WalletEditor = copy(money = money.copy(initialBalance = digitsOnly(raw)))
+    fun withInitialBalance(typed: String): WalletEditor = copy(money = money.copy(initialBalance = digitsOnly(typed)))
 
     // FR-139: typing the limit clears the limit error
-    fun withCreditLimit(raw: String): WalletEditor =
-        copy(money = money.copy(creditLimit = digitsOnly(raw)), errors = errors.copy(limitError = false))
+    fun withCreditLimit(typed: String): WalletEditor =
+        copy(money = money.copy(creditLimit = digitsOnly(typed)), errors = errors.copy(limitError = false))
 
     // FR-013: whether the wallet counts in the total
     fun withIncludeInTotal(include: Boolean): WalletEditor = copy(money = money.copy(includeInTotal = include))
@@ -78,7 +78,7 @@ internal data class WalletEditor(
         private const val MAX_DIGITS = 12
 
         // FR-010: money fields keep digits only, at most twelve of them
-        private fun digitsOnly(raw: String): String = raw.filter { it.isDigit() }.take(MAX_DIGITS)
+        private fun digitsOnly(typed: String): String = typed.filter { it.isDigit() }.take(MAX_DIGITS)
 
         // FR-010: a new wallet starts as cash, with the prototype's day defaults for credit wallets
         fun forNew(): WalletEditor =

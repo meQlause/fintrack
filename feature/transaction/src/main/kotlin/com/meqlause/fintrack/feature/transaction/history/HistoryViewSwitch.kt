@@ -29,8 +29,7 @@ internal fun HistoryViewSwitch(
                     DesignR.drawable.ic_stats,
                 ),
             ),
-        selected = view,
-        onPick = onPick,
+        choice = SegmentChoice(selected = view, onPick = onPick),
         modifier = Modifier.padding(top = FintrackTheme.spacing.small),
     )
 }

@@ -11,8 +11,7 @@ internal fun QuickEntry.toForm(): TransactionForm =
     TransactionForm(
         type = template.type,
         rupiahDigits = template.amount.rupiah.toString(),
-        walletId = walletId,
-        categoryId = categoryId,
+        route = FormRoute(walletId = walletId, categoryId = categoryId),
         note = template.title,
     )
 
@@ -20,13 +19,17 @@ internal fun QuickEntry.toForm(): TransactionForm =
 internal fun EditTransactionUiState.toShortcut(currentTime: Instant): QuickEntry? {
     val categoryId = form.categoryId
     val walletId = form.walletId
-    if (!keepAsShortcut || !canKeepShortcut || categoryId == null || walletId == null) return null
-    return QuickEntry(
-        quickEntryId = QuickEntryId(0L),
-        template = QuickTemplate(title = form.note.trim(), type = form.type, amount = form.amount),
-        categoryId = categoryId,
-        walletId = walletId,
-        sortOrder = 0,
-        audit = Audit(createdAt = currentTime, updatedAt = currentTime),
-    )
+    if (!keepAsShortcut || !canKeepShortcut) return null
+    return if (categoryId == null || walletId == null) {
+        null
+    } else {
+        QuickEntry(
+            quickEntryId = QuickEntryId(0L),
+            template = QuickTemplate(title = form.note.trim(), type = form.type, amount = form.amount),
+            categoryId = categoryId,
+            walletId = walletId,
+            sortOrder = 0,
+            audit = Audit(createdAt = currentTime, updatedAt = currentTime),
+        )
+    }
 }

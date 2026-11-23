@@ -21,48 +21,44 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.transaction.R
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
-// FR-034, FR-035, FR-038, S-06: Ubah, Ulangi (not for loan-linked rows) and Hapus, each a card with an icon over a label
+// FR-034, FR-035, FR-038, S-06: Ubah, Ulangi (not for loan-linked rows) and Hapus, each a card
 @Composable
 internal fun ActionRow(
     isLoanLinked: Boolean,
-    onEdit: () -> Unit,
-    onDuplicate: () -> Unit,
-    onDelete: () -> Unit,
+    actions: TransactionDetailCallbacks,
     modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-        ActionCard(
-            text = stringResource(R.string.transaction_detail_edit),
-            iconRes = DesignR.drawable.ic_edit,
-            onClick = onEdit,
-            modifier = Modifier.weight(1f),
-        )
+        val edit = ActionLabel(stringResource(R.string.transaction_detail_edit), DesignR.drawable.ic_edit)
+        ActionCard(label = edit, onClick = actions.onEdit, modifier = Modifier.weight(1f))
         if (!isLoanLinked) {
-            ActionCard(
-                text = stringResource(R.string.transaction_detail_duplicate),
-                iconRes = DesignR.drawable.ic_copy,
-                onClick = onDuplicate,
-                modifier = Modifier.weight(1f),
-            )
+            val copy = ActionLabel(stringResource(R.string.transaction_detail_duplicate), DesignR.drawable.ic_copy)
+            ActionCard(label = copy, onClick = actions.onDuplicate, modifier = Modifier.weight(1f))
         }
-        ActionCard(
-            text = stringResource(R.string.transaction_detail_delete),
-            iconRes = DesignR.drawable.ic_trash,
-            onClick = onDelete,
-            modifier = Modifier.weight(1f),
-            color = FintrackTheme.colors.semantics.error,
-        )
+        val delete =
+            ActionLabel(
+                text = stringResource(R.string.transaction_detail_delete),
+                iconRes = DesignR.drawable.ic_trash,
+                color = FintrackTheme.colors.semantics.error,
+            )
+        ActionCard(label = delete, onClick = actions.onDelete, modifier = Modifier.weight(1f))
     }
 }
 
+// S-06: the words, the icon and the colour of one action card
+private data class ActionLabel(
+    val text: String,
+    @param:DrawableRes val iconRes: Int,
+    val color: Color? = null,
+)
+
 @Composable
 private fun ActionCard(
-    text: String,
-    @DrawableRes iconRes: Int,
+    label: ActionLabel,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    color: Color = FintrackTheme.colors.texts.onSurface,
 ) {
+    val color = label.color ?: FintrackTheme.colors.texts.onSurface
     FintrackCard(
         modifier = modifier.height(FintrackTheme.sizes.actionHeight),
         onClick = onClick,
@@ -74,12 +70,12 @@ private fun ActionCard(
             verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall, Alignment.CenterVertically),
         ) {
             Icon(
-                painter = painterResource(iconRes),
+                painter = painterResource(label.iconRes),
                 contentDescription = null,
                 tint = color,
                 modifier = Modifier.size(FintrackTheme.sizes.iconSmall),
             )
-            Text(text = text, style = FintrackTheme.typography.caption, color = color)
+            Text(text = label.text, style = FintrackTheme.typography.caption, color = color)
         }
     }
 }

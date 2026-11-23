@@ -58,8 +58,8 @@ class TransactionDetailViewModelTest {
     @Test
     fun givenStoredExpenseWhenOpenedThenDetailShowsMerchantAndAmount() =
         runTest {
-            val id = transactions.insert(expense(merchant = "Warung Bu Tini")).value
-            val state = viewModel(id).state.first { it.isLoaded }
+            val storedId = transactions.insert(expense(merchant = "Warung Bu Tini")).value
+            val state = viewModel(storedId).state.first { it.isLoaded }
             assertEquals("Warung Bu Tini", state.detail?.title)
             assertEquals(Money(25_000L), state.detail?.amount)
         }
@@ -76,33 +76,33 @@ class TransactionDetailViewModelTest {
     @Test
     fun givenDeleteRequestWhenUndoneThenTransactionIsKept() =
         runTest {
-            val id = transactions.insert(expense(merchant = "Warung")).value
-            val vm = viewModel(id)
-            vm.requestDelete()
-            vm.undoDelete()
+            val storedId = transactions.insert(expense(merchant = "Warung")).value
+            val model = viewModel(storedId)
+            model.requestDelete()
+            model.undoDelete()
             advanceUntilIdle()
             assertEquals(1, transactions.observeAll().first().size)
-            assertTrue(!vm.state.first { it.isLoaded }.isClosed)
+            assertTrue(!model.state.first { it.isLoaded }.isClosed)
         }
 
     /** FR-035: once the undo window passes, the transaction is removed and the screen closes. */
     @Test
     fun givenDeleteRequestWhenWindowPassesThenTransactionIsRemovedAndClosed() =
         runTest {
-            val id = transactions.insert(expense(merchant = "Warung")).value
-            val vm = viewModel(id)
-            vm.requestDelete()
+            val storedId = transactions.insert(expense(merchant = "Warung")).value
+            val model = viewModel(storedId)
+            model.requestDelete()
             advanceUntilIdle()
             assertTrue(transactions.observeAll().first().isEmpty())
-            assertTrue(vm.state.first { it.isLoaded }.isClosed)
+            assertTrue(model.state.first { it.isLoaded }.isClosed)
         }
 
     /** FR-038: a duplicate is a manual copy dated now; the original stays as it was. */
     @Test
     fun givenExpenseWhenDuplicatedThenCopyIsDatedNowAsManualEntry() =
         runTest {
-            val id = transactions.insert(expense(merchant = "Warung")).value
-            viewModel(id).duplicate()
+            val storedId = transactions.insert(expense(merchant = "Warung")).value
+            viewModel(storedId).duplicate()
             advanceUntilIdle()
             val rows = transactions.observeAll().first()
             assertEquals(2, rows.size)

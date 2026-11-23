@@ -24,27 +24,8 @@ internal fun ColumnScope.StatisticsContent(
     state: HistoryUiState,
     onEvent: (HistoryEvent) -> Unit,
 ) {
-    val colors = FintrackTheme.colors
     Column(modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState())) {
-        HistorySegmented(
-            options =
-                listOf(
-                    HistorySegmentOption(
-                        TransactionType.EXPENSE,
-                        stringResource(R.string.history_type_expense),
-                        activeColor = colors.semantics.expense,
-                    ),
-                    HistorySegmentOption(
-                        TransactionType.INCOME,
-                        stringResource(R.string.history_type_income),
-                        activeColor = colors.semantics.income,
-                    ),
-                ),
-            selected = state.statisticsType,
-            onPick = { onEvent(HistoryEvent.StatisticsTypePicked(it)) },
-            modifier = Modifier.padding(top = FintrackTheme.spacing.small),
-            trackHeight = FintrackTheme.sizes.statSegmentHeight,
-        )
+        StatisticsTypeSwitch(state = state, onEvent = onEvent)
         val statistics = state.statistics
         if (statistics == null || statistics.categories.isEmpty()) {
             StatisticsEmpty()
@@ -68,6 +49,33 @@ internal fun ColumnScope.StatisticsContent(
             StatisticsDailyBars(statistics = statistics)
         }
     }
+}
+
+// FR-060: Pengeluaran or Pemasukan, the type the statistics total
+@Composable
+private fun StatisticsTypeSwitch(
+    state: HistoryUiState,
+    onEvent: (HistoryEvent) -> Unit,
+) {
+    val colors = FintrackTheme.colors
+    HistorySegmented(
+        options =
+            listOf(
+                HistorySegmentOption(
+                    TransactionType.EXPENSE,
+                    stringResource(R.string.history_type_expense),
+                    activeColor = colors.semantics.expense,
+                ),
+                HistorySegmentOption(
+                    TransactionType.INCOME,
+                    stringResource(R.string.history_type_income),
+                    activeColor = colors.semantics.income,
+                ),
+            ),
+        choice = SegmentChoice(state.statisticsType) { onEvent(HistoryEvent.StatisticsTypePicked(it)) },
+        modifier = Modifier.padding(top = FintrackTheme.spacing.small),
+        trackHeight = FintrackTheme.sizes.statSegmentHeight,
+    )
 }
 
 @Composable

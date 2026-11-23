@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -15,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,8 +31,7 @@ import com.meqlause.fintrack.feature.transaction.R
 internal fun StatisticsCategoryRow(
     statistics: PeriodStatistics,
     change: CategoryChange,
-    name: String,
-    color: Color,
+    label: CategoryLabel,
     onClick: (() -> Unit)?,
 ) {
     val colors = FintrackTheme.colors
@@ -50,32 +49,56 @@ internal fun StatisticsCategoryRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
-        Box(modifier = Modifier.size(FintrackTheme.sizes.smallDot).clip(FintrackTheme.shapes.full).background(color))
-        Text(
-            text = name,
-            modifier = Modifier.weight(1f),
-            style = FintrackTheme.typography.tabWide.copy(fontWeight = FontWeight.Medium),
-            color = colors.texts.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        CategoryDotAndName(label = label)
         ChangeText(statistics = statistics, change = change)
-        Text(
-            text = "${statistics.shareOf(change)}%",
-            modifier = Modifier.width(FintrackTheme.sizes.statPercentWidth),
-            style = FintrackTheme.typography.caption.copy(fontWeight = FontWeight.Medium),
-            color = colors.texts.onSurfaceVariant,
-            textAlign = TextAlign.End,
-        )
-        Text(
-            text = MoneyFormatter.format(change.amount),
-            modifier = Modifier.width(FintrackTheme.sizes.statAmountWidth),
-            style = FintrackTheme.typography.numberCompact.copy(fontWeight = FontWeight.SemiBold),
-            color = colors.texts.onSurface,
-            textAlign = TextAlign.End,
-            maxLines = 1,
-        )
+        ShareAndAmount(statistics = statistics, change = change)
     }
+}
+
+// FR-060: the coloured dot and the name of a ranked category
+@Composable
+private fun RowScope.CategoryDotAndName(label: CategoryLabel) {
+    val colors = FintrackTheme.colors
+    Box(
+        modifier =
+            Modifier
+                .size(
+                    FintrackTheme.sizes.smallDot,
+                ).clip(FintrackTheme.shapes.full)
+                .background(label.color),
+    )
+    Text(
+        text = label.name,
+        modifier = Modifier.weight(1f),
+        style = FintrackTheme.typography.tabWide.copy(fontWeight = FontWeight.Medium),
+        color = colors.texts.onSurface,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+    )
+}
+
+// FR-060: the category's share of the total and its amount, right aligned
+@Composable
+private fun ShareAndAmount(
+    statistics: PeriodStatistics,
+    change: CategoryChange,
+) {
+    val colors = FintrackTheme.colors
+    Text(
+        text = "${statistics.shareOf(change)}%",
+        modifier = Modifier.width(FintrackTheme.sizes.statPercentWidth),
+        style = FintrackTheme.typography.caption.copy(fontWeight = FontWeight.Medium),
+        color = colors.texts.onSurfaceVariant,
+        textAlign = TextAlign.End,
+    )
+    Text(
+        text = MoneyFormatter.format(change.amount),
+        modifier = Modifier.width(FintrackTheme.sizes.statAmountWidth),
+        style = FintrackTheme.typography.numberCompact.copy(fontWeight = FontWeight.SemiBold),
+        color = colors.texts.onSurface,
+        textAlign = TextAlign.End,
+        maxLines = 1,
+    )
 }
 
 // FR-062: the change against the last period; "baru" when it had nothing before, empty without a last period

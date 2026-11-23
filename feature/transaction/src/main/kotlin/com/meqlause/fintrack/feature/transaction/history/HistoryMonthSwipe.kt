@@ -11,7 +11,7 @@ import androidx.compose.ui.semantics.semantics
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.transaction.R
 
-// FR-036, S-05: a horizontal drag past the threshold moves to the previous or next month; the list never slides sideways
+// FR-036, S-05: a horizontal drag past the threshold moves to the previous or next month
 @Composable
 internal fun Modifier.historyMonthSwipe(
     onPrevious: () -> Unit,
@@ -35,16 +35,18 @@ internal fun Modifier.historyMonthSwipe(
         )
     }.semantics {
         // NFR-010: the month swipe has screen-reader alternatives
-        customActions =
-            listOf(
-                CustomAccessibilityAction(previousLabel) {
-                    onPrevious()
-                    true
-                },
-                CustomAccessibilityAction(nextLabel) {
-                    onNext()
-                    true
-                },
-            )
+        customActions = monthActions(previousLabel to onPrevious, nextLabel to onNext)
     }
 }
+
+// NFR-010: one accessibility action per direction, each with its spoken label
+private fun monthActions(
+    previous: Pair<String, () -> Unit>,
+    next: Pair<String, () -> Unit>,
+): List<CustomAccessibilityAction> =
+    listOf(previous, next).map { (label, action) ->
+        CustomAccessibilityAction(label) {
+            action()
+            true
+        }
+    }

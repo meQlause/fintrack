@@ -27,7 +27,7 @@ import com.meqlause.fintrack.core.ui.money.MoneyText
 import com.meqlause.fintrack.feature.transaction.R
 import com.meqlause.fintrack.feature.transaction.edit.ShortcutChip
 
-// FR-034, FR-035, FR-038, S-06: stateless transaction detail as the prototype's bottom sheet; Ubah / Ulangi / Hapus below
+// FR-034, FR-035, FR-038, S-06: stateless transaction detail as the prototype's bottom sheet
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TransactionDetailScreen(
@@ -48,28 +48,37 @@ internal fun TransactionDetailScreen(
                     modifier = Modifier.padding(end = FintrackTheme.spacing.xxSmall),
                 )
             }
-            val detail = state.detail
-            when {
-                !state.isLoaded -> {
-                    Unit
-                }
-
-                detail == null -> {
-                    MissingText()
-                }
-
-                else -> {
-                    TransactionDetailBody(detail = detail, actions = actions)
-                }
-            }
-            if (state.isDeletePending) {
-                UndoSnackbar(
-                    message = stringResource(R.string.transaction_detail_deleted),
-                    onUndo = actions.onUndo,
-                    modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
-                )
-            }
+            DetailContent(state = state, actions = actions)
         }
+    }
+}
+
+// S-06: the facts once loaded, a note for an unknown id, and the undo bar while a delete is pending
+@Composable
+private fun DetailContent(
+    state: TransactionDetailUiState,
+    actions: TransactionDetailCallbacks,
+) {
+    val detail = state.detail
+    when {
+        !state.isLoaded -> {
+            Unit
+        }
+
+        detail == null -> {
+            MissingText()
+        }
+
+        else -> {
+            TransactionDetailBody(detail = detail, actions = actions)
+        }
+    }
+    if (state.isDeletePending) {
+        UndoSnackbar(
+            message = stringResource(R.string.transaction_detail_deleted),
+            onUndo = actions.onUndo,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
+        )
     }
 }
 
@@ -80,28 +89,7 @@ private fun TransactionDetailBody(
     actions: TransactionDetailCallbacks,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        IconCircle(
-            look = IconLook(iconKey = detail.appearance.iconKey, colorKey = detail.appearance.colorKey),
-            modifier = Modifier.padding(top = FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),
-            tile =
-                IconBox(
-                    size = FintrackTheme.sizes.detailIcon,
-                    glyph = FintrackTheme.sizes.detailGlyph,
-                    shape = FintrackTheme.shapes.card,
-                ),
-        )
-        MoneyText(
-            money = detail.amount,
-            type = detail.type,
-            modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
-            style = FintrackTheme.typography.numberDetail,
-        )
-        Text(
-            text = detail.title,
-            modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
-            style = FintrackTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-        )
+        DetailHero(detail = detail)
         FintrackCard(
             modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.section),
             contentPadding = PaddingValues(),
@@ -110,12 +98,37 @@ private fun TransactionDetailBody(
         }
         ActionRow(
             isLoanLinked = detail.isLoanLinked,
-            onEdit = actions.onEdit,
-            onDuplicate = actions.onDuplicate,
-            onDelete = actions.onDelete,
+            actions = actions,
             modifier = Modifier.padding(top = FintrackTheme.spacing.stack),
         )
     }
+}
+
+// S-06: the category icon, the amount in its type colour and the title
+@Composable
+private fun DetailHero(detail: TransactionDetail) {
+    IconCircle(
+        look = IconLook(iconKey = detail.appearance.iconKey, colorKey = detail.appearance.colorKey),
+        modifier = Modifier.padding(top = FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),
+        tile =
+            IconBox(
+                size = FintrackTheme.sizes.detailIcon,
+                glyph = FintrackTheme.sizes.detailGlyph,
+                shape = FintrackTheme.shapes.card,
+            ),
+    )
+    MoneyText(
+        money = detail.amount,
+        type = detail.type,
+        modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
+        style = FintrackTheme.typography.numberDetail,
+    )
+    Text(
+        text = detail.title,
+        modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
+        style = FintrackTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+        color = FintrackTheme.colors.texts.onSurfaceVariant,
+    )
 }
 
 // FR-034: the detail of a transaction id that no stored row carries (or that was just deleted)

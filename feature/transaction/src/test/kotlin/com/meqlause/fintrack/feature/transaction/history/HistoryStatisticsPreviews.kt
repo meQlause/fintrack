@@ -39,15 +39,22 @@ internal fun HistoryStatisticsDarkPreview() {
 // FR-060..062, DOC-08: the mockup breakdown of 2026-11 against October: nine expense categories and 22 days
 internal fun sampleStatisticsState(): HistoryUiState =
     HistoryUiState(
-        month = YearMonth.of(2026, 11),
-        view = HistoryView.STATISTICS,
-        categories =
-            SAMPLE_CATEGORIES.mapIndexed {
-                index,
-                row,
-                ->
-                sampleCategory(index + 1L, row.name, row.icon, row.color)
-            },
+        selection =
+            HistorySelection(
+                month = YearMonth.of(2026, 11),
+                statsView = HistoryStatsView(view = HistoryView.STATISTICS),
+            ),
+        lists =
+            HistoryLists(
+                categories =
+                    SAMPLE_CATEGORIES.mapIndexed {
+                        index,
+                        row,
+                        ->
+                        sampleCategory(index + 1L, row.name, row.icon, row.color)
+                    },
+            ),
+        status = HistoryStatus(hasRecords = true, isLoaded = true),
         statistics =
             PeriodStatistics(
                 type = TransactionType.EXPENSE,
@@ -59,8 +66,6 @@ internal fun sampleStatisticsState(): HistoryUiState =
                     },
                 dailyTotals = List(22) { day -> Money(if (day % 4 == 3) 0L else (day * 37_000L) % 420_000L + 60_000L) },
             ),
-        hasRecords = true,
-        isLoaded = true,
     )
 
 private data class SampleCategory(

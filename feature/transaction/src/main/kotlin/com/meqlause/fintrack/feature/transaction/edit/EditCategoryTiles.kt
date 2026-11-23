@@ -73,12 +73,7 @@ private fun CategoryTile(
     ) {
         TintedIconBox(
             look = IconLook(iconKey = appearance.iconKey, colorKey = appearance.colorKey),
-            tile =
-                IconBox(
-                    size = FintrackScreenSizes.categoryTile,
-                    glyph = FintrackScreenSizes.categoryTileGlyph,
-                    shape = RoundedCornerShape(FintrackScreenSizes.categoryTileCorner),
-                ),
+            tile = CATEGORY_TILE,
             modifier = Modifier.drawBehind { if (selected) drawRing(ring, colors.surfaces.surface) },
         )
         Text(
@@ -90,6 +85,14 @@ private fun CategoryTile(
         )
     }
 }
+
+// S-04: the size, glyph and corner of a category tile
+private val CATEGORY_TILE =
+    IconBox(
+        size = FintrackScreenSizes.categoryTile,
+        glyph = FintrackScreenSizes.categoryTileGlyph,
+        shape = RoundedCornerShape(FintrackScreenSizes.categoryTileCorner),
+    )
 
 // prototype box-shadow: a 2 px surface gap, then a 2 px ring of the category colour
 private fun DrawScope.drawRing(

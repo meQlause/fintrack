@@ -56,7 +56,7 @@ private fun EditWalletCard(
     state: EditTransactionUiState,
     onEvent: (EditTransactionEvent) -> Unit,
 ) {
-    val info = EditWalletInfo.of(state, state.form.walletId)
+    val info = EditWalletInfo.forWallet(state, state.form.walletId)
     val base = stringResource(pickerTitleRes(state.form.type, EditSheet.WALLET))
     val group = info.groupRes?.let { stringResource(it) }
     SheetPickRow(
@@ -83,4 +83,4 @@ private fun EditWalletCard(
 internal fun walletName(
     state: EditTransactionUiState,
     walletId: WalletId?,
-): String = EditWalletInfo.of(state, walletId).name
+): String = EditWalletInfo.forWallet(state, walletId).name

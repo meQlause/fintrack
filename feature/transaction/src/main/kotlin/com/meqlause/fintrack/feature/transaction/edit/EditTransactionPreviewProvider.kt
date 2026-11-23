@@ -55,8 +55,7 @@ internal fun expenseSample(): EditTransactionUiState =
             TransactionForm(
                 type = TransactionType.EXPENSE,
                 rupiahDigits = "",
-                walletId = WalletId(1L),
-                categoryId = CategoryId(1L),
+                route = FormRoute(walletId = WalletId(1L), categoryId = CategoryId(1L)),
             ),
         catalog = sampleCatalog(),
         record = EditRecord(existing = null, occurredAt = Instant.EPOCH, dateLabel = "Hari ini, 14:05"),
@@ -69,15 +68,14 @@ internal fun transferSample(): EditTransactionUiState =
             TransactionForm(
                 type = TransactionType.TRANSFER,
                 rupiahDigits = "",
-                walletId = WalletId(1L),
-                targetWalletId = WalletId(2L),
+                route = FormRoute(walletId = WalletId(1L), targetWalletId = WalletId(2L)),
             ),
         catalog = sampleCatalog(),
         record = EditRecord(existing = null, occurredAt = Instant.EPOCH, dateLabel = "Hari ini, 14:05"),
     )
 
 // S-04: the Pinjaman tab with nobody named yet, lent from BCA
-internal fun loanSample(): EditTransactionUiState = expenseSample().copy(loan = LoanForm())
+internal fun loanSample(): EditTransactionUiState = expenseSample().withExtras { copy(loan = LoanForm()) }
 
 internal fun sampleCatalog(): EditCatalog =
     EditCatalog(
@@ -86,17 +84,39 @@ internal fun sampleCatalog(): EditCatalog =
                 sampleWallet(1L, "BCA", WalletType.BANK, Appearance("bank", "blue")),
                 sampleWallet(2L, "GoPay", WalletType.EWALLET, Appearance("ewallet", "teal")),
             ),
-        moneyByWallet = mapOf(WalletId(1L) to Money(10_000_000L), WalletId(2L) to Money(222_000L)),
-        categories =
-            listOf(
-                sampleCategory(1L, "Makan", CategoryKind.EXPENSE, Appearance("food", "orange")),
-                sampleCategory(3L, "Transport", CategoryKind.EXPENSE, Appearance("transport", "blue")),
-                sampleCategory(4L, "Belanja", CategoryKind.EXPENSE, Appearance("shopping", "pink")),
-                sampleCategory(5L, "Tagihan", CategoryKind.EXPENSE, Appearance("bill", "purple")),
-                sampleCategory(6L, "Hiburan", CategoryKind.EXPENSE, Appearance("entertainment", "indigo")),
-                sampleCategory(7L, "Kesehatan", CategoryKind.EXPENSE, Appearance("health", "red")),
-                sampleCategory(2L, "Gaji", CategoryKind.INCOME, Appearance("salary", "green")),
+        moneyByWallet =
+            mapOf(
+                WalletId(value = 1L) to Money(rupiah = 10_000_000L),
+                WalletId(value = 2L) to Money(rupiah = 222_000L),
             ),
+        categories = sampleCategories(),
+    )
+
+// S-04: the sample categories, six of expense and one of income
+internal fun sampleCategories(): List<Category> =
+    listOf(
+        sampleCategory(categoryKey = 1L, name = "Makan", CategoryKind.EXPENSE, Appearance("food", "orange")),
+        sampleCategory(
+            categoryKey = 3L,
+            name = "Transport",
+            CategoryKind.EXPENSE,
+            Appearance("transport", "blue"),
+        ),
+        sampleCategory(
+            categoryKey = 4L,
+            name = "Belanja",
+            CategoryKind.EXPENSE,
+            Appearance("shopping", "pink"),
+        ),
+        sampleCategory(categoryKey = 5L, name = "Tagihan", CategoryKind.EXPENSE, Appearance("bill", "purple")),
+        sampleCategory(
+            categoryKey = 6L,
+            name = "Hiburan",
+            CategoryKind.EXPENSE,
+            Appearance("entertainment", "indigo"),
+        ),
+        sampleCategory(categoryKey = 7L, name = "Kesehatan", CategoryKind.EXPENSE, Appearance("health", "red")),
+        sampleCategory(categoryKey = 2L, name = "Gaji", CategoryKind.INCOME, Appearance("salary", "green")),
     )
 
 private fun sampleWallet(

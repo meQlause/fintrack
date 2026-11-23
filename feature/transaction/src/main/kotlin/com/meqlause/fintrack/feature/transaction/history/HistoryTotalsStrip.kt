@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.transaction.history
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -42,28 +43,19 @@ internal fun HistoryTotalsStrip(totals: HistoryTotals) {
                 .background(colors.surfaces.surface)
                 .border(FintrackTheme.sizes.hairline, colors.surfaces.outline, shape),
     ) {
-        TotalCell(
-            label = stringResource(R.string.history_total_income),
-            value = MoneyFormatter.formatCompact(totals.income),
-            arrow = DesignR.drawable.ic_down,
-            arrowColor = colors.semantics.income,
-            modifier = Modifier.weight(1f),
-        )
+        val income =
+            TotalLabel(stringResource(R.string.history_total_income), DesignR.drawable.ic_down, colors.semantics.income)
+        TotalCell(label = income, value = MoneyFormatter.formatCompact(totals.income), modifier = Modifier.weight(1f))
+        Divider()
+        val expense =
+            TotalLabel(stringResource(R.string.history_total_expense), DesignR.drawable.ic_up, colors.semantics.expense)
+        TotalCell(label = expense, value = MoneyFormatter.formatCompact(totals.expense), modifier = Modifier.weight(1f))
         Divider()
         TotalCell(
-            label = stringResource(R.string.history_total_expense),
-            value = MoneyFormatter.formatCompact(totals.expense),
-            arrow = DesignR.drawable.ic_up,
-            arrowColor = colors.semantics.expense,
-            modifier = Modifier.weight(1f),
-        )
-        Divider()
-        TotalCell(
-            label = stringResource(R.string.history_total_net),
+            label = TotalLabel(stringResource(R.string.history_total_net)),
             value = MoneyFormatter.formatCompactSigned(totals.netTotal),
-            arrow = null,
-            valueColor = if (totals.netTotal.rupiah < 0L) colors.semantics.expense else colors.semantics.income,
             modifier = Modifier.weight(1f),
+            valueColor = if (totals.netTotal.rupiah < 0L) colors.semantics.expense else colors.semantics.income,
         )
     }
 }
@@ -81,35 +73,16 @@ private fun Divider() {
 
 @Composable
 private fun TotalCell(
-    label: String,
+    label: TotalLabel,
     value: String,
-    arrow: Int?,
     modifier: Modifier,
-    arrowColor: Color = Color.Unspecified,
     valueColor: Color = FintrackTheme.colors.texts.onSurface,
 ) {
     Column(
         modifier =
             modifier.padding(horizontal = FintrackTheme.sizes.rowInset, vertical = FintrackTheme.spacing.medium),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
-        ) {
-            if (arrow != null) {
-                Icon(
-                    painter = painterResource(arrow),
-                    contentDescription = null,
-                    tint = arrowColor,
-                    modifier = Modifier.size(FintrackTheme.sizes.tinyGlyph),
-                )
-            }
-            Text(
-                text = label,
-                style = FintrackTheme.typography.caption,
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-            )
-        }
+        TotalCaption(label = label)
         Text(
             text = value,
             modifier = Modifier.padding(top = FintrackTheme.spacing.xSmall),
@@ -120,3 +93,33 @@ private fun TotalCell(
         )
     }
 }
+
+// S-05: the arrow, when the cell has one, and the caption
+@Composable
+private fun TotalCaption(label: TotalLabel) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
+    ) {
+        if (label.arrow != null) {
+            Icon(
+                painter = painterResource(label.arrow),
+                contentDescription = null,
+                tint = label.arrowColor,
+                modifier = Modifier.size(FintrackTheme.sizes.tinyGlyph),
+            )
+        }
+        Text(
+            text = label.text,
+            style = FintrackTheme.typography.caption,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
+    }
+}
+
+// S-05: the caption of one totals cell with its optional arrow and the arrow's colour
+private data class TotalLabel(
+    val text: String,
+    @param:DrawableRes val arrow: Int? = null,
+    val arrowColor: Color = Color.Unspecified,
+)

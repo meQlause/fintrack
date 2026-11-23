@@ -35,6 +35,13 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.transaction.R
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
+// S-04: the caption of a transfer side, the wallet it shows and whether it aligns to the end
+private data class SideInfo(
+    val label: String,
+    val info: EditWalletInfo,
+    val alignEnd: Boolean,
+)
+
 // S-04: Dari and Ke as two cards with a dark swap button between them; tapping a card opens its wallet drawer
 @Composable
 internal fun EditTransferSides(
@@ -44,17 +51,23 @@ internal fun EditTransferSides(
 ) {
     Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         TransferSide(
-            label = stringResource(R.string.transaction_transfer_from),
-            info = EditWalletInfo.of(state, state.form.walletId),
-            alignEnd = false,
+            side =
+                SideInfo(
+                    label = stringResource(R.string.transaction_transfer_from),
+                    info = EditWalletInfo.forWallet(state, state.form.walletId),
+                    alignEnd = false,
+                ),
             onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.WALLET)) },
             modifier = Modifier.weight(1f),
         )
         SwapButton(onClick = { onEvent(EditTransactionEvent.WalletsSwapped) })
         TransferSide(
-            label = stringResource(R.string.transaction_transfer_to),
-            info = EditWalletInfo.of(state, state.form.targetWalletId),
-            alignEnd = true,
+            side =
+                SideInfo(
+                    label = stringResource(R.string.transaction_transfer_to),
+                    info = EditWalletInfo.forWallet(state, state.form.targetWalletId),
+                    alignEnd = true,
+                ),
             onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.TARGET_WALLET)) },
             modifier = Modifier.weight(1f),
         )
@@ -93,13 +106,12 @@ private fun SwapButton(onClick: () -> Unit) {
 
 @Composable
 private fun TransferSide(
-    label: String,
-    info: EditWalletInfo,
-    alignEnd: Boolean,
+    side: SideInfo,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val colors = FintrackTheme.colors
+    val (label, info, alignEnd) = side
     val shape = FintrackTheme.shapes.medium
     Column(
         modifier =

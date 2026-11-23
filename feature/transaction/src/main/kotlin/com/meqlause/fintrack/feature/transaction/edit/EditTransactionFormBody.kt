@@ -18,6 +18,7 @@ import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.feature.transaction.R
 import com.meqlause.fintrack.feature.transaction.history.HistorySegmentOption
 import com.meqlause.fintrack.feature.transaction.history.HistorySegmented
+import com.meqlause.fintrack.feature.transaction.history.SegmentChoice
 
 private val TYPE_ORDER = listOf(TransactionType.EXPENSE, TransactionType.INCOME, TransactionType.TRANSFER)
 
@@ -32,13 +33,7 @@ internal fun EditTransactionFormBody(
     val spacing = FintrackTheme.spacing
     Column(modifier = modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
         EditTransactionHeader(state = state, onEvent = onEvent, onClose = onClose)
-        HistorySegmented(
-            options = typeOptions(),
-            selected = if (state.loan != null) TYPE_ORDER.size else TYPE_ORDER.indexOf(state.form.type),
-            onPick = { index -> onEvent(typeTabEvent(index)) },
-            modifier = Modifier.padding(top = spacing.small),
-            trackHeight = FintrackScreenSizes.segmentTall,
-        )
+        TypeSwitch(state = state, onEvent = onEvent, modifier = Modifier.padding(top = spacing.small))
         EditTransactionAmountBlock(state = state, onEvent = onEvent)
         if (state.loan != null) {
             EditLoanRows(state = state, onEvent = onEvent)
@@ -56,15 +51,7 @@ internal fun EditTransactionFormBody(
             onBackspace = { onEvent(EditTransactionEvent.BackspacePressed) },
             modifier = Modifier.padding(top = spacing.medium),
         )
-        if (state.canKeepShortcut) {
-            EditShortcutKeepRow(state = state, onEvent = onEvent, modifier = Modifier.padding(top = spacing.medium))
-        }
-        FintrackButton(
-            text = stringResource(R.string.transaction_save),
-            onClick = { onEvent(EditTransactionEvent.SaveRequested) },
-            enabled = state.canSave,
-            modifier = Modifier.padding(top = FintrackScreenSizes.sheetTop),
-        )
+        FormFooter(state = state, onEvent = onEvent)
     }
 }
 
@@ -82,13 +69,47 @@ private fun EditTransactionHeader(
             else -> R.string.transaction_title_add
         }
     SheetHeader(title = stringResource(titleRes), onClose = onClose) {
-        if (!state.isEditing && state.loan == null && !state.form.isTransfer) {
+        if (state.offersShortcutChip) {
             ShortcutChip(
                 onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.SHORTCUTS)) },
                 modifier = Modifier.padding(end = FintrackTheme.spacing.xxSmall),
             )
         }
     }
+}
+
+// S-04: the "Simpan sebagai pintasan" row when it applies, then the Simpan button
+@Composable
+private fun FormFooter(
+    state: EditTransactionUiState,
+    onEvent: (EditTransactionEvent) -> Unit,
+) {
+    val spacing = FintrackTheme.spacing
+    if (state.canKeepShortcut) {
+        EditShortcutKeepRow(state = state, onEvent = onEvent, modifier = Modifier.padding(top = spacing.medium))
+    }
+    FintrackButton(
+        text = stringResource(R.string.transaction_save),
+        onClick = { onEvent(EditTransactionEvent.SaveRequested) },
+        enabled = state.canSave,
+        modifier = Modifier.padding(top = FintrackScreenSizes.sheetTop),
+    )
+}
+
+// S-04: the four type tabs; the Pinjaman tab is selected while the loan block is open
+@Composable
+private fun TypeSwitch(
+    state: EditTransactionUiState,
+    onEvent: (EditTransactionEvent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val selected = if (state.loan != null) TYPE_ORDER.size else TYPE_ORDER.indexOf(state.form.type)
+    HistorySegmented(
+        options = typeOptions(),
+        choice = SegmentChoice(selected = selected, onPick = { index -> onEvent(typeTabEvent(index)) }),
+        modifier = modifier,
+        trackHeight = FintrackScreenSizes.segmentTall,
+    )
 }
 
 // S-04, DOC-08: Keluar, Masuk, Transfer and Pinjaman; the picked tab reads in its type colour
@@ -103,7 +124,11 @@ private fun typeOptions(): List<HistorySegmentOption<Int>> {
             stringResource(R.string.transaction_type_transfer),
             activeColor = colors.semantics.transfer,
         ),
-        HistorySegmentOption(3, stringResource(R.string.transaction_type_loan), activeColor = colors.brands.primary),
+        HistorySegmentOption(
+            LOAN_TAB,
+            stringResource(R.string.transaction_type_loan),
+            activeColor = colors.brands.primary,
+        ),
     )
 }
 
@@ -114,3 +139,6 @@ private fun typeTabEvent(index: Int): EditTransactionEvent =
     } else {
         EditTransactionEvent.TypeSelected(TYPE_ORDER[index])
     }
+
+// S-04: the Pinjaman tab follows the three type tabs
+private const val LOAN_TAB = 3

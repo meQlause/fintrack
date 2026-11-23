@@ -18,7 +18,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.domain.statistics.CategoryChange
 import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
+import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.feature.transaction.R
 import com.meqlause.fintrack.core.designsystem.R as DesignR
@@ -45,8 +47,7 @@ internal fun StatisticsCategoryList(
             StatisticsCategoryRow(
                 statistics = statistics,
                 change = change,
-                name = change.categoryId?.let { names[it] } ?: stringResource(R.string.history_stats_uncategorized),
-                color = statisticsColorOf(change, appearances),
+                label = CategoryLabel(name = nameOf(change, names), color = statisticsColorOf(change, appearances)),
                 onClick = open,
             )
         }
@@ -86,16 +87,32 @@ private fun StatisticsExpandToggle(
                 Alignment.CenterHorizontally,
             ),
     ) {
-        Text(
-            text = label,
-            style = FintrackTheme.typography.tabLabel,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-        )
-        Icon(
-            painter = painterResource(if (isExpanded) DesignR.drawable.ic_chev_u else DesignR.drawable.ic_chev_d),
-            contentDescription = null,
-            tint = FintrackTheme.colors.texts.onSurfaceVariant,
-            modifier = Modifier.size(FintrackTheme.sizes.shortcutGlyph),
-        )
+        ToggleLabel(label = label, isExpanded = isExpanded)
     }
 }
+
+// S-08: the words and the chevron of the expand toggle
+@Composable
+private fun ToggleLabel(
+    label: String,
+    isExpanded: Boolean,
+) {
+    Text(
+        text = label,
+        style = FintrackTheme.typography.tabLabel,
+        color = FintrackTheme.colors.texts.onSurfaceVariant,
+    )
+    Icon(
+        painter = painterResource(if (isExpanded) DesignR.drawable.ic_chev_u else DesignR.drawable.ic_chev_d),
+        contentDescription = null,
+        tint = FintrackTheme.colors.texts.onSurfaceVariant,
+        modifier = Modifier.size(FintrackTheme.sizes.shortcutGlyph),
+    )
+}
+
+// FR-060: the category's name, or "Tanpa kategori" for spending without one
+@Composable
+private fun nameOf(
+    change: CategoryChange,
+    names: Map<CategoryId, String>,
+): String = change.categoryId?.let { names[it] } ?: stringResource(R.string.history_stats_uncategorized)

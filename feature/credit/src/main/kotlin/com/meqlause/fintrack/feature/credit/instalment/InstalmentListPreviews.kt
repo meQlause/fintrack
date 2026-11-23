@@ -36,7 +36,7 @@ private fun sampleRow(
     InstalmentRow(
         plan = plan,
         progress = InstalmentProgress(tenor = tenor, billed = billed, nextMonth = SAMPLE_NEXT, payoffMonth = null),
-        amounts = amounts,
+        sums = amounts,
         portions = emptyList(),
     )
 

@@ -168,7 +168,7 @@ internal class CreditDetailViewModel
                         availableLimit = StatementCalculator.availableLimit(account, today),
                     ),
                 today = today,
-                pay =
+                payment =
                     PayState(
                         sources =
                             allWallets

@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -52,7 +53,6 @@ private fun MonthPills(
     activeMonths: Set<YearMonth>,
     onPick: (YearMonth) -> Unit,
 ) {
-    val names = stringArrayResource(R.array.history_month_names).toList()
     val selectedIndex = month.monthValue - 1
     val motion = FintrackTheme.motion.medium
     val scrollState = rememberScrollState()
@@ -71,23 +71,41 @@ private fun MonthPills(
                 .horizontalScroll(scrollState)
                 .padding(horizontal = FintrackTheme.spacing.gutter),
     ) {
-        Box(
-            modifier =
-                Modifier
-                    .offset { IntOffset(x = indicatorOffset.roundToPx(), y = 0) }
-                    .size(width = FintrackTheme.sizes.monthPillMock, height = FintrackTheme.sizes.monthPillHeight)
-                    .clip(FintrackTheme.shapes.full)
-                    .background(FintrackTheme.colors.texts.onSurface),
-        )
-        Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall)) {
-            names.forEachIndexed { index, label ->
-                MonthPill(
-                    label = label,
-                    selected = index == selectedIndex,
-                    hasDot = YearMonth.of(month.year, index + 1) in activeMonths,
-                    onClick = { onPick(YearMonth.of(month.year, index + 1)) },
-                )
-            }
+        PillIndicator(offset = indicatorOffset)
+        PillRow(month = month, activeMonths = activeMonths, onPick = onPick)
+    }
+}
+
+// S-05: the dark pill that slides under the selected month
+@Composable
+private fun PillIndicator(offset: Dp) {
+    Box(
+        modifier =
+            Modifier
+                .offset { IntOffset(x = offset.roundToPx(), y = 0) }
+                .size(width = FintrackTheme.sizes.monthPillMock, height = FintrackTheme.sizes.monthPillHeight)
+                .clip(FintrackTheme.shapes.full)
+                .background(FintrackTheme.colors.texts.onSurface),
+    )
+}
+
+// BR-010: the twelve month names; a dot marks a month that has records
+@Composable
+private fun PillRow(
+    month: YearMonth,
+    activeMonths: Set<YearMonth>,
+    onPick: (YearMonth) -> Unit,
+) {
+    val names = stringArrayResource(R.array.history_month_names).toList()
+    Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall)) {
+        names.forEachIndexed { index, label ->
+            val pillMonth = YearMonth.of(month.year, index + 1)
+            MonthPill(
+                label = label,
+                selected = pillMonth == month,
+                hasDot = pillMonth in activeMonths,
+                onClick = { onPick(pillMonth) },
+            )
         }
     }
 }

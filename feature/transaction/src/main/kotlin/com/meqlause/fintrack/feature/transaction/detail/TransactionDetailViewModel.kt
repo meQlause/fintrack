@@ -91,9 +91,9 @@ internal class TransactionDetailViewModel
         // FR-038: stores a copy dated now; loan-linked rows are not copied because a copy would double the loan
         fun duplicate() {
             viewModelScope.launch {
-                val row = findRow() ?: return@launch
-                if (row.routing.loanId != null) return@launch
-                transactions.insert(row.asDuplicateAt(Instant.now(clock)))
+                val original = findRow() ?: return@launch
+                if (original.routing.loanId != null) return@launch
+                transactions.insert(original.asDuplicateAt(Instant.now(clock)))
                 closed.value = true
             }
         }

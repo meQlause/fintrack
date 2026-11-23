@@ -27,18 +27,7 @@ internal fun HistoryScreen(
                 .background(FintrackTheme.colors.surfaces.background)
                 .padding(top = FintrackTheme.spacing.stack),
     ) {
-        HistoryHeader(
-            onCalendarClick = { onEvent(HistoryEvent.SheetOpened(HistorySheet.MONTH)) },
-            onSearchClick = { onEvent(HistoryEvent.SearchToggled) },
-            modifier = gutter,
-        )
-        if (state.isSearchOpen && state.view == HistoryView.LIST) {
-            HistorySearchField(
-                query = state.filter.query,
-                onQueryChange = { onEvent(HistoryEvent.QueryChanged(it)) },
-                modifier = gutter.fillMaxWidth(),
-            )
-        }
+        HistoryTop(state = state, onEvent = onEvent, modifier = gutter)
         HistoryMonthStrip(
             month = state.month,
             activeMonths = state.activeMonths,
@@ -50,6 +39,27 @@ internal fun HistoryScreen(
         }
     }
     HistorySheetHost(state = state, onEvent = onEvent)
+}
+
+// S-05: the title row with the calendar and search buttons, and the search field while it is open
+@Composable
+private fun HistoryTop(
+    state: HistoryUiState,
+    onEvent: (HistoryEvent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    HistoryHeader(
+        onCalendarClick = { onEvent(HistoryEvent.SheetOpened(HistorySheet.MONTH)) },
+        onSearchClick = { onEvent(HistoryEvent.SearchToggled) },
+        modifier = modifier,
+    )
+    if (state.isSearchOpen && state.view == HistoryView.LIST) {
+        HistorySearchField(
+            query = state.filter.query,
+            onQueryChange = { onEvent(HistoryEvent.QueryChanged(it)) },
+            modifier = modifier.fillMaxWidth(),
+        )
+    }
 }
 
 // S-05, S-08: the list of the month, or its statistics when the statistics view is picked
