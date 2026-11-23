@@ -30,7 +30,7 @@ public class DetectedItemFactory
             monitored: MonitoredApp,
             fingerprint: String,
         ): InboxItem {
-            val now = clock.instant()
+            val nowInstant = clock.instant()
             val rule = suggestedRule(parsed.merchantKey)
             return InboxItem(
                 inboxItemId = InboxItemId(0),
@@ -38,7 +38,7 @@ public class DetectedItemFactory
                 parsed = ParsedAmount(parsed.amount, parsed.direction, parsed.merchant),
                 suggestion = suggestion(rule, monitored),
                 resolution = Resolution(InboxStatus.PENDING, transactionId = null, resolvedAt = null),
-                audit = Audit(createdAt = now, updatedAt = now),
+                audit = Audit(createdAt = nowInstant, updatedAt = nowInstant),
             )
         }
 

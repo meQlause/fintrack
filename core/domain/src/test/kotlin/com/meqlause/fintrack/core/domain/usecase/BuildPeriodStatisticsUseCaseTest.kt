@@ -23,10 +23,11 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 // FR-060..062: statistics math over the November period, which starts on day 1
+
+/** Build period statistics use case tests. */
 class BuildPeriodStatisticsUseCaseTest {
     private val zone: ZoneId = ZoneId.of("Asia/Jakarta")
     private val november = Period(LocalDate.of(2026, 11, 1), LocalDate.of(2026, 11, 30))
-    private val october = Period(LocalDate.of(2026, 10, 1), LocalDate.of(2026, 10, 31))
     private val useCase = BuildPeriodStatisticsUseCase()
 
     /** FR-060: only expenses are totalled and the categories are ranked largest first */

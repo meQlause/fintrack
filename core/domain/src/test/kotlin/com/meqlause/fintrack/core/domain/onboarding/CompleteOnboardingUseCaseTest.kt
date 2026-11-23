@@ -5,7 +5,6 @@ import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import com.meqlause.fintrack.core.domain.category.DefaultCategory
-import com.meqlause.fintrack.core.domain.onboarding.CompleteOnboardingResult
 import com.meqlause.fintrack.core.domain.usecase.CompleteOnboardingUseCase
 import com.meqlause.fintrack.core.domain.usecase.InMemoryCategoryRepository
 import com.meqlause.fintrack.core.domain.usecase.SeedDefaultCategoriesUseCase
@@ -20,6 +19,7 @@ import java.time.Clock
 import java.time.Instant
 import java.time.ZoneOffset
 
+/** Complete onboarding use case tests. */
 class CompleteOnboardingUseCaseTest {
     private val wallets = InMemoryWalletRepository()
     private val categories = InMemoryCategoryRepository()
@@ -36,6 +36,8 @@ class CompleteOnboardingUseCaseTest {
         )
 
     // FR-002 AC: the first wallet is created with the name, type and initial balance the user entered
+
+    /** Given valid first wallet when completed then wallet is stored with type and initial balance (FR-002). */
     @Test
     fun `given valid first wallet when completed then wallet is stored with type and initial balance (FR-002)`() =
         runBlocking {
@@ -48,6 +50,7 @@ class CompleteOnboardingUseCaseTest {
             assertThat(stored.terms.initialBalance).isEqualTo(Money(250_000L))
         }
 
+    /** Given name with surrounding spaces when completed then the wallet name is stored trimmed (FR-002). */
     @Test
     fun `given name with surrounding spaces when completed then the wallet name is stored trimmed (FR-002)`() =
         runBlocking {
@@ -62,6 +65,7 @@ class CompleteOnboardingUseCaseTest {
             ).isEqualTo("Tunai")
         }
 
+    /** Given blank name when completed then nothing is stored and the name is rejected (FR-002). */
     @Test
     fun `given blank name when completed then nothing is stored and the name is rejected (FR-002)`() =
         runBlocking {
@@ -77,6 +81,7 @@ class CompleteOnboardingUseCaseTest {
             ).isEqualTo(false)
         }
 
+    /** Given name longer than thirty characters when completed then the name is rejected (FR-002). */
     @Test
     fun `given name longer than thirty characters when completed then the name is rejected (FR-002)`() =
         runBlocking {
@@ -86,6 +91,8 @@ class CompleteOnboardingUseCaseTest {
         }
 
     // FR-004 AC: the default categories are seeded on first launch
+
+    /** Given onboarding finished when completed then every default category is seeded (FR-004). */
     @Test
     fun `given onboarding finished when completed then every default category is seeded (FR-004)`() =
         runBlocking {
@@ -96,6 +103,7 @@ class CompleteOnboardingUseCaseTest {
             assertThat(names.first()).isEqualTo(DefaultCategory.entries.first().name)
         }
 
+    /** Given categories already exist when completed then they are not seeded again (FR-004). */
     @Test
     fun `given categories already exist when completed then they are not seeded again (FR-004)`() =
         runBlocking {
@@ -108,6 +116,8 @@ class CompleteOnboardingUseCaseTest {
         }
 
     // FR-001 AC: after onboarding the flag is set, so the Dashboard is shown on the next launch
+
+    /** Given onboarding finished when completed then onboarding is marked completed (FR-001). */
     @Test
     fun `given onboarding finished when completed then onboarding is marked completed (FR-001)`() =
         runBlocking {
@@ -122,6 +132,7 @@ class CompleteOnboardingUseCaseTest {
             assertThat(wallets.observeAll().first()).hasSize(1)
         }
 
+    /** Given wallet stored when completed then its audit timestamps come from the clock (FR-002). */
     @Test
     fun `given wallet stored when completed then its audit timestamps come from the clock (FR-002)`() =
         runBlocking {
@@ -138,6 +149,8 @@ class CompleteOnboardingUseCaseTest {
         }
 
     // FR-002: each onboarding wallet type starts with its own icon and colour
+
+    /** Given e-wallet when completed then the wallet starts with the teal e-wallet appearance (FR-002). */
     @Test
     fun `given e-wallet when completed then the wallet starts with the teal e-wallet appearance (FR-002)`() =
         runBlocking {
@@ -153,6 +166,7 @@ class CompleteOnboardingUseCaseTest {
             assertThat(appearance.colorKey).isEqualTo("teal")
         }
 
+    /** Given other wallet type when completed then the wallet starts with the neutral appearance (FR-002). */
     @Test
     fun `given other wallet type when completed then the wallet starts with the neutral appearance (FR-002)`() =
         runBlocking {

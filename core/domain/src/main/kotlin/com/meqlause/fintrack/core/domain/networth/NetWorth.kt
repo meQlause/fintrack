@@ -2,7 +2,7 @@ package com.meqlause.fintrack.core.domain.networth
 
 import com.meqlause.fintrack.core.model.Money
 
-// BR-043, BR-053: the parts of Kekayaan bersih; every amount is whole rupiah and may be zero
+/** BR-043, BR-053: the parts of Kekayaan bersih; every amount is whole rupiah and may be zero */
 public data class NetWorth(
     public val saldo: Money,
     public val investasi: Money,

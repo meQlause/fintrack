@@ -6,7 +6,7 @@ import com.meqlause.fintrack.core.model.WalletId
 import java.time.Instant
 import java.time.LocalDate
 
-// FR-150, FR-151, FR-158: what the Pinjaman tab holds when a loan is recorded; a null dueDate means no due date
+/** FR-150, FR-151, FR-158: what the Pinjaman tab holds when a loan is recorded; a null dueDate means no due date */
 public data class LoanDraft(
     public val direction: LoanDirection,
     public val personName: String,

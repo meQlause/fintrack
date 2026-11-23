@@ -3,9 +3,12 @@ package com.meqlause.fintrack.core.domain.reminder
 import java.time.Duration
 import java.time.Instant
 
-// FR-112: when the backup reminder is due
+/** FR-112: when the backup reminder is due */
 public object BackupReminderRules {
-    /** FR-112: off when [reminderDays] is 0; otherwise due when data exists without a backup, or the last backup is old enough. */
+    /**
+     * FR-112: off when [reminderDays] is 0; otherwise due when data exists without a backup, or the last
+     * backup is old enough.
+     */
     public fun isDue(
         currentTime: Instant,
         lastBackupAt: Instant?,

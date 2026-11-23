@@ -13,12 +13,16 @@ import com.meqlause.fintrack.core.model.Audit
 import com.meqlause.fintrack.core.model.Loan
 import com.meqlause.fintrack.core.model.LoanId
 import com.meqlause.fintrack.core.model.LoanStatus
+import com.meqlause.fintrack.core.model.Memo
+import com.meqlause.fintrack.core.model.Movement
+import com.meqlause.fintrack.core.model.Routing
+import com.meqlause.fintrack.core.model.Timing
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
 import javax.inject.Inject
 
-// FR-150, FR-151, BR-011: a loan and its opening LEND or BORROW movement are stored together, or not at all
+/** FR-150, FR-151, BR-011: a loan and its opening LEND or BORROW movement are stored together, or not at all */
 public class SaveLoanUseCase
     @Inject
     constructor(
@@ -35,18 +39,15 @@ public class SaveLoanUseCase
         }
 
         private suspend fun store(draft: LoanDraft): SaveTransactionResult.Saved {
-            val now = Instant.now(clock)
-            val loanId = loans.insert(loanOf(draft, now))
+            val nowInstant = Instant.now(clock)
+            val loanId = loans.insert(loanOf(draft, nowInstant))
             val walletId = requireNotNull(draft.walletId) { "LoanRules guarantees a wallet" }
             val movement =
                 LoanTransactionFactory.movement(
-                    type = draft.direction.openingType(),
-                    amount = draft.principal,
-                    walletId = walletId,
-                    loanId = loanId,
-                    note = draft.note.trim(),
-                    occurredAt = draft.startDate,
-                    currentTime = now,
+                    movement = Movement(draft.direction.openingType(), draft.principal),
+                    routing = Routing(walletId, null, null, loanId),
+                    memo = Memo(note = draft.note.trim()),
+                    timing = Timing(draft.startDate, Audit(nowInstant, nowInstant)),
                 )
             return SaveTransactionResult.Saved(transactions.insert(movement))
         }

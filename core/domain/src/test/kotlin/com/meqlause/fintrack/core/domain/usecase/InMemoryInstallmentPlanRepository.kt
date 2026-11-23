@@ -15,9 +15,9 @@ internal class InMemoryInstallmentPlanRepository : InstallmentPlanRepository {
 
     override suspend fun insert(plan: InstallmentPlan): InstallmentPlanId {
         lastId += 1
-        val id = InstallmentPlanId(lastId)
-        rows.value = rows.value + plan.copy(installmentPlanId = id)
-        return id
+        val newId = InstallmentPlanId(lastId)
+        rows.value = rows.value + plan.copy(installmentPlanId = newId)
+        return newId
     }
 
     override suspend fun update(plan: InstallmentPlan) {

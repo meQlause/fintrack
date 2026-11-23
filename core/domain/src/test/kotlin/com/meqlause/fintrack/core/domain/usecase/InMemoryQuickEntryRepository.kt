@@ -8,15 +8,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
 // FR-039: an in-memory shortcut store for use-case tests; ids are assigned in insertion order
+
+/** In memory quick entry repository tests. */
 class InMemoryQuickEntryRepository : QuickEntryRepository {
     private val rows = MutableStateFlow<List<QuickEntry>>(emptyList())
 
     override fun observeAll(): Flow<List<QuickEntry>> = rows.map { list -> list.sortedBy { it.sortOrder } }
 
     override suspend fun insert(quickEntry: QuickEntry): QuickEntryId {
-        val id = QuickEntryId(rows.value.size + 1L)
-        rows.value = rows.value + quickEntry.copy(quickEntryId = id)
-        return id
+        val newId = QuickEntryId(rows.value.size + 1L)
+        rows.value = rows.value + quickEntry.copy(quickEntryId = newId)
+        return newId
     }
 
     override suspend fun delete(quickEntryId: QuickEntryId) {

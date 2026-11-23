@@ -7,6 +7,7 @@ import com.meqlause.fintrack.core.domain.security.PinPolicy
 import com.meqlause.fintrack.core.model.PinLock
 import kotlinx.coroutines.flow.first
 import java.time.Clock
+import java.time.Instant
 import javax.inject.Inject
 
 /**
@@ -27,14 +28,33 @@ public class VerifyPinUseCase
                     .observe()
                     .first()
                     .security.pinLock
-            val hash = pinLock.pinHash ?: return PinCheck.Accepted
-            val salt = pinLock.pinSalt ?: return PinCheck.Accepted
             val instant = clock.instant()
-            if (instant < pinLock.lockedUntil) return PinCheck.LockedOut(pinLock.lockedUntil)
-            if (hasher.matches(digits, salt, hash)) {
-                store(pinLock.copy(failedPinAttempts = 0, lockedUntil = instant))
-                return PinCheck.Accepted
+            val hash = pinLock.pinHash
+            val salt = pinLock.pinSalt
+            return when {
+                hash == null || salt == null -> {
+                    PinCheck.Accepted
+                }
+
+                instant < pinLock.lockedUntil -> {
+                    PinCheck.LockedOut(pinLock.lockedUntil)
+                }
+
+                hasher.matches(digits, salt, hash) -> {
+                    store(pinLock.copy(failedPinAttempts = 0, lockedUntil = instant))
+                    PinCheck.Accepted
+                }
+
+                else -> {
+                    recordFailure(pinLock, instant)
+                }
             }
+        }
+
+        private suspend fun recordFailure(
+            pinLock: PinLock,
+            instant: Instant,
+        ): PinCheck {
             val failures = pinLock.failedPinAttempts + 1
             val until = instant.plusSeconds(PinPolicy.lockSeconds(failures))
             store(pinLock.copy(failedPinAttempts = failures, lockedUntil = until))

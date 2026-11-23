@@ -13,7 +13,7 @@ import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
 
-// FR-172, BR-054: records a manual value of an investment; a value dated today replaces the earlier one of that day
+/** FR-172, BR-054: records a manual value of an investment; a value dated today replaces the earlier one of that day */
 public class SaveValuationUseCase
     @Inject
     constructor(
@@ -30,10 +30,10 @@ public class SaveValuationUseCase
         ): Boolean {
             val wallet = wallets.observeAll().first().firstOrNull { it.walletId == walletId } ?: return false
             if (!InvestmentAccountBuilder.isActiveInvestment(wallet) || value.rupiah < 0L) return false
-            val day = currentTime.atZone(zone).toLocalDate()
+            val valuationDay = currentTime.atZone(zone).toLocalDate()
             val sameDay =
                 valuations.observeAll().first().filter {
-                    it.walletId == walletId && it.valuedAt.atZone(zone).toLocalDate() == day
+                    it.walletId == walletId && it.valuedAt.atZone(zone).toLocalDate() == valuationDay
                 }
             atomic.atomically {
                 sameDay.forEach { valuations.delete(it.valuationId) }

@@ -9,7 +9,7 @@ public object MerchantKey {
     private val legalForms = Regex("(?<!\\p{L})(?:cabang|tbk|pt|cv)(?!\\p{L})", RegexOption.IGNORE_CASE)
 
     /** FR-088: lowercase key without digits, punctuation or legal forms, at most 40 characters. */
-    public fun of(merchant: String): String =
+    public fun normalize(merchant: String): String =
         merchant
             .lowercase()
             .replace(digits, "")

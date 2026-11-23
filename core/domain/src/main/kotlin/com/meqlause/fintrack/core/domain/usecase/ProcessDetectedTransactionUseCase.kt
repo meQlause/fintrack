@@ -20,7 +20,10 @@ public class ProcessDetectedTransactionUseCase
         private val inbox: InboxRepository,
         private val factory: DetectedItemFactory,
     ) {
-        /** FR-084, FR-090: stores a detected payment as PENDING; an app that is not monitored and enabled stores nothing. */
+        /**
+         * FR-084, FR-090: stores a detected payment as PENDING; an app that is not monitored and enabled
+         * stores nothing.
+         */
         public suspend operator fun invoke(
             rawNotification: RawNotification,
             parsed: ParsedTransaction,
@@ -36,7 +39,7 @@ public class ProcessDetectedTransactionUseCase
             parsed: ParsedTransaction,
             monitored: MonitoredApp,
         ): ProcessNotificationResult {
-            val fingerprint = DetectionFingerprint.of(rawNotification, parsed)
+            val fingerprint = DetectionFingerprint.compute(rawNotification, parsed)
             if (inbox.containsFingerprint(fingerprint)) return ProcessNotificationResult.Duplicate
             val draft: InboxItem = factory.build(rawNotification, parsed, monitored, fingerprint)
             val partner = TransferPairFinder.findPartner(draft, inbox.pendingItems())

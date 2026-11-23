@@ -27,6 +27,8 @@ import java.time.Instant
 import java.time.ZoneId
 
 // FR-150 … FR-155, BR-040 … BR-042: loans are saved, repaid and written off through their use cases
+
+/** Loan use cases tests. */
 class LoanUseCasesTest {
     private val clock = Clock.fixed(Instant.parse("2026-11-23T02:00:00Z"), ZoneId.of("Asia/Jakarta"))
     private val loans = MemoryLoanRepository()
@@ -38,6 +40,8 @@ class LoanUseCasesTest {
     private val observe = ObserveLoansUseCase(loans, transactions)
 
     // FR-150: a LENT loan stores an OPEN loan and one LEND movement with the loan id and no category (BR-040)
+
+    /** Given lent draft when saved then open loan and lend movement are stored. */
     @Test
     fun givenLentDraftWhenSavedThenOpenLoanAndLendMovementAreStored() {
         runBlocking {
@@ -53,6 +57,8 @@ class LoanUseCasesTest {
     }
 
     // FR-151: a loan without a person name is rejected and nothing is stored
+
+    /** Given blank person name when saved then nothing is stored. */
     @Test
     fun givenBlankPersonNameWhenSavedThenNothingIsStored() {
         runBlocking {
@@ -64,6 +70,8 @@ class LoanUseCasesTest {
     }
 
     // BR-041: the outstanding balance is principal minus repayments
+
+    /** Given partial repayment when observed then outstanding drops. */
     @Test
     fun givenPartialRepaymentWhenObservedThenOutstandingDrops() {
         runBlocking {
@@ -77,6 +85,8 @@ class LoanUseCasesTest {
     }
 
     // BR-041: a repayment above the outstanding balance is rejected and stores nothing
+
+    /** Given repayment above outstanding when recorded then rejected. */
     @Test
     fun givenRepaymentAboveOutstandingWhenRecordedThenRejected() {
         runBlocking {
@@ -88,6 +98,8 @@ class LoanUseCasesTest {
     }
 
     // BR-041: a repayment that clears the balance settles the loan and sets closedAt
+
+    /** Given full repayment when recorded then loan is settled. */
     @Test
     fun givenFullRepaymentWhenRecordedThenLoanIsSettled() {
         runBlocking {
@@ -107,6 +119,8 @@ class LoanUseCasesTest {
     }
 
     // BR-042: only an open LENT loan can be written off, and no money moves
+
+    /** Given lent loan when written off then status changes without amovement. */
     @Test
     fun givenLentLoanWhenWrittenOffThenStatusChangesWithoutAMovement() {
         runBlocking {
@@ -125,6 +139,8 @@ class LoanUseCasesTest {
     }
 
     // BR-042: a borrowed loan is never written off by the use case
+
+    /** Given borrowed loan when written off then nothing changes. */
     @Test
     fun givenBorrowedLoanWhenWrittenOffThenNothingChanges() {
         runBlocking {

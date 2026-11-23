@@ -6,7 +6,7 @@ import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.model.InstallmentPlanId
 import javax.inject.Inject
 
-// FR-145: deleting a plan also deletes its purchase and admin fee, so no orphan transaction is left behind
+/** FR-145: deleting a plan also deletes its purchase and admin fee, so no orphan transaction is left behind */
 public class DeleteInstalmentPlanUseCase
     @Inject
     constructor(

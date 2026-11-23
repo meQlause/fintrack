@@ -20,10 +20,13 @@ import org.junit.jupiter.api.Test
 import java.time.Instant
 
 // FR-039, BR-047: a shortcut is stored with a trimmed title, or not at all when a rule breaks
+
+/** Save quick entry use case tests. */
 class SaveQuickEntryUseCaseTest {
     private val repository = InMemoryQuickEntryRepository()
     private val saveQuickEntry = SaveQuickEntryUseCase(repository)
 
+    /** Stores a trimmed shortcut after the existing ones. */
     @Test
     fun `stores a trimmed shortcut after the existing ones`() =
         runBlocking {
@@ -37,6 +40,7 @@ class SaveQuickEntryUseCaseTest {
             assertThat(stored.map { it.sortOrder }).containsExactly(0, 1)
         }
 
+    /** Rejects a title longer than 24 characters and stores nothing. */
     @Test
     fun `rejects a title longer than 24 characters and stores nothing`() =
         runBlocking {
@@ -46,6 +50,7 @@ class SaveQuickEntryUseCaseTest {
             assertThat(repository.observeAll().first().size).isEqualTo(0)
         }
 
+    /** Rejects a transfer because a shortcut is an expense or income only. */
     @Test
     fun `rejects a transfer because a shortcut is an expense or income only`() =
         runBlocking {

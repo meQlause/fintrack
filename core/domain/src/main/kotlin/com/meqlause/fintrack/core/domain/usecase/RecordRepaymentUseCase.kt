@@ -10,17 +10,25 @@ import com.meqlause.fintrack.core.domain.loan.repaymentType
 import com.meqlause.fintrack.core.domain.port.AtomicRunner
 import com.meqlause.fintrack.core.domain.repository.LoanRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
+import com.meqlause.fintrack.core.model.Audit
 import com.meqlause.fintrack.core.model.Loan
 import com.meqlause.fintrack.core.model.LoanId
 import com.meqlause.fintrack.core.model.LoanStatus
+import com.meqlause.fintrack.core.model.Memo
 import com.meqlause.fintrack.core.model.Money
+import com.meqlause.fintrack.core.model.Movement
+import com.meqlause.fintrack.core.model.Routing
+import com.meqlause.fintrack.core.model.Timing
 import com.meqlause.fintrack.core.model.WalletId
 import kotlinx.coroutines.flow.first
 import java.time.Clock
 import java.time.Instant
 import javax.inject.Inject
 
-// FR-152, FR-155, BR-011, BR-041: a repayment is stored, and the loan settles in the same write when it reaches zero
+/**
+ * FR-152, FR-155, BR-011, BR-041: a repayment is stored, and the loan settles in the same write when
+ * it reaches zero
+ */
 public class RecordRepaymentUseCase
     @Inject
     constructor(
@@ -52,21 +60,18 @@ public class RecordRepaymentUseCase
             amount: Money,
             walletId: WalletId,
         ): RepaymentResult.Saved {
-            val now = Instant.now(clock)
+            val nowInstant = Instant.now(clock)
             val loan = entry.loan
             val movement =
                 LoanTransactionFactory.movement(
-                    type = loan.agreement.direction.repaymentType(),
-                    amount = amount,
-                    walletId = walletId,
-                    loanId = loan.loanId,
-                    note = "",
-                    occurredAt = now,
-                    currentTime = now,
+                    movement = Movement(loan.agreement.direction.repaymentType(), amount),
+                    routing = Routing(walletId, null, null, loan.loanId),
+                    memo = Memo(note = ""),
+                    timing = Timing(nowInstant, Audit(nowInstant, nowInstant)),
                 )
-            val id = transactions.insert(movement)
-            if ((entry.loanBalance.repaid + amount) >= entry.loanBalance.principal) settle(loan, now)
-            return RepaymentResult.Saved(id)
+            val newId = transactions.insert(movement)
+            if ((entry.loanBalance.repaid + amount) >= entry.loanBalance.principal) settle(loan, nowInstant)
+            return RepaymentResult.Saved(newId)
         }
 
         // BR-041: outstanding 0 → SETTLED with closedAt = now

@@ -76,20 +76,20 @@ class SaveInstalmentPurchaseUseCaseTest {
 
     /** BR-038: a fee is stored as its own EXPENSE on the same card, linked from the plan. */
     @Test
-    fun `given admin fee when saving then the fee is a separate expense on the card (BR-038)`() =
+    fun `given admin feeAmount when saving then the feeAmount is a separate expense on the card (BR-038)`() =
         runBlocking {
             useCase(expense(3_000_000L), InstalmentRequest(3, Money(15_000L)))
-            val fee = transactions.stored.single { it.movement.amount == Money(15_000L) }
-            assertThat(fee.movement.type).isEqualTo(TransactionType.EXPENSE)
-            assertThat(fee.routing.walletId).isEqualTo(cardId)
-            assertThat(fee.routing.categoryId).isEqualTo(feeId)
+            val feeAmount = transactions.stored.single { it.movement.amount == Money(15_000L) }
+            assertThat(feeAmount.movement.type).isEqualTo(TransactionType.EXPENSE)
+            assertThat(feeAmount.routing.walletId).isEqualTo(cardId)
+            assertThat(feeAmount.routing.categoryId).isEqualTo(feeId)
             val linked =
                 plans
                     .observeAll()
                     .first()
                     .single()
                     .purchase.adminFeeTransactionId
-            assertThat(linked).isEqualTo(fee.transactionId)
+            assertThat(linked).isEqualTo(feeAmount.transactionId)
         }
 
     /** BR-011: a purchase that breaks a rule stores neither the transaction nor the plan. */

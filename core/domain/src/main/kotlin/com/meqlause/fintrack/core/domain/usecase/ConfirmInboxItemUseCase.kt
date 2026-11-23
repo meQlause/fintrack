@@ -59,7 +59,7 @@ public class ConfirmInboxItemUseCase
         ): ConfirmInboxResult {
             val walletId = choice.walletId ?: return ConfirmInboxResult.MissingWallet
             val categoryId = choice.categoryId ?: return ConfirmInboxResult.MissingCategory
-            val now = Instant.now(clock)
+            val nowInstant = Instant.now(clock)
             val type =
                 if (item.parsed.direction ==
                     MoneyDirection.DEBIT
@@ -69,12 +69,12 @@ public class ConfirmInboxItemUseCase
                     TransactionType.INCOME
                 }
             val routing = Routing(walletId = walletId, targetWalletId = null, categoryId = categoryId, loanId = null)
-            val transaction = transactionOf(item, type, routing, now)
+            val transaction = transactionOf(item, type, routing, nowInstant)
             return atomic.atomically {
-                val id = transactions.insert(transaction)
-                inbox.resolve(item.inboxItemId, confirmed(id, now))
-                rememberMerchant(item, walletId, categoryId, now)
-                ConfirmInboxResult.Confirmed(id)
+                val newId = transactions.insert(transaction)
+                inbox.resolve(item.inboxItemId, confirmed(newId, nowInstant))
+                rememberMerchant(item, walletId, categoryId, nowInstant)
+                ConfirmInboxResult.Confirmed(newId)
             }
         }
 
@@ -86,14 +86,14 @@ public class ConfirmInboxItemUseCase
         ): ConfirmInboxResult {
             val source = choice.walletId ?: return ConfirmInboxResult.MissingWallet
             val target = choice.targetWalletId ?: return ConfirmInboxResult.MissingWallet
-            val now = Instant.now(clock)
+            val nowInstant = Instant.now(clock)
             val routing = Routing(walletId = source, targetWalletId = target, categoryId = null, loanId = null)
-            val transaction = transactionOf(item, TransactionType.TRANSFER, routing, now)
+            val transaction = transactionOf(item, TransactionType.TRANSFER, routing, nowInstant)
             return atomic.atomically {
-                val id = transactions.insert(transaction)
-                inbox.resolve(item.inboxItemId, confirmed(id, now))
-                inbox.resolve(partner.inboxItemId, confirmed(id, now))
-                ConfirmInboxResult.Confirmed(id)
+                val newId = transactions.insert(transaction)
+                inbox.resolve(item.inboxItemId, confirmed(newId, nowInstant))
+                inbox.resolve(partner.inboxItemId, confirmed(newId, nowInstant))
+                ConfirmInboxResult.Confirmed(newId)
             }
         }
 
@@ -104,12 +104,19 @@ public class ConfirmInboxItemUseCase
             categoryId: CategoryId,
             currentTime: Instant,
         ) {
-            val key = MerchantKey.of(item.parsed.merchant)
-            if (key.isEmpty()) return
-            val existing = merchantRules.findByKey(key)
+            val merchantKey = MerchantKey.normalize(item.parsed.merchant)
+            if (merchantKey.isEmpty()) return
+            val existing = merchantRules.findByKey(merchantKey)
             if (existing == null) {
                 merchantRules.insert(
-                    MerchantRule(MerchantRuleId(0L), key, categoryId, walletId, 1, Audit(currentTime, currentTime)),
+                    MerchantRule(
+                        MerchantRuleId(0L),
+                        merchantKey,
+                        categoryId,
+                        walletId,
+                        1,
+                        Audit(currentTime, currentTime),
+                    ),
                 )
             } else {
                 merchantRules.update(

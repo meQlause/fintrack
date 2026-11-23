@@ -7,7 +7,7 @@ import com.meqlause.fintrack.core.model.LoanId
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-// BR-046, BR-011: deleting a loan removes its opening movement and every repayment in the same write
+/** BR-046, BR-011: deleting a loan removes its opening movement and every repayment in the same write */
 public class DeleteLoanUseCase
     @Inject
     constructor(

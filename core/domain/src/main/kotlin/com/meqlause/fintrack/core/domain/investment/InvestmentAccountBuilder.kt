@@ -21,8 +21,11 @@ internal object InvestmentAccountBuilder {
         valuations: List<ValuationEntry>,
     ): InvestmentAccount {
         val flows = transactions.mapNotNull { flowOf(it, wallet.walletId) }
-        val own = valuations.filter { it.walletId == wallet.walletId }
-        return InvestmentAccount(wallet, InvestmentCalculator.valuate(wallet.terms.initialBalance, flows, own))
+        val ownValuations = valuations.filter { it.walletId == wallet.walletId }
+        return InvestmentAccount(
+            wallet,
+            InvestmentCalculator.valuate(wallet.terms.initialBalance, flows, ownValuations),
+        )
     }
 
     fun accountsOf(

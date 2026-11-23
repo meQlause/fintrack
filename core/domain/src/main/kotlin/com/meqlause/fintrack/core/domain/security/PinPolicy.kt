@@ -1,6 +1,6 @@
 package com.meqlause.fintrack.core.domain.security
 
-// FR-100, FR-103: the PIN format and the lockout schedule after wrong attempts
+/** FR-100, FR-103: the PIN format and the lockout schedule after wrong attempts */
 public object PinPolicy {
     /** FR-100: a PIN is exactly six digits (Q-008). */
     public const val LENGTH: Int = 6

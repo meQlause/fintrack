@@ -24,11 +24,8 @@ internal class EvaluateBudgetAlertsUseCaseTest {
 
     private fun useCaseAt(isoInstant: String) =
         EvaluateBudgetAlertsUseCase(
-            budgets,
-            transactions,
-            categories,
+            BudgetAlertSources(budgets, transactions, categories, alertLog),
             settings,
-            alertLog,
             notifier,
             clockAt(isoInstant),
         )

@@ -16,9 +16,9 @@ internal class InMemoryMerchantRuleRepository : MerchantRuleRepository {
     override suspend fun insert(rule: MerchantRule): MerchantRuleId {
         require(rows.value.none { it.merchantKey == rule.merchantKey }) { "unique constraint violated" }
         lastId += 1
-        val id = MerchantRuleId(lastId)
-        rows.value = rows.value + rule.copy(merchantRuleId = id)
-        return id
+        val newId = MerchantRuleId(lastId)
+        rows.value = rows.value + rule.copy(merchantRuleId = newId)
+        return newId
     }
 
     override suspend fun findByKey(merchantKey: String): MerchantRule? =

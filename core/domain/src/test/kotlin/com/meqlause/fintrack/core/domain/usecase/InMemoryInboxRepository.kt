@@ -19,9 +19,9 @@ internal class InMemoryInboxRepository : InboxRepository {
     override suspend fun insert(item: InboxItem): InboxItemId {
         require(rows.value.none { it.notice.fingerprint == item.notice.fingerprint }) { "unique constraint violated" }
         lastId += 1
-        val id = InboxItemId(lastId)
-        rows.value = rows.value + item.copy(inboxItemId = id)
-        return id
+        val newId = InboxItemId(lastId)
+        rows.value = rows.value + item.copy(inboxItemId = newId)
+        return newId
     }
 
     override suspend fun containsFingerprint(fingerprint: String): Boolean =
@@ -61,13 +61,20 @@ internal class InMemoryInboxRepository : InboxRepository {
     override suspend fun purgeRawTextResolvedBefore(cutoff: Instant) {
         rows.value =
             rows.value.map { item ->
-                val resolvedAt = item.resolution.resolvedAt
-                val resolved = item.resolution.status in setOf(InboxStatus.CONFIRMED, InboxStatus.DISMISSED)
-                if (resolved && resolvedAt != null && resolvedAt.isBefore(cutoff)) {
+                if (isPurgeable(item, cutoff)) {
                     item.copy(notice = item.notice.copy(rawTitle = "", rawText = ""))
                 } else {
                     item
                 }
             }
+    }
+
+    private fun isPurgeable(
+        item: InboxItem,
+        cutoff: Instant,
+    ): Boolean {
+        val resolvedAt = item.resolution.resolvedAt ?: return false
+        val resolved = item.resolution.status in setOf(InboxStatus.CONFIRMED, InboxStatus.DISMISSED)
+        return resolved && resolvedAt.isBefore(cutoff)
     }
 }

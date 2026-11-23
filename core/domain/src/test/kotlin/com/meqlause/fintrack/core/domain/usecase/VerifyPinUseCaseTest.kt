@@ -14,11 +14,14 @@ import org.junit.jupiter.api.Test
 import java.time.Instant
 
 // FR-100, FR-103: PIN checks, the failure count and the lockout
+
+/** Verify pin use case tests. */
 class VerifyPinUseCaseTest {
     private lateinit var settings: InMemoryPinSettings
     private lateinit var clock: MovableClock
     private lateinit var verifyPin: VerifyPinUseCase
 
+    /** Set up. */
     @BeforeEach
     fun setUp() {
         settings = InMemoryPinSettings()
@@ -27,6 +30,7 @@ class VerifyPinUseCaseTest {
         runBlocking { SetPinUseCase(settings, ReadablePinHasher())("123456") }
     }
 
+    /** Correct PIN is accepted and clears failures. */
     @Test
     fun `correct PIN is accepted and clears failures`() {
         runBlocking {
@@ -41,6 +45,7 @@ class VerifyPinUseCaseTest {
         }
     }
 
+    /** First four wrong PINs are rejected without a lockout. */
     @Test
     fun `first four wrong PINs are rejected without a lockout`() {
         runBlocking {
@@ -48,6 +53,7 @@ class VerifyPinUseCaseTest {
         }
     }
 
+    /** Fifth wrong PIN locks for 30 seconds. */
     @Test
     fun `fifth wrong PIN locks for 30 seconds`() {
         runBlocking {
@@ -58,6 +64,7 @@ class VerifyPinUseCaseTest {
         }
     }
 
+    /** Correct PIN is refused during the lockout and not counted. */
     @Test
     fun `correct PIN is refused during the lockout and not counted`() {
         runBlocking {
@@ -73,6 +80,7 @@ class VerifyPinUseCaseTest {
         }
     }
 
+    /** PIN works again after the lockout ends. */
     @Test
     fun `PIN works again after the lockout ends`() {
         runBlocking {
@@ -82,6 +90,7 @@ class VerifyPinUseCaseTest {
         }
     }
 
+    /** A wrong PIN after the wait doubles the lockout to 60 seconds. */
     @Test
     fun `a wrong PIN after the wait doubles the lockout to 60 seconds`() {
         runBlocking {
@@ -92,6 +101,7 @@ class VerifyPinUseCaseTest {
         }
     }
 
+    /** No PIN set means every check is accepted. */
     @Test
     fun `no PIN set means every check is accepted`() {
         runBlocking {

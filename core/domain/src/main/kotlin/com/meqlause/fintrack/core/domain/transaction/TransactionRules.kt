@@ -41,9 +41,9 @@ internal object TransactionRules {
 
     // BR-004: the fee is only used by TRANSFER and is deducted from the source
     private fun feeErrors(draft: TransactionDraft): Set<TransactionError> {
-        val fee = draft.movement.feeAmount.rupiah
+        val feeAmount = draft.movement.feeAmount.rupiah
         val isTransfer = draft.movement.type == TransactionType.TRANSFER
-        val isValid = fee in 0L..Money.MAX_TRANSACTION_RUPIAH
+        val isValid = feeAmount in 0L..Money.MAX_TRANSACTION_RUPIAH
         return if (isTransfer && !isValid) setOf(TransactionError.FEE_INVALID) else emptySet()
     }
 

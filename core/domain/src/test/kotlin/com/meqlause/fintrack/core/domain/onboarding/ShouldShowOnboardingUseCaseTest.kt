@@ -20,8 +20,9 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import java.time.Instant
 
+/** Should show onboarding use case tests. */
 class ShouldShowOnboardingUseCaseTest {
-    // FR-001 AC: onboarding is shown only when no wallet exists and the onboardingCompleted flag is false
+    /** FR-001 AC: onboarding is shown only when no wallet exists and the onboardingCompleted flag is false */
     @Test
     fun `given no wallet and onboarding not completed when observed then onboarding is shown (FR-001)`() =
         runBlocking {
@@ -30,6 +31,7 @@ class ShouldShowOnboardingUseCaseTest {
             assertThat(useCase().first()).isEqualTo(true)
         }
 
+    /** Given a wallet exists when observed then onboarding is not shown (FR-001). */
     @Test
     fun `given a wallet exists when observed then onboarding is not shown (FR-001)`() =
         runBlocking {
@@ -39,6 +41,7 @@ class ShouldShowOnboardingUseCaseTest {
             assertThat(useCaseWith(completed = false, wallets = wallets)().first()).isEqualTo(false)
         }
 
+    /** Given onboarding completed when observed then onboarding is not shown (FR-001). */
     @Test
     fun `given onboarding completed when observed then onboarding is not shown (FR-001)`() =
         runBlocking {

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
-// FR-153: every loan with its own movements, so the list and the detail screens read one shape
+/** FR-153: every loan with its own movements, so the list and the detail screens read one shape */
 public class ObserveLoansUseCase
     @Inject
     constructor(

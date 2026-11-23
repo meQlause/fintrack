@@ -29,7 +29,7 @@ import java.time.Clock
 import java.time.Instant
 import javax.inject.Inject
 
-// FR-140, BR-011, BR-038: a credit purchase, its admin fee and its instalment plan are stored together
+/** FR-140, BR-011, BR-038: a credit purchase, its admin fee and its instalment plan are stored together */
 public class SaveInstalmentPurchaseUseCase
     @Inject
     constructor(
@@ -109,7 +109,7 @@ public class SaveInstalmentPurchaseUseCase
             feeId: TransactionId?,
         ): InstallmentPlan {
             val walletId = requireNotNull(draft.routing.walletId) { "a plan needs a credit wallet (FR-140)" }
-            val now = Instant.now(clock)
+            val nowInstant = Instant.now(clock)
             val purchase =
                 Purchase(
                     transactionId = purchaseId,
@@ -129,7 +129,7 @@ public class SaveInstalmentPurchaseUseCase
                 purchase = purchase,
                 schedule = schedule,
                 status = InstallmentStatus.ACTIVE,
-                audit = Audit(createdAt = now, updatedAt = now),
+                audit = Audit(createdAt = nowInstant, updatedAt = nowInstant),
             )
         }
 

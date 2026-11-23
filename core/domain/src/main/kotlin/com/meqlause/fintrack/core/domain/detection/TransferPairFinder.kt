@@ -5,7 +5,8 @@ import java.time.Duration
 
 /** FR-091, BR-013: finds the pending item that a new detected payment forms a transfer pair with. */
 public object TransferPairFinder {
-    private val PAIR_WINDOW: Duration = Duration.ofMinutes(10)
+    private const val PAIR_WINDOW_MINUTES = 10L
+    private val PAIR_WINDOW: Duration = Duration.ofMinutes(PAIR_WINDOW_MINUTES)
 
     /** FR-091: the oldest unpaired pending item of another app, opposite direction, same amount, within 10 min. */
     public fun findPartner(

@@ -2,6 +2,8 @@ package com.meqlause.fintrack.core.domain.usecase
 
 import com.meqlause.fintrack.core.domain.bills.BillsCard
 import com.meqlause.fintrack.core.domain.bills.BillsCardBuilder
+import com.meqlause.fintrack.core.domain.credit.CreditSnapshot
+import com.meqlause.fintrack.core.domain.period.DayContext
 import com.meqlause.fintrack.core.domain.period.PeriodCalculator
 import com.meqlause.fintrack.core.domain.repository.InstallmentPlanRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
@@ -13,7 +15,7 @@ import java.time.Clock
 import java.time.LocalDate
 import javax.inject.Inject
 
-// FR-137, FR-146: the Tagihan card, recomputed when a wallet, a transaction, a plan or the period start day changes
+/** FR-137, FR-146: the Tagihan card, recomputed when a wallet, a transaction, a plan or the period start day changes */
 public class ObserveBillsCardUseCase
     @Inject
     constructor(
@@ -33,6 +35,7 @@ public class ObserveBillsCardUseCase
                 ->
                 val today = LocalDate.now(clock)
                 val period = PeriodCalculator.periodContaining(today, prefs.preferences.periodStartDay)
-                BillsCardBuilder.build(all, txs, planList, period, today, clock.zone)
+                val snapshot = CreditSnapshot(all, txs, planList)
+                BillsCardBuilder.build(snapshot, period, DayContext(today, clock.zone))
             }
     }

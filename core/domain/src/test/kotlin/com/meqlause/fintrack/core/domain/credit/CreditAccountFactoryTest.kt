@@ -38,10 +38,13 @@ import java.time.YearMonth
 import java.time.ZoneOffset
 
 // BR-031, BR-033, BR-035: the factory maps stored rows to the statement input with the same signs as the balance query
+
+/** Credit account factory tests. */
 class CreditAccountFactoryTest {
     private val card = WalletId(1L)
     private val bank = WalletId(2L)
 
+    /** Given expense and transfer in when built then entries carry signed deltas. */
     @Test
     fun givenExpenseAndTransferInWhenBuiltThenEntriesCarrySignedDeltas() {
         val account = CreditAccountFactory.build(creditWallet(), transactions(), emptyList(), ZoneOffset.UTC)
@@ -53,6 +56,7 @@ class CreditAccountFactoryTest {
         assertThat(account.entries[1].isTransferIn).isTrue()
     }
 
+    /** Given wallet without credit terms when built then rejected. */
     @Test
     fun givenWalletWithoutCreditTermsWhenBuiltThenRejected() {
         val plain = creditWallet().copy(terms = WalletTerms(Money(0L), credit = null))
@@ -62,6 +66,7 @@ class CreditAccountFactoryTest {
         }
     }
 
+    /** Given plan of this card when built then instalment uses the purchase date. */
     @Test
     fun givenPlanOfThisCardWhenBuiltThenInstalmentUsesThePurchaseDate() {
         val purchase = transactions()[0]
@@ -75,6 +80,7 @@ class CreditAccountFactoryTest {
         assertThat(account.instalments[0].tenorMonths).isEqualTo(3)
     }
 
+    /** Given plan of another wallet when built then it is ignored. */
     @Test
     fun givenPlanOfAnotherWalletWhenBuiltThenItIsIgnored() {
         val plan = plan(transactions()[0].transactionId, walletId = bank)
@@ -96,23 +102,36 @@ class CreditAccountFactoryTest {
 
     private fun transactions(): List<Transaction> =
         listOf(
-            row(1L, TransactionType.EXPENSE, 100_000L, card, null, "2026-03-05T10:00:00Z"),
-            row(2L, TransactionType.TRANSFER, 40_000L, bank, card, "2026-03-20T10:00:00Z"),
-            row(3L, TransactionType.EXPENSE, 9_000L, bank, null, "2026-03-21T10:00:00Z"),
+            rowOf(
+                1L,
+                Movement(TransactionType.EXPENSE, Money(100_000L)),
+                Routing(card, null, null, null),
+                "2026-03-05T10:00:00Z",
+            ),
+            rowOf(
+                2L,
+                Movement(TransactionType.TRANSFER, Money(40_000L)),
+                Routing(bank, card, null, null),
+                "2026-03-20T10:00:00Z",
+            ),
+            rowOf(
+                3L,
+                Movement(TransactionType.EXPENSE, Money(9_000L)),
+                Routing(bank, null, null, null),
+                "2026-03-21T10:00:00Z",
+            ),
         )
 
-    private fun row(
+    private fun rowOf(
         transactionNumber: Long,
-        type: TransactionType,
-        amount: Long,
-        walletId: WalletId,
-        target: WalletId?,
+        movement: Movement,
+        routing: Routing,
         occurredAt: String,
     ): Transaction =
         Transaction(
             transactionId = TransactionId(transactionNumber),
-            movement = Movement(type, Money(amount)),
-            routing = Routing(walletId, target, categoryId = null, loanId = null),
+            movement = movement,
+            routing = routing,
             memo = Memo(),
             origin = Origin(TransactionSource.MANUAL, null),
             timing = Timing(Instant.parse(occurredAt), Audit(Instant.parse(occurredAt), Instant.parse(occurredAt))),

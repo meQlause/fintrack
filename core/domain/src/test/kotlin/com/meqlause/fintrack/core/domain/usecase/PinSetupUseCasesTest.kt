@@ -18,11 +18,14 @@ import org.junit.jupiter.api.Test
 import java.time.Instant
 
 // FR-100, DOC-10: setting, changing and removing the PIN; only salt and hash are stored
+
+/** Pin setup use cases tests. */
 class PinSetupUseCasesTest {
     private lateinit var settings: InMemoryPinSettings
     private lateinit var setPin: SetPinUseCase
     private lateinit var removePin: RemovePinUseCase
 
+    /** Set up. */
     @BeforeEach
     fun setUp() {
         settings = InMemoryPinSettings()
@@ -32,6 +35,7 @@ class PinSetupUseCasesTest {
         removePin = RemovePinUseCase(VerifyPinUseCase(settings, hasher, clock), settings)
     }
 
+    /** Invalid PIN is refused and nothing is stored. */
     @Test
     fun `invalid PIN is refused and nothing is stored`() {
         runBlocking {
@@ -45,6 +49,7 @@ class PinSetupUseCasesTest {
         }
     }
 
+    /** Valid PIN is stored as hash and salt, never as digits. */
     @Test
     fun `valid PIN is stored as hash and salt, never as digits`() {
         runBlocking {
@@ -59,6 +64,7 @@ class PinSetupUseCasesTest {
         }
     }
 
+    /** Removing with the wrong PIN keeps the PIN. */
     @Test
     fun `removing with the wrong PIN keeps the PIN`() {
         runBlocking {
@@ -73,6 +79,7 @@ class PinSetupUseCasesTest {
         }
     }
 
+    /** Removing with the right PIN clears the PIN and biometrics. */
     @Test
     fun `removing with the right PIN clears the PIN and biometrics`() {
         runBlocking {

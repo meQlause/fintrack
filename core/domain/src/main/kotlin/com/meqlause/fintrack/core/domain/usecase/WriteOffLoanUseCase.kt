@@ -9,7 +9,7 @@ import java.time.Clock
 import java.time.Instant
 import javax.inject.Inject
 
-// FR-155, BR-042: a LENT loan that is still open can be written off; no money moves and statistics stay unchanged
+/** FR-155, BR-042: a LENT loan that is still open can be written off; no money moves and statistics stay unchanged */
 public class WriteOffLoanUseCase
     @Inject
     constructor(
@@ -20,9 +20,13 @@ public class WriteOffLoanUseCase
         public suspend operator fun invoke(loanId: LoanId): Boolean {
             val loan = loans.findLoan(loanId) ?: return false
             if (loan.agreement.direction != LoanDirection.LENT || loan.status != LoanStatus.OPEN) return false
-            val now = Instant.now(clock)
+            val nowInstant = Instant.now(clock)
             loans.update(
-                loan.copy(status = LoanStatus.WRITTEN_OFF, closedAt = now, audit = loan.audit.copy(updatedAt = now)),
+                loan.copy(
+                    status = LoanStatus.WRITTEN_OFF,
+                    closedAt = nowInstant,
+                    audit = loan.audit.copy(updatedAt = nowInstant),
+                ),
             )
             return true
         }

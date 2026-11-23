@@ -1,5 +1,7 @@
 package com.meqlause.fintrack.core.domain.usecase
 
+import com.meqlause.fintrack.core.domain.credit.CreditSnapshot
+import com.meqlause.fintrack.core.domain.period.DayContext
 import com.meqlause.fintrack.core.domain.reminder.CardBillReminders
 import com.meqlause.fintrack.core.domain.reminder.InvestmentReminders
 import com.meqlause.fintrack.core.domain.reminder.LoanReminders
@@ -13,7 +15,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import javax.inject.Inject
 
-// BR-045, BR-055: gathers one snapshot and returns every reminder that is due today
+/** BR-045, BR-055: gathers one snapshot and returns every reminder that is due today */
 public class TodayRemindersUseCase
     @Inject
     constructor(
@@ -30,14 +32,15 @@ public class TodayRemindersUseCase
         ): List<Reminder> {
             val walletRows = wallets.observeAll().first()
             val rows = transactions.observeAll().first()
-            val card = CardBillReminders.of(walletRows, rows, plans.observeAll().first(), today, zone)
-            val loanDue = LoanReminders.of(loans().first(), today, zone)
+            val snapshot = CreditSnapshot(walletRows, rows, plans.observeAll().first())
+            val card = CardBillReminders.collect(snapshot, DayContext(today, zone))
+            val loanDue = LoanReminders.collect(loans().first(), today, zone)
             val enabled =
                 settings
                     .observe()
                     .first()
                     .preferences.investReminder
-            val invest = InvestmentReminders.of(walletRows, enabled, today)
+            val invest = InvestmentReminders.collect(walletRows, enabled, today)
             return buildList {
                 addAll(card)
                 addAll(loanDue)

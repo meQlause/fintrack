@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
-// FR-173, S-20: one investment account with its timeline, recomputed on every change
+/** FR-173, S-20: one investment account with its timeline, recomputed on every change */
 public class ObserveInvestmentDetailUseCase
     @Inject
     constructor(

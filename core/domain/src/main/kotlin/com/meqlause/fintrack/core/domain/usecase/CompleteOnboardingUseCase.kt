@@ -55,7 +55,8 @@ public class CompleteOnboardingUseCase
             )
         }
 
-        // FR-002: icon and colour of the onboarding wallet types, copied from the prototype; other types get a neutral default
+        // FR-002: icon and colour of the onboarding wallet types, copied from the prototype; other types get
+        // a neutral default
         private fun WalletType.defaultAppearance(): Appearance =
             when (this) {
                 WalletType.CASH -> {

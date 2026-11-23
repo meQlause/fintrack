@@ -12,7 +12,7 @@ public object DetectionFingerprint {
     private val WHITESPACE_RUN = Regex("""\s+""")
 
     /** FR-086, DOC-07: sha256 of package, amount, direction, normalized text and the posting minute. */
-    public fun of(
+    public fun compute(
         rawNotification: RawNotification,
         parsed: ParsedTransaction,
     ): String {

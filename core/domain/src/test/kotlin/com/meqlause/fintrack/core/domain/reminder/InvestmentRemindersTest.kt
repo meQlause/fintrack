@@ -18,30 +18,36 @@ import java.time.Instant
 import java.time.LocalDate
 
 // BR-055: the monthly investment reminder is off by default and fires on day 1 only
+
+/** Investment reminders tests. */
 class InvestmentRemindersTest {
     private val firstOfMonth = LocalDate.parse("2026-12-01")
     private val investment = wallet(WalletType.INVESTMENT)
 
+    /** Given enabled and investment wallet on first when of then one reminder. */
     @Test
     fun givenEnabledAndInvestmentWalletOnFirstWhenOfThenOneReminder() {
-        assertThat(InvestmentReminders.of(listOf(investment), enabled = true, today = firstOfMonth)).hasSize(1)
+        assertThat(InvestmentReminders.collect(listOf(investment), enabled = true, today = firstOfMonth)).hasSize(1)
     }
 
+    /** Given disabled setting when of then nothing. */
     @Test
     fun givenDisabledSettingWhenOfThenNothing() {
-        assertThat(InvestmentReminders.of(listOf(investment), enabled = false, today = firstOfMonth)).isEmpty()
+        assertThat(InvestmentReminders.collect(listOf(investment), enabled = false, today = firstOfMonth)).isEmpty()
     }
 
+    /** Given no investment wallet when of then nothing. */
     @Test
     fun givenNoInvestmentWalletWhenOfThenNothing() {
         val cash = wallet(WalletType.CASH)
-        assertThat(InvestmentReminders.of(listOf(cash), enabled = true, today = firstOfMonth)).isEmpty()
+        assertThat(InvestmentReminders.collect(listOf(cash), enabled = true, today = firstOfMonth)).isEmpty()
     }
 
+    /** Given not first day when of then nothing. */
     @Test
     fun givenNotFirstDayWhenOfThenNothing() {
         val second = LocalDate.parse("2026-12-02")
-        assertThat(InvestmentReminders.of(listOf(investment), enabled = true, today = second)).isEmpty()
+        assertThat(InvestmentReminders.collect(listOf(investment), enabled = true, today = second)).isEmpty()
     }
 
     private fun wallet(type: WalletType): Wallet =

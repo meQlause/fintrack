@@ -18,8 +18,8 @@ public class BackupReminderUseCase
         public suspend operator fun invoke(currentTime: Instant): Int? {
             val stored = settings.observe().first().backup
             val hasTransactions = transactions.observeAll().first().isNotEmpty()
-            val due =
+            val dueDate =
                 BackupReminderRules.isDue(currentTime, stored.lastBackupAt, hasTransactions, stored.backupReminderDays)
-            return stored.backupReminderDays.takeIf { due }
+            return stored.backupReminderDays.takeIf { dueDate }
         }
     }

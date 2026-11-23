@@ -1,7 +1,6 @@
 package com.meqlause.fintrack.core.domain.usecase
 
 import com.meqlause.fintrack.core.domain.repository.BudgetRepository
-import com.meqlause.fintrack.core.model.Audit
 import com.meqlause.fintrack.core.model.Budget
 import com.meqlause.fintrack.core.model.BudgetId
 import com.meqlause.fintrack.core.model.CategoryId
@@ -24,12 +23,12 @@ public class SetBudgetLimitUseCase
             limit: Money,
         ) {
             require(limit.isTransactionAmount()) { "budget limit must be 1..999999999999 rupiah (BR-001)" }
-            val now = Instant.now(clock)
+            val nowInstant = Instant.now(clock)
             val existing = budgets.observeAll().first().firstOrNull { it.categoryId == categoryId }
             if (existing == null) {
-                budgets.insert(Budget(BudgetId(0L), categoryId, limit, true, now, now))
+                budgets.insert(Budget(BudgetId(0L), categoryId, limit, true, nowInstant, nowInstant))
             } else {
-                budgets.update(existing.copy(limitAmount = limit, isActive = true, updatedAt = now))
+                budgets.update(existing.copy(limitAmount = limit, isActive = true, updatedAt = nowInstant))
             }
         }
     }

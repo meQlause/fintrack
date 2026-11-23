@@ -20,56 +20,62 @@ import java.time.Instant
 import java.time.ZoneOffset
 
 // FR-092: raw notification text is purged 30 days after an item is resolved; parsed data is kept
+
+/** Purge resolved raw text use case tests. */
 class PurgeResolvedRawTextUseCaseTest {
     private val currentTime: Instant = Instant.parse("2026-11-23T00:00:00Z")
     private val inbox = InMemoryInboxRepository()
     private val useCase = PurgeResolvedRawTextUseCase(inbox, Clock.fixed(currentTime, ZoneOffset.UTC))
 
+    /** Given a confirmed item resolved 31 days ago when purged then its raw text is cleared (FR-092). */
     @Test
     fun `given a confirmed item resolved 31 days ago when purged then its raw text is cleared (FR-092)`() =
         runBlocking {
-            val id = inbox.insert(item("old", InboxStatus.CONFIRMED, currentTime.minus(Duration.ofDays(31))))
+            val newId = inbox.insert(item("old", InboxStatus.CONFIRMED, currentTime.minus(Duration.ofDays(31))))
 
             useCase()
 
-            assertRaw(id, title = "", text = "")
+            assertRaw(newId, title = "", text = "")
         }
 
+    /** Given a dismissed item resolved 31 days ago when purged then its raw text is cleared (FR-092). */
     @Test
     fun `given a dismissed item resolved 31 days ago when purged then its raw text is cleared (FR-092)`() =
         runBlocking {
-            val id = inbox.insert(item("dismissed", InboxStatus.DISMISSED, currentTime.minus(Duration.ofDays(31))))
+            val newId = inbox.insert(item("dismissed", InboxStatus.DISMISSED, currentTime.minus(Duration.ofDays(31))))
 
             useCase()
 
-            assertRaw(id, title = "", text = "")
+            assertRaw(newId, title = "", text = "")
             assertThat(
                 inbox
-                    .findById(id)
+                    .findById(newId)
                     ?.parsed
                     ?.amount
                     ?.rupiah,
             ).isEqualTo(25_000L)
         }
 
+    /** Given an item resolved 29 days ago when purged then its raw text is kept (FR-092). */
     @Test
     fun `given an item resolved 29 days ago when purged then its raw text is kept (FR-092)`() =
         runBlocking {
-            val id = inbox.insert(item("recent", InboxStatus.CONFIRMED, currentTime.minus(Duration.ofDays(29))))
+            val newId = inbox.insert(item("recent", InboxStatus.CONFIRMED, currentTime.minus(Duration.ofDays(29))))
 
             useCase()
 
-            assertRaw(id, title = "Pembayaran", text = "Rp25.000")
+            assertRaw(newId, title = "Pembayaran", text = "Rp25.000")
         }
 
+    /** Given a pending item when purged then its raw text is kept (FR-092). */
     @Test
     fun `given a pending item when purged then its raw text is kept (FR-092)`() =
         runBlocking {
-            val id = inbox.insert(item("pending", InboxStatus.PENDING, null))
+            val newId = inbox.insert(item("pending", InboxStatus.PENDING, null))
 
             useCase()
 
-            assertRaw(id, title = "Pembayaran", text = "Rp25.000")
+            assertRaw(newId, title = "Pembayaran", text = "Rp25.000")
         }
 
     private suspend fun assertRaw(

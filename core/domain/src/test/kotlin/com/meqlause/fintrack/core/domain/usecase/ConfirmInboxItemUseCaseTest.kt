@@ -26,6 +26,8 @@ import java.time.Instant
 import java.time.ZoneOffset
 
 // FR-087, FR-091, BR-011 … BR-013: confirming creates one transaction and remembers the merchant
+
+/** Confirm inbox item use case tests. */
 class ConfirmInboxItemUseCaseTest {
     private val currentTime: Instant = Instant.parse("2026-11-23T07:05:00Z")
     private val inbox = InMemoryInboxRepository()
@@ -42,40 +44,44 @@ class ConfirmInboxItemUseCaseTest {
     private val wallet = WalletId(1L)
     private val category = CategoryId(2L)
 
+    /** Given a pending debit when confirmed then one expense is stored and the item is CONFIRMED (BR-011, BR-013). */
     @Test
     fun `given a pending debit when confirmed then one expense is stored and the item is CONFIRMED (BR-011, BR-013)`() =
         runBlocking {
-            val id = inbox.insert(item("a", MoneyDirection.DEBIT, "INDOMARET 123"))
+            val newId = inbox.insert(item("a", MoneyDirection.DEBIT, "INDOMARET 123"))
 
-            val result = useCase(InboxChoice(id, wallet, category))
+            val result = useCase(InboxChoice(newId, wallet, category))
 
             assertThat(result).isInstanceOf(ConfirmInboxResult.Confirmed::class)
             val stored = transactions.observeAll().first().single()
             assertThat(stored.movement.type).isEqualTo(TransactionType.EXPENSE)
-            assertThat(inbox.findById(id)?.resolution?.status).isEqualTo(InboxStatus.CONFIRMED)
+            assertThat(inbox.findById(newId)?.resolution?.status).isEqualTo(InboxStatus.CONFIRMED)
         }
 
+    /** Given a confirmed merchant when confirmed again then its rule is remembered (BR-012). */
     @Test
     fun `given a confirmed merchant when confirmed again then its rule is remembered (BR-012)`() =
         runBlocking {
-            val id = inbox.insert(item("b", MoneyDirection.DEBIT, "Indomaret"))
+            val newId = inbox.insert(item("b", MoneyDirection.DEBIT, "Indomaret"))
 
-            useCase(InboxChoice(id, wallet, category))
+            useCase(InboxChoice(newId, wallet, category))
 
             assertThat(rules.findByKey("indomaret")?.categoryId).isEqualTo(category)
         }
 
+    /** Given no category when confirmed then nothing is stored (FR-087). */
     @Test
     fun `given no category when confirmed then nothing is stored (FR-087)`() =
         runBlocking {
-            val id = inbox.insert(item("c", MoneyDirection.CREDIT, "Gaji"))
+            val newId = inbox.insert(item("c", MoneyDirection.CREDIT, "Gaji"))
 
-            val result = useCase(InboxChoice(id, wallet, null))
+            val result = useCase(InboxChoice(newId, wallet, null))
 
             assertThat(result).isEqualTo(ConfirmInboxResult.MissingCategory)
             assertThat(transactions.observeAll().first().size).isEqualTo(0)
         }
 
+    /** Given a paired debit and credit when confirmed as transfer then one TRANSFER links both (FR-091). */
     @Test
     fun `given a paired debit and credit when confirmed as transfer then one TRANSFER links both (FR-091)`() =
         runBlocking {

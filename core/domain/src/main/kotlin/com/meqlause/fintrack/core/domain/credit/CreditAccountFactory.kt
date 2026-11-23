@@ -21,14 +21,14 @@ public object CreditAccountFactory {
         zone: ZoneId,
     ): CreditAccount {
         val terms = requireNotNull(wallet.terms.credit) { "a credit wallet needs credit terms (FR-139)" }
-        val id = wallet.walletId
+        val ownerId = wallet.walletId
         return CreditAccount(
             terms = terms,
             initialBalance = wallet.terms.initialBalance,
             createdOn = wallet.audit.createdAt.toLocalDate(zone),
-            entries = transactions.mapNotNull { entryOf(it, id, zone) },
+            entries = transactions.mapNotNull { entryOf(it, ownerId, zone) },
             instalments =
-                plans.filter { it.purchase.walletId == id }.mapNotNull { instalmentOf(it, transactions, zone) },
+                plans.filter { it.purchase.walletId == ownerId }.mapNotNull { instalmentOf(it, transactions, zone) },
         )
     }
 
@@ -64,7 +64,7 @@ public object CreditAccountFactory {
         }
     }
 
-    // BR-035, BR-036: the statement input of a plan; the purchase date comes from its stored purchase transaction
+    /** BR-035, BR-036: the statement input of a plan; the purchase date comes from its stored purchase transaction */
     public fun instalmentOf(
         plan: InstallmentPlan,
         transactions: List<Transaction>,

@@ -2,7 +2,7 @@ package com.meqlause.fintrack.core.domain.loan
 
 import com.meqlause.fintrack.core.model.TransactionId
 
-// FR-152: outcome of recording a repayment; a rejected repayment stores nothing
+/** FR-152: outcome of recording a repayment; a rejected repayment stores nothing */
 public sealed interface RepaymentResult {
     /** FR-152: the repayment is stored under [transactionId]. */
     public data class Saved(

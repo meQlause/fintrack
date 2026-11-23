@@ -6,7 +6,10 @@ import com.meqlause.fintrack.core.model.ValuationEntry
 
 /** BR-051: values one investment wallet from its opening balance, its transfers and its manual valuations. */
 public object InvestmentCalculator {
-    /** BR-051: modal counts every transfer; current value starts from the latest valuation and adds the transfers after it. */
+    /**
+     * BR-051: modal counts every transfer; current value starts from the latest valuation and adds the
+     * transfers after it.
+     */
     public fun valuate(
         initialBalance: Money,
         flows: List<InvestmentFlow>,

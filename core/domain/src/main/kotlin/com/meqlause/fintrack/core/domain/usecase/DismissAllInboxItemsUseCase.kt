@@ -19,9 +19,9 @@ public class DismissAllInboxItemsUseCase
         /** FR-087: nothing is stored when no item is pending. */
         public suspend operator fun invoke() {
             atomic.atomically {
-                val now = Instant.now(clock)
+                val nowInstant = Instant.now(clock)
                 inbox.pendingItems().forEach { item ->
-                    inbox.resolve(item.inboxItemId, Resolution(InboxStatus.DISMISSED, null, now))
+                    inbox.resolve(item.inboxItemId, Resolution(InboxStatus.DISMISSED, null, nowInstant))
                 }
             }
         }

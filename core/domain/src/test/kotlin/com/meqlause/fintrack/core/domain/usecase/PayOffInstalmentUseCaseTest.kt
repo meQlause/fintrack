@@ -41,9 +41,9 @@ class PayOffInstalmentUseCaseTest {
     fun `given active plan when paying off then the payoff is the next statement (BR-037)`() =
         runBlocking {
             val walletId = seedCard()
-            val id = plans.insert(plan(walletId))
-            useCase(id)
-            val stored = plans.observeAll().first().single { it.installmentPlanId == id }
+            val newId = plans.insert(plan(walletId))
+            useCase(newId)
+            val stored = plans.observeAll().first().single { it.installmentPlanId == newId }
             assertThat(stored.schedule.earlyPayoffMonth).isEqualTo(YearMonth.of(2026, 12))
         }
 

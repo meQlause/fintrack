@@ -3,6 +3,8 @@ package com.meqlause.fintrack.core.domain.bills
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
+import com.meqlause.fintrack.core.domain.credit.CreditSnapshot
+import com.meqlause.fintrack.core.domain.period.DayContext
 import com.meqlause.fintrack.core.domain.period.Period
 import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Audit
@@ -37,16 +39,19 @@ import java.time.YearMonth
 import java.time.ZoneOffset
 
 // FR-137, FR-146: the Tagihan card lists the next statement per credit wallet and the instalments due this period
+
+/** Bills card builder tests. */
 class BillsCardBuilderTest {
     private val card = WalletId(1L)
-    private val bank = WalletId(2L)
     private val today = LocalDate.of(2026, 11, 5)
     private val december = Period(LocalDate.of(2026, 12, 1), LocalDate.of(2026, 12, 31))
 
     // FR-137: the October statement is due on 10 Nov; FR-146: the November portion of 300.000 over 3 is due 10 Dec
+
+    /** Given statement due and portion due in period when built then both are reported. */
     @Test
     fun givenStatementDueAndPortionDueInPeriodWhenBuiltThenBothAreReported() {
-        val result = BillsCardBuilder.build(wallets(), transactions(), plans(), december, today, ZoneOffset.UTC)
+        val result = BillsCardBuilder.build(snapshot(), december, DayContext(today, ZoneOffset.UTC))
 
         assertThat(result.bills).hasSize(1)
         assertThat(result.bills[0].walletName).isEqualTo("Kartu")
@@ -59,19 +64,28 @@ class BillsCardBuilderTest {
     }
 
     // FR-146: a period with no statement falling due holds no instalment amount
+
+    /** Given period without due portion when built then instalments are zero. */
     @Test
     fun givenPeriodWithoutDuePortionWhenBuiltThenInstalmentsAreZero() {
         val november = Period(LocalDate.of(2026, 11, 1), LocalDate.of(2026, 11, 30))
-        val result = BillsCardBuilder.build(wallets(), transactions(), plans(), november, today, ZoneOffset.UTC)
+        val result = BillsCardBuilder.build(snapshot(), november, DayContext(today, ZoneOffset.UTC))
 
         assertThat(result.instalmentsDue).isEqualTo(Money(0L))
     }
 
     // FR-137: wallets without credit terms are not bills
+
+    /** Given plain wallet when built then it is not listed. */
     @Test
     fun givenPlainWalletWhenBuiltThenItIsNotListed() {
         val plain = wallets() + wallet(WalletId(3L), terms = WalletTerms(Money(0L), credit = null))
-        val result = BillsCardBuilder.build(plain, transactions(), plans(), december, today, ZoneOffset.UTC)
+        val result =
+            BillsCardBuilder.build(
+                CreditSnapshot(plain, transactions(), plans()),
+                december,
+                DayContext(today, ZoneOffset.UTC),
+            )
 
         assertThat(result.bills.map { it.walletId }).isEqualTo(listOf(card))
         assertThat(result.bills).hasSize(1)
@@ -93,11 +107,13 @@ class BillsCardBuilderTest {
             audit = Audit(Instant.parse("2026-01-01T00:00:00Z"), Instant.parse("2026-01-01T00:00:00Z")),
         )
 
+    private fun snapshot(): CreditSnapshot = CreditSnapshot(wallets(), transactions(), plans())
+
     // an expense of 1.000.000 on 10 Oct and a 300.000 purchase on 10 Oct that is split into three portions
     private fun transactions(): List<Transaction> =
         listOf(
-            row(1L, TransactionType.EXPENSE, 1_000_000L, "2026-10-10T10:00:00Z"),
-            row(2L, TransactionType.EXPENSE, 300_000L, "2026-10-10T11:00:00Z"),
+            rowOf(1L, TransactionType.EXPENSE, 1_000_000L, "2026-10-10T10:00:00Z"),
+            rowOf(2L, TransactionType.EXPENSE, 300_000L, "2026-10-10T11:00:00Z"),
         )
 
     private fun plans(): List<InstallmentPlan> =
@@ -112,7 +128,7 @@ class BillsCardBuilderTest {
             ),
         )
 
-    private fun row(
+    private fun rowOf(
         transactionNumber: Long,
         type: TransactionType,
         amount: Long,

@@ -10,7 +10,7 @@ import java.time.Instant
 import java.time.LocalDate
 import javax.inject.Inject
 
-// FR-144, BR-037: early payoff bills every unbilled portion on the next statement
+/** FR-144, BR-037: early payoff bills every unbilled portion on the next statement */
 public class PayOffInstalmentUseCase
     @Inject
     constructor(
@@ -23,11 +23,11 @@ public class PayOffInstalmentUseCase
             val plan = plans.findPlan(installmentPlanId) ?: return
             val statementDay = wallets.statementDayOf(plan.purchase.walletId)
             val payoff = StatementDates.firstStatementMonth(LocalDate.now(clock), statementDay)
-            val now = Instant.now(clock)
+            val nowInstant = Instant.now(clock)
             plans.update(
                 plan.copy(
                     schedule = plan.schedule.copy(earlyPayoffMonth = payoff),
-                    audit = Audit(createdAt = plan.audit.createdAt, updatedAt = now),
+                    audit = Audit(createdAt = plan.audit.createdAt, updatedAt = nowInstant),
                 ),
             )
         }

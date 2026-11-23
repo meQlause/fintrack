@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
-// FR-173, FR-174: the Investasi tab data, recomputed whenever a wallet, transfer or valuation changes
+/** FR-173, FR-174: the Investasi tab data, recomputed whenever a wallet, transfer or valuation changes */
 public class ObserveInvestmentPortfolioUseCase
     @Inject
     constructor(

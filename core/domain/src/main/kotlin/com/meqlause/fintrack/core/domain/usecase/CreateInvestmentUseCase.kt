@@ -17,14 +17,17 @@ import kotlinx.coroutines.flow.first
 import java.time.Instant
 import javax.inject.Inject
 
-// FR-170: creates an INVESTMENT wallet with its kind and the amount already put in
+/** FR-170: creates an INVESTMENT wallet with its kind and the amount already put in */
 public class CreateInvestmentUseCase
     @Inject
     constructor(
         private val wallets: WalletRepository,
         private val validator: WalletNameValidator,
     ) {
-        /** FR-170: returns the new id, or null when the name is invalid or used by an active wallet, or the amount is negative. */
+        /**
+         * FR-170: returns the new id, or null when the name is invalid or used by an active wallet, or the
+         * amount is negative.
+         */
         public suspend operator fun invoke(
             name: String,
             investKind: InvestKind,
@@ -32,28 +35,40 @@ public class CreateInvestmentUseCase
             currentTime: Instant,
         ): WalletId? {
             val trimmed = name.trim()
-            if (validator.validate(trimmed) != null || invested.rupiah < 0L) return null
-            val all = wallets.observeAll().first()
-            if (all.any { !it.status.isArchived && it.profile.name.equals(trimmed, ignoreCase = true) }) return null
-            val order = (all.maxOfOrNull { it.profile.sortOrder } ?: -1) + 1
-            return wallets.insert(newWallet(trimmed, investKind, invested, order, currentTime))
+            val allWallets = wallets.observeAll().first()
+            if (!isAccepted(trimmed, invested, allWallets)) return null
+            val order = (allWallets.maxOfOrNull { it.profile.sortOrder } ?: -1) + 1
+            return wallets.insert(newWallet(NewInvestment(trimmed, investKind, invested), order, currentTime))
         }
+
+        private fun isAccepted(
+            trimmed: String,
+            invested: Money,
+            allWallets: List<Wallet>,
+        ): Boolean =
+            validator.validate(trimmed) == null &&
+                invested.rupiah >= 0L &&
+                allWallets.none { !it.status.isArchived && it.profile.name.equals(trimmed, ignoreCase = true) }
+
+        private class NewInvestment(
+            val name: String,
+            val investKind: InvestKind,
+            val invested: Money,
+        )
 
         // FR-170: the default icon and colour of an investment wallet, as the Dompet editor gives them
         private fun newWallet(
-            name: String,
-            investKind: InvestKind,
-            invested: Money,
+            spec: NewInvestment,
             order: Int,
             currentTime: Instant,
         ): Wallet =
             Wallet(
                 walletId = WalletId(0L),
-                kind = WalletKind(type = WalletType.INVESTMENT, investKind = investKind),
-                terms = WalletTerms(initialBalance = invested, credit = null),
+                kind = WalletKind(type = WalletType.INVESTMENT, investKind = spec.investKind),
+                terms = WalletTerms(initialBalance = spec.invested, credit = null),
                 profile =
                     WalletProfile(
-                        name = name,
+                        name = spec.name,
                         appearance = Appearance(iconKey = INVESTMENT_ICON, colorKey = INVESTMENT_COLOR),
                         sortOrder = order,
                     ),

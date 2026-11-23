@@ -27,6 +27,8 @@ import java.time.Instant
 import java.time.ZoneOffset
 
 // FR-084, FR-086, FR-088, FR-091: detected payments are stored as PENDING, deduplicated and paired
+
+/** Process detected transaction use case tests. */
 class ProcessDetectedTransactionUseCaseTest {
     private val start: Instant = Instant.parse("2026-11-23T10:00:00Z")
     private val clock: Clock = Clock.fixed(start, ZoneOffset.UTC)
@@ -35,6 +37,7 @@ class ProcessDetectedTransactionUseCaseTest {
     private val apps = InMemoryMonitoredAppRepository()
     private val bcaDefaultWallet = WalletId(7)
 
+    /** Given a stored payment when the same notification is reposted then it is discarded (FR-086). */
     @Test
     fun `given a stored payment when the same notification is reposted then it is discarded (FR-086)`() =
         runBlocking {
@@ -49,6 +52,7 @@ class ProcessDetectedTransactionUseCaseTest {
             assertThat(inbox.observeAll().first().size).isEqualTo(1)
         }
 
+    /** Given a detected payment then it is stored as PENDING with the app default wallet (FR-084, FR-082). */
     @Test
     fun `given a detected payment then it is stored as PENDING with the app default wallet (FR-084, FR-082)`() =
         runBlocking {
@@ -65,6 +69,7 @@ class ProcessDetectedTransactionUseCaseTest {
             assertThat(item.parsed.merchant).isEqualTo(DEBIT_MERCHANT)
         }
 
+    /** Given a remembered merchant then its category and wallet are suggested (FR-088). */
     @Test
     fun `given a remembered merchant then its category and wallet are suggested (FR-088)`() =
         runBlocking {
@@ -79,6 +84,7 @@ class ProcessDetectedTransactionUseCaseTest {
             assertThat(item.suggestion.suggestedWalletId).isEqualTo(WalletId(9))
         }
 
+    /** Given a debit and a credit of one amount from two apps within 10 minutes then they are paired (FR-091). */
     @Test
     fun `given a debit and a credit of one amount from two apps within 10 minutes then they are paired (FR-091)`() =
         runBlocking {
@@ -98,6 +104,7 @@ class ProcessDetectedTransactionUseCaseTest {
             assertThat(itemById(stored.inboxItemId).suggestion.relatedInboxItemId).isEqualTo(firstId)
         }
 
+    /** Given one amount more than 10 minutes apart then no pair is suggested (FR-091). */
     @Test
     fun `given one amount more than 10 minutes apart then no pair is suggested (FR-091)`() =
         runBlocking {
@@ -113,6 +120,7 @@ class ProcessDetectedTransactionUseCaseTest {
             assertThat((later as ProcessNotificationResult.Stored).pairedWith).isNull()
         }
 
+    /** Given a notification from an app that is not monitored then nothing is stored (FR-090). */
     @Test
     fun `given a notification from an app that is not monitored then nothing is stored (FR-090)`() =
         runBlocking {
@@ -125,10 +133,11 @@ class ProcessDetectedTransactionUseCaseTest {
             assertThat(inbox.observeAll().first().isEmpty()).isEqualTo(true)
         }
 
+    /** Given a disabled monitored app then nothing is stored (FR-090). */
     @Test
     fun `given a disabled monitored app then nothing is stored (FR-090)`() =
         runBlocking {
-            apps.insert(app(BCA_PACKAGE, enabled = false))
+            apps.insert(appOf(BCA_PACKAGE, enabled = false))
             val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
 
             val result = useCase(received(BCA_PACKAGE, "Pembayaran"), payment(DEBIT_MERCHANT))
@@ -138,8 +147,8 @@ class ProcessDetectedTransactionUseCaseTest {
         }
 
     private suspend fun registerApps() {
-        apps.insert(app(BCA_PACKAGE, enabled = true))
-        apps.insert(app(GOPAY, enabled = true))
+        apps.insert(appOf(BCA_PACKAGE, enabled = true))
+        apps.insert(appOf(GOPAY, enabled = true))
     }
 
     private suspend fun itemById(itemId: InboxItemId): InboxItem =
@@ -175,7 +184,7 @@ class ProcessDetectedTransactionUseCaseTest {
             parserId = "test.fixture.v1",
         )
 
-    private fun app(
+    private fun appOf(
         packageName: String,
         enabled: Boolean,
     ): MonitoredApp =

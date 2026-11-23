@@ -3,6 +3,7 @@ package com.meqlause.fintrack.core.domain.usecase
 import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.domain.networth.NetWorthBuilder
 import com.meqlause.fintrack.core.domain.networth.NetWorthLedger
+import com.meqlause.fintrack.core.domain.period.DayContext
 import com.meqlause.fintrack.core.domain.repository.InstallmentPlanRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
@@ -12,7 +13,7 @@ import java.time.Clock
 import java.time.LocalDate
 import javax.inject.Inject
 
-// BR-043, BR-053: Kekayaan bersih for Dompet and the Ringkasan drawer, recomputed when any source changes
+/** BR-043, BR-053: Kekayaan bersih for Dompet and the Ringkasan drawer, recomputed when any source changes */
 public class ObserveNetWorthUseCase
     @Inject
     constructor(
@@ -38,8 +39,7 @@ public class ObserveNetWorthUseCase
                     ledger = data,
                     loans = loanRows,
                     investments = portfolio.total.currentValue,
-                    today = LocalDate.now(clock),
-                    zone = clock.zone,
+                    day = DayContext(LocalDate.now(clock), clock.zone),
                 )
             }
         }

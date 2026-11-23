@@ -9,7 +9,7 @@ import java.time.Instant
 import java.time.LocalDate
 import javax.inject.Inject
 
-// FR-158: the due date of an open loan can be changed or cleared (null) from the loan detail
+/** FR-158: the due date of an open loan can be changed or cleared (null) from the loan detail */
 public class ChangeLoanDueDateUseCase
     @Inject
     constructor(
@@ -23,10 +23,13 @@ public class ChangeLoanDueDateUseCase
         ): Boolean {
             val loan = loans.findLoan(loanId) ?: return false
             if (loan.status != LoanStatus.OPEN) return false
-            val now = Instant.now(clock)
-            val due = dueDate?.atStartOfDay(clock.zone)?.toInstant()
+            val nowInstant = Instant.now(clock)
+            val dueInstant = dueDate?.atStartOfDay(clock.zone)?.toInstant()
             loans.update(
-                loan.copy(agreement = loan.agreement.copy(dueDate = due), audit = loan.audit.copy(updatedAt = now)),
+                loan.copy(
+                    agreement = loan.agreement.copy(dueDate = dueInstant),
+                    audit = loan.audit.copy(updatedAt = nowInstant),
+                ),
             )
             return true
         }

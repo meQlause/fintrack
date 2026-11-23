@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test
 import java.time.Instant
 
 // BR-051, BR-054: the worked example of 19-investments.md and the same-day withdrawal rule
+
+/** Investment calculator tests. */
 class InvestmentCalculatorTest {
     private val oct2 = Instant.parse("2026-10-02T08:00:00Z")
     private val nov2 = Instant.parse("2026-11-02T08:00:00Z")
@@ -20,6 +22,8 @@ class InvestmentCalculatorTest {
     private val nov21 = Instant.parse("2026-11-21T02:00:00Z")
 
     // BR-051: the worked example, two top-ups of 1.000.000 and a value of 2.080.000 on 20 Nov
+
+    /** Given two top ups and an update when valuated then gain is eighty thousand at four point zero percent. */
     @Test
     fun givenTwoTopUpsAndAnUpdateWhenValuatedThenGainIsEightyThousandAtFourPointZeroPercent() {
         val flows =
@@ -35,6 +39,8 @@ class InvestmentCalculatorTest {
     }
 
     // BR-051: a withdrawal after the update reduces modal and value alike, so the gain is kept
+
+    /** Given withdrawal after update when valuated then gain is still eighty thousand. */
     @Test
     fun givenWithdrawalAfterUpdateWhenValuatedThenGainIsStillEightyThousand() {
         val flows =
@@ -50,6 +56,8 @@ class InvestmentCalculatorTest {
     }
 
     // BR-051: a same-day withdrawal after the update counts, because the comparison uses full timestamps
+
+    /** Given same day withdrawal after update when valuated then it counts after the update. */
     @Test
     fun givenSameDayWithdrawalAfterUpdateWhenValuatedThenItCountsAfterTheUpdate() {
         val flows = listOf(InvestmentFlow(nov20Noon, Money(500_000L), MoneyDirection.DEBIT))
@@ -59,6 +67,8 @@ class InvestmentCalculatorTest {
     }
 
     // BR-051: without any valuation the current value is the modal
+
+    /** Given no valuation when valuated then current value equals modal. */
     @Test
     fun givenNoValuationWhenValuatedThenCurrentValueEqualsModal() {
         val result = InvestmentCalculator.valuate(Money(2_000_000L), emptyList(), emptyList())

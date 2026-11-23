@@ -18,9 +18,9 @@ internal class InMemoryTransactionRepository : TransactionRepository {
 
     override suspend fun insert(transaction: Transaction): TransactionId {
         lastId += 1
-        val id = TransactionId(lastId)
-        rows.value = rows.value + transaction.copy(transactionId = id)
-        return id
+        val newId = TransactionId(lastId)
+        rows.value = rows.value + transaction.copy(transactionId = newId)
+        return newId
     }
 
     override suspend fun update(transaction: Transaction) {

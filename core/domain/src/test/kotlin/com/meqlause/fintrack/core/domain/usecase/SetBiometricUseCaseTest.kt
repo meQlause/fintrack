@@ -11,16 +11,20 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 // FR-101: biometric unlock is stored only while a PIN exists
+
+/** Set biometric use case tests. */
 class SetBiometricUseCaseTest {
     private lateinit var settings: InMemoryPinSettings
     private lateinit var setBiometric: SetBiometricUseCase
 
+    /** Set up. */
     @BeforeEach
     fun setUp() {
         settings = InMemoryPinSettings()
         setBiometric = SetBiometricUseCase(settings)
     }
 
+    /** Enabling without a PIN is ignored. */
     @Test
     fun `enabling without a PIN is ignored`() {
         runBlocking {
@@ -34,6 +38,7 @@ class SetBiometricUseCaseTest {
         }
     }
 
+    /** Enabling with a PIN is stored. */
     @Test
     fun `enabling with a PIN is stored`() {
         runBlocking {
@@ -48,6 +53,7 @@ class SetBiometricUseCaseTest {
         }
     }
 
+    /** Disabling turns biometrics off again. */
     @Test
     fun `disabling turns biometrics off again`() {
         runBlocking {

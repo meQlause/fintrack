@@ -3,6 +3,7 @@ package com.meqlause.fintrack.core.domain.networth
 import com.meqlause.fintrack.core.domain.credit.CreditAccountFactory
 import com.meqlause.fintrack.core.domain.credit.StatementCalculator
 import com.meqlause.fintrack.core.domain.loan.LoanEntry
+import com.meqlause.fintrack.core.domain.period.DayContext
 import com.meqlause.fintrack.core.model.LoanDirection
 import com.meqlause.fintrack.core.model.LoanStatus
 import com.meqlause.fintrack.core.model.Money
@@ -19,9 +20,10 @@ internal object NetWorthBuilder {
         ledger: NetWorthLedger,
         loans: List<LoanEntry>,
         investments: Money,
-        today: LocalDate,
-        zone: ZoneId,
+        day: DayContext,
     ): NetWorth {
+        val today = day.today
+        val zone = day.zone
         val active = ledger.wallets.filterNot { it.status.isArchived }
         return NetWorth(
             saldo = saldoOf(active, ledger.moneyByWallet),

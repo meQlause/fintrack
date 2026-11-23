@@ -28,6 +28,8 @@ import java.time.LocalDate
 import java.time.ZoneId
 
 // BR-039, BR-040, BR-052: bill payments, loan movements and investment flows never reach statistics or budgets
+
+/** Statistics exclusions tests. */
 class StatisticsExclusionsTest {
     private val zone: ZoneId = ZoneId.of("Asia/Jakarta")
     private val november = Period(LocalDate.of(2026, 11, 1), LocalDate.of(2026, 11, 30))
@@ -53,10 +55,10 @@ class StatisticsExclusionsTest {
     fun `given every loan movement when statistics and budget are built then none of them count (BR-040)`() {
         val loanMovements =
             listOf(
-                transaction(TransactionType.LEND, 300_000L, loanId = 9L),
-                transaction(TransactionType.BORROW, 400_000L, loanId = 10L),
-                transaction(TransactionType.COLLECT, 100_000L, loanId = 9L),
-                transaction(TransactionType.REPAY, 150_000L, loanId = 10L),
+                loanMovement(TransactionType.LEND, 300_000L, loanId = 9L),
+                loanMovement(TransactionType.BORROW, 400_000L, loanId = 10L),
+                loanMovement(TransactionType.COLLECT, 100_000L, loanId = 9L),
+                loanMovement(TransactionType.REPAY, 150_000L, loanId = 10L),
             )
         assertNothingCounted(loanMovements)
     }
@@ -80,10 +82,10 @@ class StatisticsExclusionsTest {
     fun `given one expense among all excluded movements when built then only that expense is counted`() {
         val mixed =
             listOf(
-                transaction(TransactionType.EXPENSE, 100_000L, categoryId = 1L),
+                categorised(TransactionType.EXPENSE, 100_000L, categoryId = 1L),
                 transaction(TransactionType.TRANSFER, 500_000L, targetWalletId = 2L),
-                transaction(TransactionType.LEND, 300_000L, loanId = 9L),
-                transaction(TransactionType.COLLECT, 100_000L, loanId = 9L),
+                loanMovement(TransactionType.LEND, 300_000L, loanId = 9L),
+                loanMovement(TransactionType.COLLECT, 100_000L, loanId = 9L),
                 transaction(TransactionType.TRANSFER, 700_000L, targetWalletId = 5L),
             )
         val expense = statistics(mixed, TransactionType.EXPENSE, november, 1, zone)
@@ -107,19 +109,29 @@ class StatisticsExclusionsTest {
         amount: Long,
         walletId: Long = 1L,
         targetWalletId: Long? = null,
-        categoryId: Long? = null,
-        loanId: Long? = null,
+    ): Transaction = build(type, amount, Routing(WalletId(walletId), targetWalletId?.let { WalletId(it) }, null, null))
+
+    private fun categorised(
+        type: TransactionType,
+        amount: Long,
+        categoryId: Long,
+    ): Transaction = build(type, amount, Routing(WalletId(1L), null, CategoryId(categoryId), null))
+
+    private fun loanMovement(
+        type: TransactionType,
+        amount: Long,
+        loanId: Long,
+    ): Transaction = build(type, amount, Routing(WalletId(1L), null, null, LoanId(loanId)))
+
+    private fun build(
+        type: TransactionType,
+        amount: Long,
+        routing: Routing,
     ): Transaction =
         Transaction(
             transactionId = TransactionId(0L),
             movement = Movement(type = type, amount = Money(amount)),
-            routing =
-                Routing(
-                    walletId = WalletId(walletId),
-                    targetWalletId = targetWalletId?.let { WalletId(it) },
-                    categoryId = categoryId?.let { CategoryId(it) },
-                    loanId = loanId?.let { LoanId(it) },
-                ),
+            routing = routing,
             memo = Memo(),
             origin = Origin(source = TransactionSource.MANUAL, inboxItemId = null),
             timing = Timing(occurredAt = noon3Nov, audit = Audit(Instant.EPOCH, Instant.EPOCH)),

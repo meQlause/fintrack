@@ -30,26 +30,26 @@ public class SaveTransactionUseCase
     ) {
         /** FR-030: nothing is stored when a rule is broken; an edited transaction keeps its origin and createdAt. */
         public suspend operator fun invoke(draft: TransactionDraft): SaveTransactionResult {
-            val now = Instant.now(clock)
+            val nowInstant = Instant.now(clock)
             val walletMap = wallets.observeAll().first().associateBy { it.walletId }
             val categoryMap = categories.observeAll().first().associateBy { it.categoryId }
-            val errors = TransactionRules.check(draft, walletMap, categoryMap, now)
+            val errors = TransactionRules.check(draft, walletMap, categoryMap, nowInstant)
             if (errors.isNotEmpty()) return SaveTransactionResult.Rejected(errors)
-            return store(draft, buildTransaction(draft, now))
+            return store(draft, buildTransaction(draft, nowInstant))
         }
 
         private suspend fun store(
             draft: TransactionDraft,
             transaction: Transaction,
         ): SaveTransactionResult.Saved {
-            val id: TransactionId =
+            val newId: TransactionId =
                 if (draft.existing == null) {
                     transactions.insert(transaction)
                 } else {
                     transactions.update(transaction)
                     transaction.transactionId
                 }
-            return SaveTransactionResult.Saved(id)
+            return SaveTransactionResult.Saved(newId)
         }
 
         private fun buildTransaction(
