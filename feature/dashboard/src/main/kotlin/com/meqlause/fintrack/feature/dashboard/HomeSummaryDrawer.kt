@@ -1,93 +1,168 @@
 package com.meqlause.fintrack.feature.dashboard
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FintrackButton
-import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
-import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.Money
+import com.meqlause.fintrack.core.ui.format.MoneyFormatter
+import java.time.format.TextStyle
+import java.util.Locale
+import kotlin.math.abs
 
-// FR-040, FR-041, S-03: the Ringkasan drawer; Kekayaan bersih on top (BR-053), then the period, the parts and the wallets action
+// FR-040, FR-041, S-03: the Ringkasan drawer; Kekayaan bersih on top (BR-053), then the month, Aset and Utang
 @Composable
 internal fun HomeSummaryDrawer(
     state: HomeUiState.Success,
     onClose: () -> Unit,
     onOpenWallets: () -> Unit,
 ) {
-    val worth = state.netWorth
-    PickerDrawer(title = stringResource(R.string.home_summary_title), onClose = onClose) {
-        SummaryLine(
-            label = stringResource(R.string.home_summary_net_worth),
-            money = worth.total,
-            hidden = state.hidden,
-        )
-        SummaryLine(
-            label = stringResource(R.string.home_summary_income),
-            money = state.period.income,
-            hidden = state.hidden,
-        )
-        SummaryLine(
-            label = stringResource(R.string.home_summary_expense),
-            money = state.period.expense,
-            hidden = state.hidden,
-        )
-        SummaryLine(
-            label = stringResource(R.string.home_summary_saldo),
-            money = worth.saldo,
-            hidden = state.hidden,
-        )
-        SummaryLine(
-            label = stringResource(R.string.home_summary_investment),
-            money = worth.investasi,
-            hidden = state.hidden,
-        )
-        SummaryLine(
-            label = stringResource(R.string.home_summary_receivable),
-            money = worth.piutang,
-            hidden = state.hidden,
-        )
-        SummaryLine(
-            label = stringResource(R.string.home_summary_card_debt),
-            money = worth.utangKartu,
-            hidden = state.hidden,
-        )
-        SummaryLine(
-            label = stringResource(R.string.home_summary_debt),
-            money = worth.hutang,
-            hidden = state.hidden,
-        )
-        FintrackButton(
-            text = stringResource(R.string.home_summary_action),
-            onClick = onOpenWallets,
-            modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
-        )
-    }
+    HomeInfoDrawer(content = summaryContent(state), onClose = onClose, onAction = onOpenWallets)
 }
 
-// S-03: one label with its amount on the same line
 @Composable
-private fun SummaryLine(
-    label: String,
-    money: Money,
-    hidden: Boolean,
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = FintrackTheme.spacing.small),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(
-            text = label,
-            style = FintrackTheme.typography.bodyLarge,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
+private fun summaryContent(state: HomeUiState.Success): HomeInfoContent {
+    val show = Shown(hidden = state.hidden, mask = stringResource(R.string.home_amount_hidden))
+    val worth = state.netWorth
+    val month =
+        state.period.startDate.month
+            .getDisplayName(TextStyle.FULL, Locale.forLanguageTag("id"))
+    val gap = state.period.income - state.period.expense
+    return HomeInfoContent(
+        title = stringResource(R.string.home_summary_title),
+        heroLabel = stringResource(R.string.home_summary_net_worth),
+        heroValue = show.plain(worth.total),
+        heroNote = stringResource(R.string.home_summary_net_note),
+        sections =
+            listOf(
+                HomeInfoSection(
+                    title = stringResource(R.string.home_summary_month, month),
+                    total = stringResource(R.string.home_summary_gap, show.signed(gap, plus = true)),
+                    tone = if (gap.rupiah >= 0L) HomeTone.INCOME else HomeTone.EXPENSE,
+                    rows = monthRows(state, show),
+                ),
+                HomeInfoSection(
+                    title = stringResource(R.string.home_summary_assets),
+                    total = show.plain(worth.assets),
+                    tone = HomeTone.INCOME,
+                    rows = assetRows(state, show),
+                ),
+                HomeInfoSection(
+                    title = stringResource(R.string.home_summary_debts),
+                    total = show.signed(worth.debts, plus = false),
+                    tone = HomeTone.EXPENSE,
+                    rows = debtRows(state, show),
+                ),
+            ),
+        actionLabel = stringResource(R.string.home_summary_action),
+    )
+}
+
+@Composable
+private fun monthRows(
+    state: HomeUiState.Success,
+    show: Shown,
+): List<HomeInfoRow> =
+    listOf(
+        HomeInfoRow(
+            stringResource(R.string.home_summary_income),
+            stringResource(R.string.home_summary_income_sub),
+            "+" + show.plain(state.period.income),
+            HomeTone.INCOME,
+            "down",
+            "green",
+        ),
+        HomeInfoRow(
+            stringResource(R.string.home_summary_expense),
+            stringResource(R.string.home_summary_expense_sub),
+            show.signed(state.period.expense, plus = false),
+            HomeTone.EXPENSE,
+            "up",
+            "rose",
+        ),
+    )
+
+// the prototype lists the biggest asset first
+@Composable
+private fun assetRows(
+    state: HomeUiState.Success,
+    show: Shown,
+): List<HomeInfoRow> {
+    val worth = state.netWorth
+    val rows =
+        listOf(
+            worth.saldo to
+                HomeInfoRow(
+                    stringResource(R.string.home_summary_saldo),
+                    stringResource(R.string.home_summary_saldo_sub),
+                    show.plain(worth.saldo),
+                    HomeTone.NORMAL,
+                    "wallet",
+                    "teal",
+                ),
+            worth.investasi to
+                HomeInfoRow(
+                    stringResource(R.string.home_summary_investment),
+                    stringResource(R.string.home_summary_investment_sub),
+                    show.plain(worth.investasi),
+                    HomeTone.NORMAL,
+                    "trend",
+                    "indigo",
+                ),
+            worth.piutang to
+                HomeInfoRow(
+                    stringResource(R.string.home_summary_receivable),
+                    stringResource(R.string.home_summary_receivable_sub),
+                    show.plain(worth.piutang),
+                    HomeTone.NORMAL,
+                    "person",
+                    "cyan",
+                ),
         )
-        HomeAmountText(money = money, hidden = hidden, style = FintrackTheme.typography.bodyLarge)
+    return rows.sortedByDescending { it.first.rupiah }.map { it.second }
+}
+
+@Composable
+private fun debtRows(
+    state: HomeUiState.Success,
+    show: Shown,
+): List<HomeInfoRow> {
+    val worth = state.netWorth
+    val rows =
+        listOf(
+            worth.utangKartu to
+                HomeInfoRow(
+                    stringResource(R.string.home_summary_card_debt),
+                    stringResource(R.string.home_summary_card_debt_sub),
+                    show.signed(worth.utangKartu, plus = false),
+                    HomeTone.EXPENSE,
+                    "card",
+                    "slate",
+                ),
+            worth.hutang to
+                HomeInfoRow(
+                    stringResource(R.string.home_summary_debt),
+                    stringResource(R.string.home_summary_debt_sub),
+                    show.signed(worth.hutang, plus = false),
+                    HomeTone.EXPENSE,
+                    "person",
+                    "orange",
+                ),
+        )
+    return rows.sortedByDescending { it.first.rupiah }.map { it.second }
+}
+
+// FR-040: formats an amount, or the privacy mask while amounts are hidden
+private class Shown(
+    private val hidden: Boolean,
+    private val mask: String,
+) {
+    fun plain(money: Money): String = if (hidden) mask else MoneyFormatter.format(money)
+
+    fun signed(
+        money: Money,
+        plus: Boolean,
+    ): String {
+        if (hidden) return mask
+        val sign = if (plus && money.rupiah >= 0L) "+" else "−"
+        return sign + MoneyFormatter.format(Money(abs(money.rupiah)))
     }
 }

@@ -34,6 +34,7 @@ internal fun HomeBillsCard(
     hidden: Boolean,
     onOpenCreditWallet: (WalletId) -> Unit,
     onOpenInstalments: () -> Unit,
+    onOpenLoans: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FintrackCard(modifier = modifier.fillMaxWidth(), contentPadding = PaddingValues()) {
@@ -76,7 +77,7 @@ internal fun HomeBillsCard(
             )
             HomeFooterCell(
                 label = stringResource(R.string.home_bills_loans),
-                onClick = null,
+                onClick = onOpenLoans,
                 modifier = Modifier.weight(1f),
             ) { HomeLoansText(receivable = receivable, payable = payable, hidden = hidden) }
         }

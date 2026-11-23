@@ -17,6 +17,7 @@ internal fun HomeRoute(
     onOpenWallet: (WalletId) -> Unit,
     onOpenCreditWallet: (WalletId) -> Unit,
     onOpenInstalments: () -> Unit,
+    onOpenLoans: () -> Unit,
     onOpenWallets: () -> Unit,
     onOpenHistory: () -> Unit,
     onQuickEntry: () -> Unit,
@@ -32,6 +33,7 @@ internal fun HomeRoute(
             HomeCallbacks(
                 onOpenSettings = onOpenSettings,
                 onOpenInbox = onOpenInbox,
+                onToggleTheme = viewModel::toggleTheme,
                 onToggleHidden = viewModel::toggleHidden,
                 onOpenSummary = viewModel::openSummary,
                 onOpenCategories = viewModel::openCategories,
@@ -39,6 +41,7 @@ internal fun HomeRoute(
                 onOpenWallet = onOpenWallet,
                 onOpenCreditWallet = onOpenCreditWallet,
                 onOpenInstalments = onOpenInstalments,
+                onOpenLoans = onOpenLoans,
                 onOpenWallets = onOpenWallets,
                 onQuickEntry = onQuickEntry,
                 onOpenTransaction = onOpenTransaction,

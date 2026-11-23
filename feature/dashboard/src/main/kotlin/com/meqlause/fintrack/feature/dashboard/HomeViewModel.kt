@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.meqlause.fintrack.core.domain.bills.BillsCard
 import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
+import com.meqlause.fintrack.core.domain.repository.InboxRepository
 import com.meqlause.fintrack.core.domain.repository.QuickEntryRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
@@ -13,6 +14,7 @@ import com.meqlause.fintrack.core.domain.usecase.ObserveBillsCardUseCase
 import com.meqlause.fintrack.core.domain.usecase.ObserveNetWorthUseCase
 import com.meqlause.fintrack.core.model.QuickEntry
 import com.meqlause.fintrack.core.model.QuickEntryId
+import com.meqlause.fintrack.core.model.ThemeMode
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutTileMapping
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -36,7 +38,8 @@ internal class HomeViewModel
         wallets: WalletRepository,
         transactions: TransactionRepository,
         categories: CategoryRepository,
-        settings: SettingsRepository,
+        private val settings: SettingsRepository,
+        inboxItems: InboxRepository,
         private val quickEntries: QuickEntryRepository,
         private val bills: ObserveBillsCardUseCase,
         private val netWorth: ObserveNetWorthUseCase,
@@ -67,9 +70,9 @@ internal class HomeViewModel
                 snapshotWithBills,
                 hideOverride,
                 drawer,
-                quickEntries.observeAll(),
+                combine(quickEntries.observeAll(), inboxItems.observeAll(), ::Pair),
                 removedShortcut,
-            ) { (data, card, worth), hide, open, entries, gone ->
+            ) { (data, card, worth), hide, open, (entries, pending), gone ->
                 HomeCalculator.success(data, card, worth, hide, open, clock).copy(
                     shortcuts =
                         ShortcutTileMapping.toTileParams(
@@ -81,6 +84,7 @@ internal class HomeViewModel
                             data.categories.associate { it.categoryId to it.profile.appearance },
                         ),
                     removedShortcut = gone,
+                    inbox = HomeInbox.of(pending),
                 )
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), HomeUiState.Loading)
 
@@ -88,6 +92,14 @@ internal class HomeViewModel
         fun toggleHidden() {
             val hidden = (state.value as? HomeUiState.Success)?.hidden ?: false
             hideOverride.value = !hidden
+        }
+
+        // FR-120: the moon or sun button flips between the light and the dark theme
+        fun toggleTheme(isDark: Boolean) {
+            val target = if (isDark) ThemeMode.LIGHT else ThemeMode.DARK
+            viewModelScope.launch {
+                settings.update { it.copy(preferences = it.preferences.copy(themeMode = target)) }
+            }
         }
 
         // FR-040: the summary pill opens the Ringkasan drawer

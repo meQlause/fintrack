@@ -47,6 +47,7 @@ internal fun sampleSuccess(
                 instalmentsDue = Money(200_000L),
             ),
         wallets = sampleWallets(),
+        inbox = HomeInbox(count = 4, sources = listOf("BCA", "GoPay", "DANA")),
         period =
             HomePeriod(
                 startDate = LocalDate.of(2026, 11, 1),

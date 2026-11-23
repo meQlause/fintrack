@@ -26,8 +26,8 @@ internal fun HomeScreen(
                 .padding(top = FintrackTheme.spacing.stack),
     ) {
         HomeHeader(
-            onSettingsClick = callbacks.onOpenSettings,
-            onInboxClick = callbacks.onOpenInbox,
+            hasPending = (state as? HomeUiState.Success)?.inbox?.count?.let { it > 0 } ?: false,
+            callbacks = callbacks,
             modifier = Modifier.padding(horizontal = FintrackTheme.spacing.gutter),
         )
         when (state) {
@@ -50,6 +50,13 @@ private fun HomeBody(
     val gutter = Modifier.padding(horizontal = FintrackTheme.spacing.gutter)
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         HomeHero(state = state, callbacks = callbacks, modifier = Modifier.padding(top = FintrackTheme.spacing.hero))
+        if (state.inbox.count > 0) {
+            HomeInboxBanner(
+                inbox = state.inbox,
+                onClick = callbacks.onOpenInbox,
+                modifier = gutter.padding(top = FintrackTheme.spacing.stack),
+            )
+        }
         HomeQuickEntry(
             shortcuts = state.shortcuts,
             onNewEntry = callbacks.onQuickEntry,
@@ -65,6 +72,7 @@ private fun HomeBody(
                 hidden = state.hidden,
                 onOpenCreditWallet = callbacks.onOpenCreditWallet,
                 onOpenInstalments = callbacks.onOpenInstalments,
+                onOpenLoans = callbacks.onOpenLoans,
                 modifier = gutter.padding(top = FintrackTheme.spacing.stack),
             )
         }

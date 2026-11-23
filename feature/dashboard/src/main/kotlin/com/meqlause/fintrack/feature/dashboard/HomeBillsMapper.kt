@@ -25,7 +25,11 @@ internal object HomeBillsMapper {
     ): HomeBill {
         val statement = bill.statement
         val date =
-            if (statement.status == StatementStatus.NOT_ISSUED) statement.period.cutOff else statement.period.dueDate
+            when (statement.status) {
+                StatementStatus.NOT_ISSUED -> statement.period.cutOff
+                StatementStatus.PAID -> statement.period.cutOff.plusMonths(1L)
+                else -> statement.period.dueDate
+            }
         return HomeBill(
             walletId = bill.walletId,
             name = bill.walletName,

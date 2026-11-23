@@ -39,6 +39,18 @@
     <string name="home_summary_receivable">Piutang</string>
     <string name="home_summary_card_debt">Utang kartu</string>
     <string name="home_summary_debt">Hutang</string>
+    <string name="home_summary_net_note">Aset − Utang</string>
+    <string name="home_summary_month">Bulan ini · %1$s</string>
+    <string name="home_summary_gap">Selisih %1$s</string>
+    <string name="home_summary_assets">Aset</string>
+    <string name="home_summary_debts">Utang</string>
+    <string name="home_summary_income_sub">Masuk ke dompet</string>
+    <string name="home_summary_expense_sub">Keluar dari dompet &amp; kartu</string>
+    <string name="home_summary_saldo_sub">Tunai, bank &amp; e-wallet</string>
+    <string name="home_summary_investment_sub">Nilai sekarang</string>
+    <string name="home_summary_receivable_sub">Orang berutang ke kamu</string>
+    <string name="home_summary_card_debt_sub">Kartu kredit &amp; paylater</string>
+    <string name="home_summary_debt_sub">Kamu berutang</string>
     <string name="home_summary_action">Lihat dompet</string>
 
     <string name="home_categories_title">Kategori</string>
@@ -46,6 +58,8 @@
         <item quantity="one">%1$d transaksi</item>
         <item quantity="other">%1$d transaksi</item>
     </plurals>
+    <string name="home_theme_description">Ganti tema</string>
+    <string name="home_inbox_banner">%1$d terdeteksi</string>
     <string name="home_bills_title">Tagihan</string>
     <string name="home_bills_instalments">Cicilan bulan ini</string>
     <string name="home_bills_loans">Pinjaman</string>
@@ -54,6 +68,7 @@
     <string name="home_bill_status_due">Belum dibayar</string>
     <string name="home_bill_status_overdue">Terlambat</string>
     <string name="home_bill_due_first">Tagihan pertama %1$s</string>
+    <string name="home_bill_next_statement">Cetak berikutnya %1$s</string>
     <string name="home_bill_due_date">Jatuh tempo %1$s</string>
     <string name="home_bill_due_overdue">Terlambat · jatuh tempo %1$s</string>
 </resources>

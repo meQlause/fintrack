@@ -8,6 +8,7 @@ import com.meqlause.fintrack.core.model.WalletId
 internal data class HomeCallbacks(
     val onOpenSettings: () -> Unit = {},
     val onOpenInbox: () -> Unit = {},
+    val onToggleTheme: (Boolean) -> Unit = {},
     val onToggleHidden: () -> Unit = {},
     val onOpenSummary: () -> Unit = {},
     val onOpenCategories: () -> Unit = {},
@@ -16,6 +17,7 @@ internal data class HomeCallbacks(
     val onOpenWallets: () -> Unit = {},
     val onOpenCreditWallet: (WalletId) -> Unit = {},
     val onOpenInstalments: () -> Unit = {},
+    val onOpenLoans: () -> Unit = {},
     val onQuickEntry: () -> Unit = {},
     val onOpenTransaction: (TransactionId) -> Unit = {},
     val onOpenHistory: () -> Unit = {},

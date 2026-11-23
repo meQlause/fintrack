@@ -33,6 +33,8 @@ object FintrackIcons {
             "person" to R.drawable.ic_person,
             "loan" to R.drawable.ic_person,
             "bolt" to R.drawable.ic_bolt,
+            "down" to R.drawable.ic_down,
+            "up" to R.drawable.ic_up,
             "bell" to R.drawable.ic_bell,
             "other" to R.drawable.ic_other,
         )

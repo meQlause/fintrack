@@ -78,7 +78,8 @@ internal fun HomeBillRow(
 private fun dueText(bill: HomeBill): String =
     when (bill.status) {
         StatementStatus.NOT_ISSUED -> stringResource(R.string.home_bill_due_first, bill.dateLabel)
-        StatementStatus.DUE, StatementStatus.PAID -> stringResource(R.string.home_bill_due_date, bill.dateLabel)
+        StatementStatus.DUE -> stringResource(R.string.home_bill_due_date, bill.dateLabel)
+        StatementStatus.PAID -> stringResource(R.string.home_bill_next_statement, bill.dateLabel)
         StatementStatus.OVERDUE -> stringResource(R.string.home_bill_due_overdue, bill.dateLabel)
     }
 

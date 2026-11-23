@@ -91,6 +91,7 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenWallet = { navController.navigate(WalletDetailDestination(it.value)) },
         onOpenCreditWallet = { navController.navigate(CreditDetailDestination(it.value)) },
         onOpenInstalments = { navController.navigate(InstalmentListDestination) },
+        onOpenLoans = { navController.navigate(LoanListDestination) },
         onOpenWallets = { MainTab.WALLET.navigateFrom(navController) },
         onOpenHistory = { MainTab.HISTORY.navigateFrom(navController) },
         onQuickEntry = { navController.navigate(EditTransactionDestination()) },

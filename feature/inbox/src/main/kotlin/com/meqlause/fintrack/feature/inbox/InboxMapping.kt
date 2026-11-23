@@ -8,6 +8,7 @@ import com.meqlause.fintrack.core.model.MoneyDirection
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.Wallet
 import com.meqlause.fintrack.core.ui.format.DateFormatter
+import com.meqlause.fintrack.core.ui.inbox.InboxSourceLabel
 import com.meqlause.fintrack.core.ui.picker.PickerOption
 import java.time.Duration
 import java.time.Instant
@@ -77,7 +78,7 @@ private fun card(
     val categoryId = edit?.categoryId ?: item.suggestion.suggestedCategoryId?.value
     return InboxCardUi(
         itemId = item.inboxItemId.value,
-        sourceLabel = sourceLabel(item.notice.packageName),
+        sourceLabel = InboxSourceLabel.of(item.notice.packageName),
         timeLabel =
             DateFormatter.timeLabel(
                 item.notice.postedAt
@@ -126,7 +127,7 @@ private fun resolvedRows(
         .map { item ->
             InboxResolvedUi(
                 itemId = item.inboxItemId.value,
-                label = item.parsed.merchant.ifEmpty { sourceLabel(item.notice.packageName) },
+                label = item.parsed.merchant.ifEmpty { InboxSourceLabel.of(item.notice.packageName) },
                 amount = item.parsed.amount,
                 type = typeOf(item),
                 isConfirmed = item.resolution.status == InboxStatus.CONFIRMED,
@@ -137,19 +138,6 @@ private fun resolvedRows(
 // BR-013: a DEBIT item is an expense and a CREDIT item an income
 private fun typeOf(item: InboxItem): TransactionType =
     if (item.parsed.direction == MoneyDirection.DEBIT) TransactionType.EXPENSE else TransactionType.INCOME
-
-// S-07: the source app label on a card, from the package names of the monitored apps
-private fun sourceLabel(packageName: String): String =
-    when {
-        packageName.startsWith("com.bca") -> "BCA"
-        packageName.startsWith("id.bmri.livin") -> "Livin' Mandiri"
-        packageName.startsWith("id.co.bri.brimo") -> "BRImo"
-        packageName.startsWith("com.gojek") -> "GoPay"
-        packageName == "ovo.id" -> "OVO"
-        packageName == "id.dana" -> "DANA"
-        packageName == "com.shopee.id" -> "ShopeePay"
-        else -> packageName
-    }
 
 // S-18: category choices of one kind, in the order the user keeps them
 private fun optionsOf(

@@ -154,7 +154,7 @@ internal object HomeCalculator {
         clock: Clock,
     ): String {
         val local = instant.atZone(clock.zone)
-        return "${DateFormatter.dayLabel(local.toLocalDate(), clock)}, ${DateFormatter.timeLabel(local.toLocalTime())}"
+        return DateFormatter.timeLabel(local.toLocalTime())
     }
 
     private fun dateOf(

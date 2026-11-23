@@ -29,6 +29,7 @@ import com.meqlause.fintrack.core.model.WalletStatus
 import com.meqlause.fintrack.core.model.WalletTerms
 import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.core.testing.repository.FakeCategoryRepository
+import com.meqlause.fintrack.core.testing.repository.FakeInboxRepository
 import com.meqlause.fintrack.core.testing.repository.FakeInstallmentPlanRepository
 import com.meqlause.fintrack.core.testing.repository.FakeLoanRepository
 import com.meqlause.fintrack.core.testing.repository.FakeQuickEntryRepository
@@ -87,6 +88,7 @@ abstract class HomeViewModelTestBase {
             transactions = transactions,
             categories = FakeCategoryRepository(),
             settings = FakeSettingsRepository(),
+            inboxItems = FakeInboxRepository(),
             quickEntries = FakeQuickEntryRepository(),
             bills =
                 ObserveBillsCardUseCase(
