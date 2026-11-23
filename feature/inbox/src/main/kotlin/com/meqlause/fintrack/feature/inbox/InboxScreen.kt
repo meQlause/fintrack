@@ -23,6 +23,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
+import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // S-07: Kotak Masuk; the list, the Selesai section and the undo bar are drawn from one state
@@ -31,10 +33,11 @@ internal fun InboxScreen(
     state: InboxUiState,
     actions: InboxActions,
     modifier: Modifier = Modifier,
+    showInfo: Boolean = true,
 ) {
     val snackbar = remember { SnackbarHostState() }
     var picker by remember { mutableStateOf<InboxPicker?>(null) }
-    var infoShown by rememberSaveable { mutableStateOf(true) }
+    var infoShown by rememberSaveable { mutableStateOf(showInfo) }
     var resolvedOpen by rememberSaveable { mutableStateOf(false) }
     UndoEffect(state.undoItemId, snackbar, actions)
     Scaffold(
@@ -63,20 +66,17 @@ private fun InboxHeader(
     onBack: () -> Unit,
     onDismissAll: () -> Unit,
 ) {
-    FintrackTabHeader(
+    ScreenBackHeader(
         title = stringResource(R.string.inbox_title),
-        leading = {
-            IconButton(onClick = onBack) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_chevron_right),
-                    contentDescription = stringResource(R.string.inbox_back_description),
-                    modifier = Modifier.graphicsLayer { rotationZ = BACK_ROTATION },
-                )
-            }
-        },
+        backLabel = stringResource(R.string.inbox_back_description),
+        onBack = onBack,
         trailing = {
             TextButton(onClick = onDismissAll) {
-                Text(text = stringResource(R.string.inbox_dismiss_all))
+                Text(
+                    text = stringResource(R.string.inbox_dismiss_all),
+                    style = FintrackScreenText.style(size = 12.5f, weight = 600),
+                    color = FintrackTheme.colors.brands.primary,
+                )
             }
         },
     )

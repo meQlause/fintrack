@@ -9,10 +9,12 @@ import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.ui.picker.PickerOption
 
 // S-07: sample rows for the screenshot previews; the amounts and labels follow the spec copy
+// design/screens/inbox.png: the prototype inbox seed
 private val sampleCards =
     listOf(
-        InboxCardUi(1L, "BCA", "14:05", Money(25_000L), TransactionType.EXPENSE, "Indomaret", 1L, "BCA", 2L, "Belanja"),
-        InboxCardUi(2L, "GoPay", "09:12", Money(18_500L), TransactionType.EXPENSE, "", null, null, null, null),
+        InboxCardUi(1L, "BCA", "09:42", Money(25_000L), TransactionType.EXPENSE, "INDOMARET KEMANG", 1L, "BCA", 2L, "Belanja"),
+        InboxCardUi(2L, "GoPay", "09:15", Money(32_000L), TransactionType.EXPENSE, "KOPI KENANGAN", 2L, "GoPay", 1L, "Makanan"),
+        InboxCardUi(3L, "DANA", "08:03", Money(150_000L), TransactionType.INCOME, "Transfer masuk dari XXXX", 3L, "DANA", 3L, "Lainnya"),
     )
 
 private val samplePair =
@@ -26,12 +28,6 @@ private val samplePair =
         amount = Money(100_000L),
     )
 
-private val sampleResolved =
-    listOf(
-        InboxResolvedUi(9L, "Kopi Kenangan", Money(22_000L), TransactionType.EXPENSE, isConfirmed = true),
-        InboxResolvedUi(10L, "Shopee", Money(54_000L), TransactionType.EXPENSE, isConfirmed = false),
-    )
-
 private val sampleOptions = listOf(PickerOption("1", "BCA"), PickerOption("5", "GoPay"))
 
 private val sampleState =
@@ -40,17 +36,17 @@ private val sampleState =
         hasAccess = true,
         cards = sampleCards,
         pairs = listOf(samplePair),
-        resolved = sampleResolved,
+        resolved = emptyList(),
         walletOptions = sampleOptions,
     )
 
-@Preview(name = "Kotak masuk light", showBackground = true, heightDp = 900)
+@Preview(name = "Kotak masuk light", showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 internal fun InboxLightPreview() {
     InboxPreviewFrame(darkTheme = false, state = sampleState)
 }
 
-@Preview(name = "Kotak masuk dark", showBackground = true, heightDp = 900)
+@Preview(name = "Kotak masuk dark", showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 internal fun InboxDarkPreview() {
     InboxPreviewFrame(darkTheme = true, state = sampleState)
@@ -75,7 +71,7 @@ private fun InboxPreviewFrame(
 ) {
     FintrackTheme(darkTheme = darkTheme) {
         Surface(color = FintrackTheme.colors.surfaces.background) {
-            InboxScreen(state = state, actions = InboxActions())
+            InboxScreen(state = state, actions = InboxActions(), showInfo = false)
         }
     }
 }
