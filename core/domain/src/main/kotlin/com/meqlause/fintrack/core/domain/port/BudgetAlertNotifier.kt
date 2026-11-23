@@ -1,4 +1,4 @@
-package com.meqlause.fintrack.core.domain.repository
+package com.meqlause.fintrack.core.domain.port
 
 import com.meqlause.fintrack.core.domain.budget.BudgetAlert
 

@@ -76,8 +76,8 @@ internal data class WalletDto(
         val dueDay: Int,
     ) {
         companion object {
-            fun toCredit(dto: CreditDto): CreditTerms =
-                CreditTerms(Money(dto.creditLimit), dto.statementDay, dto.dueDay)
+            fun toCredit(creditDto: CreditDto): CreditTerms =
+                CreditTerms(Money(creditDto.creditLimit), creditDto.statementDay, creditDto.dueDay)
 
             fun from(credit: CreditTerms): CreditDto =
                 CreditDto(credit.creditLimit.rupiah, credit.statementDay, credit.dueDay)

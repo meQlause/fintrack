@@ -21,7 +21,7 @@ import com.meqlause.fintrack.feature.credit.R
 // FR-142, S-16: one plan card with its progress "k/n", what remains and the next statement that bills
 @Composable
 internal fun InstalmentListItem(
-    row: InstalmentRow,
+    instalmentRow: InstalmentRow,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -36,32 +36,32 @@ internal fun InstalmentListItem(
                 .padding(FintrackTheme.spacing.medium),
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
-        Text(text = row.title, style = FintrackTheme.typography.titleMedium, color = colors.texts.onSurface)
+        Text(text = instalmentRow.title, style = FintrackTheme.typography.titleMedium, color = colors.texts.onSurface)
         Text(
-            text = "${row.cardName} · ${stringResource(
+            text = "${instalmentRow.cardName} · ${stringResource(
                 R.string.instalment_monthly,
-                MoneyFormatter.format(row.monthly),
+                MoneyFormatter.format(instalmentRow.monthly),
             )}",
             style = FintrackTheme.typography.bodyMedium,
             color = colors.texts.onSurfaceVariant,
         )
-        ProgressBar(fraction = row.billed.toFloat() / row.tenor, color = colors.brands.primary)
+        ProgressBar(fraction = instalmentRow.billed.toFloat() / instalmentRow.tenor, color = colors.brands.primary)
         Row(
             horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = stringResource(R.string.instalment_progress, row.billed, row.tenor),
+                text = stringResource(R.string.instalment_progress, instalmentRow.billed, instalmentRow.tenor),
                 style = FintrackTheme.typography.labelLarge,
                 color = colors.texts.onSurface,
             )
             Text(
-                text = remainingLabel(row),
+                text = remainingLabel(instalmentRow),
                 style = FintrackTheme.typography.bodyMedium,
                 color = colors.texts.onSurfaceVariant,
             )
         }
-        row.nextMonth?.let { month ->
+        instalmentRow.nextMonth?.let { month ->
             Text(
                 text = stringResource(R.string.instalment_next_bill, month.label()),
                 style = FintrackTheme.typography.labelMedium,
@@ -73,9 +73,9 @@ internal fun InstalmentListItem(
 
 // FR-142: remaining principal, or the word "Lunas" once every portion is billed
 @Composable
-private fun remainingLabel(row: InstalmentRow): String =
-    if (row.isFinished) {
+private fun remainingLabel(instalmentRow: InstalmentRow): String =
+    if (instalmentRow.isFinished) {
         stringResource(R.string.instalment_finished)
     } else {
-        stringResource(R.string.instalment_remaining, MoneyFormatter.format(row.remaining))
+        stringResource(R.string.instalment_remaining, MoneyFormatter.format(instalmentRow.remaining))
     }

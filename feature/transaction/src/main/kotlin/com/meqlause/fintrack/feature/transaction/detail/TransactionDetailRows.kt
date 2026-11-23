@@ -30,10 +30,10 @@ internal fun DetailRows(detail: TransactionDetail) {
         }
     DetailRow(label = stringResource(walletLabel), value = detail.walletLabel)
     detail.categoryName?.let { DetailRow(label = stringResource(R.string.transaction_detail_category), value = it) }
-    if (!detail.fee.isZero) {
+    if (!detail.feeAmount.isZero) {
         DetailRow(
             label = stringResource(R.string.transaction_fee_label),
-            value = MoneyFormatter.format(detail.fee),
+            value = MoneyFormatter.format(detail.feeAmount),
         )
     }
     DetailRow(

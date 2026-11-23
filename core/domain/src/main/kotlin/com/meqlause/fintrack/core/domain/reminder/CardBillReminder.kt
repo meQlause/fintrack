@@ -12,6 +12,6 @@ public data class CardBillReminder(
     public val dueDate: LocalDate,
     public val daysBefore: Int,
 ) : Reminder {
-    override val key: String
+    override val reminderKey: String
         get() = "card-${walletId.value}-$dueDate-$daysBefore"
 }

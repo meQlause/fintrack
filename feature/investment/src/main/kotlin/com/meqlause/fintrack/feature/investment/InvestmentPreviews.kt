@@ -30,15 +30,15 @@ private val previewAudit = Audit(createdAt = Instant.EPOCH, updatedAt = Instant.
 private val previewTime: Instant = Instant.parse("2026-11-20T09:00:00Z")
 
 private fun previewWallet(
-    id: Long,
+    walletKey: Long,
     name: String,
     kind: InvestKind,
 ): Wallet =
     Wallet(
-        walletId = WalletId(id),
+        walletId = WalletId(walletKey),
         kind = WalletKind(type = WalletType.INVESTMENT, investKind = kind),
         terms = WalletTerms(initialBalance = Money(1_000_000L), credit = null),
-        profile = WalletProfile(name = name, appearance = Appearance("trend", "gray"), sortOrder = id.toInt()),
+        profile = WalletProfile(name = name, appearance = Appearance("trend", "gray"), sortOrder = walletKey.toInt()),
         status = WalletStatus(),
         audit = previewAudit,
     )

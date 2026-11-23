@@ -33,7 +33,7 @@ internal sealed interface HistoryEvent {
     ) : HistoryEvent
 
     data class DayPicked(
-        val day: Int,
+        val dayOfMonth: Int,
     ) : HistoryEvent
 
     data class QueryChanged(

@@ -62,12 +62,12 @@ private fun AmountBlock(entry: LoanEntry) {
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
         Text(
-            text = MoneyFormatter.format(entry.balance.outstanding),
+            text = MoneyFormatter.format(entry.loanBalance.outstanding),
             style = FintrackTheme.typography.headlineSmall,
             color = FintrackTheme.colors.texts.onSurface,
         )
         Text(
-            text = stringResource(R.string.loan_principal, MoneyFormatter.format(entry.balance.principal)),
+            text = stringResource(R.string.loan_principal, MoneyFormatter.format(entry.loanBalance.principal)),
             style = FintrackTheme.typography.bodyMedium,
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
@@ -212,12 +212,12 @@ private fun movementLabelRes(type: TransactionType): Int =
 
 // FR-153: the share repaid so far, used by the progress bar of the detail
 private fun progressOf(entry: LoanEntry): Float {
-    val principal = entry.balance.principal.rupiah
+    val principal = entry.loanBalance.principal.rupiah
     return if (principal <= 0L) {
         0f
     } else {
         (
-            entry.balance.repaid.rupiah
+            entry.loanBalance.repaid.rupiah
                 .toFloat() / principal
         ).coerceIn(0f, 1f)
     }

@@ -63,7 +63,7 @@ private fun sampleRows(limit: String): List<WalletPickerRow> {
 
 @Composable
 private fun sampleRow(
-    id: Long,
+    rowId: Long,
     nameRes: Int,
     type: WalletType,
     balance: String,
@@ -71,10 +71,10 @@ private fun sampleRow(
     isBlocked: Boolean = false,
 ): WalletPickerRow =
     WalletPickerRow(
-        walletId = WalletId(id),
+        walletId = WalletId(rowId),
         name = stringResource(nameRes),
         type = type,
-        balanceLabel = balance,
+        shownBalanceText = balance,
         isSelected = isSelected,
         isBlocked = isBlocked,
     )

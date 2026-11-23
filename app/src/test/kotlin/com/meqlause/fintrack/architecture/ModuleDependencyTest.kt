@@ -13,7 +13,12 @@ class ModuleDependencyTest {
             .files
             .filter { file -> normalized(file.path).contains("/feature/") }
             .assertFalse { file ->
-                val ownFeature = FEATURE_PACKAGE.find(file.text)?.groupValues?.get(1)?.plus(".") ?: NO_FEATURE
+                val ownFeature =
+                    FEATURE_PACKAGE
+                        .find(file.text)
+                        ?.groupValues
+                        ?.get(1)
+                        ?.plus(".") ?: NO_FEATURE
                 file.imports.any { importItem ->
                     val name = importItem.name
                     val otherFeature = name.startsWith(FEATURE_ROOT) && !name.startsWith(ownFeature)

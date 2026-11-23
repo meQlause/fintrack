@@ -10,7 +10,7 @@ internal data class CreditDetailCallbacks(
     val onAmountChange: (String) -> Unit = {},
     val onPickSource: (WalletId) -> Unit = {},
     val onFillRemaining: () -> Unit = {},
-    val onClearAmount: () -> Unit = {},
+    val onClearEntry: () -> Unit = {},
     val onPay: () -> Unit = {},
     val onOpenPicker: (CreditDay) -> Unit = {},
     val onDismissPicker: () -> Unit = {},

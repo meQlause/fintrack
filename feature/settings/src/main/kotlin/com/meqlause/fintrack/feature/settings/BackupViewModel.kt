@@ -57,20 +57,20 @@ internal class BackupViewModel
         }
 
         // FR-110: writes the backup to the picked file; a cancelled picker just forgets the password
-        fun onExportTarget(uri: String?) {
+        fun onExportTarget(fileUri: String?) {
             val password = exportPassword
             exportPassword = null
-            if (uri == null || password == null) return
+            if (fileUri == null || password == null) return
             runOperation {
-                exportBackup(uri, password)
+                exportBackup(fileUri, password)
                 BackupOutcome.Saved
             }
         }
 
         // FR-111: "Pulihkan" hands the picked file to the password dialog
-        fun onImportPicked(uri: String?) {
-            if (uri == null) return
-            mutable.update { it.copy(step = BackupStep.ImportPassword(uri), outcome = null) }
+        fun onImportPicked(fileUri: String?) {
+            if (fileUri == null) return
+            mutable.update { it.copy(step = BackupStep.ImportPassword(fileUri), outcome = null) }
         }
 
         // FR-111: decrypts and validates the file; the summary dialog shows before anything is replaced
@@ -79,7 +79,7 @@ internal class BackupViewModel
             viewModelScope.launch {
                 mutable.update { it.copy(busy = true) }
                 try {
-                    val snapshot = readBackup(step.uri, password)
+                    val snapshot = readBackup(step.fileUri, password)
                     mutable.update { it.copy(step = BackupStep.ConfirmRestore(snapshot), busy = false) }
                 } catch (error: BackupException) {
                     mutable.update { it.copy(step = null, outcome = BackupOutcome.Failed(error.failure), busy = false) }
@@ -116,12 +116,12 @@ internal class BackupViewModel
         }
 
         // FR-113: writes the CSV to the picked file; a cancelled picker just forgets the range
-        fun onCsvTarget(uri: String?) {
+        fun onCsvTarget(fileUri: String?) {
             val range = pendingCsv
             pendingCsv = null
-            if (uri == null || range == null) return
+            if (fileUri == null || range == null) return
             runOperation {
-                exportCsv(uri, range.start, range.endInclusive)
+                exportCsv(fileUri, range.start, range.endInclusive)
                 BackupOutcome.CsvSaved
             }
         }

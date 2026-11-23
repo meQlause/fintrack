@@ -6,6 +6,6 @@ import java.time.YearMonth
 public data class InvestmentUpdateReminder(
     public val month: YearMonth,
 ) : Reminder {
-    override val key: String
+    override val reminderKey: String
         get() = "invest-$month"
 }

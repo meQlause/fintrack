@@ -11,7 +11,7 @@ internal fun Transaction.matches(
     date: LocalDate,
 ): Boolean =
     filter.type.accepts(movement.type) &&
-        (filter.day == null || date.dayOfMonth == filter.day) &&
+        (filter.dayOfMonth == null || date.dayOfMonth == filter.dayOfMonth) &&
         (filter.walletId == null || filter.walletId in listOfNotNull(routing.walletId, routing.targetWalletId)) &&
         (filter.categoryId == null || routing.categoryId == filter.categoryId) &&
         matchesQuery(filter.query)

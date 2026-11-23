@@ -16,6 +16,6 @@ internal data class InstalmentForm(
     val tenor: Int?
         get() = tenorDigits.toIntOrNull()?.takeIf { it in MIN_TENOR..MAX_TENOR }
 
-    val fee: Money
+    val feeAmount: Money
         get() = Money(feeDigits.toLongOrNull() ?: 0L)
 }

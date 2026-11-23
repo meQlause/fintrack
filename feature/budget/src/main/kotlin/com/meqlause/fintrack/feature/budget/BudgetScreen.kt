@@ -93,13 +93,13 @@ private fun BudgetBody(
 // FR-071: one budget line; its title is the category name, or the overall label when there is none
 @Composable
 private fun BudgetRowCard(
-    row: BudgetRow,
+    budgetRow: BudgetRow,
     callbacks: BudgetCallbacks,
 ) {
     BudgetStatusCard(
-        title = row.target.categoryName ?: stringResource(R.string.budget_overall),
-        status = row.status,
-        onClick = { callbacks.onEdit(row) },
+        title = budgetRow.target.categoryName ?: stringResource(R.string.budget_overall),
+        status = budgetRow.status,
+        onClick = { callbacks.onEdit(budgetRow) },
     )
 }
 

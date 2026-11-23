@@ -25,7 +25,7 @@ public class DetectedItemFactory
     ) {
         /** FR-084: the item is PENDING until the user confirms it; nothing is recorded before that. */
         public suspend fun build(
-            raw: RawNotification,
+            rawNotification: RawNotification,
             parsed: ParsedTransaction,
             monitored: MonitoredApp,
             fingerprint: String,
@@ -34,7 +34,7 @@ public class DetectedItemFactory
             val rule = suggestedRule(parsed.merchantKey)
             return InboxItem(
                 inboxItemId = InboxItemId(0),
-                notice = notice(raw, parsed, fingerprint),
+                notice = notice(rawNotification, parsed, fingerprint),
                 parsed = ParsedAmount(parsed.amount, parsed.direction, parsed.merchant),
                 suggestion = suggestion(rule, monitored),
                 resolution = Resolution(InboxStatus.PENDING, transactionId = null, resolvedAt = null),
@@ -58,16 +58,16 @@ public class DetectedItemFactory
             )
 
         private fun notice(
-            raw: RawNotification,
+            rawNotification: RawNotification,
             parsed: ParsedTransaction,
             fingerprint: String,
         ): RawNotice =
             RawNotice(
-                packageName = raw.packageName,
+                packageName = rawNotification.packageName,
                 parserId = parsed.parserId,
-                rawTitle = raw.title,
-                rawText = raw.bigText.ifEmpty { raw.text },
-                postedAt = raw.postedAt,
+                rawTitle = rawNotification.title,
+                rawText = rawNotification.bigText.ifEmpty { rawNotification.text },
+                postedAt = rawNotification.postedAt,
                 fingerprint = fingerprint,
             )
     }

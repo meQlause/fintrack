@@ -94,7 +94,7 @@ private fun CreditDetailBody(
                 onClose = callbacks.onDismissPicker,
             )
         }
-        state.pay?.let { draft ->
+        state.payDraft?.let { draft ->
             PayBillSheet(draft = draft, sources = state.sources, callbacks = callbacks)
         }
     }
@@ -117,10 +117,10 @@ private fun CreditHeader(state: CreditDetailUiState.Success) {
     }
 }
 
-private fun pickerTitle(day: CreditDay): Int =
-    if (day == CreditDay.STATEMENT) R.string.credit_statement_picker_title else R.string.credit_due_picker_title
+private fun pickerTitle(creditDay: CreditDay): Int =
+    if (creditDay == CreditDay.STATEMENT) R.string.credit_statement_picker_title else R.string.credit_due_picker_title
 
 private fun dayOf(
     state: CreditDetailUiState.Success,
-    day: CreditDay,
-): Int = if (day == CreditDay.STATEMENT) state.terms.statementDay else state.terms.dueDay
+    creditDay: CreditDay,
+): Int = if (creditDay == CreditDay.STATEMENT) state.terms.statementDay else state.terms.dueDay

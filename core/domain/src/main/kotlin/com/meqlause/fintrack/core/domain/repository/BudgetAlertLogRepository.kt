@@ -9,5 +9,5 @@ public interface BudgetAlertLogRepository {
     public fun observeAll(): Flow<List<BudgetAlertLog>>
 
     /** FR-073: records a sent alert; the same budget, period and threshold is never recorded twice. */
-    public suspend fun insert(log: BudgetAlertLog)
+    public suspend fun insert(alertLog: BudgetAlertLog)
 }

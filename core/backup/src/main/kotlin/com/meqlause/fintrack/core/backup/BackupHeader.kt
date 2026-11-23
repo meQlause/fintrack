@@ -7,7 +7,7 @@ import java.nio.ByteBuffer
 // DOC-11: the 42-byte plain header; it is passed to AES-GCM as AAD, so any change to it fails authentication
 internal class BackupHeader(
     val salt: ByteArray,
-    val iv: ByteArray,
+    val cipherIv: ByteArray,
     val iterations: Int,
 ) {
     fun toBytes(): ByteArray {
@@ -15,7 +15,7 @@ internal class BackupHeader(
         buffer.put(BackupFormat.MAGIC.toByteArray(Charsets.US_ASCII))
         buffer.putShort(BackupFormat.CONTAINER_VERSION.toShort())
         buffer.put(salt)
-        buffer.put(iv)
+        buffer.put(cipherIv)
         buffer.putInt(iterations)
         return buffer.array()
     }

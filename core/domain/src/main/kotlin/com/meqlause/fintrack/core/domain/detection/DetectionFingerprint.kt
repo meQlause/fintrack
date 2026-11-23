@@ -13,18 +13,25 @@ public object DetectionFingerprint {
 
     /** FR-086, DOC-07: sha256 of package, amount, direction, normalized text and the posting minute. */
     public fun of(
-        raw: RawNotification,
+        rawNotification: RawNotification,
         parsed: ParsedTransaction,
     ): String {
-        val minute = raw.postedAt.epochSecond / SECONDS_PER_MINUTE
-        val source = listOf(raw.packageName, parsed.amount.rupiah, parsed.direction, normalizedText(raw), minute)
+        val minute = rawNotification.postedAt.epochSecond / SECONDS_PER_MINUTE
+        val source =
+            listOf(
+                rawNotification.packageName,
+                parsed.amount.rupiah,
+                parsed.direction,
+                normalizedText(rawNotification),
+                minute,
+            )
         return sha256(source.joinToString("|"))
     }
 
     // DOC-07: lowercase, reference digits removed, whitespace collapsed
-    private fun normalizedText(raw: RawNotification): String =
-        raw.bigText
-            .ifEmpty { raw.text }
+    private fun normalizedText(rawNotification: RawNotification): String =
+        rawNotification.bigText
+            .ifEmpty { rawNotification.text }
             .lowercase()
             .replace(DIGITS, "")
             .replace(WHITESPACE_RUN, " ")

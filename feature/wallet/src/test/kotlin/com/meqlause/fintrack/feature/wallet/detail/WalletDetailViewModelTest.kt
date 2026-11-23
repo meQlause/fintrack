@@ -90,16 +90,16 @@ class WalletDetailViewModelTest {
 
     private fun expense(
         walletId: WalletId,
-        day: Int,
+        dayOfMonth: Int,
         rupiah: Long,
     ): Transaction =
         Transaction(
             transactionId = TransactionId(0L),
             movement = Movement(type = TransactionType.EXPENSE, amount = Money(rupiah)),
             routing = Routing(walletId = walletId, targetWalletId = null, categoryId = null, loanId = null),
-            memo = Memo(note = "", merchant = "Toko $day"),
+            memo = Memo(note = "", merchant = "Toko $dayOfMonth"),
             origin = Origin(source = TransactionSource.MANUAL, inboxItemId = null),
-            timing = Timing(occurredAt = Instant.parse("2026-11-%02dT08:00:00Z".format(day)), audit = audit),
+            timing = Timing(occurredAt = Instant.parse("2026-11-%02dT08:00:00Z".format(dayOfMonth)), audit = audit),
         )
 
     // FR-017: a wallet id that is not stored shows the Missing state
@@ -123,9 +123,9 @@ class WalletDetailViewModelTest {
             val wallets = FakeWalletRepository(transactions)
             val walletId = wallets.insert(wallet("BCA"))
             val otherId = wallets.insert(wallet("Tunai"))
-            transactions.insert(expense(walletId, day = 1, rupiah = 10_000L))
-            transactions.insert(expense(otherId, day = 2, rupiah = 20_000L))
-            transactions.insert(expense(walletId, day = 3, rupiah = 30_000L))
+            transactions.insert(expense(walletId, dayOfMonth = 1, rupiah = 10_000L))
+            transactions.insert(expense(otherId, dayOfMonth = 2, rupiah = 20_000L))
+            transactions.insert(expense(walletId, dayOfMonth = 3, rupiah = 30_000L))
             val viewModel = viewModel(transactions, wallets, walletId.value)
             val collector = backgroundScope.launch { viewModel.state.collect {} }
             advanceUntilIdle()

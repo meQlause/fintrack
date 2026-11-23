@@ -165,17 +165,17 @@ private fun InfoCard(onDismiss: () -> Unit) {
 }
 
 @Composable
-private fun ResolvedRow(row: InboxResolvedUi) {
+private fun ResolvedRow(resolvedRow: InboxResolvedUi) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = FintrackTheme.spacing.small),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = row.label,
+            text = resolvedRow.label,
             style = FintrackTheme.typography.bodyMedium,
             color = FintrackTheme.colors.texts.onSurface,
         )
-        MoneyText(money = row.amount, type = row.type)
+        MoneyText(money = resolvedRow.amount, type = resolvedRow.type)
     }
 }

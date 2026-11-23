@@ -8,7 +8,7 @@ internal data class HistoryFilter(
     val type: HistoryTypeFilter = HistoryTypeFilter.EVERY,
     val walletId: WalletId? = null,
     val categoryId: CategoryId? = null,
-    val day: Int? = null,
+    val dayOfMonth: Int? = null,
     val query: String = "",
 ) {
     // FR-037: true when any filter narrows the list, which turns an empty result into "Tidak ditemukan"
@@ -17,6 +17,6 @@ internal data class HistoryFilter(
             type != HistoryTypeFilter.EVERY ||
                 walletId != null ||
                 categoryId != null ||
-                day != null ||
+                dayOfMonth != null ||
                 query.isNotBlank()
 }

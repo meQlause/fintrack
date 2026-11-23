@@ -41,8 +41,8 @@ class InboxViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule(UnconfinedTestDispatcher())
 
-    private val now: Instant = Instant.parse("2026-11-23T07:05:00Z")
-    private val clock = FakeClock(now)
+    private val fixedNow: Instant = Instant.parse("2026-11-23T07:05:00Z")
+    private val clock = FakeClock(fixedNow)
     private val inbox = FakeInboxRepository()
     private val transactions = FakeTransactionRepository()
     private val rules = FakeMerchantRuleRepository()
@@ -129,12 +129,12 @@ class InboxViewModelTest {
                     parserId = "bca",
                     rawTitle = "Pembayaran",
                     rawText = "Rp25.000",
-                    postedAt = now,
+                    postedAt = fixedNow,
                     fingerprint = fingerprint,
                 ),
             parsed = ParsedAmount(Money(25_000L), MoneyDirection.DEBIT, "Indomaret"),
             suggestion = Suggestion(null, null, null),
             resolution = Resolution(InboxStatus.PENDING, null, null),
-            audit = Audit(now, now),
+            audit = Audit(fixedNow, fixedNow),
         )
 }

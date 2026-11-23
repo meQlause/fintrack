@@ -63,11 +63,11 @@ class MonitoredAppsViewModelTest {
     fun givenWalletPickedWhenDrawerOpenThenItBecomesTheDefaultWallet() =
         runTest(dispatcher) {
             val viewModel = viewModel()
-            viewModel.openPicker(BCA)
-            viewModel.pickWallet(PickerOption(key = "7", label = "BCA"))
+            viewModel.openPicker(BCA_APP)
+            viewModel.pickWallet(PickerOption(optionKey = "7", label = "BCA"))
             advanceUntilIdle()
 
-            assertThat(apps.find(BCA)?.defaultWalletId).isEqualTo(WalletId(7L))
+            assertThat(apps.find(BCA_APP)?.defaultWalletId).isEqualTo(WalletId(7L))
         }
 
     // FR-090: the access state is read again when the screen resumes after system settings changed it
@@ -104,7 +104,7 @@ class MonitoredAppsViewModelTest {
         )
 
     private companion object {
-        const val BCA = "com.bca"
+        const val BCA_APP = "com.bca"
         const val GOPAY = "com.gojek.gopay"
     }
 }

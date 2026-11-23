@@ -81,11 +81,11 @@ class BillsCardBuilderTest {
         listOf(wallet(card, WalletTerms(Money(0L), CreditTerms(Money(10_000_000L), statementDay = 25, dueDay = 10))))
 
     private fun wallet(
-        id: WalletId,
+        walletId: WalletId,
         terms: WalletTerms,
     ): Wallet =
         Wallet(
-            walletId = id,
+            walletId = walletId,
             kind = WalletKind(WalletType.CREDIT_CARD, null),
             terms = terms,
             profile = WalletProfile("Kartu", Appearance("card", "blue"), 0),
@@ -113,17 +113,17 @@ class BillsCardBuilderTest {
         )
 
     private fun row(
-        id: Long,
+        transactionNumber: Long,
         type: TransactionType,
         amount: Long,
-        at: String,
+        occurredAt: String,
     ): Transaction =
         Transaction(
-            transactionId = TransactionId(id),
+            transactionId = TransactionId(transactionNumber),
             movement = Movement(type, Money(amount)),
             routing = Routing(card, null, categoryId = null, loanId = null),
             memo = Memo(),
             origin = Origin(TransactionSource.MANUAL, null),
-            timing = Timing(Instant.parse(at), Audit(Instant.parse(at), Instant.parse(at))),
+            timing = Timing(Instant.parse(occurredAt), Audit(Instant.parse(occurredAt), Instant.parse(occurredAt))),
         )
 }

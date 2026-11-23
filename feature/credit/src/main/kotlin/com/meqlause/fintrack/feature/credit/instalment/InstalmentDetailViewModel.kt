@@ -74,13 +74,13 @@ internal class InstalmentDetailViewModel
         private fun buildState(
             planRows: List<InstallmentPlan>,
             rows: List<Transaction>,
-            all: List<Wallet>,
+            allWallets: List<Wallet>,
             current: Session,
         ): InstalmentDetailUiState {
             if (current.closed) return InstalmentDetailUiState.Closed
             val plan = planRows.firstOrNull { it.installmentPlanId == planId } ?: return InstalmentDetailUiState.Missing
             val walletId = plan.purchase.walletId
-            val wallet = all.firstOrNull { it.walletId == walletId } ?: return InstalmentDetailUiState.Missing
+            val wallet = allWallets.firstOrNull { it.walletId == walletId } ?: return InstalmentDetailUiState.Missing
             val terms = wallet.terms.credit ?: return InstalmentDetailUiState.Missing
             val today = LocalDate.now(clock)
             val row = plan.toRow(wallet.profile.name, rows, terms.statementDay, today, clock.zone)

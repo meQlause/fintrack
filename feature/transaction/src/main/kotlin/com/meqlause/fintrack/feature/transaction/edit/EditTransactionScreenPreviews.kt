@@ -54,7 +54,7 @@ internal fun expenseSample(): EditTransactionUiState =
         form =
             TransactionForm(
                 type = TransactionType.EXPENSE,
-                amountDigits = "25000",
+                rupiahDigits = "25000",
                 walletId = WalletId(1L),
                 categoryId = CategoryId(1L),
             ),
@@ -68,7 +68,7 @@ internal fun transferSample(): EditTransactionUiState =
         form =
             TransactionForm(
                 type = TransactionType.TRANSFER,
-                amountDigits = "500000",
+                rupiahDigits = "500000",
                 walletId = WalletId(1L),
                 targetWalletId = WalletId(2L),
             ),
@@ -83,7 +83,7 @@ internal fun sampleCatalog(): EditCatalog =
                 sampleWallet(1L, "BCA", WalletType.BANK),
                 sampleWallet(2L, "Kartu BCA", WalletType.CREDIT_CARD),
             ),
-        balances = mapOf(WalletId(1L) to Money(1_250_000L)),
+        moneyByWallet = mapOf(WalletId(1L) to Money(1_250_000L)),
         categories =
             listOf(
                 sampleCategory(1L, "Makan", CategoryKind.EXPENSE),
@@ -92,27 +92,27 @@ internal fun sampleCatalog(): EditCatalog =
     )
 
 private fun sampleWallet(
-    id: Long,
+    walletKey: Long,
     name: String,
     type: WalletType,
 ): Wallet =
     Wallet(
-        walletId = WalletId(id),
+        walletId = WalletId(walletKey),
         kind = WalletKind(type, null),
         terms = WalletTerms(Money(0L), null),
-        profile = WalletProfile(name, Appearance("wallet", "teal"), id.toInt()),
+        profile = WalletProfile(name, Appearance("wallet", "teal"), walletKey.toInt()),
         status = WalletStatus(),
         audit = Audit(Instant.EPOCH, Instant.EPOCH),
     )
 
 private fun sampleCategory(
-    id: Long,
+    categoryKey: Long,
     name: String,
     kind: CategoryKind,
 ): Category =
     Category(
-        categoryId = CategoryId(id),
-        profile = CategoryProfile(name, kind, Appearance("tag", "teal"), id.toInt()),
+        categoryId = CategoryId(categoryKey),
+        profile = CategoryProfile(name, kind, Appearance("tag", "teal"), categoryKey.toInt()),
         state = CategoryState(isDefault = true, isArchived = false),
         audit = Audit(Instant.EPOCH, Instant.EPOCH),
     )

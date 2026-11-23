@@ -54,7 +54,7 @@ public class SaveTransactionUseCase
 
         private fun buildTransaction(
             draft: TransactionDraft,
-            now: Instant,
+            currentTime: Instant,
         ): Transaction {
             val existing = draft.existing
             val type = draft.movement.type
@@ -74,7 +74,11 @@ public class SaveTransactionUseCase
                 timing =
                     Timing(
                         occurredAt = draft.occurredAt,
-                        audit = Audit(createdAt = existing?.timing?.audit?.createdAt ?: now, updatedAt = now),
+                        audit =
+                            Audit(
+                                createdAt = existing?.timing?.audit?.createdAt ?: currentTime,
+                                updatedAt = currentTime,
+                            ),
                     ),
             )
         }

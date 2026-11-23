@@ -58,7 +58,7 @@ internal class InboxViewModel
                     categories = cats,
                     local = edits,
                     hasAccess = access.isGranted(),
-                    now = Instant.now(clock),
+                    currentTime = Instant.now(clock),
                     zone = clock.zone,
                 )
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), InboxUiState())

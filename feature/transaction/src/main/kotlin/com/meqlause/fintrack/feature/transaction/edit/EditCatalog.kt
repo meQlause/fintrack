@@ -10,7 +10,7 @@ import com.meqlause.fintrack.core.model.WalletType
 // S-04, S-18: the wallets, balances and categories the sheet can choose from; archived ones are never offered (BR-007)
 internal data class EditCatalog(
     val wallets: List<Wallet> = emptyList(),
-    val balances: Map<WalletId, Money> = emptyMap(),
+    val moneyByWallet: Map<WalletId, Money> = emptyMap(),
     val categories: List<Category> = emptyList(),
 ) {
     fun activeWallets(): List<Wallet> = wallets.filterNot { it.status.isArchived }

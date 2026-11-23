@@ -32,7 +32,7 @@ internal fun sampleHistoryState(): HistoryUiState =
             listOf(
                 HistoryDayGroup(
                     label = "Hari ini",
-                    net = Money(-175_000L),
+                    netTotal = Money(-175_000L),
                     rows =
                         listOf(
                             HistoryRowItem(
@@ -47,7 +47,7 @@ internal fun sampleHistoryState(): HistoryUiState =
                 ),
                 HistoryDayGroup(
                     label = "Kemarin",
-                    net = Money(5_000_000L),
+                    netTotal = Money(5_000_000L),
                     rows =
                         listOf(
                             HistoryRowItem(3L, TransactionType.INCOME, Money(5_000_000L), "Gaji", "BCA · 08:00"),

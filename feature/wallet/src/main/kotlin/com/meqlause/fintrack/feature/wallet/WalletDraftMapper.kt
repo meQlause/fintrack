@@ -17,7 +17,7 @@ internal object WalletDraftMapper {
     fun newWallet(
         draft: WalletEditor,
         sortOrder: Int,
-        now: Instant,
+        currentTime: Instant,
     ): Wallet =
         Wallet(
             walletId = WalletId(0L),
@@ -30,21 +30,21 @@ internal object WalletDraftMapper {
                     sortOrder = sortOrder,
                 ),
             status = WalletStatus(isIncludedInTotal = draft.includeInTotal),
-            audit = Audit(createdAt = now, updatedAt = now),
+            audit = Audit(createdAt = currentTime, updatedAt = currentTime),
         )
 
     // FR-011: an edit keeps the id, appearance, order, archive state and creation time of the stored wallet
     fun applyTo(
         wallet: Wallet,
         draft: WalletEditor,
-        now: Instant,
+        currentTime: Instant,
     ): Wallet =
         wallet.copy(
             kind = kindOf(draft),
             terms = termsOf(draft),
             profile = wallet.profile.copy(name = draft.name.trim()),
             status = wallet.status.copy(isIncludedInTotal = draft.includeInTotal),
-            audit = wallet.audit.copy(updatedAt = now),
+            audit = wallet.audit.copy(updatedAt = currentTime),
         )
 
     // FR-170: the investment kind applies to investment wallets only

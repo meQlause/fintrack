@@ -36,7 +36,7 @@ public class ReminderNotifier
                     .setContentText(text(reminder))
                     .setContentIntent(openAppIntent(context))
                     .setAutoCancel(true)
-            manager.notify(REMINDER_TAG, reminder.key.hashCode(), builder.build())
+            manager.notify(REMINDER_TAG, reminder.reminderKey.hashCode(), builder.build())
         }
 
         private fun createChannel(manager: NotificationManager) {

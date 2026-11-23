@@ -13,17 +13,17 @@ internal object LedgerRules {
 
     fun validate(
         ledger: BackupLedger,
-        ids: BackupIds,
+        backupIds: BackupIds,
     ) {
         validateWallets(ledger.wallets)
         validateCategories(ledger)
-        validateTransactions(ledger.transactions, ids)
-        validateBudgets(ledger, ids)
+        validateTransactions(ledger.transactions, backupIds)
+        validateBudgets(ledger, backupIds)
         BackupChecks.unique(ledger.merchantRules.map { it.merchantRuleId.value })
         BackupChecks.unique(ledger.merchantRules.map { it.merchantKey })
         ledger.merchantRules.forEach { rule ->
-            BackupChecks.present(ids.categoryIds, rule.categoryId.value)
-            BackupChecks.optional(ids.walletIds, rule.walletId?.value)
+            BackupChecks.present(backupIds.categoryIds, rule.categoryId.value)
+            BackupChecks.optional(backupIds.walletIds, rule.walletId?.value)
         }
     }
 
@@ -46,26 +46,26 @@ internal object LedgerRules {
 
     private fun validateTransactions(
         transactions: List<Transaction>,
-        ids: BackupIds,
+        backupIds: BackupIds,
     ) {
         BackupChecks.unique(transactions.map { it.transactionId.value })
         transactions.forEach { transaction ->
-            validateTransaction(transaction, ids)
+            validateTransaction(transaction, backupIds)
         }
     }
 
     private fun validateTransaction(
         transaction: Transaction,
-        ids: BackupIds,
+        backupIds: BackupIds,
     ) {
         val routing = transaction.routing
         BackupChecks.amount(transaction.movement.amount)
         BackupChecks.ensure(transaction.movement.feeAmount.rupiah in 0..Money.MAX_TRANSACTION_RUPIAH)
-        BackupChecks.present(ids.walletIds, routing.walletId.value)
-        BackupChecks.optional(ids.walletIds, routing.targetWalletId?.value)
-        BackupChecks.optional(ids.categoryIds, routing.categoryId?.value)
-        BackupChecks.optional(ids.loanIds, routing.loanId?.value)
-        BackupChecks.optional(ids.inboxItemIds, transaction.origin.inboxItemId?.value)
+        BackupChecks.present(backupIds.walletIds, routing.walletId.value)
+        BackupChecks.optional(backupIds.walletIds, routing.targetWalletId?.value)
+        BackupChecks.optional(backupIds.categoryIds, routing.categoryId?.value)
+        BackupChecks.optional(backupIds.loanIds, routing.loanId?.value)
+        BackupChecks.optional(backupIds.inboxItemIds, transaction.origin.inboxItemId?.value)
         if (transaction.movement.type == TransactionType.TRANSFER) {
             BackupChecks.ensure(routing.targetWalletId != null && routing.targetWalletId != routing.walletId)
         }
@@ -73,13 +73,13 @@ internal object LedgerRules {
 
     private fun validateBudgets(
         ledger: BackupLedger,
-        ids: BackupIds,
+        backupIds: BackupIds,
     ) {
         BackupChecks.unique(ledger.budgets.map { it.budgetId.value })
         ledger.budgets.forEach { budget ->
             BackupChecks.ensure(budget.limitAmount.rupiah > 0)
-            BackupChecks.optional(ids.categoryIds, budget.categoryId?.value)
+            BackupChecks.optional(backupIds.categoryIds, budget.categoryId?.value)
         }
-        ledger.budgetAlertLogs.forEach { BackupChecks.present(ids.budgetIds, it.budgetId.value) }
+        ledger.budgetAlertLogs.forEach { BackupChecks.present(backupIds.budgetIds, it.budgetId.value) }
     }
 }

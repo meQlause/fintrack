@@ -11,9 +11,9 @@ public class ExportBackupUseCase
     ) {
         /** FR-110: throws BackupException when the password is too short or the file cannot be written. */
         public suspend operator fun invoke(
-            uri: String,
+            fileUri: String,
             password: String,
         ) {
-            backups.export(uri, password)
+            backups.export(fileUri, password)
         }
     }

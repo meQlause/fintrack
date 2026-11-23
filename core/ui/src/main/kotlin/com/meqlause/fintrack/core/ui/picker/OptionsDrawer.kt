@@ -34,7 +34,7 @@ fun OptionsDrawer(
         options.forEach { option ->
             OptionItem(
                 option = option,
-                isSelected = option.key == selectedKey,
+                isSelected = option.optionKey == selectedKey,
                 onClick = { onPick(option) },
             )
         }
@@ -90,9 +90,9 @@ internal fun OptionsDrawerSample() {
 @Composable
 private fun sampleOptions(): List<PickerOption> =
     listOf(
-        PickerOption(key = "none", label = stringResource(R.string.picker_sample_option_none)),
-        PickerOption(key = "week", label = stringResource(R.string.picker_sample_option_week)),
-        PickerOption(key = "month", label = stringResource(R.string.picker_sample_option_month)),
+        PickerOption(optionKey = "none", label = stringResource(R.string.picker_sample_option_none)),
+        PickerOption(optionKey = "week", label = stringResource(R.string.picker_sample_option_week)),
+        PickerOption(optionKey = "month", label = stringResource(R.string.picker_sample_option_month)),
     )
 
 @Preview(name = "OptionsDrawer light", showBackground = true)

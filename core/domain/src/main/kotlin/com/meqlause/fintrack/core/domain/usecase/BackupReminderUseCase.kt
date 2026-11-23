@@ -14,11 +14,12 @@ public class BackupReminderUseCase
         private val settings: SettingsRepository,
         private val transactions: TransactionRepository,
     ) {
-        /** FR-112: the reminder length in days when a reminder is due at [now], null when none is due. */
-        public suspend operator fun invoke(now: Instant): Int? {
+        /** FR-112: the reminder length in days when a reminder is due at [currentTime], null when none is due. */
+        public suspend operator fun invoke(currentTime: Instant): Int? {
             val stored = settings.observe().first().backup
             val hasTransactions = transactions.observeAll().first().isNotEmpty()
-            val due = BackupReminderRules.isDue(now, stored.lastBackupAt, hasTransactions, stored.backupReminderDays)
+            val due =
+                BackupReminderRules.isDue(currentTime, stored.lastBackupAt, hasTransactions, stored.backupReminderDays)
             return stored.backupReminderDays.takeIf { due }
         }
     }

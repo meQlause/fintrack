@@ -1,7 +1,7 @@
 package com.meqlause.fintrack.core.testing.repository
 
 import com.meqlause.fintrack.core.domain.budget.BudgetAlert
-import com.meqlause.fintrack.core.domain.repository.BudgetAlertNotifier
+import com.meqlause.fintrack.core.domain.port.BudgetAlertNotifier
 
 /** FR-073: records every alert instead of posting a notification, so tests can count them. */
 public class FakeBudgetAlertNotifier : BudgetAlertNotifier {

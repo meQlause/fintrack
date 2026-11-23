@@ -22,27 +22,27 @@ public class ProcessDetectedTransactionUseCase
     ) {
         /** FR-084, FR-090: stores a detected payment as PENDING; an app that is not monitored and enabled stores nothing. */
         public suspend operator fun invoke(
-            raw: RawNotification,
+            rawNotification: RawNotification,
             parsed: ParsedTransaction,
         ): ProcessNotificationResult {
-            val monitored = monitoredApps.find(raw.packageName)
+            val monitored = monitoredApps.find(rawNotification.packageName)
             if (monitored == null || !monitored.isEnabled) return ProcessNotificationResult.NotMonitored
-            return store(raw, parsed, monitored)
+            return store(rawNotification, parsed, monitored)
         }
 
         // FR-086: a known fingerprint is a repost; FR-091: a matching pending item becomes the pair partner
         private suspend fun store(
-            raw: RawNotification,
+            rawNotification: RawNotification,
             parsed: ParsedTransaction,
             monitored: MonitoredApp,
         ): ProcessNotificationResult {
-            val fingerprint = DetectionFingerprint.of(raw, parsed)
+            val fingerprint = DetectionFingerprint.of(rawNotification, parsed)
             if (inbox.containsFingerprint(fingerprint)) return ProcessNotificationResult.Duplicate
-            val draft: InboxItem = factory.build(raw, parsed, monitored, fingerprint)
+            val draft: InboxItem = factory.build(rawNotification, parsed, monitored, fingerprint)
             val partner = TransferPairFinder.findPartner(draft, inbox.pendingItems())
             val itemId = inbox.insert(draft)
             partner?.let { inbox.linkPair(it.inboxItemId, itemId) }
-            monitoredApps.recordNotification(raw.packageName, raw.postedAt)
+            monitoredApps.recordNotification(rawNotification.packageName, rawNotification.postedAt)
             return ProcessNotificationResult.Stored(itemId, partner?.inboxItemId)
         }
     }

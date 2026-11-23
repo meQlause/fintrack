@@ -166,7 +166,7 @@ internal class LoanDetailViewModel
             copy(
                 repayment =
                     repayment.copy(
-                        amountDigits = transform(repayment.amountDigits).trimStart('0').take(MAX_DIGITS),
+                        rupiahDigits = transform(repayment.rupiahDigits).trimStart('0').take(MAX_DIGITS),
                     ),
                 errors = emptySet(),
             )

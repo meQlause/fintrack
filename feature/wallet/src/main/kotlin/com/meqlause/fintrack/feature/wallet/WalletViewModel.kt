@@ -109,10 +109,10 @@ internal class WalletViewModel
         }
 
         // FR-139: the statement or due day drawer result, depending on which drawer was open
-        fun pickDay(day: Int) {
+        fun pickDay(pickedDay: Int) {
             when (picker.value) {
-                WalletPicker.STATEMENT_DAY -> editor.update { it?.copy(statementDay = day) }
-                WalletPicker.DUE_DAY -> editor.update { it?.copy(dueDay = day) }
+                WalletPicker.STATEMENT_DAY -> editor.update { it?.copy(statementDay = pickedDay) }
+                WalletPicker.DUE_DAY -> editor.update { it?.copy(dueDay = pickedDay) }
                 else -> Unit
             }
             picker.value = null
@@ -151,15 +151,16 @@ internal class WalletViewModel
         }
 
         private fun buildState(
-            all: List<Wallet>,
+            allWallets: List<Wallet>,
             balances: Map<WalletId, Money>,
             worth: NetWorth,
             draft: WalletEditor?,
             open: WalletPicker?,
             expanded: Boolean,
         ): WalletUiState {
-            if (all.isEmpty()) return WalletUiState.Empty(editor = draft, picker = open)
-            val items = all.map { WalletItem(wallet = it, balance = balances[it.walletId] ?: it.terms.initialBalance) }
+            if (allWallets.isEmpty()) return WalletUiState.Empty(editor = draft, picker = open)
+            val items =
+                allWallets.map { WalletItem(wallet = it, balance = balances[it.walletId] ?: it.terms.initialBalance) }
             val active = items.filterNot { it.wallet.status.isArchived }
             return WalletUiState.Success(
                 netWorth = worth,
@@ -180,16 +181,17 @@ internal class WalletViewModel
 
         private fun Wallet.withArchived(
             archived: Boolean,
-            now: Instant,
+            currentTime: Instant,
         ): Wallet =
             copy(
                 status = status.copy(isArchived = archived),
-                audit = audit.copy(updatedAt = now),
+                audit = audit.copy(updatedAt = currentTime),
             )
 
-        private fun nextSortOrder(all: List<Wallet>): Int = (all.maxOfOrNull { it.profile.sortOrder } ?: -1) + 1
+        private fun nextSortOrder(existingWallets: List<Wallet>): Int =
+            (existingWallets.maxOfOrNull { it.profile.sortOrder } ?: -1) + 1
 
-        private fun digitsOf(raw: String): String = raw.filter { it.isDigit() }.take(MAX_DIGITS)
+        private fun digitsOf(rawInput: String): String = rawInput.filter { it.isDigit() }.take(MAX_DIGITS)
 
         private companion object {
             const val STOP_TIMEOUT_MS = 5_000L

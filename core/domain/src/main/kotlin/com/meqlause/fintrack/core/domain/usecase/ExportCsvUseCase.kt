@@ -9,14 +9,14 @@ import javax.inject.Inject
 public class ExportCsvUseCase
     @Inject
     constructor(
-        private val csv: TransactionCsvRepository,
+        private val csvRepository: TransactionCsvRepository,
     ) {
         /** FR-113: dates are read in the device zone; throws BackupException when the file cannot be written. */
         public suspend operator fun invoke(
-            uri: String,
+            fileUri: String,
             start: LocalDate,
-            end: LocalDate,
+            endDate: LocalDate,
         ) {
-            csv.export(uri, start, end, ZoneId.systemDefault())
+            csvRepository.export(fileUri, start, endDate, ZoneId.systemDefault())
         }
     }

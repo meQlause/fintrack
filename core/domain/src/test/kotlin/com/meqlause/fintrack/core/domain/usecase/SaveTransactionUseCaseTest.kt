@@ -34,8 +34,8 @@ import java.time.ZoneOffset
 
 /** FR-030..FR-032, BR-001..BR-003, BR-006, BR-009, BR-039: the validation rules behind the add sheet. */
 class SaveTransactionUseCaseTest {
-    private val now = Instant.parse("2026-11-23T10:00:00Z")
-    private val clock = Clock.fixed(now, ZoneOffset.UTC)
+    private val currentTime = Instant.parse("2026-11-23T10:00:00Z")
+    private val clock = Clock.fixed(currentTime, ZoneOffset.UTC)
     private val wallets = InMemoryWalletRepository()
     private val categories = InMemoryCategoryRepository()
     private val transactions = InMemoryTransactionRepository()
@@ -117,7 +117,8 @@ class SaveTransactionUseCaseTest {
     @Test
     fun `given date two days ahead when saving then date too far is reported (BR-009)`() =
         runBlocking {
-            val draft = expense(amount = 25_000L, categoryId = foodId()).copy(occurredAt = now.plusSeconds(172_800L))
+            val draft =
+                expense(amount = 25_000L, categoryId = foodId()).copy(occurredAt = currentTime.plusSeconds(172_800L))
             assertThat(useCase(draft)).isEqualTo(SaveTransactionResult.Rejected(setOf(TransactionError.DATE_TOO_FAR)))
         }
 
@@ -141,7 +142,7 @@ class SaveTransactionUseCaseTest {
             movement = Movement(TransactionType.EXPENSE, Money(amount)),
             routing = DraftRouting(walletId ?: seedWallet(WalletType.CASH), null, categoryId),
             memo = Memo(),
-            occurredAt = now,
+            occurredAt = currentTime,
         )
 
     private fun transfer(
@@ -153,7 +154,7 @@ class SaveTransactionUseCaseTest {
             movement = Movement(TransactionType.TRANSFER, Money(10_000L)),
             routing = DraftRouting(source, target, null),
             memo = Memo(),
-            occurredAt = now,
+            occurredAt = currentTime,
         )
 
     private fun seedWallet(type: WalletType): WalletId =
@@ -165,7 +166,7 @@ class SaveTransactionUseCaseTest {
                     terms = WalletTerms(Money(0L), null),
                     profile = WalletProfile("Dompet", Appearance("wallet", "teal"), 0),
                     status = WalletStatus(),
-                    audit = Audit(now, now),
+                    audit = Audit(currentTime, currentTime),
                 ),
             )
         }
@@ -181,7 +182,7 @@ class SaveTransactionUseCaseTest {
                     categoryId = CategoryId(0L),
                     profile = CategoryProfile("Kategori", kind, Appearance("tag", "teal"), 0),
                     state = CategoryState(isDefault = true, isArchived = false),
-                    audit = Audit(now, now),
+                    audit = Audit(currentTime, currentTime),
                 ),
             )
         }

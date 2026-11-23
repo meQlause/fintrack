@@ -69,16 +69,16 @@ internal class CreditDetailViewModel
 
         // FR-132: opens the pay sheet with an empty amount; the first non-credit wallet is the default source
         fun openPay() {
-            session.update { it.copy(pay = PayDraft(amount = "", sourceId = null, failed = false)) }
+            session.update { it.copy(payDraft = PayDraft(typedDigits = "", sourceId = null, failed = false)) }
         }
 
         fun dismissPay() {
-            session.update { it.copy(pay = null) }
+            session.update { it.copy(payDraft = null) }
         }
 
         // FR-133: only digits are kept so the amount is always a whole rupiah value
         fun setPayAmount(text: String) {
-            session.update { s -> s.withPay { it.copy(amount = text.filter(Char::isDigit), failed = false) } }
+            session.update { s -> s.withPay { it.copy(typedDigits = text.filter(Char::isDigit), failed = false) } }
         }
 
         fun pickSource(source: WalletId) {
@@ -89,19 +89,19 @@ internal class CreditDetailViewModel
         fun fillRemaining() {
             val remaining = (state.value as? CreditDetailUiState.Success)?.statement?.breakdown?.remainingDue
             val text = remaining?.rupiah?.toString().orEmpty()
-            session.update { s -> s.withPay { it.copy(amount = text, failed = false) } }
+            session.update { s -> s.withPay { it.copy(typedDigits = text, failed = false) } }
         }
 
         fun clearAmount() {
-            session.update { s -> s.withPay { it.copy(amount = "", failed = false) } }
+            session.update { s -> s.withPay { it.copy(typedDigits = "", failed = false) } }
         }
 
         // FR-132, BR-039: the bill is a TRANSFER from a non-credit wallet, never an EXPENSE; the save rules decide
         fun payBill() {
-            val draft = session.value.pay ?: return
+            val draft = session.value.payDraft ?: return
             val success = state.value as? CreditDetailUiState.Success ?: return
             val source = draft.sourceId ?: success.sources.firstOrNull()?.walletId
-            val amount = draft.amount.toLongOrNull()
+            val amount = draft.typedDigits.toLongOrNull()
             if (source == null || amount == null) {
                 markFailed()
                 return
@@ -122,14 +122,14 @@ internal class CreditDetailViewModel
                     occurredAt = Instant.now(clock),
                 )
             if (saveTransaction(draft) is SaveTransactionResult.Saved) {
-                session.update { it.copy(pay = null) }
+                session.update { it.copy(payDraft = null) }
             } else {
                 markFailed()
             }
         }
 
-        fun openPicker(day: CreditDay) {
-            session.update { it.copy(picker = day) }
+        fun openPicker(creditDay: CreditDay) {
+            session.update { it.copy(picker = creditDay) }
         }
 
         fun dismissPicker() {
@@ -137,11 +137,11 @@ internal class CreditDetailViewModel
         }
 
         // FR-138: the new day is stored at once; the bill recalculates from the stream of wallets
-        fun pickDay(day: Int) {
+        fun pickDay(pickedDay: Int) {
             val picker = session.value.picker ?: return
             viewModelScope.launch {
                 val wallet = wallets.observeAll().first().firstOrNull { it.walletId == walletId } ?: return@launch
-                wallets.update(withDay(wallet, picker, day))
+                wallets.update(withDay(wallet, picker, pickedDay))
                 session.update { it.copy(picker = null) }
             }
         }
@@ -153,11 +153,11 @@ internal class CreditDetailViewModel
         private fun withDay(
             wallet: Wallet,
             picker: CreditDay,
-            day: Int,
+            newDay: Int,
         ): Wallet {
             val credit = requireNotNull(wallet.terms.credit)
             val updated =
-                if (picker == CreditDay.STATEMENT) credit.copy(statementDay = day) else credit.copy(dueDay = day)
+                if (picker == CreditDay.STATEMENT) credit.copy(statementDay = newDay) else credit.copy(dueDay = newDay)
             return wallet.copy(
                 terms = wallet.terms.copy(credit = updated),
                 audit = Audit(createdAt = wallet.audit.createdAt, updatedAt = Instant.now(clock)),
@@ -165,12 +165,12 @@ internal class CreditDetailViewModel
         }
 
         private fun buildState(
-            all: List<Wallet>,
+            allWallets: List<Wallet>,
             rows: List<Transaction>,
             planRows: List<InstallmentPlan>,
             current: Session,
         ): CreditDetailUiState {
-            val wallet = all.firstOrNull { it.walletId == walletId } ?: return CreditDetailUiState.Missing
+            val wallet = allWallets.firstOrNull { it.walletId == walletId } ?: return CreditDetailUiState.Missing
             val terms = wallet.terms.credit ?: return CreditDetailUiState.Missing
             val today = LocalDate.now(clock)
             val account = CreditAccountFactory.build(wallet, rows, planRows, clock.zone)
@@ -182,8 +182,8 @@ internal class CreditDetailViewModel
                 outstanding = StatementCalculator.outstandingOn(account, today),
                 availableLimit = StatementCalculator.availableLimit(account, today),
                 today = today,
-                sources = all.filter { isPayable(it) }.map { PaySource(it.walletId, it.profile.name) },
-                pay = current.pay,
+                sources = allWallets.filter { isPayable(it) }.map { PaySource(it.walletId, it.profile.name) },
+                payDraft = current.payDraft,
                 picker = current.picker,
                 instalments = activeInstalments(wallet, terms, planRows, rows, today),
             )
@@ -207,10 +207,10 @@ internal class CreditDetailViewModel
             wallet.kind.type != WalletType.CREDIT_CARD && wallet.kind.type != WalletType.PAYLATER
 
         private data class Session(
-            val pay: PayDraft? = null,
+            val payDraft: PayDraft? = null,
             val picker: CreditDay? = null,
         ) {
-            fun withPay(change: (PayDraft) -> PayDraft): Session = pay?.let { copy(pay = change(it)) } ?: this
+            fun withPay(change: (PayDraft) -> PayDraft): Session = payDraft?.let { copy(payDraft = change(it)) } ?: this
         }
 
         private companion object {

@@ -22,7 +22,7 @@ internal fun buildInboxState(
     categories: List<Category>,
     local: InboxLocal,
     hasAccess: Boolean,
-    now: Instant,
+    currentTime: Instant,
     zone: ZoneId,
 ): InboxUiState {
     val walletNames = wallets.associate { it.walletId.value to it.profile.name }
@@ -40,7 +40,7 @@ internal fun buildInboxState(
         hasAccess = hasAccess,
         cards = cards,
         pairs = pairs.map { pairCard(it.first, it.second, walletNames, local.edits) },
-        resolved = resolvedRows(items, now),
+        resolved = resolvedRows(items, currentTime),
         walletOptions = wallets.map { PickerOption(it.walletId.value.toString(), it.profile.name) },
         expenseOptions = optionsOf(categories, CategoryKind.EXPENSE),
         incomeOptions = optionsOf(categories, CategoryKind.INCOME),
@@ -96,15 +96,15 @@ private fun card(
 
 private fun pairCard(
     from: InboxItem,
-    to: InboxItem,
+    toItem: InboxItem,
     walletNames: Map<Long, String>,
     edits: Map<Long, InboxEdit>,
 ): InboxPairUi {
     val fromWallet = edits[from.inboxItemId.value]?.walletId ?: from.suggestion.suggestedWalletId?.value
-    val toWallet = edits[to.inboxItemId.value]?.walletId ?: to.suggestion.suggestedWalletId?.value
+    val toWallet = edits[toItem.inboxItemId.value]?.walletId ?: toItem.suggestion.suggestedWalletId?.value
     return InboxPairUi(
         fromItemId = from.inboxItemId.value,
-        toItemId = to.inboxItemId.value,
+        toItemId = toItem.inboxItemId.value,
         fromWalletId = fromWallet,
         fromWalletName = fromWallet?.let { walletNames[it] },
         toWalletId = toWallet,
@@ -116,9 +116,9 @@ private fun pairCard(
 // S-07 "Selesai": confirmed and dismissed items of the last seven days, newest first
 private fun resolvedRows(
     items: List<InboxItem>,
-    now: Instant,
+    currentTime: Instant,
 ): List<InboxResolvedUi> {
-    val since = now.minus(RESOLVED_WINDOW)
+    val since = currentTime.minus(RESOLVED_WINDOW)
     return items
         .filter { it.resolution.status == InboxStatus.CONFIRMED || it.resolution.status == InboxStatus.DISMISSED }
         .filter { (it.resolution.resolvedAt ?: since) >= since }

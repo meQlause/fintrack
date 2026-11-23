@@ -7,13 +7,13 @@ import java.time.Instant
 public object BackupReminderRules {
     /** FR-112: off when [reminderDays] is 0; otherwise due when data exists without a backup, or the last backup is old enough. */
     public fun isDue(
-        now: Instant,
+        currentTime: Instant,
         lastBackupAt: Instant?,
         hasTransactions: Boolean,
         reminderDays: Int,
     ): Boolean {
         if (reminderDays <= 0) return false
         if (lastBackupAt == null) return hasTransactions
-        return Duration.between(lastBackupAt, now) >= Duration.ofDays(reminderDays.toLong())
+        return Duration.between(lastBackupAt, currentTime) >= Duration.ofDays(reminderDays.toLong())
     }
 }

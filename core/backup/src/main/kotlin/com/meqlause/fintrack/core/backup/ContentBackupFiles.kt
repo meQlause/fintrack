@@ -5,7 +5,7 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import com.meqlause.fintrack.core.domain.backup.BackupException
 import com.meqlause.fintrack.core.domain.backup.BackupFailure
-import com.meqlause.fintrack.core.domain.repository.BackupFiles
+import com.meqlause.fintrack.core.domain.port.BackupFiles
 import java.io.IOException
 
 // DOC-11: reads and writes the file the user picked through the system picker; no network is involved
@@ -13,13 +13,13 @@ public class ContentBackupFiles(
     private val context: Context,
 ) : BackupFiles {
     override suspend fun read(
-        uri: String,
+        fileUri: String,
         maxBytes: Long,
     ): ByteArray {
         val bytes =
             try {
                 val input =
-                    context.contentResolver.openInputStream(Uri.parse(uri))
+                    context.contentResolver.openInputStream(Uri.parse(fileUri))
                         ?: throw BackupException(BackupFailure.READ_FAILED)
                 input.use { it.readNBytes(maxBytes.toInt() + 1) }
             } catch (error: IOException) {
@@ -30,12 +30,12 @@ public class ContentBackupFiles(
     }
 
     override suspend fun write(
-        uri: String,
+        fileUri: String,
         bytes: ByteArray,
     ) {
         try {
             val output =
-                context.contentResolver.openOutputStream(Uri.parse(uri), "wt")
+                context.contentResolver.openOutputStream(Uri.parse(fileUri), "wt")
                     ?: throw BackupException(BackupFailure.WRITE_FAILED)
             output.use { it.write(bytes) }
         } catch (error: IOException) {
@@ -44,7 +44,7 @@ public class ContentBackupFiles(
     }
 
     // DOC-11: best effort; a partial file the provider refuses to delete is left for the user to remove
-    override suspend fun delete(uri: String) {
-        runCatching { DocumentsContract.deleteDocument(context.contentResolver, Uri.parse(uri)) }
+    override suspend fun delete(fileUri: String) {
+        runCatching { DocumentsContract.deleteDocument(context.contentResolver, Uri.parse(fileUri)) }
     }
 }

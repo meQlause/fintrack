@@ -30,7 +30,7 @@ internal fun HistoryFilterChips(
             .firstOrNull { it.categoryId == filter.categoryId }
             ?.profile
             ?.name
-    val dayLabel = filter.day?.let { stringResource(R.string.history_day_label, it) }
+    val dayLabel = filter.dayOfMonth?.let { stringResource(R.string.history_day_label, it) }
     Row(
         modifier =
             Modifier
@@ -51,7 +51,7 @@ internal fun HistoryFilterChips(
         )
         FintrackChip(
             label = dayLabel ?: stringResource(R.string.history_filter_day),
-            selected = filter.day != null,
+            selected = filter.dayOfMonth != null,
             onClick = { onEvent(HistoryEvent.SheetOpened(HistorySheet.DAY)) },
         )
     }

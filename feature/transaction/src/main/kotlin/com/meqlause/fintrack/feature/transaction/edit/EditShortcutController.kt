@@ -70,9 +70,9 @@ internal class EditShortcutController(
     // BR-047: a shortcut is stored only when the sheet asks for it; a rejected title keeps the sheet open
     suspend fun storeIfKept(
         current: EditTransactionUiState,
-        now: Instant,
+        currentTime: Instant,
     ): Boolean {
-        val draft = current.toShortcut(now) ?: return true
+        val draft = current.toShortcut(currentTime) ?: return true
         return when (val result = saveQuickEntry(draft)) {
             is QuickEntryResult.Saved -> {
                 true

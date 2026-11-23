@@ -104,7 +104,7 @@ class CreditDetailViewModelTest {
             assertThat(stored.movement.type).isEqualTo(TransactionType.TRANSFER)
             assertThat(stored.routing.walletId).isEqualTo(bankId)
             assertThat(stored.routing.targetWalletId).isEqualTo(cardId)
-            assertThat((viewModel.state.value as CreditDetailUiState.Success).pay).isNull()
+            assertThat((viewModel.state.value as CreditDetailUiState.Success).payDraft).isNull()
             collector.cancel()
         }
 
@@ -157,7 +157,7 @@ class CreditDetailViewModelTest {
         type: TransactionType,
         amount: Long,
         target: WalletId?,
-        at: String,
+        occurredAt: String,
     ): Transaction =
         Transaction(
             transactionId = TransactionId(0L),
@@ -165,6 +165,6 @@ class CreditDetailViewModelTest {
             routing = Routing(walletId, target, categoryId = null, loanId = null),
             memo = Memo(),
             origin = Origin(TransactionSource.MANUAL, inboxItemId = null),
-            timing = Timing(Instant.parse(at), audit),
+            timing = Timing(Instant.parse(occurredAt), audit),
         )
 }

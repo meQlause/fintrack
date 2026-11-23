@@ -42,7 +42,7 @@ class NetWorthBuilderTest {
     private val archived = WalletId(5L)
     private val excluded = WalletId(6L)
     private val today = LocalDate.of(2026, 11, 23)
-    private val at = "2026-11-01T10:00:00Z"
+    private val isoTimestamp = "2026-11-01T10:00:00Z"
 
     // BR-043, BR-053: Saldo leaves out credit and investment wallets, archived wallets and wallets not in the total
     @Test
@@ -114,24 +114,28 @@ class NetWorthBuilderTest {
                 routing = Routing(card, null, categoryId = null, loanId = null),
                 memo = Memo(),
                 origin = Origin(TransactionSource.MANUAL, null),
-                timing = Timing(Instant.parse(at), Audit(Instant.parse(at), Instant.parse(at))),
+                timing =
+                    Timing(
+                        Instant.parse(isoTimestamp),
+                        Audit(Instant.parse(isoTimestamp), Instant.parse(isoTimestamp)),
+                    ),
             )
         return NetWorthLedger(wallets, balances, listOf(spend), plans = emptyList())
     }
 
     private fun wallet(
-        id: WalletId,
+        walletId: WalletId,
         type: WalletType,
         credit: CreditTerms? = null,
         status: WalletStatus = WalletStatus(),
     ): Wallet =
         Wallet(
-            walletId = id,
+            walletId = walletId,
             kind = WalletKind(type, investKind = null),
             terms = WalletTerms(Money(0L), credit),
-            profile = WalletProfile("Dompet ${id.value}", Appearance("wallet", "gray"), id.value.toInt()),
+            profile = WalletProfile("Dompet ${walletId.value}", Appearance("wallet", "gray"), walletId.value.toInt()),
             status = status,
-            audit = Audit(Instant.parse(at), Instant.parse(at)),
+            audit = Audit(Instant.parse(isoTimestamp), Instant.parse(isoTimestamp)),
         )
 
     private fun loan(
@@ -139,8 +143,16 @@ class NetWorthBuilderTest {
         principal: Long,
         status: LoanStatus = LoanStatus.OPEN,
     ): LoanEntry {
-        val agreement = Agreement(direction, "Andi", Money(principal), Instant.parse(at), dueDate = null, note = "")
-        val audit = Audit(Instant.parse(at), Instant.parse(at))
+        val agreement =
+            Agreement(
+                direction,
+                "Andi",
+                Money(principal),
+                Instant.parse(isoTimestamp),
+                dueDate = null,
+                note = "",
+            )
+        val audit = Audit(Instant.parse(isoTimestamp), Instant.parse(isoTimestamp))
         val loan = Loan(LoanId(direction.ordinal.toLong() + 1), agreement, status, closedAt = null, audit)
         return LoanEntry(loan, movements = emptyList())
     }

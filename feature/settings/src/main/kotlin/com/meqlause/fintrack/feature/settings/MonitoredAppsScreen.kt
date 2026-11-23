@@ -69,7 +69,7 @@ internal fun MonitoredAppsScreen(
                 )
             }
             SettingsSection(title = stringResource(R.string.monitored_section_apps)) {
-                state.apps.forEach { row -> AppRow(row = row, callbacks = callbacks) }
+                state.apps.forEach { row -> AppRow(monitoredApp = row, callbacks = callbacks) }
             }
         }
     }
@@ -92,29 +92,29 @@ internal fun MonitoredAppsScreen(
 // FR-081, FR-082, FR-090: one supported app with its switch, default wallet and last received time
 @Composable
 private fun AppRow(
-    row: MonitoredAppRow,
+    monitoredApp: MonitoredAppRow,
     callbacks: MonitoredAppsCallbacks,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = row.displayName,
+                text = monitoredApp.displayName,
                 style = FintrackTheme.typography.labelLarge,
                 color = FintrackTheme.colors.texts.onSurface,
                 modifier = Modifier.weight(1f),
             )
             Switch(
-                checked = row.isEnabled,
-                onCheckedChange = { callbacks.onToggle(row.packageName, it) },
+                checked = monitoredApp.isEnabled,
+                onCheckedChange = { callbacks.onToggle(monitoredApp.packageName, it) },
             )
         }
         FormRow(
             label = stringResource(R.string.monitored_wallet_label),
-            value = row.defaultWalletName ?: stringResource(R.string.monitored_wallet_none),
-            onClick = { callbacks.onOpenPicker(row.packageName) },
+            value = monitoredApp.defaultWalletName ?: stringResource(R.string.monitored_wallet_none),
+            onClick = { callbacks.onOpenPicker(monitoredApp.packageName) },
         )
         Text(
-            text = lastReceivedLabel(row.lastNotificationAt),
+            text = lastReceivedLabel(monitoredApp.lastNotificationAt),
             style = FintrackTheme.typography.labelLarge,
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )

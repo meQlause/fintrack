@@ -24,7 +24,7 @@ internal object NetWorthBuilder {
     ): NetWorth {
         val active = ledger.wallets.filterNot { it.status.isArchived }
         return NetWorth(
-            saldo = saldoOf(active, ledger.balances),
+            saldo = saldoOf(active, ledger.moneyByWallet),
             investasi = investments,
             piutang = outstandingOf(loans, LoanDirection.LENT),
             utangKartu = cardDebtOf(active, ledger, today, zone),
@@ -62,7 +62,7 @@ internal object NetWorthBuilder {
     ): Money =
         loans
             .filter { it.loan.status == LoanStatus.OPEN && it.loan.agreement.direction == direction }
-            .fold(Money(0L)) { sum, entry -> sum + entry.balance.outstanding }
+            .fold(Money(0L)) { sum, entry -> sum + entry.loanBalance.outstanding }
 
     private fun Wallet.isCredit(): Boolean = kind.type == WalletType.CREDIT_CARD || kind.type == WalletType.PAYLATER
 }

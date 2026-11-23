@@ -9,7 +9,7 @@ internal sealed interface InstalmentDetailUiState {
     data object Closed : InstalmentDetailUiState
 
     data class Success(
-        val row: InstalmentRow,
+        val instalmentRow: InstalmentRow,
         val confirmDelete: Boolean,
     ) : InstalmentDetailUiState
 }

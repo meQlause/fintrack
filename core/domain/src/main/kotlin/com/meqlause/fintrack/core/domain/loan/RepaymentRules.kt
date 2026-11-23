@@ -16,6 +16,6 @@ internal object RepaymentRules {
             if (!amount.isTransactionAmount()) add(RepaymentError.AMOUNT_REQUIRED)
             if (walletId == null) add(RepaymentError.WALLET_REQUIRED)
             if (entry.loan.status != LoanStatus.OPEN) add(RepaymentError.LOAN_CLOSED)
-            if (amount > entry.balance.outstanding) add(RepaymentError.AMOUNT_ABOVE_OUTSTANDING)
+            if (amount > entry.loanBalance.outstanding) add(RepaymentError.AMOUNT_ABOVE_OUTSTANDING)
         }
 }

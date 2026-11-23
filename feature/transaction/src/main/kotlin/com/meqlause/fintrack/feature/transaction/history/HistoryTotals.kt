@@ -7,6 +7,6 @@ internal data class HistoryTotals(
     val income: Money = Money(0L),
     val expense: Money = Money(0L),
 ) {
-    val net: Money
+    val netTotal: Money
         get() = income - expense
 }

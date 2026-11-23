@@ -39,7 +39,7 @@ internal fun PayBillSheet(
         )
         SourceChips(draft = draft, sources = sources, onPick = callbacks.onPickSource)
         OutlinedTextField(
-            value = draft.amount,
+            value = draft.typedDigits,
             onValueChange = callbacks.onAmountChange,
             modifier = Modifier.fillMaxWidth(),
             label = { Text(text = stringResource(R.string.credit_pay_amount)) },
@@ -55,7 +55,7 @@ internal fun PayBillSheet(
             FintrackChip(
                 label = stringResource(R.string.credit_pay_partial),
                 selected = false,
-                onClick = callbacks.onClearAmount,
+                onClick = callbacks.onClearEntry,
             )
         }
         if (draft.failed) {

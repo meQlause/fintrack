@@ -1,4 +1,4 @@
-package com.meqlause.fintrack.core.domain.repository
+package com.meqlause.fintrack.core.domain.port
 
 /** DOC-03, BR-011: runs several repository writes as one atomic unit. */
 public interface AtomicRunner {

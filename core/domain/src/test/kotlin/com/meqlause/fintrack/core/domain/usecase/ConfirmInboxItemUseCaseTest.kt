@@ -27,7 +27,7 @@ import java.time.ZoneOffset
 
 // FR-087, FR-091, BR-011 … BR-013: confirming creates one transaction and remembers the merchant
 class ConfirmInboxItemUseCaseTest {
-    private val now: Instant = Instant.parse("2026-11-23T07:05:00Z")
+    private val currentTime: Instant = Instant.parse("2026-11-23T07:05:00Z")
     private val inbox = InMemoryInboxRepository()
     private val transactions = InMemoryTransactionRepository()
     private val rules = InMemoryMerchantRuleRepository()
@@ -37,7 +37,7 @@ class ConfirmInboxItemUseCaseTest {
             transactions,
             rules,
             ImmediateAtomicRunner(),
-            Clock.fixed(now, ZoneOffset.UTC),
+            Clock.fixed(currentTime, ZoneOffset.UTC),
         )
     private val wallet = WalletId(1L)
     private val category = CategoryId(2L)
@@ -110,12 +110,12 @@ class ConfirmInboxItemUseCaseTest {
                     parserId = "bca",
                     rawTitle = "Pembayaran",
                     rawText = "Rp25.000",
-                    postedAt = now,
+                    postedAt = currentTime,
                     fingerprint = fingerprint,
                 ),
             parsed = ParsedAmount(Money(25_000L), direction, merchant),
             suggestion = Suggestion(null, null, related),
             resolution = Resolution(InboxStatus.PENDING, null, null),
-            audit = Audit(now, now),
+            audit = Audit(currentTime, currentTime),
         )
 }

@@ -5,7 +5,7 @@ import com.meqlause.fintrack.core.model.TransactionType
 
 // FR-017, S-19: one recent transaction of the wallet, already formatted for a TransactionRow
 internal data class WalletDetailRow(
-    val id: Long,
+    val transactionId: Long,
     val title: String,
     val subtitle: String,
     val amount: Money,

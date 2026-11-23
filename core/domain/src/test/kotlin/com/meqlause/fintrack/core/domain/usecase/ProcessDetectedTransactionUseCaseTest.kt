@@ -41,8 +41,9 @@ class ProcessDetectedTransactionUseCaseTest {
             registerApps()
             val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
 
-            useCase(received(BCA, "Pembayaran Rp25.000 di INDOMARET KEMANG 12"), payment(DEBIT_MERCHANT))
-            val repost = useCase(received(BCA, "Pembayaran Rp25.000 di INDOMARET KEMANG 12"), payment(DEBIT_MERCHANT))
+            useCase(received(BCA_PACKAGE, "Pembayaran Rp25.000 di INDOMARET KEMANG 12"), payment(DEBIT_MERCHANT))
+            val repost =
+                useCase(received(BCA_PACKAGE, "Pembayaran Rp25.000 di INDOMARET KEMANG 12"), payment(DEBIT_MERCHANT))
 
             assertThat(repost).isEqualTo(ProcessNotificationResult.Duplicate)
             assertThat(inbox.observeAll().first().size).isEqualTo(1)
@@ -54,7 +55,7 @@ class ProcessDetectedTransactionUseCaseTest {
             registerApps()
             val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
 
-            val result = useCase(received(BCA, "Pembayaran"), payment(DEBIT_MERCHANT))
+            val result = useCase(received(BCA_PACKAGE, "Pembayaran"), payment(DEBIT_MERCHANT))
 
             assertThat(result).isInstanceOf(ProcessNotificationResult.Stored::class)
             val item = inbox.observeAll().first().single()
@@ -68,10 +69,10 @@ class ProcessDetectedTransactionUseCaseTest {
     fun `given a remembered merchant then its category and wallet are suggested (FR-088)`() =
         runBlocking {
             registerApps()
-            rules.insert(rule(key = "indomaret kemang 12", category = CategoryId(3), wallet = WalletId(9)))
+            rules.insert(rule(ruleKey = "indomaret kemang 12", category = CategoryId(3), wallet = WalletId(9)))
             val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
 
-            useCase(received(BCA, "Pembayaran"), payment(DEBIT_MERCHANT))
+            useCase(received(BCA_PACKAGE, "Pembayaran"), payment(DEBIT_MERCHANT))
 
             val item = inbox.observeAll().first().single()
             assertThat(item.suggestion.suggestedCategoryId).isEqualTo(CategoryId(3))
@@ -83,7 +84,7 @@ class ProcessDetectedTransactionUseCaseTest {
         runBlocking {
             registerApps()
             val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
-            val first = useCase(received(BCA, "Transfer ke GoPay"), payment("GOPAY TOPUP"))
+            val first = useCase(received(BCA_PACKAGE, "Transfer ke GoPay"), payment("GOPAY TOPUP"))
             val second =
                 useCase(
                     received(GOPAY, "Transfer dari BCA", start.plusSeconds(300)),
@@ -102,7 +103,7 @@ class ProcessDetectedTransactionUseCaseTest {
         runBlocking {
             registerApps()
             val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
-            useCase(received(BCA, "Transfer ke GoPay"), payment("GOPAY TOPUP"))
+            useCase(received(BCA_PACKAGE, "Transfer ke GoPay"), payment("GOPAY TOPUP"))
             val later =
                 useCase(
                     received(GOPAY, "Transfer dari BCA", start.plusSeconds(660)),
@@ -127,22 +128,22 @@ class ProcessDetectedTransactionUseCaseTest {
     @Test
     fun `given a disabled monitored app then nothing is stored (FR-090)`() =
         runBlocking {
-            apps.insert(app(BCA, enabled = false))
+            apps.insert(app(BCA_PACKAGE, enabled = false))
             val useCase = ProcessDetectedTransactionUseCase(apps, inbox, factory())
 
-            val result = useCase(received(BCA, "Pembayaran"), payment(DEBIT_MERCHANT))
+            val result = useCase(received(BCA_PACKAGE, "Pembayaran"), payment(DEBIT_MERCHANT))
 
             assertThat(result).isEqualTo(ProcessNotificationResult.NotMonitored)
             assertThat(inbox.observeAll().first().isEmpty()).isEqualTo(true)
         }
 
     private suspend fun registerApps() {
-        apps.insert(app(BCA, enabled = true))
+        apps.insert(app(BCA_PACKAGE, enabled = true))
         apps.insert(app(GOPAY, enabled = true))
     }
 
-    private suspend fun itemById(id: InboxItemId): InboxItem =
-        inbox.observeAll().first().single { it.inboxItemId == id }
+    private suspend fun itemById(itemId: InboxItemId): InboxItem =
+        inbox.observeAll().first().single { it.inboxItemId == itemId }
 
     private fun factory(): DetectedItemFactory = DetectedItemFactory(rules, clock)
 
@@ -182,18 +183,18 @@ class ProcessDetectedTransactionUseCaseTest {
             packageName = packageName,
             displayName = packageName,
             isEnabled = enabled,
-            defaultWalletId = bcaDefaultWallet.takeIf { packageName == BCA },
+            defaultWalletId = bcaDefaultWallet.takeIf { packageName == BCA_PACKAGE },
             lastNotificationAt = null,
         )
 
     private fun rule(
-        key: String,
+        ruleKey: String,
         category: CategoryId,
         wallet: WalletId,
     ): MerchantRule =
         MerchantRule(
             merchantRuleId = MerchantRuleId(0),
-            merchantKey = key,
+            merchantKey = ruleKey,
             categoryId = category,
             walletId = wallet,
             hitCount = 1,
@@ -201,7 +202,7 @@ class ProcessDetectedTransactionUseCaseTest {
         )
 
     private companion object {
-        const val BCA = "com.bca"
+        const val BCA_PACKAGE = "com.bca"
         const val GOPAY = "com.gojek.gopay"
         const val DEBIT_MERCHANT = "INDOMARET KEMANG 12"
     }

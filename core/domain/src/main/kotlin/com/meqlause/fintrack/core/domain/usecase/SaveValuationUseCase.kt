@@ -1,7 +1,7 @@
 package com.meqlause.fintrack.core.domain.usecase
 
 import com.meqlause.fintrack.core.domain.investment.InvestmentAccountBuilder
-import com.meqlause.fintrack.core.domain.repository.AtomicRunner
+import com.meqlause.fintrack.core.domain.port.AtomicRunner
 import com.meqlause.fintrack.core.domain.repository.ValuationRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import com.meqlause.fintrack.core.model.Money
@@ -25,19 +25,19 @@ public class SaveValuationUseCase
         public suspend operator fun invoke(
             walletId: WalletId,
             value: Money,
-            now: Instant,
+            currentTime: Instant,
             zone: ZoneId,
         ): Boolean {
             val wallet = wallets.observeAll().first().firstOrNull { it.walletId == walletId } ?: return false
             if (!InvestmentAccountBuilder.isActiveInvestment(wallet) || value.rupiah < 0L) return false
-            val day = now.atZone(zone).toLocalDate()
+            val day = currentTime.atZone(zone).toLocalDate()
             val sameDay =
                 valuations.observeAll().first().filter {
                     it.walletId == walletId && it.valuedAt.atZone(zone).toLocalDate() == day
                 }
             atomic.atomically {
                 sameDay.forEach { valuations.delete(it.valuationId) }
-                valuations.insert(ValuationEntry(ValuationEntryId(0L), walletId, value, now, now))
+                valuations.insert(ValuationEntry(ValuationEntryId(0L), walletId, value, currentTime, currentTime))
             }
             return true
         }

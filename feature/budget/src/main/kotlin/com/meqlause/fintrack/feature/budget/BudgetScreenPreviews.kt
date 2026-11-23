@@ -12,13 +12,13 @@ import java.time.Instant
 
 // S-11: previews of the list and empty states in light and dark themes
 private fun sampleRow(
-    id: Long,
+    rowId: Long,
     name: String?,
     limit: Long,
     spent: Long,
 ): BudgetRow {
-    val categoryId = name?.let { CategoryId(id) }
-    val budget = Budget(BudgetId(id), categoryId, Money(limit), true, Instant.EPOCH, Instant.EPOCH)
+    val categoryId = name?.let { CategoryId(rowId) }
+    val budget = Budget(BudgetId(rowId), categoryId, Money(limit), true, Instant.EPOCH, Instant.EPOCH)
     return BudgetRow(BudgetTarget(categoryId, name), BudgetStatus(budget, Money(spent)))
 }
 

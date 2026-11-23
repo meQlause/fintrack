@@ -32,7 +32,7 @@ internal val monitoredPreviewState =
                     lastNotificationAt = null,
                 ),
             ),
-        wallets = listOf(PickerOption(key = "2", label = "BCA")),
+        wallets = listOf(PickerOption(optionKey = "2", label = "BCA")),
     )
 
 @Composable

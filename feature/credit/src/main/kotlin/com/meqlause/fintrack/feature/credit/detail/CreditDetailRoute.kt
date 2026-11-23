@@ -26,7 +26,7 @@ internal fun CreditDetailRoute(
                 onAmountChange = viewModel::setPayAmount,
                 onPickSource = viewModel::pickSource,
                 onFillRemaining = viewModel::fillRemaining,
-                onClearAmount = viewModel::clearAmount,
+                onClearEntry = viewModel::clearAmount,
                 onPay = viewModel::payBill,
                 onOpenPicker = viewModel::openPicker,
                 onDismissPicker = viewModel::dismissPicker,

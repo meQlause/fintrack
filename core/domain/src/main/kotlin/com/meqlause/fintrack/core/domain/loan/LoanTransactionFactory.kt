@@ -24,7 +24,7 @@ internal object LoanTransactionFactory {
         loanId: LoanId,
         note: String,
         occurredAt: Instant,
-        now: Instant,
+        currentTime: Instant,
     ): Transaction =
         Transaction(
             transactionId = TransactionId(0L),
@@ -32,6 +32,6 @@ internal object LoanTransactionFactory {
             routing = Routing(walletId = walletId, targetWalletId = null, categoryId = null, loanId = loanId),
             memo = Memo(note = note),
             origin = Origin(source = TransactionSource.MANUAL, inboxItemId = null),
-            timing = Timing(occurredAt = occurredAt, audit = Audit(createdAt = now, updatedAt = now)),
+            timing = Timing(occurredAt = occurredAt, audit = Audit(createdAt = currentTime, updatedAt = currentTime)),
         )
 }

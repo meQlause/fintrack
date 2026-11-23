@@ -49,7 +49,7 @@ internal fun EditInstalmentRows(
             )
             FormRow(
                 label = stringResource(R.string.instalment_fee_label),
-                value = MoneyFormatter.format(instalment.fee),
+                value = MoneyFormatter.format(instalment.feeAmount),
                 onClick = { onEvent(EditTransactionEvent.FieldFocused(KeypadField.INSTALMENT_FEE)) },
             )
             previewLabel(state)?.let { preview ->

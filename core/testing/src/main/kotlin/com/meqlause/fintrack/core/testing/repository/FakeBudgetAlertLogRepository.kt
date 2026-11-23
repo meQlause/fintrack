@@ -15,8 +15,8 @@ public class FakeBudgetAlertLogRepository : BudgetAlertLogRepository {
 
     override fun observeAll(): Flow<List<BudgetAlertLog>> = store.observe()
 
-    override suspend fun insert(log: BudgetAlertLog) {
-        store.append(log) { same(it, log) }
+    override suspend fun insert(alertLog: BudgetAlertLog) {
+        store.append(alertLog) { same(it, alertLog) }
     }
 
     private fun same(

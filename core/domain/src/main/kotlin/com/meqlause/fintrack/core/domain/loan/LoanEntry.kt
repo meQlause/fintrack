@@ -9,7 +9,7 @@ public data class LoanEntry(
     public val loan: Loan,
     public val movements: List<Transaction>,
 ) {
-    public val balance: LoanBalance
+    public val loanBalance: LoanBalance
         get() =
             LoanBalance(
                 principal = loan.agreement.principal,

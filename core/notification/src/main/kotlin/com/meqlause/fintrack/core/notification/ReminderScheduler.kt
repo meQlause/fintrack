@@ -37,14 +37,14 @@ public object ReminderScheduler {
             .enqueueUniquePeriodicWork(BACKUP_REMINDER_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request)
     }
 
-    private fun delayUntilNextRun(now: ZonedDateTime): Duration {
+    private fun delayUntilNextRun(currentTime: ZonedDateTime): Duration {
         val todayRun =
-            now
+            currentTime
                 .withHour(ReminderRules.RUN_HOUR)
                 .withMinute(0)
                 .withSecond(0)
                 .withNano(0)
-        val nextRun = if (todayRun.isAfter(now)) todayRun else todayRun.plusDays(1)
-        return Duration.between(now, nextRun)
+        val nextRun = if (todayRun.isAfter(currentTime)) todayRun else todayRun.plusDays(1)
+        return Duration.between(currentTime, nextRun)
     }
 }

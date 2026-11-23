@@ -22,7 +22,7 @@ import java.time.ZoneId
 internal val TEST_ZONE: ZoneId = ZoneId.of("UTC")
 
 // a clock that always reads the given UTC instant
-internal fun clockAt(iso: String): Clock = Clock.fixed(Instant.parse(iso), TEST_ZONE)
+internal fun clockAt(isoInstant: String): Clock = Clock.fixed(Instant.parse(isoInstant), TEST_ZONE)
 
 // a budget for [categoryId]; null is the overall budget (FR-074)
 internal fun aBudget(

@@ -22,7 +22,7 @@ internal sealed interface CreditDetailUiState {
         val availableLimit: Money,
         val today: LocalDate,
         val sources: List<PaySource>,
-        val pay: PayDraft?,
+        val payDraft: PayDraft?,
         val picker: CreditDay?,
         val instalments: List<InstalmentRow> = emptyList(),
     ) : CreditDetailUiState

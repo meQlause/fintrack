@@ -91,7 +91,7 @@ private fun onPicked(
     option: PickerOption,
     actions: InboxActions,
 ) {
-    val id = option.key.toLong()
+    val id = option.optionKey.toLong()
     when (picker.kind) {
         PickKind.CATEGORY -> actions.onChooseCategory(picker.itemId, id)
         PickKind.WALLET, PickKind.TARGET_WALLET -> actions.onChooseWallet(picker.itemId, id)

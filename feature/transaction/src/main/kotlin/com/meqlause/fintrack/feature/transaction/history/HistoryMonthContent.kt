@@ -116,7 +116,7 @@ private fun DayHeader(group: HistoryDayGroup) {
             modifier = Modifier.weight(1f),
         )
         Text(
-            text = MoneyFormatter.format(group.net),
+            text = MoneyFormatter.format(group.netTotal),
             style = FintrackTheme.typography.labelMedium,
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )

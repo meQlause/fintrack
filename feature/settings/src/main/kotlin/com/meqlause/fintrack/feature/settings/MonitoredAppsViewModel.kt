@@ -80,7 +80,7 @@ internal class MonitoredAppsViewModel
         fun pickWallet(option: PickerOption) {
             val packageName = picking.value ?: return
             picking.value = null
-            updateApp(packageName) { it.copy(defaultWalletId = WalletId(option.key.toLong())) }
+            updateApp(packageName) { it.copy(defaultWalletId = WalletId(option.optionKey.toLong())) }
         }
 
         private fun rowsFor(
@@ -102,7 +102,7 @@ internal class MonitoredAppsViewModel
         }
 
         private fun walletOption(wallet: Wallet): PickerOption =
-            PickerOption(key = wallet.walletId.value.toString(), label = wallet.profile.name)
+            PickerOption(optionKey = wallet.walletId.value.toString(), label = wallet.profile.name)
 
         private fun updateApp(
             packageName: String,

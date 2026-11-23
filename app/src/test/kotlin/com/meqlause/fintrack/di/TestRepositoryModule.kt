@@ -1,6 +1,6 @@
 package com.meqlause.fintrack.di
 
-import com.meqlause.fintrack.core.domain.repository.AtomicRunner
+import com.meqlause.fintrack.core.domain.port.AtomicRunner
 import com.meqlause.fintrack.core.domain.repository.BudgetAlertLogRepository
 import com.meqlause.fintrack.core.domain.repository.BudgetRepository
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository

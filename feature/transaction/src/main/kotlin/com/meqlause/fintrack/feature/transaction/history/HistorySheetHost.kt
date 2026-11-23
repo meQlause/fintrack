@@ -37,7 +37,7 @@ internal fun HistorySheetHost(
                         ?.value
                         ?.toString() ?: ALL_KEY,
                 onPick = { option ->
-                    onEvent(HistoryEvent.WalletPicked(option.key.toLongOrNull()?.let { WalletId(it) }))
+                    onEvent(HistoryEvent.WalletPicked(option.optionKey.toLongOrNull()?.let { WalletId(it) }))
                 },
                 onClose = close,
             )
@@ -56,7 +56,7 @@ internal fun HistorySheetHost(
                         ?.value
                         ?.toString() ?: ALL_KEY,
                 onPick = { option ->
-                    onEvent(HistoryEvent.CategoryPicked(option.key.toLongOrNull()?.let { CategoryId(it) }))
+                    onEvent(HistoryEvent.CategoryPicked(option.optionKey.toLongOrNull()?.let { CategoryId(it) }))
                 },
                 onClose = close,
             )
@@ -65,7 +65,7 @@ internal fun HistorySheetHost(
         HistorySheet.DAY -> {
             DayGridDrawer(
                 title = stringResource(R.string.history_filter_day_title),
-                selectedDay = state.filter.day,
+                selectedDay = state.filter.dayOfMonth,
                 onPick = { day -> onEvent(HistoryEvent.DayPicked(day)) },
                 onClose = close,
             )

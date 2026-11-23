@@ -20,13 +20,13 @@ internal object TransactionRules {
         draft: TransactionDraft,
         wallets: Map<WalletId, Wallet>,
         categories: Map<CategoryId, Category>,
-        now: Instant,
+        currentTime: Instant,
     ): Set<TransactionError> =
         buildSet {
             addAll(amountErrors(draft.movement.amount))
             addAll(feeErrors(draft))
             addAll(routeErrors(draft, wallets, categories))
-            if (draft.occurredAt.isAfter(now.plus(MAX_FUTURE_DAYS, ChronoUnit.DAYS))) {
+            if (draft.occurredAt.isAfter(currentTime.plus(MAX_FUTURE_DAYS, ChronoUnit.DAYS))) {
                 add(TransactionError.DATE_TOO_FAR)
             }
         }

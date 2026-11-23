@@ -27,12 +27,12 @@ internal fun WalletPickerOverlay(
                 options =
                     WalletType.entries.map {
                         PickerOption(
-                            key = it.name,
+                            optionKey = it.name,
                             label = stringResource(WalletLabels.type(it)),
                         )
                     },
                 selectedKey = draft.type.name,
-                onPick = { callbacks.onPickType(WalletType.valueOf(it.key)) },
+                onPick = { callbacks.onPickType(WalletType.valueOf(it.optionKey)) },
                 onClose = callbacks.onDismissPicker,
             )
         }
@@ -43,12 +43,12 @@ internal fun WalletPickerOverlay(
                 options =
                     InvestKind.entries.map {
                         PickerOption(
-                            key = it.name,
+                            optionKey = it.name,
                             label = stringResource(WalletLabels.investKind(it)),
                         )
                     },
                 selectedKey = draft.investKind.name,
-                onPick = { callbacks.onPickInvestKind(InvestKind.valueOf(it.key)) },
+                onPick = { callbacks.onPickInvestKind(InvestKind.valueOf(it.optionKey)) },
                 onClose = callbacks.onDismissPicker,
             )
         }

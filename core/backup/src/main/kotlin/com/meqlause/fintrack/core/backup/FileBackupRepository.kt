@@ -3,9 +3,9 @@ package com.meqlause.fintrack.core.backup
 import com.meqlause.fintrack.core.common.time.ClockProvider
 import com.meqlause.fintrack.core.domain.backup.BackupException
 import com.meqlause.fintrack.core.domain.backup.BackupFailure
-import com.meqlause.fintrack.core.domain.repository.BackupFiles
+import com.meqlause.fintrack.core.domain.port.BackupFiles
+import com.meqlause.fintrack.core.domain.port.BackupStore
 import com.meqlause.fintrack.core.domain.repository.BackupRepository
-import com.meqlause.fintrack.core.domain.repository.BackupStore
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.model.BackupSnapshot
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,33 +18,33 @@ public class FileBackupRepository(
     private val settings: SettingsRepository,
     private val files: BackupFiles,
     private val clock: ClockProvider,
-    private val io: CoroutineDispatcher,
+    private val ioDispatcher: CoroutineDispatcher,
     private val appVersionName: String,
 ) : BackupRepository {
     override suspend fun export(
-        uri: String,
+        fileUri: String,
         password: String,
     ): Unit =
-        withContext(io) {
+        withContext(ioDispatcher) {
             ensurePassword(password)
             val snapshot = BackupScope.scope(readSnapshot())
             val bytes = BackupCodec.encode(snapshot, password, appVersionName)
-            writeChecked(uri, bytes, password, snapshot)
+            writeChecked(fileUri, bytes, password, snapshot)
             settings.update { stored -> stored.copy(backup = stored.backup.copy(lastBackupAt = snapshot.createdAt)) }
         }
 
     override suspend fun readBackup(
-        uri: String,
+        fileUri: String,
         password: String,
     ): BackupSnapshot =
-        withContext(io) {
-            val snapshot = BackupCodec.decode(files.read(uri, BackupFormat.MAX_FILE_BYTES), password)
+        withContext(ioDispatcher) {
+            val snapshot = BackupCodec.decode(files.read(fileUri, BackupFormat.MAX_FILE_BYTES), password)
             BackupValidator.validate(snapshot)
             snapshot
         }
 
     override suspend fun restore(snapshot: BackupSnapshot) {
-        withContext(io) {
+        withContext(ioDispatcher) {
             BackupValidator.validate(snapshot)
             store.replaceAll(snapshot)
         }
@@ -70,17 +70,17 @@ public class FileBackupRepository(
 
     // DOC-11: the file is only reported as saved once it decrypts and matches the snapshot it was made from
     private suspend fun writeChecked(
-        uri: String,
+        fileUri: String,
         bytes: ByteArray,
         password: String,
         expected: BackupSnapshot,
     ) {
         try {
-            files.write(uri, bytes)
-            val written = BackupCodec.decode(files.read(uri, BackupFormat.MAX_FILE_BYTES), password)
+            files.write(fileUri, bytes)
+            val written = BackupCodec.decode(files.read(fileUri, BackupFormat.MAX_FILE_BYTES), password)
             if (written != expected) throw BackupException(BackupFailure.WRITE_FAILED)
         } catch (error: BackupException) {
-            files.delete(uri)
+            files.delete(fileUri)
             throw error
         }
     }

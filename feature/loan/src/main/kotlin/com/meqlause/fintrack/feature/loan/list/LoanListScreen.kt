@@ -102,7 +102,7 @@ private fun LoanListItems(
                 )
             }
             items(items = state.settled, key = { it.loanId }) { row ->
-                LoanRowItem(row = row, onClick = { onOpenLoan(row.loanId) })
+                LoanRowItem(loanRow = row, onClick = { onOpenLoan(row.loanId) })
             }
         }
     }

@@ -18,7 +18,7 @@ internal class EditInstalmentController
             val draft = state.toDraft()
             val tenor = state.instalment.tenor
             return if (state.instalmentActive && tenor != null) {
-                saveInstalment(draft, InstalmentRequest(tenor, state.instalment.fee))
+                saveInstalment(draft, InstalmentRequest(tenor, state.instalment.feeAmount))
             } else {
                 saveTransaction(draft)
             }

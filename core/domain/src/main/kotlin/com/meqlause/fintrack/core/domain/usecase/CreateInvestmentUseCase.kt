@@ -29,14 +29,14 @@ public class CreateInvestmentUseCase
             name: String,
             investKind: InvestKind,
             invested: Money,
-            now: Instant,
+            currentTime: Instant,
         ): WalletId? {
             val trimmed = name.trim()
             if (validator.validate(trimmed) != null || invested.rupiah < 0L) return null
             val all = wallets.observeAll().first()
             if (all.any { !it.status.isArchived && it.profile.name.equals(trimmed, ignoreCase = true) }) return null
             val order = (all.maxOfOrNull { it.profile.sortOrder } ?: -1) + 1
-            return wallets.insert(newWallet(trimmed, investKind, invested, order, now))
+            return wallets.insert(newWallet(trimmed, investKind, invested, order, currentTime))
         }
 
         // FR-170: the default icon and colour of an investment wallet, as the Dompet editor gives them
@@ -45,7 +45,7 @@ public class CreateInvestmentUseCase
             investKind: InvestKind,
             invested: Money,
             order: Int,
-            now: Instant,
+            currentTime: Instant,
         ): Wallet =
             Wallet(
                 walletId = WalletId(0L),
@@ -58,7 +58,7 @@ public class CreateInvestmentUseCase
                         sortOrder = order,
                     ),
                 status = WalletStatus(),
-                audit = Audit(createdAt = now, updatedAt = now),
+                audit = Audit(createdAt = currentTime, updatedAt = currentTime),
             )
 
         private companion object {

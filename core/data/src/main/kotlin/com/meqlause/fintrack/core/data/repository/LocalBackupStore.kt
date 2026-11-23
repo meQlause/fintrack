@@ -15,7 +15,7 @@ import com.meqlause.fintrack.core.data.mapper.toTransaction
 import com.meqlause.fintrack.core.data.mapper.toValuationEntry
 import com.meqlause.fintrack.core.data.mapper.toWallet
 import com.meqlause.fintrack.core.database.FintrackDatabase
-import com.meqlause.fintrack.core.domain.repository.BackupStore
+import com.meqlause.fintrack.core.domain.port.BackupStore
 import com.meqlause.fintrack.core.model.BackupAdjunct
 import com.meqlause.fintrack.core.model.BackupLedger
 import com.meqlause.fintrack.core.model.BackupSnapshot

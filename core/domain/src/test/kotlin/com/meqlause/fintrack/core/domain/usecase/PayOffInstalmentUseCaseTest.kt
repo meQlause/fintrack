@@ -30,8 +30,8 @@ import java.time.ZoneOffset
 /** FR-144, BR-037: early payoff bills the remaining portions on the next statement. */
 class PayOffInstalmentUseCaseTest {
     // 2026-11-26 is after the cut-off of the 25th, so the next statement is December
-    private val now = Instant.parse("2026-11-26T10:00:00Z")
-    private val clock = Clock.fixed(now, ZoneOffset.UTC)
+    private val currentTime = Instant.parse("2026-11-26T10:00:00Z")
+    private val clock = Clock.fixed(currentTime, ZoneOffset.UTC)
     private val wallets = InMemoryWalletRepository()
     private val plans = InMemoryInstallmentPlanRepository()
     private val useCase = PayOffInstalmentUseCase(plans, wallets, clock)
@@ -60,7 +60,7 @@ class PayOffInstalmentUseCaseTest {
                 ),
             schedule = Schedule(tenorMonths = 6, firstStatementMonth = YearMonth.of(2026, 11), earlyPayoffMonth = null),
             status = InstallmentStatus.ACTIVE,
-            audit = Audit(createdAt = now, updatedAt = now),
+            audit = Audit(createdAt = currentTime, updatedAt = currentTime),
         )
 
     private fun seedCard(): WalletId =
@@ -72,7 +72,7 @@ class PayOffInstalmentUseCaseTest {
                     terms = WalletTerms(Money(0L), CreditTerms(Money(10_000_000L), statementDay = 25, dueDay = 10)),
                     profile = WalletProfile("Kartu", Appearance("card", "teal"), 0),
                     status = WalletStatus(),
-                    audit = Audit(now, now),
+                    audit = Audit(currentTime, currentTime),
                 ),
             )
         }

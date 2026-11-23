@@ -3,7 +3,7 @@ package com.meqlause.fintrack.core.backup
 // FR-113, DOC-11: RFC 4180 text of a CSV file with CRLF record ends
 internal object CsvText {
     /** DOC-11: UTF-8 byte order mark, so Excel reads Indonesian text correctly. */
-    const val BOM: String = "﻿"
+    const val BYTE_ORDER_MARK: String = "﻿"
 
     private const val SEPARATOR = ","
     private const val LINE_END = "\r\n"

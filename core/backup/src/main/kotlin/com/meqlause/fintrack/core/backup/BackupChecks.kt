@@ -15,17 +15,17 @@ internal object BackupChecks {
     }
 
     fun present(
-        ids: Set<Long>,
-        id: Long,
+        knownIds: Set<Long>,
+        targetId: Long,
     ) {
-        ensure(id in ids)
+        ensure(targetId in knownIds)
     }
 
     fun optional(
-        ids: Set<Long>,
-        id: Long?,
+        knownIds: Set<Long>,
+        targetId: Long?,
     ) {
-        if (id != null) present(ids, id)
+        if (targetId != null) present(knownIds, targetId)
     }
 
     fun amount(value: Money) {

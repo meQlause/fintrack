@@ -67,17 +67,17 @@ internal fun sampleStatisticsState(): HistoryUiState =
     )
 
 private fun sampleCategory(
-    id: Long,
+    categoryNumber: Long,
     name: String,
 ): Category =
     Category(
-        categoryId = CategoryId(id),
+        categoryId = CategoryId(categoryNumber),
         profile =
             CategoryProfile(
                 name = name,
                 kind = CategoryKind.EXPENSE,
                 appearance = Appearance(iconKey = "food", colorKey = "orange"),
-                sortOrder = id.toInt(),
+                sortOrder = categoryNumber.toInt(),
             ),
         state = CategoryState(isDefault = true, isArchived = false),
         audit = Audit(createdAt = Instant.EPOCH, updatedAt = Instant.EPOCH),

@@ -16,14 +16,14 @@ import java.time.Instant
 
 // FR-039, BR-047: a shortcut fills the draft in editable form; only a new expense or income can become one
 class EditShortcutMappingTest {
-    private val now = Instant.parse("2026-11-23T10:00:00Z")
+    private val fixedNow = Instant.parse("2026-11-23T10:00:00Z")
 
     @Test
     fun `a shortcut fills the form with its type, amount, wallet, category and title`() {
         val form = entry().toForm()
 
         assertThat(form.type).isEqualTo(TransactionType.EXPENSE)
-        assertThat(form.amountDigits).isEqualTo("25000")
+        assertThat(form.rupiahDigits).isEqualTo("25000")
         assertThat(form.walletId).isEqualTo(WalletId(2L))
         assertThat(form.categoryId).isEqualTo(CategoryId(3L))
         assertThat(form.note).isEqualTo("Kopi")
@@ -36,7 +36,7 @@ class EditShortcutMappingTest {
                 form =
                     TransactionForm(
                         type = TransactionType.EXPENSE,
-                        amountDigits = "25000",
+                        rupiahDigits = "25000",
                         walletId = WalletId(2L),
                         categoryId = CategoryId(3L),
                         note = "  Kopi  ",
@@ -44,7 +44,7 @@ class EditShortcutMappingTest {
                 keepAsShortcut = true,
             )
 
-        val shortcut = state.toShortcut(now)
+        val shortcut = state.toShortcut(fixedNow)
 
         assertThat(shortcut?.template?.title).isEqualTo("Kopi")
         assertThat(shortcut?.template?.amount).isEqualTo(Money(25_000L))
@@ -55,8 +55,8 @@ class EditShortcutMappingTest {
         val form = TransactionForm(walletId = WalletId(2L), categoryId = CategoryId(3L))
         val base = EditTransactionUiState(form = form)
 
-        assertThat(base.toShortcut(now)).isNull()
-        assertThat(base.copy(keepAsShortcut = true, appliedShortcut = true).toShortcut(now)).isNull()
+        assertThat(base.toShortcut(fixedNow)).isNull()
+        assertThat(base.copy(keepAsShortcut = true, appliedShortcut = true).toShortcut(fixedNow)).isNull()
     }
 
     private fun entry(): QuickEntry =
@@ -66,6 +66,6 @@ class EditShortcutMappingTest {
             categoryId = CategoryId(3L),
             walletId = WalletId(2L),
             sortOrder = 0,
-            audit = Audit(createdAt = now, updatedAt = now),
+            audit = Audit(createdAt = fixedNow, updatedAt = fixedNow),
         )
 }

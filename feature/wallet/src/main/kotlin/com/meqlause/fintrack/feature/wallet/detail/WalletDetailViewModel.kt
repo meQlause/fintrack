@@ -54,12 +54,12 @@ internal class WalletDetailViewModel
         }
 
         private fun buildState(
-            all: List<Wallet>,
+            allWallets: List<Wallet>,
             balances: Map<WalletId, Money>,
             rows: List<Transaction>,
             open: Boolean,
         ): WalletDetailUiState {
-            val wallet = all.firstOrNull { it.walletId == walletId } ?: return WalletDetailUiState.Missing
+            val wallet = allWallets.firstOrNull { it.walletId == walletId } ?: return WalletDetailUiState.Missing
             val balance = balances[walletId] ?: wallet.terms.initialBalance
             val related =
                 rows
@@ -71,7 +71,7 @@ internal class WalletDetailViewModel
 
         private fun Transaction.toRow(): WalletDetailRow =
             WalletDetailRow(
-                id = transactionId.value,
+                transactionId = transactionId.value,
                 title = memo.merchant.ifBlank { memo.note },
                 subtitle = DATE_FORMAT.withZone(clock.zone).format(timing.occurredAt),
                 amount = movement.amount,

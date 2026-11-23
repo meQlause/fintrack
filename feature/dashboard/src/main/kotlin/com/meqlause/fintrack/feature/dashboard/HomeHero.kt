@@ -45,7 +45,7 @@ internal fun HomeHero(
             }
         }
         HomeNetPill(
-            net = state.period.net,
+            netAmount = state.period.netTotal,
             hidden = state.hidden,
             onClick = callbacks.onOpenSummary,
             modifier = Modifier.padding(top = FintrackTheme.spacing.small),
@@ -95,7 +95,7 @@ private fun HomeHeroLabel(
 // FR-041: the period net as a pill; tapping it opens the Ringkasan drawer
 @Composable
 private fun HomeNetPill(
-    net: Money,
+    netAmount: Money,
     hidden: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -111,7 +111,7 @@ private fun HomeNetPill(
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
     ) {
         Text(
-            text = netLabel(net = net, hidden = hidden),
+            text = netLabel(netAmount = netAmount, hidden = hidden),
             style = FintrackTheme.typography.labelLarge,
             color = FintrackTheme.colors.texts.onSurface,
             maxLines = 1,
@@ -127,13 +127,13 @@ private fun HomeNetPill(
 
 @Composable
 private fun netLabel(
-    net: Money,
+    netAmount: Money,
     hidden: Boolean,
 ): String =
     if (hidden) {
         stringResource(R.string.home_amount_hidden)
     } else {
-        stringResource(R.string.home_net_suffix, MoneyFormatter.formatSigned(net, AmountSign.PLUS))
+        stringResource(R.string.home_net_suffix, MoneyFormatter.formatSigned(netAmount, AmountSign.PLUS))
     }
 
 // FR-040: each wallet's share of the positive balances as one slim bar; nothing is drawn when no wallet is positive

@@ -8,7 +8,7 @@ import com.meqlause.fintrack.core.model.WalletId
 // FR-030..FR-032: what the user has typed or picked; amounts stay digit strings until they are saved
 internal data class TransactionForm(
     val type: TransactionType = TransactionType.EXPENSE,
-    val amountDigits: String = "",
+    val rupiahDigits: String = "",
     val feeDigits: String = "",
     val walletId: WalletId? = null,
     val targetWalletId: WalletId? = null,
@@ -16,9 +16,9 @@ internal data class TransactionForm(
     val note: String = "",
 ) {
     val amount: Money
-        get() = Money(amountDigits.toLongOrNull() ?: 0L)
+        get() = Money(rupiahDigits.toLongOrNull() ?: 0L)
 
-    val fee: Money
+    val feeAmount: Money
         get() = Money(feeDigits.toLongOrNull() ?: 0L)
 
     val isTransfer: Boolean

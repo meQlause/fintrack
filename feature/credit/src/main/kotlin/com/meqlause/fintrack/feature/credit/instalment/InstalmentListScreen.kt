@@ -81,7 +81,7 @@ private fun ColumnScope.InstalmentListBody(
             verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
         ) {
             items(items = state.rows, key = { it.planId }) { row ->
-                InstalmentListItem(row = row, onClick = { onOpenInstalment(row.planId) })
+                InstalmentListItem(instalmentRow = row, onClick = { onOpenInstalment(row.planId) })
             }
         }
     }

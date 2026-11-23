@@ -50,7 +50,7 @@ class HistoryViewModelTest {
     @Test
     fun givenExpenseInNovemberWhenOpenedThenRowAndTotalsAreShown() =
         runTest {
-            transactions.insert(expense(note = "Makan siang", merchant = "Warung Bu Tini", day = 18))
+            transactions.insert(expense(note = "Makan siang", merchant = "Warung Bu Tini", dayOfMonth = 18))
             val state = viewModel().state.first { it.isLoaded }
             assertEquals(1, state.groups.size)
             assertEquals(
@@ -68,8 +68,8 @@ class HistoryViewModelTest {
     @Test
     fun givenTwoExpensesWhenSearchedByMerchantThenOnlyMatchingRowIsShown() =
         runTest {
-            transactions.insert(expense(note = "Kopi", merchant = "Kopi Kenangan", day = 18))
-            transactions.insert(expense(note = "Bensin", merchant = "Pertamina", day = 19))
+            transactions.insert(expense(note = "Kopi", merchant = "Kopi Kenangan", dayOfMonth = 18))
+            transactions.insert(expense(note = "Bensin", merchant = "Pertamina", dayOfMonth = 19))
             val model = viewModel()
             model.onEvent(HistoryEvent.SearchToggled)
             model.onEvent(HistoryEvent.QueryChanged("KOPI"))
@@ -86,8 +86,8 @@ class HistoryViewModelTest {
     @Test
     fun givenTransferToWalletWhenWalletFilterSetThenTransferIsShown() =
         runTest {
-            transactions.insert(transfer(from = 1L, to = 2L, day = 18))
-            transactions.insert(expense(note = "Lain", merchant = "Toko", day = 18, wallet = 3L))
+            transactions.insert(transfer(from = 1L, targetWallet = 2L, dayOfMonth = 18))
+            transactions.insert(expense(note = "Lain", merchant = "Toko", dayOfMonth = 18, wallet = 3L))
             val model = viewModel()
             model.onEvent(HistoryEvent.WalletPicked(WalletId(2L)))
             val state = model.state.first { it.filter.walletId == WalletId(2L) && it.isLoaded }
@@ -123,15 +123,15 @@ class HistoryViewModelTest {
     fun givenDayPickedTwiceThenDayFilterIsCleared() {
         val picked = HistorySelection(month = YearMonth.of(2026, 11)).reduce(HistoryEvent.DayPicked(18))
         val cleared = picked.reduce(HistoryEvent.DayPicked(18))
-        assertEquals(18, picked.filter.day)
-        assertEquals(null, cleared.filter.day)
+        assertEquals(18, picked.filter.dayOfMonth)
+        assertEquals(null, cleared.filter.dayOfMonth)
     }
 
     // FR-060: the statistics view totals the picked month for the picked kind of money
     @Test
     fun givenExpenseInNovemberWhenStatisticsOpenedThenTotalIsComputed() =
         runTest {
-            transactions.insert(expense(note = "Makan", merchant = "", day = 18))
+            transactions.insert(expense(note = "Makan", merchant = "", dayOfMonth = 18))
             val model = viewModel()
             model.onEvent(HistoryEvent.ViewPicked(HistoryView.STATISTICS))
             val state = model.state.first { it.isLoaded && it.view == HistoryView.STATISTICS }
@@ -152,7 +152,7 @@ class HistoryViewModelTest {
     private suspend fun expense(
         note: String,
         merchant: String,
-        day: Int,
+        dayOfMonth: Int,
         wallet: Long = 1L,
     ): Transaction =
         Transaction(
@@ -161,13 +161,13 @@ class HistoryViewModelTest {
             routing = Routing(walletId = WalletId(wallet), targetWalletId = null, categoryId = null, loanId = null),
             memo = Memo(note = note, merchant = merchant),
             origin = Origin(source = TransactionSource.MANUAL, inboxItemId = null),
-            timing = Timing(occurredAt = at(day), audit = audit()),
+            timing = Timing(occurredAt = at(dayOfMonth), audit = audit()),
         )
 
     private fun transfer(
         from: Long,
-        to: Long,
-        day: Int,
+        targetWallet: Long,
+        dayOfMonth: Int,
     ): Transaction =
         Transaction(
             transactionId = TransactionId(0L),
@@ -175,16 +175,16 @@ class HistoryViewModelTest {
             routing =
                 Routing(
                     walletId = WalletId(from),
-                    targetWalletId = WalletId(to),
+                    targetWalletId = WalletId(targetWallet),
                     categoryId = null,
                     loanId = null,
                 ),
             memo = Memo(),
             origin = Origin(source = TransactionSource.MANUAL, inboxItemId = null),
-            timing = Timing(occurredAt = at(day), audit = audit()),
+            timing = Timing(occurredAt = at(dayOfMonth), audit = audit()),
         )
 
-    private fun at(day: Int): Instant = Instant.parse("2026-11-%02dT05:00:00Z".format(day))
+    private fun at(dayOfMonth: Int): Instant = Instant.parse("2026-11-%02dT05:00:00Z".format(dayOfMonth))
 
     private fun audit(): Audit = Audit(createdAt = at(1), updatedAt = at(1))
 }

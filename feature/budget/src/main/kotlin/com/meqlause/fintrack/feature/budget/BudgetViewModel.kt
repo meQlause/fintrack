@@ -52,11 +52,11 @@ internal class BudgetViewModel
         }
 
         // FR-070: opens the amount keypad for an existing budget, prefilled with its current limit
-        fun startEdit(row: BudgetRow) {
+        fun startEdit(budgetRow: BudgetRow) {
             editor.value =
                 BudgetEditor.Amount(
-                    row.target,
-                    row.status.budget.limitAmount.rupiah
+                    budgetRow.target,
+                    budgetRow.status.budget.limitAmount.rupiah
                         .toString(),
                 )
         }

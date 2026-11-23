@@ -18,7 +18,7 @@ internal fun EditTransactionUiState.toDraft(): TransactionDraft {
             Movement(
                 type = form.type,
                 amount = form.amount,
-                feeAmount = if (form.isTransfer) form.fee else Money(0L),
+                feeAmount = if (form.isTransfer) form.feeAmount else Money(0L),
             ),
         routing =
             DraftRouting(
@@ -35,7 +35,7 @@ internal fun EditTransactionUiState.toDraft(): TransactionDraft {
 internal fun Transaction.toForm(): TransactionForm =
     TransactionForm(
         type = movement.type,
-        amountDigits = digitsOf(movement.amount),
+        rupiahDigits = digitsOf(movement.amount),
         feeDigits = digitsOf(movement.feeAmount),
         walletId = routing.walletId,
         targetWalletId = routing.targetWalletId,

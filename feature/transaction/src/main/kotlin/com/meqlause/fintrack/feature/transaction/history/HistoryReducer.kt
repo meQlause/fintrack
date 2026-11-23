@@ -35,7 +35,7 @@ internal fun HistorySelection.reduce(event: HistoryEvent): HistorySelection =
 
         is HistoryEvent.DayPicked -> {
             copy(
-                filter = filter.copy(day = event.day.takeIf { it != filter.day }),
+                filter = filter.copy(dayOfMonth = event.dayOfMonth.takeIf { it != filter.dayOfMonth }),
                 sheet = null,
             )
         }

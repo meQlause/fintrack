@@ -15,7 +15,7 @@ import java.time.LocalDate
 // FR-131 to FR-138, S-14: previews of the credit wallet detail with a bill that is due, light and dark
 private val previewToday: LocalDate = LocalDate.of(2026, 11, 5)
 
-private fun previewState(pay: PayDraft? = null): CreditDetailUiState.Success {
+private fun previewState(payDraft: PayDraft? = null): CreditDetailUiState.Success {
     val terms = CreditTerms(Money(10_000_000L), statementDay = 25, dueDay = 10)
     val account =
         CreditAccount(
@@ -34,7 +34,7 @@ private fun previewState(pay: PayDraft? = null): CreditDetailUiState.Success {
         availableLimit = StatementCalculator.availableLimit(account, previewToday),
         today = previewToday,
         sources = listOf(PaySource(WalletId(2L), "BCA Tabungan")),
-        pay = pay,
+        payDraft = payDraft,
         picker = null,
     )
 }
@@ -60,6 +60,6 @@ internal fun CreditDetailDarkPreview() {
 @Composable
 internal fun CreditPaySheetLightPreview() {
     FintrackTheme(darkTheme = false) {
-        CreditDetailSample(previewState(pay = PayDraft(amount = "3500000", sourceId = null, failed = false)))
+        CreditDetailSample(previewState(payDraft = PayDraft(typedDigits = "3500000", sourceId = null, failed = false)))
     }
 }

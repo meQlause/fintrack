@@ -12,7 +12,7 @@ public class ReadBackupUseCase
     ) {
         /** FR-111: returns the validated content; throws BackupException with the reason otherwise. */
         public suspend operator fun invoke(
-            uri: String,
+            fileUri: String,
             password: String,
-        ): BackupSnapshot = backups.readBackup(uri, password)
+        ): BackupSnapshot = backups.readBackup(fileUri, password)
     }

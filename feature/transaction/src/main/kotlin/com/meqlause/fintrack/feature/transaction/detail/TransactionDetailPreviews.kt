@@ -12,7 +12,7 @@ private val sampleDetail =
     TransactionDetail(
         type = TransactionType.EXPENSE,
         amount = Money(25_000L),
-        fee = Money(0L),
+        feeAmount = Money(0L),
         title = "Warung Bu Tini",
         merchant = "Warung Bu Tini",
         note = "Makan siang",

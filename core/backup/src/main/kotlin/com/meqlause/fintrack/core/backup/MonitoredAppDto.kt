@@ -23,13 +23,13 @@ internal data class MonitoredAppDto(
         )
 
     companion object {
-        fun from(app: MonitoredApp): MonitoredAppDto =
+        fun from(monitoredApp: MonitoredApp): MonitoredAppDto =
             MonitoredAppDto(
-                packageName = app.packageName,
-                displayName = app.displayName,
-                isEnabled = app.isEnabled,
-                defaultWalletId = app.defaultWalletId?.value,
-                lastNotificationAt = app.lastNotificationAt?.toString(),
+                packageName = monitoredApp.packageName,
+                displayName = monitoredApp.displayName,
+                isEnabled = monitoredApp.isEnabled,
+                defaultWalletId = monitoredApp.defaultWalletId?.value,
+                lastNotificationAt = monitoredApp.lastNotificationAt?.toString(),
             )
     }
 }

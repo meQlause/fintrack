@@ -3,7 +3,7 @@ package com.meqlause.fintrack.core.domain.usecase
 import com.meqlause.fintrack.core.domain.inbox.ConfirmInboxResult
 import com.meqlause.fintrack.core.domain.inbox.InboxChoice
 import com.meqlause.fintrack.core.domain.inbox.MerchantKey
-import com.meqlause.fintrack.core.domain.repository.AtomicRunner
+import com.meqlause.fintrack.core.domain.port.AtomicRunner
 import com.meqlause.fintrack.core.domain.repository.InboxRepository
 import com.meqlause.fintrack.core.domain.repository.MerchantRuleRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
@@ -102,20 +102,22 @@ public class ConfirmInboxItemUseCase
             item: InboxItem,
             walletId: WalletId,
             categoryId: CategoryId,
-            now: Instant,
+            currentTime: Instant,
         ) {
             val key = MerchantKey.of(item.parsed.merchant)
             if (key.isEmpty()) return
             val existing = merchantRules.findByKey(key)
             if (existing == null) {
-                merchantRules.insert(MerchantRule(MerchantRuleId(0L), key, categoryId, walletId, 1, Audit(now, now)))
+                merchantRules.insert(
+                    MerchantRule(MerchantRuleId(0L), key, categoryId, walletId, 1, Audit(currentTime, currentTime)),
+                )
             } else {
                 merchantRules.update(
                     existing.copy(
                         categoryId = categoryId,
                         walletId = walletId,
                         hitCount = existing.hitCount + 1,
-                        audit = existing.audit.copy(updatedAt = now),
+                        audit = existing.audit.copy(updatedAt = currentTime),
                     ),
                 )
             }
@@ -125,7 +127,7 @@ public class ConfirmInboxItemUseCase
             item: InboxItem,
             type: TransactionType,
             routing: Routing,
-            now: Instant,
+            currentTime: Instant,
         ): Transaction =
             Transaction(
                 transactionId = TransactionId(0L),
@@ -133,11 +135,15 @@ public class ConfirmInboxItemUseCase
                 routing = routing,
                 memo = Memo(merchant = item.parsed.merchant),
                 origin = Origin(TransactionSource.NOTIFICATION, item.inboxItemId),
-                timing = Timing(occurredAt = item.notice.postedAt, audit = Audit(createdAt = now, updatedAt = now)),
+                timing =
+                    Timing(
+                        occurredAt = item.notice.postedAt,
+                        audit = Audit(createdAt = currentTime, updatedAt = currentTime),
+                    ),
             )
 
         private fun confirmed(
-            id: TransactionId,
-            now: Instant,
-        ): Resolution = Resolution(InboxStatus.CONFIRMED, transactionId = id, resolvedAt = now)
+            transactionId: TransactionId,
+            currentTime: Instant,
+        ): Resolution = Resolution(InboxStatus.CONFIRMED, transactionId = transactionId, resolvedAt = currentTime)
     }

@@ -51,7 +51,7 @@ internal fun BackupFlow(
                 title = stringResource(R.string.settings_backup_reminder_sheet_title),
                 options = reminderOptions(),
                 selectedKey = state.reminderDays.toString(),
-                onPick = { option -> onReminderDaysPicked(option.key.toInt()) },
+                onPick = { option -> onReminderDaysPicked(option.optionKey.toInt()) },
                 onClose = onDismissStep,
             )
         }
@@ -73,7 +73,7 @@ private fun reminderOptions(): List<PickerOption> =
             } else {
                 stringResource(R.string.settings_backup_reminder_value, days)
             }
-        PickerOption(key = days.toString(), label = label)
+        PickerOption(optionKey = days.toString(), label = label)
     }
 
 // FR-111: the summary of a validated backup; nothing has been replaced yet

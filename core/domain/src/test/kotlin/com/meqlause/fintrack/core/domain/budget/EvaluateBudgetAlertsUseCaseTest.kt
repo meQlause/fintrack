@@ -22,7 +22,7 @@ internal class EvaluateBudgetAlertsUseCaseTest {
     private val alertLog = InMemoryBudgetAlertLogRepository()
     private val notifier = RecordingBudgetAlertNotifier()
 
-    private fun useCaseAt(iso: String) =
+    private fun useCaseAt(isoInstant: String) =
         EvaluateBudgetAlertsUseCase(
             budgets,
             transactions,
@@ -30,7 +30,7 @@ internal class EvaluateBudgetAlertsUseCaseTest {
             settings,
             alertLog,
             notifier,
-            clockAt(iso),
+            clockAt(isoInstant),
         )
 
     @Test

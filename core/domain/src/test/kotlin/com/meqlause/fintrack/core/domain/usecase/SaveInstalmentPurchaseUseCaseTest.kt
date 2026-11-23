@@ -40,8 +40,8 @@ import java.time.ZoneOffset
 
 /** FR-140, BR-011, BR-036, BR-038: a credit purchase, its admin fee and its plan are stored together or not at all. */
 class SaveInstalmentPurchaseUseCaseTest {
-    private val now = Instant.parse("2026-11-23T10:00:00Z")
-    private val clock = Clock.fixed(now, ZoneOffset.UTC)
+    private val currentTime = Instant.parse("2026-11-23T10:00:00Z")
+    private val clock = Clock.fixed(currentTime, ZoneOffset.UTC)
     private val wallets = InMemoryWalletRepository()
     private val categories = InMemoryCategoryRepository()
     private val transactions = InMemoryTransactionRepository()
@@ -108,7 +108,7 @@ class SaveInstalmentPurchaseUseCaseTest {
             movement = Movement(TransactionType.EXPENSE, Money(amount)),
             routing = DraftRouting(cardId, null, foodId),
             memo = Memo(note = "HP baru"),
-            occurredAt = now,
+            occurredAt = currentTime,
         )
 
     private fun seedCard(): WalletId =
@@ -120,7 +120,7 @@ class SaveInstalmentPurchaseUseCaseTest {
                     terms = WalletTerms(Money(0L), CreditTerms(Money(10_000_000L), statementDay = 25, dueDay = 10)),
                     profile = WalletProfile("Kartu", Appearance("card", "teal"), 0),
                     status = WalletStatus(),
-                    audit = Audit(now, now),
+                    audit = Audit(currentTime, currentTime),
                 ),
             )
         }
@@ -132,7 +132,7 @@ class SaveInstalmentPurchaseUseCaseTest {
                     categoryId = CategoryId(0L),
                     profile = CategoryProfile("Kategori", CategoryKind.EXPENSE, Appearance(icon, "teal"), 0),
                     state = CategoryState(isDefault = true, isArchived = false),
-                    audit = Audit(now, now),
+                    audit = Audit(currentTime, currentTime),
                 ),
             )
         }

@@ -56,7 +56,7 @@ private fun dayGroup(
 ): HistoryDayGroup =
     HistoryDayGroup(
         label = DateFormatter.dayLabel(date, clock),
-        net = items.toTotals().net,
+        netTotal = items.toTotals().netTotal,
         rows =
             items
                 .sortedByDescending { (transaction, _) -> transaction.timing.occurredAt }

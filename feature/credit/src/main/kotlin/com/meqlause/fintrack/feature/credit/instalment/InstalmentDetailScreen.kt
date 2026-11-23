@@ -68,13 +68,13 @@ private fun ColumnScope.InstalmentDetailBody(
     state: InstalmentDetailUiState.Success,
     callbacks: InstalmentDetailCallbacks,
 ) {
-    val row = state.row
+    val row = state.instalmentRow
     LazyColumn(
         modifier = Modifier.fillMaxWidth().weight(1f),
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
-        item { InstalmentSummary(row = row) }
-        item { ActionRows(row = row, callbacks = callbacks) }
+        item { InstalmentSummary(instalmentRow = row) }
+        item { ActionRows(instalmentRow = row, callbacks = callbacks) }
         item {
             Text(
                 text = stringResource(R.string.instalment_schedule_title),
@@ -91,30 +91,30 @@ private fun ColumnScope.InstalmentDetailBody(
 
 // FR-142: title, card, monthly portion, progress "k/n" and what remains
 @Composable
-private fun InstalmentSummary(row: InstalmentRow) {
+private fun InstalmentSummary(instalmentRow: InstalmentRow) {
     val colors = FintrackTheme.colors
     Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-        Text(text = row.title, style = FintrackTheme.typography.headlineSmall, color = colors.texts.onSurface)
+        Text(text = instalmentRow.title, style = FintrackTheme.typography.headlineSmall, color = colors.texts.onSurface)
         Text(
-            text = "${row.cardName} · ${stringResource(
+            text = "${instalmentRow.cardName} · ${stringResource(
                 R.string.instalment_monthly,
-                MoneyFormatter.format(row.monthly),
+                MoneyFormatter.format(instalmentRow.monthly),
             )}",
             style = FintrackTheme.typography.bodyMedium,
             color = colors.texts.onSurfaceVariant,
         )
-        ProgressBar(fraction = row.billed.toFloat() / row.tenor, color = colors.brands.primary)
+        ProgressBar(fraction = instalmentRow.billed.toFloat() / instalmentRow.tenor, color = colors.brands.primary)
         Text(
-            text = stringResource(R.string.instalment_progress, row.billed, row.tenor),
+            text = stringResource(R.string.instalment_progress, instalmentRow.billed, instalmentRow.tenor),
             style = FintrackTheme.typography.labelLarge,
             color = colors.texts.onSurface,
         )
         Text(
-            text = stringResource(R.string.instalment_remaining_full, MoneyFormatter.format(row.remaining)),
+            text = stringResource(R.string.instalment_remaining_full, MoneyFormatter.format(instalmentRow.remaining)),
             style = FintrackTheme.typography.bodyMedium,
             color = colors.texts.onSurfaceVariant,
         )
-        row.payoffMonth?.let { month ->
+        instalmentRow.payoffMonth?.let { month ->
             Text(
                 text = stringResource(R.string.instalment_pay_off_set, month.label()),
                 style = FintrackTheme.typography.labelMedium,
@@ -127,7 +127,7 @@ private fun InstalmentSummary(row: InstalmentRow) {
 // FR-144, FR-145: "Lunasi sekarang" is offered while portions remain; "Hapus" asks first
 @Composable
 private fun ActionRows(
-    row: InstalmentRow,
+    instalmentRow: InstalmentRow,
     callbacks: InstalmentDetailCallbacks,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
@@ -135,7 +135,7 @@ private fun ActionRows(
             text = stringResource(R.string.instalment_pay_off),
             onClick = callbacks.onPayOff,
             modifier = Modifier.fillMaxWidth(),
-            enabled = row.canPayOff,
+            enabled = instalmentRow.canPayOff,
         )
         TextButton(onClick = callbacks.onRequestDelete) {
             Text(text = stringResource(R.string.instalment_delete), color = FintrackTheme.colors.texts.onSurface)

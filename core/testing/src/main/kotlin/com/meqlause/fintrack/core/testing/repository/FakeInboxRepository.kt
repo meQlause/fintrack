@@ -40,11 +40,11 @@ public class FakeInboxRepository : InboxRepository {
     }
 
     private fun partnerOf(
-        id: InboxItemId,
+        itemId: InboxItemId,
         first: InboxItemId,
         second: InboxItemId,
     ): InboxItemId? =
-        when (id) {
+        when (itemId) {
             first -> second
             second -> first
             else -> null

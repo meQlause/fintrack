@@ -12,7 +12,7 @@ internal sealed interface BackupStep {
     data object ExportPassword : BackupStep
 
     data class ImportPassword(
-        val uri: String,
+        val fileUri: String,
     ) : BackupStep
 
     data class ConfirmRestore(

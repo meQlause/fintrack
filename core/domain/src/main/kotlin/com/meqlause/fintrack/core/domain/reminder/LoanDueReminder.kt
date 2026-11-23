@@ -14,6 +14,6 @@ public data class LoanDueReminder(
     public val dueDate: LocalDate,
     public val daysBefore: Int,
 ) : Reminder {
-    override val key: String
+    override val reminderKey: String
         get() = "loan-${loanId.value}-$dueDate-$daysBefore"
 }

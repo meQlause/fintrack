@@ -1,6 +1,6 @@
 package com.meqlause.fintrack.core.domain.usecase
 
-import com.meqlause.fintrack.core.domain.repository.AtomicRunner
+import com.meqlause.fintrack.core.domain.port.AtomicRunner
 import com.meqlause.fintrack.core.domain.repository.InboxRepository
 import com.meqlause.fintrack.core.model.InboxStatus
 import com.meqlause.fintrack.core.model.Resolution

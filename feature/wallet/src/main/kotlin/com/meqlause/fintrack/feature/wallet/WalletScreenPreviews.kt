@@ -20,7 +20,7 @@ import java.time.Instant
 private val previewAudit = Audit(createdAt = Instant.EPOCH, updatedAt = Instant.EPOCH)
 
 private fun previewItem(
-    id: Long,
+    itemId: Long,
     name: String,
     type: WalletType,
     balance: Long,
@@ -28,14 +28,14 @@ private fun previewItem(
 ): WalletItem {
     val wallet =
         Wallet(
-            walletId = WalletId(id),
+            walletId = WalletId(itemId),
             kind = WalletKind(type = type, investKind = null),
             terms = WalletTerms(initialBalance = Money(balance), credit = null),
             profile =
                 WalletProfile(
                     name = name,
                     appearance = Appearance(iconKey = "wallet", colorKey = "gray"),
-                    sortOrder = id.toInt(),
+                    sortOrder = itemId.toInt(),
                 ),
             status = WalletStatus(isArchived = archived),
             audit = previewAudit,

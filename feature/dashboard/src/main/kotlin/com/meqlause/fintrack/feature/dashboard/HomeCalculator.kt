@@ -47,7 +47,7 @@ internal object HomeCalculator {
             netWorth = worth,
             wallets =
                 active.map {
-                    HomeWallet(it.walletId, it.profile.name, balanceOf(it, snapshot.balances), isCreditWallet(it))
+                    HomeWallet(it.walletId, it.profile.name, balanceOf(it, snapshot.moneyByWallet), isCreditWallet(it))
                 },
             period = periodOf(period, inPeriod),
             categories = categoryShares(inPeriod, names),
@@ -128,9 +128,11 @@ internal object HomeCalculator {
             }
 
     private fun titleOf(
-        row: Transaction,
+        transaction: Transaction,
         categoryName: String?,
-    ): String? = listOf(row.memo.merchant, row.memo.note, categoryName.orEmpty()).firstOrNull { it.isNotBlank() }
+    ): String? =
+        listOf(transaction.memo.merchant, transaction.memo.note, categoryName.orEmpty())
+            .firstOrNull { it.isNotBlank() }
 
     private fun whenLabelOf(
         instant: Instant,

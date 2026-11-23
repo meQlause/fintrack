@@ -1,6 +1,6 @@
 package com.meqlause.fintrack.core.testing.repository
 
-import com.meqlause.fintrack.core.domain.repository.AtomicRunner
+import com.meqlause.fintrack.core.domain.port.AtomicRunner
 
 /** BR-011: in-memory runner for tests; the fakes are already atomic, so the block simply runs. */
 public class PassthroughAtomicRunner : AtomicRunner {

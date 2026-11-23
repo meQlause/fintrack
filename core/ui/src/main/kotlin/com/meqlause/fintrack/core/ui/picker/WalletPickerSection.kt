@@ -46,14 +46,14 @@ internal fun WalletPickerSection(
                 color = FintrackTheme.colors.texts.onSurfaceVariant,
             )
         }
-        rows.forEach { row -> WalletPickerItem(group = group, row = row, onPick = onPick) }
+        rows.forEach { row -> WalletPickerItem(group = group, pickerRow = row, onPick = onPick) }
     }
 }
 
 @Composable
 private fun WalletPickerItem(
     group: WalletPickerGroup,
-    row: WalletPickerRow,
+    pickerRow: WalletPickerRow,
     onPick: (WalletId) -> Unit,
 ) {
     val colors = FintrackTheme.colors
@@ -62,7 +62,7 @@ private fun WalletPickerItem(
             Modifier
                 .fillMaxWidth()
                 .heightIn(min = FintrackTheme.sizes.formRowHeight)
-                .clickable(enabled = !row.isBlocked, role = Role.RadioButton) { onPick(row.walletId) }
+                .clickable(enabled = !pickerRow.isBlocked, role = Role.RadioButton) { onPick(pickerRow.walletId) }
                 .padding(vertical = FintrackTheme.spacing.xSmall),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
@@ -70,20 +70,20 @@ private fun WalletPickerItem(
         IconTile(iconRes = group.iconRes)
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = row.name,
+                text = pickerRow.name,
                 style = FintrackTheme.typography.titleMedium,
-                color = if (row.isBlocked) colors.texts.faint else colors.texts.onSurface,
+                color = if (pickerRow.isBlocked) colors.texts.faint else colors.texts.onSurface,
             )
             Text(
-                text = blockedOrBalance(row),
+                text = blockedOrBalance(pickerRow),
                 style = FintrackTheme.typography.bodyMedium,
                 color = colors.texts.onSurfaceVariant,
             )
         }
-        RadioButton(selected = row.isSelected, onClick = null, enabled = !row.isBlocked)
+        RadioButton(selected = pickerRow.isSelected, onClick = null, enabled = !pickerRow.isBlocked)
     }
 }
 
 @Composable
-private fun blockedOrBalance(row: WalletPickerRow): String =
-    if (row.isBlocked) stringResource(R.string.picker_already_selected) else row.balanceLabel
+private fun blockedOrBalance(pickerRow: WalletPickerRow): String =
+    if (pickerRow.isBlocked) stringResource(R.string.picker_already_selected) else pickerRow.shownBalanceText

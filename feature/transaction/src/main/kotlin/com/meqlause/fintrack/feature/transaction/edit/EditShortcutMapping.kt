@@ -10,14 +10,14 @@ import java.time.Instant
 internal fun QuickEntry.toForm(): TransactionForm =
     TransactionForm(
         type = template.type,
-        amountDigits = template.amount.rupiah.toString(),
+        rupiahDigits = template.amount.rupiah.toString(),
         walletId = walletId,
         categoryId = categoryId,
         note = template.title,
     )
 
 // FR-039: the shortcut the sheet would create from its draft; null when the checkbox is off or does not apply
-internal fun EditTransactionUiState.toShortcut(now: Instant): QuickEntry? {
+internal fun EditTransactionUiState.toShortcut(currentTime: Instant): QuickEntry? {
     val categoryId = form.categoryId
     val walletId = form.walletId
     if (!keepAsShortcut || !canKeepShortcut || categoryId == null || walletId == null) return null
@@ -27,6 +27,6 @@ internal fun EditTransactionUiState.toShortcut(now: Instant): QuickEntry? {
         categoryId = categoryId,
         walletId = walletId,
         sortOrder = 0,
-        audit = Audit(createdAt = now, updatedAt = now),
+        audit = Audit(createdAt = currentTime, updatedAt = currentTime),
     )
 }

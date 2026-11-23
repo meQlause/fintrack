@@ -41,7 +41,7 @@ private fun previewWallet(): WalletItem {
 private fun previewRows(count: Int): List<WalletDetailRow> =
     (1..count).map { index ->
         WalletDetailRow(
-            id = index.toLong(),
+            transactionId = index.toLong(),
             title = if (index % 2 == 0) "Makan siang" else "",
             subtitle = "$index Nov 2026",
             amount = Money(25_000L * index),

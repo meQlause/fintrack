@@ -20,7 +20,7 @@ internal fun SettingsSheetHost(
                 title = stringResource(R.string.settings_theme_sheet_title),
                 options = themeOptions(),
                 selectedKey = state.themeMode.name,
-                onPick = { option -> callbacks.onPickThemeMode(ThemeMode.valueOf(option.key)) },
+                onPick = { option -> callbacks.onPickThemeMode(ThemeMode.valueOf(option.optionKey)) },
                 onClose = callbacks.onDismissSheet,
             )
         }
@@ -43,7 +43,7 @@ internal fun SettingsSheetHost(
 // FR-120: the three theme choices in their stored order
 @Composable
 private fun themeOptions(): List<PickerOption> =
-    ThemeMode.entries.map { mode -> PickerOption(key = mode.name, label = themeLabel(mode)) }
+    ThemeMode.entries.map { mode -> PickerOption(optionKey = mode.name, label = themeLabel(mode)) }
 
 // FR-120: Indonesian label of a theme choice, shared by the row value and the drawer
 @Composable

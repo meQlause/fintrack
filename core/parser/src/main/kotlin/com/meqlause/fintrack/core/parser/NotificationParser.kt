@@ -11,5 +11,5 @@ public interface NotificationParser {
     public val packageNames: Set<String>
 
     /** FR-083, DOC-07: the outcome for one notification of a package this parser covers. */
-    public fun parse(raw: RawNotification): ParseResult
+    public fun parse(rawNotification: RawNotification): ParseResult
 }

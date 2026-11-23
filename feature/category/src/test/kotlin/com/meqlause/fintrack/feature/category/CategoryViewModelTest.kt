@@ -138,7 +138,7 @@ class CategoryViewModelTest {
             val second = repository.insert(sample("Dua", order = 1))
             val viewModel = CategoryViewModel(repository)
 
-            viewModel.move(sample("Dua", order = 1).copy(categoryId = second), up = true)
+            viewModel.move(sample("Dua", order = 1).copy(categoryId = second), upward = true)
             advanceUntilIdle()
 
             assertThat(repository.observeAll().first().map { it.profile.name }).isEqualTo(listOf("Dua", "Satu"))

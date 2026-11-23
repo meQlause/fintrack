@@ -51,7 +51,7 @@ class CsvRowMapperTest {
     private fun transaction(
         type: TransactionType,
         amount: Long,
-        fee: Long,
+        feeAmount: Long,
         memo: Memo,
         wallet: WalletId,
         target: WalletId?,
@@ -60,7 +60,7 @@ class CsvRowMapperTest {
         val category = if (type == TransactionType.EXPENSE) CategoryId(1) else null
         return Transaction(
             TransactionId(1),
-            Movement(type, Money(amount), Money(fee)),
+            Movement(type, Money(amount), Money(feeAmount)),
             Routing(wallet, target, category, null),
             memo,
             Origin(TransactionSource.NOTIFICATION, null),

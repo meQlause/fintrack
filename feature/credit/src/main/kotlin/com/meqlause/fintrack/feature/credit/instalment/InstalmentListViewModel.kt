@@ -48,22 +48,22 @@ internal class InstalmentListViewModel
         private fun rowsOf(
             planRows: List<InstallmentPlan>,
             rows: List<Transaction>,
-            all: List<Wallet>,
+            allWallets: List<Wallet>,
             selected: InstalmentFilter,
         ): List<InstalmentRow> {
             val today = LocalDate.now(clock)
             return planRows
-                .mapNotNull { plan -> rowOf(plan, rows, all, today) }
+                .mapNotNull { plan -> rowOf(plan, rows, allWallets, today) }
                 .filter { it.isFinished == (selected == InstalmentFilter.FINISHED) }
         }
 
         private fun rowOf(
             plan: InstallmentPlan,
             rows: List<Transaction>,
-            all: List<Wallet>,
+            allWallets: List<Wallet>,
             today: LocalDate,
         ): InstalmentRow? {
-            val wallet = all.firstOrNull { it.walletId == plan.purchase.walletId } ?: return null
+            val wallet = allWallets.firstOrNull { it.walletId == plan.purchase.walletId } ?: return null
             val terms = wallet.terms.credit ?: return null
             return plan.toRow(wallet.profile.name, rows, terms.statementDay, today, clock.zone)
         }

@@ -7,6 +7,6 @@ import com.meqlause.fintrack.core.model.Money
 @Immutable
 internal data class HistoryDayGroup(
     val label: String,
-    val net: Money,
+    val netTotal: Money,
     val rows: List<HistoryRowItem>,
 )

@@ -21,14 +21,14 @@ import java.time.ZoneOffset
 
 // FR-092: raw notification text is purged 30 days after an item is resolved; parsed data is kept
 class PurgeResolvedRawTextUseCaseTest {
-    private val now: Instant = Instant.parse("2026-11-23T00:00:00Z")
+    private val currentTime: Instant = Instant.parse("2026-11-23T00:00:00Z")
     private val inbox = InMemoryInboxRepository()
-    private val useCase = PurgeResolvedRawTextUseCase(inbox, Clock.fixed(now, ZoneOffset.UTC))
+    private val useCase = PurgeResolvedRawTextUseCase(inbox, Clock.fixed(currentTime, ZoneOffset.UTC))
 
     @Test
     fun `given a confirmed item resolved 31 days ago when purged then its raw text is cleared (FR-092)`() =
         runBlocking {
-            val id = inbox.insert(item("old", InboxStatus.CONFIRMED, now.minus(Duration.ofDays(31))))
+            val id = inbox.insert(item("old", InboxStatus.CONFIRMED, currentTime.minus(Duration.ofDays(31))))
 
             useCase()
 
@@ -38,7 +38,7 @@ class PurgeResolvedRawTextUseCaseTest {
     @Test
     fun `given a dismissed item resolved 31 days ago when purged then its raw text is cleared (FR-092)`() =
         runBlocking {
-            val id = inbox.insert(item("dismissed", InboxStatus.DISMISSED, now.minus(Duration.ofDays(31))))
+            val id = inbox.insert(item("dismissed", InboxStatus.DISMISSED, currentTime.minus(Duration.ofDays(31))))
 
             useCase()
 
@@ -55,7 +55,7 @@ class PurgeResolvedRawTextUseCaseTest {
     @Test
     fun `given an item resolved 29 days ago when purged then its raw text is kept (FR-092)`() =
         runBlocking {
-            val id = inbox.insert(item("recent", InboxStatus.CONFIRMED, now.minus(Duration.ofDays(29))))
+            val id = inbox.insert(item("recent", InboxStatus.CONFIRMED, currentTime.minus(Duration.ofDays(29))))
 
             useCase()
 
@@ -73,11 +73,11 @@ class PurgeResolvedRawTextUseCaseTest {
         }
 
     private suspend fun assertRaw(
-        id: InboxItemId,
+        itemId: InboxItemId,
         title: String,
         text: String,
     ) {
-        val notice = inbox.findById(id)?.notice
+        val notice = inbox.findById(itemId)?.notice
         assertThat(notice?.rawTitle).isEqualTo(title)
         assertThat(notice?.rawText).isEqualTo(text)
     }
@@ -95,12 +95,12 @@ class PurgeResolvedRawTextUseCaseTest {
                     parserId = "bca",
                     rawTitle = "Pembayaran",
                     rawText = "Rp25.000",
-                    postedAt = now.minus(Duration.ofDays(40)),
+                    postedAt = currentTime.minus(Duration.ofDays(40)),
                     fingerprint = fingerprint,
                 ),
             parsed = ParsedAmount(Money(25_000L), MoneyDirection.DEBIT, "INDOMARET"),
             suggestion = Suggestion(null, null, null),
             resolution = Resolution(status, null, resolvedAt),
-            audit = Audit(now, now),
+            audit = Audit(currentTime, currentTime),
         )
 }

@@ -8,8 +8,8 @@ import com.meqlause.fintrack.core.model.TransactionSource
 import java.time.Instant
 
 // FR-038: a copy dated now and recorded as a manual entry; the repository assigns the new transactionId
-internal fun Transaction.asDuplicateAt(now: Instant): Transaction =
+internal fun Transaction.asDuplicateAt(currentTime: Instant): Transaction =
     copy(
         origin = Origin(source = TransactionSource.MANUAL, inboxItemId = null),
-        timing = Timing(occurredAt = now, audit = Audit(createdAt = now, updatedAt = now)),
+        timing = Timing(occurredAt = currentTime, audit = Audit(createdAt = currentTime, updatedAt = currentTime)),
     )

@@ -69,13 +69,13 @@ class InvestmentCalculatorTest {
 
     private fun valuation(
         value: Long,
-        at: Instant,
+        valuationTime: Instant,
     ): ValuationEntry =
         ValuationEntry(
             valuationId = ValuationEntryId(1L),
             walletId = WalletId(1L),
             value = Money(value),
-            valuedAt = at,
-            createdAt = at,
+            valuedAt = valuationTime,
+            createdAt = valuationTime,
         )
 }

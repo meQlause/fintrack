@@ -102,20 +102,20 @@ class CreditAccountFactoryTest {
         )
 
     private fun row(
-        id: Long,
+        transactionNumber: Long,
         type: TransactionType,
         amount: Long,
         walletId: WalletId,
         target: WalletId?,
-        at: String,
+        occurredAt: String,
     ): Transaction =
         Transaction(
-            transactionId = TransactionId(id),
+            transactionId = TransactionId(transactionNumber),
             movement = Movement(type, Money(amount)),
             routing = Routing(walletId, target, categoryId = null, loanId = null),
             memo = Memo(),
             origin = Origin(TransactionSource.MANUAL, null),
-            timing = Timing(Instant.parse(at), Audit(Instant.parse(at), Instant.parse(at))),
+            timing = Timing(Instant.parse(occurredAt), Audit(Instant.parse(occurredAt), Instant.parse(occurredAt))),
         )
 
     private fun plan(

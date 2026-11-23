@@ -8,7 +8,7 @@ import com.meqlause.fintrack.core.model.TransactionType
 internal data class TransactionDetail(
     val type: TransactionType,
     val amount: Money,
-    val fee: Money,
+    val feeAmount: Money,
     val title: String,
     val merchant: String,
     val note: String,

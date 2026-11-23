@@ -7,11 +7,11 @@ public class NotificationParserRegistry(
     private val parsers: List<NotificationParser>,
 ) {
     /** FR-085: the first parser that recognises the notification decides; none registered means Unrecognized. */
-    public fun parse(raw: RawNotification): ParseResult =
+    public fun parse(rawNotification: RawNotification): ParseResult =
         parsers
             .asSequence()
-            .filter { raw.packageName in it.packageNames }
-            .map { it.parse(raw) }
+            .filter { rawNotification.packageName in it.packageNames }
+            .map { it.parse(rawNotification) }
             .firstOrNull { it !is ParseResult.Unrecognized }
             ?: ParseResult.Unrecognized
 }

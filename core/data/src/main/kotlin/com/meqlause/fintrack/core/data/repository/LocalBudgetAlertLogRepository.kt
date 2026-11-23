@@ -15,5 +15,5 @@ public class LocalBudgetAlertLogRepository(
     override fun observeAll(): Flow<List<BudgetAlertLog>> =
         alertLogDao.observeAll().map { rows -> rows.map { it.toLog() } }
 
-    override suspend fun insert(log: BudgetAlertLog) = alertLogDao.insert(log.toEntity())
+    override suspend fun insert(alertLog: BudgetAlertLog) = alertLogDao.insert(alertLog.toEntity())
 }

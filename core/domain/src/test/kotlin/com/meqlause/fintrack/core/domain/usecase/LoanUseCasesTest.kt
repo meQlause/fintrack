@@ -71,7 +71,7 @@ class LoanUseCasesTest {
             val result = repay(loanId, Money(40_000L), wallet)
             val entry = observe().first().single()
             assertThat(result is RepaymentResult.Saved).isTrue()
-            assertThat(entry.balance.outstanding).isEqualTo(Money(60_000L))
+            assertThat(entry.loanBalance.outstanding).isEqualTo(Money(60_000L))
             assertThat(entry.loan.status).isEqualTo(LoanStatus.OPEN)
         }
     }

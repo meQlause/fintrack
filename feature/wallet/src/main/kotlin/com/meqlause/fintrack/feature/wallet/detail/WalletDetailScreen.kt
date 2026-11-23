@@ -68,7 +68,7 @@ private fun WalletDetailBody(
         if (state.rows.isEmpty()) {
             item(key = "no-rows") { EmptyRowsText() }
         }
-        items(visible, key = { it.id }) { row -> RecentRow(row = row) }
+        items(visible, key = { it.transactionId }) { row -> RecentRow(detailRow = row) }
         if (state.rows.size > RECENT_LIMIT) {
             item(key = "toggle") {
                 ToggleText(expanded = state.expanded, count = state.rows.size, callbacks = callbacks)
@@ -144,17 +144,17 @@ private fun RecentHeading() {
 
 // S-19: one recent transaction in the shared row style
 @Composable
-private fun RecentRow(row: WalletDetailRow) {
+private fun RecentRow(detailRow: WalletDetailRow) {
     val colors = FintrackTheme.colors
     TransactionRow(
         params =
             TransactionRowParams(
                 iconRes = DesignR.drawable.ic_wallet,
                 iconColor = colors.brands.primary,
-                title = row.title.ifBlank { stringResource(R.string.wallet_detail_untitled) },
-                subtitle = row.subtitle,
-                amount = row.amount,
-                type = row.type,
+                title = detailRow.title.ifBlank { stringResource(R.string.wallet_detail_untitled) },
+                subtitle = detailRow.subtitle,
+                amount = detailRow.amount,
+                type = detailRow.type,
             ),
         callbacks = TransactionRowCallbacks(onClick = {}),
     )

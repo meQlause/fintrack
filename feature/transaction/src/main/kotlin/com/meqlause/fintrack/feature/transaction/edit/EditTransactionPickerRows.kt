@@ -54,7 +54,7 @@ internal fun pickerRows(
             walletId = wallet.walletId,
             name = wallet.profile.name,
             type = wallet.kind.type,
-            balanceLabel = MoneyFormatter.format(state.catalog.balances[wallet.walletId] ?: Money(0L)),
+            shownBalanceText = MoneyFormatter.format(state.catalog.moneyByWallet[wallet.walletId] ?: Money(0L)),
             isSelected = wallet.walletId == selected,
             isBlocked = wallet.walletId == blocked,
         )

@@ -1,6 +1,6 @@
 package com.meqlause.fintrack.core.backup
 
-import com.meqlause.fintrack.core.domain.repository.BackupFiles
+import com.meqlause.fintrack.core.domain.port.BackupFiles
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.LoanRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionCsvRepository
@@ -35,26 +35,27 @@ public class FileTransactionCsvRepository(
     private val categories: CategoryRepository,
     private val loans: LoanRepository,
     private val files: BackupFiles,
-    private val io: CoroutineDispatcher,
+    private val ioDispatcher: CoroutineDispatcher,
 ) : TransactionCsvRepository {
     override suspend fun export(
-        uri: String,
+        fileUri: String,
         start: LocalDate,
-        end: LocalDate,
+        endDate: LocalDate,
         zone: ZoneId,
     ) {
         val text =
-            withContext(io) {
+            withContext(ioDispatcher) {
                 val mapper = CsvRowMapper(walletNames(), categoryNames(), personNames(), zone)
-                val rows = inRange(start, end, zone)
-                CsvText.BOM + CsvText.record(CSV_HEADER) + rows.joinToString("") { CsvText.record(mapper.cells(it)) }
+                val rows = inRange(start, endDate, zone)
+                val body = rows.joinToString("") { CsvText.record(mapper.cells(it)) }
+                CsvText.BYTE_ORDER_MARK + CsvText.record(CSV_HEADER) + body
             }
-        files.write(uri, text.toByteArray(Charsets.UTF_8))
+        files.write(fileUri, text.toByteArray(Charsets.UTF_8))
     }
 
     private suspend fun inRange(
         start: LocalDate,
-        end: LocalDate,
+        endDate: LocalDate,
         zone: ZoneId,
     ): List<Transaction> =
         transactions
@@ -63,7 +64,7 @@ public class FileTransactionCsvRepository(
             .filter {
                 it.timing.occurredAt
                     .atZone(zone)
-                    .toLocalDate() in start..end
+                    .toLocalDate() in start..endDate
             }.sortedBy { it.timing.occurredAt }
 
     private suspend fun walletNames() = wallets.observeAll().first().associate { it.walletId to it.profile.name }

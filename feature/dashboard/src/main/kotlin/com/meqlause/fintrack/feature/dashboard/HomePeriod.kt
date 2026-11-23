@@ -10,6 +10,6 @@ internal data class HomePeriod(
     val income: Money,
     val expense: Money,
 ) {
-    val net: Money
+    val netTotal: Money
         get() = income - expense
 }

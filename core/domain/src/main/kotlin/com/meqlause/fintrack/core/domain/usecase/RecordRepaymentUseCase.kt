@@ -7,7 +7,7 @@ import com.meqlause.fintrack.core.domain.loan.RepaymentResult
 import com.meqlause.fintrack.core.domain.loan.RepaymentRules
 import com.meqlause.fintrack.core.domain.loan.findLoan
 import com.meqlause.fintrack.core.domain.loan.repaymentType
-import com.meqlause.fintrack.core.domain.repository.AtomicRunner
+import com.meqlause.fintrack.core.domain.port.AtomicRunner
 import com.meqlause.fintrack.core.domain.repository.LoanRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.model.Loan
@@ -62,20 +62,24 @@ public class RecordRepaymentUseCase
                     loanId = loan.loanId,
                     note = "",
                     occurredAt = now,
-                    now = now,
+                    currentTime = now,
                 )
             val id = transactions.insert(movement)
-            if ((entry.balance.repaid + amount) >= entry.balance.principal) settle(loan, now)
+            if ((entry.loanBalance.repaid + amount) >= entry.loanBalance.principal) settle(loan, now)
             return RepaymentResult.Saved(id)
         }
 
         // BR-041: outstanding 0 → SETTLED with closedAt = now
         private suspend fun settle(
             loan: Loan,
-            now: Instant,
+            currentTime: Instant,
         ) {
             loans.update(
-                loan.copy(status = LoanStatus.SETTLED, closedAt = now, audit = loan.audit.copy(updatedAt = now)),
+                loan.copy(
+                    status = LoanStatus.SETTLED,
+                    closedAt = currentTime,
+                    audit = loan.audit.copy(updatedAt = currentTime),
+                ),
             )
         }
     }

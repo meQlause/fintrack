@@ -4,7 +4,7 @@ import com.meqlause.fintrack.core.domain.loan.LoanDraft
 import com.meqlause.fintrack.core.domain.loan.LoanRules
 import com.meqlause.fintrack.core.domain.loan.LoanTransactionFactory
 import com.meqlause.fintrack.core.domain.loan.openingType
-import com.meqlause.fintrack.core.domain.repository.AtomicRunner
+import com.meqlause.fintrack.core.domain.port.AtomicRunner
 import com.meqlause.fintrack.core.domain.repository.LoanRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.domain.transaction.SaveTransactionResult
@@ -46,7 +46,7 @@ public class SaveLoanUseCase
                     loanId = loanId,
                     note = draft.note.trim(),
                     occurredAt = draft.startDate,
-                    now = now,
+                    currentTime = now,
                 )
             return SaveTransactionResult.Saved(transactions.insert(movement))
         }
@@ -54,7 +54,7 @@ public class SaveLoanUseCase
         // FR-150: the loan starts OPEN; a due date is stored as the start of that day in the clock's zone
         private fun loanOf(
             draft: LoanDraft,
-            now: Instant,
+            currentTime: Instant,
         ): Loan =
             Loan(
                 loanId = LoanId(0L),
@@ -69,7 +69,7 @@ public class SaveLoanUseCase
                     ),
                 status = LoanStatus.OPEN,
                 closedAt = null,
-                audit = Audit(createdAt = now, updatedAt = now),
+                audit = Audit(createdAt = currentTime, updatedAt = currentTime),
             )
 
         private fun dueInstant(date: LocalDate?): Instant? = date?.atStartOfDay(clock.zone)?.toInstant()

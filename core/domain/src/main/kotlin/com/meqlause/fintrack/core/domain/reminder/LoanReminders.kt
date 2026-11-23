@@ -21,7 +21,7 @@ public object LoanReminders {
     ): LoanDueReminder? {
         val loan = entry.loan
         val dueAt = loan.agreement.dueDate ?: return null
-        val outstanding = entry.balance.outstanding
+        val outstanding = entry.loanBalance.outstanding
         if (loan.status != LoanStatus.OPEN || outstanding.rupiah <= 0L) return null
         val due = dueAt.atZone(zone).toLocalDate()
         val lead = ReminderRules.leadOf(due, today) ?: return null

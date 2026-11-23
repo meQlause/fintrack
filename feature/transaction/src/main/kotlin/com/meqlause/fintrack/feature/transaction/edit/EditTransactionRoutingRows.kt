@@ -39,7 +39,7 @@ internal fun EditTransactionRoutingRows(
             TransferRoute(state = state, onEvent = onEvent)
             FormRow(
                 label = stringResource(R.string.transaction_fee_label),
-                value = MoneyFormatter.format(state.form.fee),
+                value = MoneyFormatter.format(state.form.feeAmount),
                 onClick = { onEvent(EditTransactionEvent.FieldFocused(KeypadField.FEE)) },
             )
         } else {

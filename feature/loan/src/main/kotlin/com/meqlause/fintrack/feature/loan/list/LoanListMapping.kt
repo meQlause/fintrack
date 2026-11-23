@@ -19,8 +19,8 @@ internal fun LoanEntry.toListRow(
     return LoanListRow(
         loanId = loan.loanId.value,
         personName = loan.agreement.personName,
-        outstanding = balance.outstanding,
-        progress = progressOf(balance),
+        outstanding = loanBalance.outstanding,
+        progress = progressOf(loanBalance),
         dueDate = due,
         status = loan.status,
         overdue = isOpen && due != null && due.isBefore(today),

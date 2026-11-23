@@ -45,9 +45,9 @@ class TransactionDetailViewModelTest {
     private val wallets = FakeWalletRepository(transactions)
     private val categories = FakeCategoryRepository()
 
-    private fun viewModel(id: Long): TransactionDetailViewModel =
+    private fun viewModel(rowId: Long): TransactionDetailViewModel =
         TransactionDetailViewModel(
-            savedStateHandle = SavedStateHandle(mapOf("transactionId" to id)),
+            savedStateHandle = SavedStateHandle(mapOf("transactionId" to rowId)),
             transactions = transactions,
             wallets = wallets,
             categories = categories,

@@ -42,7 +42,7 @@ fun DayGridDrawer(
             ) {
                 week.forEach { day ->
                     DayCell(
-                        day = day,
+                        dayNumber = day,
                         isSelected = day == selectedDay,
                         onClick = { onPick(day) },
                         modifier = Modifier.weight(1f),
@@ -55,13 +55,13 @@ fun DayGridDrawer(
 
 @Composable
 private fun DayCell(
-    day: Int,
+    dayNumber: Int,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val colors = FintrackTheme.colors
-    val description = stringResource(R.string.picker_day_description, day)
+    val description = stringResource(R.string.picker_day_description, dayNumber)
     Box(
         modifier =
             modifier
@@ -73,7 +73,7 @@ private fun DayCell(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = day.toString(),
+            text = dayNumber.toString(),
             style = FintrackTheme.typography.titleMedium,
             color = if (isSelected) colors.brands.onPrimaryContainer else colors.texts.onSurface,
         )

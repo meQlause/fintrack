@@ -43,7 +43,7 @@ internal object BackupCrypto {
     ): Cipher {
         val key = deriveKey(password, header.salt, header.iterations)
         val cipher = Cipher.getInstance(CIPHER_NAME)
-        cipher.init(mode, SecretKeySpec(key, KEY_ALGORITHM), GCMParameterSpec(BackupFormat.TAG_BITS, header.iv))
+        cipher.init(mode, SecretKeySpec(key, KEY_ALGORITHM), GCMParameterSpec(BackupFormat.TAG_BITS, header.cipherIv))
         cipher.updateAAD(header.toBytes())
         return cipher
     }

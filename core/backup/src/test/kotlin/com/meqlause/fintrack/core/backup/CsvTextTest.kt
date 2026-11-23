@@ -34,6 +34,6 @@ class CsvTextTest {
 
     @Test
     fun givenBomWhenWrittenThenStartsTheFile() {
-        assertThat(CsvText.BOM + CsvText.record(listOf("tanggal"))).startsWith("﻿")
+        assertThat(CsvText.BYTE_ORDER_MARK + CsvText.record(listOf("tanggal"))).startsWith("﻿")
     }
 }

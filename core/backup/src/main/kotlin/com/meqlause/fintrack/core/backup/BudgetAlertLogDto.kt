@@ -21,12 +21,12 @@ internal data class BudgetAlertLogDto(
         )
 
     companion object {
-        fun from(log: BudgetAlertLog): BudgetAlertLogDto =
+        fun from(alertLog: BudgetAlertLog): BudgetAlertLogDto =
             BudgetAlertLogDto(
-                budgetId = log.budgetId.value,
-                periodStart = log.periodStart.toString(),
-                threshold = log.threshold,
-                notifiedAt = log.notifiedAt.toString(),
+                budgetId = alertLog.budgetId.value,
+                periodStart = alertLog.periodStart.toString(),
+                threshold = alertLog.threshold,
+                notifiedAt = alertLog.notifiedAt.toString(),
             )
     }
 }

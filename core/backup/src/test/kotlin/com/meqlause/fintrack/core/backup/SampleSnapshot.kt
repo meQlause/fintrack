@@ -64,13 +64,13 @@ import java.time.YearMonth
 
 // DOC-11: a snapshot where every table holds one valid row with every foreign reference filled in
 internal object SampleSnapshot {
-    val now: Instant = Instant.parse("2026-11-22T08:00:00Z")
-    private val audit = Audit(now, now)
+    val fixedTime: Instant = Instant.parse("2026-11-22T08:00:00Z")
+    private val audit = Audit(fixedTime, fixedTime)
     private val appearance = Appearance("wallet", "green")
 
     fun build(): BackupSnapshot =
         BackupSnapshot(
-            createdAt = now,
+            createdAt = fixedTime,
             ledger = ledger(),
             adjunct = adjunct(),
             preferences = Preferences(themeMode = ThemeMode.DARK, periodStartDay = 25, hideAmountsByDefault = true),
@@ -83,21 +83,21 @@ internal object SampleSnapshot {
             categories = listOf(food()),
             transactions = listOf(expense(), transfer()),
             budgets = listOf(budget()),
-            budgetAlertLogs = listOf(BudgetAlertLog(BudgetId(1), now, 80, now)),
+            budgetAlertLogs = listOf(BudgetAlertLog(BudgetId(1), fixedTime, 80, fixedTime)),
             merchantRules = listOf(rule()),
         )
 
     private fun adjunct(): BackupAdjunct =
         BackupAdjunct(
-            monitoredApps = listOf(MonitoredApp("com.example.pay", "Pay", true, WalletId(1), now)),
+            monitoredApps = listOf(MonitoredApp("com.example.pay", "Pay", true, WalletId(1), fixedTime)),
             inboxItems = listOf(inbox()),
             installmentPlans = listOf(plan()),
             loans = listOf(loan()),
-            valuations = listOf(ValuationEntry(ValuationEntryId(1), WalletId(2), Money(750_000), now, now)),
+            valuations = listOf(ValuationEntry(ValuationEntryId(1), WalletId(2), Money(750_000), fixedTime, fixedTime)),
             quickEntries = listOf(quick()),
         )
 
-    private fun budget(): Budget = Budget(BudgetId(1), CategoryId(1), Money(500_000), true, now, now)
+    private fun budget(): Budget = Budget(BudgetId(1), CategoryId(1), Money(500_000), true, fixedTime, fixedTime)
 
     private fun rule(): MerchantRule = MerchantRule(MerchantRuleId(1), "KOPI", CategoryId(1), WalletId(1), 3, audit)
 
@@ -146,7 +146,7 @@ internal object SampleSnapshot {
             Routing(WalletId(1), null, CategoryId(1), null),
             Memo("Kopi", "KOPI"),
             Origin(TransactionSource.MANUAL, null),
-            Timing(now, audit),
+            Timing(fixedTime, audit),
         )
 
     private fun transfer(): Transaction =
@@ -156,13 +156,13 @@ internal object SampleSnapshot {
             Routing(WalletId(1), WalletId(2), null, null),
             Memo(),
             Origin(TransactionSource.MANUAL, null),
-            Timing(now, audit),
+            Timing(fixedTime, audit),
         )
 
     private fun inbox(): InboxItem =
         InboxItem(
             InboxItemId(1),
-            RawNotice("com.example.pay", "parser", "Pay", "Pembayaran Rp25.000", now, "fingerprint"),
+            RawNotice("com.example.pay", "parser", "Pay", "Pembayaran Rp25.000", fixedTime, "fingerprint"),
             ParsedAmount(Money(25_000), MoneyDirection.DEBIT, "KOPI"),
             Suggestion(WalletId(1), CategoryId(1), null),
             Resolution(InboxStatus.PENDING, null, null),
@@ -181,7 +181,7 @@ internal object SampleSnapshot {
     private fun loan(): Loan =
         Loan(
             LoanId(1),
-            Agreement(LoanDirection.LENT, "Budi", Money(100_000), now, null, "catatan"),
+            Agreement(LoanDirection.LENT, "Budi", Money(100_000), fixedTime, null, "catatan"),
             LoanStatus.OPEN,
             null,
             audit,

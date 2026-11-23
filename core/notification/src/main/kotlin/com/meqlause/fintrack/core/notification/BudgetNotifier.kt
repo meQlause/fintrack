@@ -10,7 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import com.meqlause.fintrack.core.domain.budget.BudgetAlert
 import com.meqlause.fintrack.core.domain.budget.BudgetRules
-import com.meqlause.fintrack.core.domain.repository.BudgetAlertNotifier
+import com.meqlause.fintrack.core.domain.port.BudgetAlertNotifier
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton

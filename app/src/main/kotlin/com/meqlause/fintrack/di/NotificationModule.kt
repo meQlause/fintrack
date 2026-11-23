@@ -1,7 +1,7 @@
 package com.meqlause.fintrack.di
 
 import com.meqlause.fintrack.core.domain.detection.NotificationAccess
-import com.meqlause.fintrack.core.domain.repository.BudgetAlertNotifier
+import com.meqlause.fintrack.core.domain.port.BudgetAlertNotifier
 import com.meqlause.fintrack.core.notification.BudgetNotifier
 import com.meqlause.fintrack.core.notification.NotificationAccessChecker
 import dagger.Binds

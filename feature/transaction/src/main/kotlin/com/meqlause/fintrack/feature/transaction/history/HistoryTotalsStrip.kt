@@ -43,7 +43,7 @@ internal fun HistoryTotalsStrip(totals: HistoryTotals) {
         )
         TotalCell(
             label = stringResource(R.string.history_total_net),
-            value = totals.net,
+            value = totals.netTotal,
             color = colors.texts.onSurface,
             modifier = Modifier.weight(1f),
         )

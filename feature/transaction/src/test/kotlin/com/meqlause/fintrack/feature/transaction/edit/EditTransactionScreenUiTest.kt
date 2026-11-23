@@ -86,7 +86,7 @@ class EditTransactionScreenUiTest {
 
     private fun readyState(): EditTransactionUiState {
         val sample = expenseSample()
-        return sample.copy(form = sample.form.copy(amountDigits = "", categoryId = null))
+        return sample.copy(form = sample.form.copy(rupiahDigits = "", categoryId = null))
     }
 
     // Test-only reducer: applies the events this sheet emits to a plain state, the way the ViewModel would
@@ -100,8 +100,8 @@ class EditTransactionScreenUiTest {
                 state.copy(
                     form =
                         form.copy(
-                            amountDigits =
-                                form.amountDigits + event.digit,
+                            rupiahDigits =
+                                form.rupiahDigits + event.digit,
                         ),
                 )
             }

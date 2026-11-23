@@ -25,4 +25,4 @@ internal fun StatusBarNotification.toRawNotification(): RawNotification {
     )
 }
 
-private fun Bundle.textOf(key: String): String = getCharSequence(key)?.toString().orEmpty()
+private fun Bundle.textOf(bundleKey: String): String = getCharSequence(bundleKey)?.toString().orEmpty()

@@ -61,9 +61,9 @@ internal class SettingsViewModel
         }
 
         // FR-121: the period start day is stored at once and the drawer closes
-        fun pickPeriodStartDay(day: Int) {
+        fun pickPeriodStartDay(dayOfMonth: Int) {
             sheet.value = null
-            updatePreferences { it.copy(periodStartDay = day) }
+            updatePreferences { it.copy(periodStartDay = dayOfMonth) }
         }
 
         // FR-101: the switch stores biometric unlock; it is ignored while no PIN is set

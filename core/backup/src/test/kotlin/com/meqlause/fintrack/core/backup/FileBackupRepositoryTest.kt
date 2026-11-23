@@ -5,8 +5,8 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNull
 import com.meqlause.fintrack.core.common.time.ClockProvider
 import com.meqlause.fintrack.core.domain.backup.BackupFailure
-import com.meqlause.fintrack.core.domain.repository.BackupFiles
-import com.meqlause.fintrack.core.domain.repository.BackupStore
+import com.meqlause.fintrack.core.domain.port.BackupFiles
+import com.meqlause.fintrack.core.domain.port.BackupStore
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.model.BackupAdjunct
 import com.meqlause.fintrack.core.model.BackupLedger
@@ -29,7 +29,7 @@ class FileBackupRepositoryTest {
     private val files = FakeBackupFiles()
     private val clock =
         object : ClockProvider {
-            override fun clock(): Clock = Clock.fixed(SampleSnapshot.now, ZoneOffset.UTC)
+            override fun clock(): Clock = Clock.fixed(SampleSnapshot.fixedTime, ZoneOffset.UTC)
         }
     private val repository = FileBackupRepository(store, settings, files, clock, Dispatchers.Unconfined, "1.0.0")
 
@@ -44,12 +44,12 @@ class FileBackupRepositoryTest {
                     backup = stored.backup.copy(backupReminderDays = sample.backupReminderDays),
                 )
             }
-            repository.export(URI, password)
-            assertThat(settings.current.backup.lastBackupAt).isEqualTo(SampleSnapshot.now)
+            repository.export(BACKUP_URI, password)
+            assertThat(settings.current.backup.lastBackupAt).isEqualTo(SampleSnapshot.fixedTime)
 
             store.replaceAll(emptySnapshot())
             settings.update { Settings() }
-            val read = repository.readBackup(URI, password)
+            val read = repository.readBackup(BACKUP_URI, password)
             repository.restore(read)
 
             assertThat(store.current).isEqualTo(sample)
@@ -61,9 +61,9 @@ class FileBackupRepositoryTest {
     fun wrongPasswordLeavesTheStoreUntouched() =
         runBlocking {
             store.replaceAll(SampleSnapshot.build())
-            repository.export(URI, password)
+            repository.export(BACKUP_URI, password)
             val before = store.current
-            assertThat(failureOf { runBlocking { repository.readBackup(URI, "salah-sandi") } })
+            assertThat(failureOf { runBlocking { repository.readBackup(BACKUP_URI, "salah-sandi") } })
                 .isEqualTo(BackupFailure.WRONG_PASSWORD)
             assertThat(store.current).isEqualTo(before)
         }
@@ -72,14 +72,14 @@ class FileBackupRepositoryTest {
     fun shortPasswordIsRefusedBeforeWriting() =
         runBlocking {
             store.replaceAll(SampleSnapshot.build())
-            assertThat(failureOf { runBlocking { repository.export(URI, "pendek") } })
+            assertThat(failureOf { runBlocking { repository.export(BACKUP_URI, "pendek") } })
                 .isEqualTo(BackupFailure.PASSWORD_TOO_SHORT)
             assertThat(files.stored).isNull()
         }
 
     private fun emptySnapshot(): BackupSnapshot =
         BackupSnapshot(
-            createdAt = SampleSnapshot.now,
+            createdAt = SampleSnapshot.fixedTime,
             ledger = BackupLedger(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()),
             adjunct = BackupAdjunct(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()),
             preferences = Preferences(),
@@ -87,7 +87,7 @@ class FileBackupRepositoryTest {
         )
 
     private companion object {
-        const val URI = "content://test/backup.fintrack"
+        const val BACKUP_URI = "content://test/backup.fintrack"
     }
 }
 
@@ -116,18 +116,18 @@ internal class FakeBackupFiles : BackupFiles {
     var stored: ByteArray? = null
 
     override suspend fun read(
-        uri: String,
+        fileUri: String,
         maxBytes: Long,
     ): ByteArray = checkNotNull(stored)
 
     override suspend fun write(
-        uri: String,
+        fileUri: String,
         bytes: ByteArray,
     ) {
         stored = bytes
     }
 
-    override suspend fun delete(uri: String) {
+    override suspend fun delete(fileUri: String) {
         stored = null
     }
 }

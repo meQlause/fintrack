@@ -2,7 +2,7 @@ package com.meqlause.fintrack.core.domain.usecase
 
 import com.meqlause.fintrack.core.domain.credit.InstalmentRequest
 import com.meqlause.fintrack.core.domain.credit.StatementDates
-import com.meqlause.fintrack.core.domain.repository.AtomicRunner
+import com.meqlause.fintrack.core.domain.port.AtomicRunner
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.InstallmentPlanRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
@@ -75,11 +75,11 @@ public class SaveInstalmentPurchaseUseCase
         // BR-038: the admin fee is an EXPENSE on the same credit wallet, dated with the purchase
         private suspend fun feeDraft(
             draft: TransactionDraft,
-            fee: Money,
+            adminFee: Money,
         ): TransactionDraft =
             TransactionDraft(
                 existing = null,
-                movement = Movement(TransactionType.EXPENSE, fee),
+                movement = Movement(TransactionType.EXPENSE, adminFee),
                 routing =
                     DraftRouting(
                         walletId = draft.routing.walletId,

@@ -20,7 +20,7 @@ internal fun Transaction.toDetail(
     return TransactionDetail(
         type = movement.type,
         amount = movement.amount,
-        fee = movement.feeAmount,
+        feeAmount = movement.feeAmount,
         title = memo.merchant.ifBlank { categoryName.orEmpty() },
         merchant = memo.merchant,
         note = memo.note,

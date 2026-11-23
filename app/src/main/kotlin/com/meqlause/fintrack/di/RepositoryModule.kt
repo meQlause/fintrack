@@ -28,7 +28,7 @@ import com.meqlause.fintrack.core.database.dao.TransactionDao
 import com.meqlause.fintrack.core.database.dao.ValuationEntryDao
 import com.meqlause.fintrack.core.database.dao.WalletDao
 import com.meqlause.fintrack.core.datastore.SettingsDataSource
-import com.meqlause.fintrack.core.domain.repository.AtomicRunner
+import com.meqlause.fintrack.core.domain.port.AtomicRunner
 import com.meqlause.fintrack.core.domain.repository.BudgetAlertLogRepository
 import com.meqlause.fintrack.core.domain.repository.BudgetRepository
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository

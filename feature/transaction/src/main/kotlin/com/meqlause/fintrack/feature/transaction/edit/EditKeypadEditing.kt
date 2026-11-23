@@ -5,7 +5,7 @@ internal fun EditTransactionUiState.withEditedField(transform: (String) -> Strin
     val edited =
         when (keypadField) {
             KeypadField.AMOUNT -> {
-                copy(form = form.copy(amountDigits = transform(form.amountDigits)))
+                copy(form = form.copy(rupiahDigits = transform(form.rupiahDigits)))
             }
 
             KeypadField.FEE -> {

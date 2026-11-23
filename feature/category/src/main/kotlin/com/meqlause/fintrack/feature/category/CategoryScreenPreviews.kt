@@ -18,18 +18,18 @@ import java.time.Instant
 private val previewAudit = Audit(createdAt = Instant.EPOCH, updatedAt = Instant.EPOCH)
 
 private fun previewCategory(
-    id: Long,
+    itemId: Long,
     name: String,
     archived: Boolean = false,
 ): Category =
     Category(
-        categoryId = CategoryId(id),
+        categoryId = CategoryId(itemId),
         profile =
             CategoryProfile(
                 name = name,
                 kind = CategoryKind.EXPENSE,
                 appearance = Appearance(iconKey = "food", colorKey = "orange"),
-                sortOrder = id.toInt(),
+                sortOrder = itemId.toInt(),
             ),
         state = CategoryState(isDefault = true, isArchived = archived),
         audit = previewAudit,

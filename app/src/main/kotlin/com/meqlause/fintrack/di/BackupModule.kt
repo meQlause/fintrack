@@ -8,9 +8,9 @@ import com.meqlause.fintrack.core.common.coroutines.IoDispatcher
 import com.meqlause.fintrack.core.common.time.ClockProvider
 import com.meqlause.fintrack.core.data.repository.LocalBackupStore
 import com.meqlause.fintrack.core.database.FintrackDatabase
-import com.meqlause.fintrack.core.domain.repository.BackupFiles
+import com.meqlause.fintrack.core.domain.port.BackupFiles
+import com.meqlause.fintrack.core.domain.port.BackupStore
 import com.meqlause.fintrack.core.domain.repository.BackupRepository
-import com.meqlause.fintrack.core.domain.repository.BackupStore
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.LoanRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
@@ -52,8 +52,9 @@ object BackupModule {
         categories: CategoryRepository,
         loans: LoanRepository,
         files: BackupFiles,
-        @IoDispatcher io: CoroutineDispatcher,
-    ): TransactionCsvRepository = FileTransactionCsvRepository(transactions, wallets, categories, loans, files, io)
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    ): TransactionCsvRepository =
+        FileTransactionCsvRepository(transactions, wallets, categories, loans, files, ioDispatcher)
 
     @Provides
     @Singleton
@@ -62,7 +63,7 @@ object BackupModule {
         settings: SettingsRepository,
         files: BackupFiles,
         clock: ClockProvider,
-        @IoDispatcher io: CoroutineDispatcher,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher,
         @ApplicationContext context: Context,
     ): BackupRepository =
         FileBackupRepository(
@@ -70,7 +71,7 @@ object BackupModule {
             settings = settings,
             files = files,
             clock = clock,
-            io = io,
+            ioDispatcher = ioDispatcher,
             appVersionName =
                 context.packageManager
                     .getPackageInfo(context.packageName, 0)
