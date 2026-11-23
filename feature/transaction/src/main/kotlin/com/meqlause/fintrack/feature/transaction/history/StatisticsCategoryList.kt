@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
@@ -69,7 +70,7 @@ private fun StatisticsExpandToggle(
         if (isExpanded) {
             stringResource(R.string.history_stats_collapse)
         } else {
-            stringResource(R.string.history_stats_show_all, count)
+            pluralStringResource(R.plurals.history_stats_show_all, count, count)
         }
     HorizontalDivider(thickness = FintrackTheme.sizes.hairline, color = FintrackTheme.colors.surfaces.outline)
     Row(

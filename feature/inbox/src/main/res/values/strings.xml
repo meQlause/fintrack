@@ -6,8 +6,6 @@
     <string name="inbox_info_text">Transaksi dari notifikasi bank &amp; e-wallet muncul di sini. Geser kanan untuk catat, kiri untuk abaikan.</string>
     <string name="inbox_info_dismiss">Mengerti</string>
     <string name="inbox_resolved_title">Selesai</string>
-    <string name="inbox_resolved_confirmed">Dicatat</string>
-    <string name="inbox_resolved_dismissed">Diabaikan</string>
     <string name="inbox_empty_title">Semua beres! ✨</string>
     <string name="inbox_empty_body">Belum ada transaksi baru terdeteksi</string>
     <string name="inbox_access_title">Deteksi notifikasi belum aktif</string>

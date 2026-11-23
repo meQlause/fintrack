@@ -4,7 +4,9 @@
     <string name="lock_app_name">Fintrack</string>
     <string name="lock_title">Masukkan PIN</string>
     <string name="lock_wrong">PIN salah</string>
-    <string name="lock_cooldown">Coba lagi dalam %1$d detik</string>
+    <plurals name="lock_cooldown">
+        <item quantity="other">Coba lagi dalam %1$d detik</item>
+    </plurals>
     <string name="pin_setup_title_new">Buat PIN 6 digit</string>
     <string name="pin_setup_title_new_change">Masukkan PIN baru</string>
     <string name="pin_setup_title_confirm">Ulangi PIN</string>

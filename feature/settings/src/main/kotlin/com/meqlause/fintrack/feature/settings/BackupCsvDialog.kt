@@ -32,7 +32,7 @@ internal fun BackupCsvDialog(
             Column {
                 DateField(startText, R.string.backup_csv_start_label, isError = start == null) { startText = it }
                 DateField(endText, R.string.backup_csv_end_label, isError = endDate == null) { endText = it }
-                Text(text = stringResource(R.string.backup_csv_hint))
+                Text(text = stringResource(R.string.backup_csv_hint, CSV_HINT_DATE))
                 Text(text = stringResource(R.string.backup_csv_warning))
             }
         },
@@ -67,3 +67,6 @@ private fun DateField(
 
 // FR-113: a typed date as LocalDate, or null when it is not yyyy-MM-dd
 private fun parseDate(text: String): LocalDate? = runCatching { LocalDate.parse(text) }.getOrNull()
+
+// FR-113: the example date of the range hint, kept out of the string so lint does not take its hyphens for a dash
+private const val CSV_HINT_DATE = "2026-11-01"

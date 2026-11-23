@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     implementation(project(":core:model"))
+    implementation(libs.androidx.annotation)
     api(project(":core:domain"))
     implementation(project(":core:designsystem"))
 

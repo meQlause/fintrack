@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.component.ScreenChip
@@ -111,9 +112,9 @@ private fun dueLine(
     val days = ChronoUnit.DAYS.between(today, due)
     val countdown =
         when {
-            days > 0L -> stringResource(R.string.credit_due_in_days, days.toInt())
+            days > 0L -> pluralStringResource(R.plurals.credit_due_in_days, days.toInt(), days.toInt())
             days == 0L -> stringResource(R.string.credit_due_today)
-            else -> stringResource(R.string.credit_overdue_days, (-days).toInt())
+            else -> pluralStringResource(R.plurals.credit_overdue_days, (-days).toInt(), (-days).toInt())
         }
     return stringResource(R.string.credit_due_date, DUE_FORMAT.format(due)) + " · " + countdown
 }

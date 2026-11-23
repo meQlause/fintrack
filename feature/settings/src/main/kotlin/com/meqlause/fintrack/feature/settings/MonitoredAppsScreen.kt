@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.BackAction
 import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
@@ -77,7 +78,13 @@ private fun MonitoredAppsContent(
         }
         SettingsSection(title = stringResource(R.string.monitored_section_diagnostics), padded = true) {
             Text(
-                text = stringResource(R.string.monitored_counts_value, state.ignoredCount, state.unrecognizedCount),
+                text =
+                    pluralStringResource(
+                        R.plurals.monitored_counts_value,
+                        state.ignoredCount,
+                        state.ignoredCount,
+                        state.unrecognizedCount,
+                    ),
                 style = FintrackTheme.typography.labelLarge,
                 color = FintrackTheme.colors.texts.onSurfaceVariant,
             )

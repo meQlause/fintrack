@@ -4,6 +4,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.domain.backup.BackupFailure
 import com.meqlause.fintrack.core.model.BackupSnapshot
@@ -113,7 +114,7 @@ private fun reminderOptions(): List<PickerOption> =
             if (days == 0) {
                 stringResource(R.string.settings_backup_reminder_off)
             } else {
-                stringResource(R.string.settings_backup_reminder_value, days)
+                pluralStringResource(R.plurals.settings_backup_reminder_value, days, days)
             }
         PickerOption(optionKey = days.toString(), label = label)
     }
@@ -131,8 +132,9 @@ private fun RestoreSummaryDialog(
         text = {
             Text(
                 text =
-                    stringResource(
-                        R.string.backup_restore_summary,
+                    pluralStringResource(
+                        R.plurals.backup_restore_summary,
+                        snapshot.ledger.wallets.size,
                         snapshot.ledger.wallets.size,
                         snapshot.ledger.transactions.size,
                         formatDate(snapshot.createdAt),

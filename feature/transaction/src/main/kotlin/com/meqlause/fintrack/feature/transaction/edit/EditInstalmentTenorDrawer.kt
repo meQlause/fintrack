@@ -2,6 +2,7 @@ package com.meqlause.fintrack.feature.transaction.edit
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FormRow
 import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
@@ -25,7 +26,7 @@ internal fun EditInstalmentTenorDrawer(
     ) {
         TENOR_OPTIONS.forEach { months ->
             FormRow(
-                label = stringResource(R.string.instalment_tenor_value, months),
+                label = pluralStringResource(R.plurals.instalment_tenor_value, months, months),
                 value = monthlyLabel(state, months),
                 onClick = { onEvent(EditTransactionEvent.InstalmentTenorPicked(months)) },
             )

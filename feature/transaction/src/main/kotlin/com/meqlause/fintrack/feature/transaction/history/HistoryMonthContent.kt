@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -50,8 +51,8 @@ internal fun ColumnScope.HistoryMonthContent(
                 ),
         transitionSpec = { focusPull(motion.durationMillis, motion.easing) },
         label = "history-month-focus",
-    ) { _ ->
-        HistoryDayList(state = state, onOpenTransaction = onOpenTransaction)
+    ) { month ->
+        key(month) { HistoryDayList(state = state, onOpenTransaction = onOpenTransaction) }
     }
 }
 

@@ -61,7 +61,9 @@
     <string name="history_stats_total">Total</string>
     <string name="history_stats_daily_title">Harian</string>
     <string name="history_stats_average">≈ %1$s / hari</string>
-    <string name="history_stats_show_all">Semua %1$d kategori</string>
+    <plurals name="history_stats_show_all">
+        <item quantity="other">Semua %1$d kategori</item>
+    </plurals>
     <string name="history_stats_collapse">Ringkas</string>
     <string name="history_stats_uncategorized">Tanpa kategori</string>
     <string name="history_stats_new_change">baru</string>
@@ -102,11 +104,15 @@
     <string name="shortcut_title_invalid">Judul pintasan 1–24 karakter, jumlah 1 sampai 999 miliar</string>
     <string name="instalment_switch_label">Cicilan 0%</string>
     <string name="instalment_tenor_label">Tenor</string>
-    <string name="instalment_tenor_value">%d bulan</string>
+    <plurals name="instalment_tenor_value">
+        <item quantity="other">%d bulan</item>
+    </plurals>
     <string name="instalment_tenor_custom">Lainnya (2–36 bulan)</string>
     <string name="instalment_tenor_drawer_title">Tenor cicilan</string>
     <string name="instalment_fee_label">Biaya admin (opsional)</string>
-    <string name="instalment_preview">%1$s × %2$d bulan</string>
+    <plurals name="instalment_preview">
+        <item quantity="other">%1$s × %2$d bulan</item>
+    </plurals>
     <string name="instalment_per_month">%s / bulan</string>
     <string name="instalment_amount_first">Isi jumlah dulu</string>
     <string name="transaction_type_loan">Pinjaman</string>

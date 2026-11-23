@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.IntOffset
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.transaction.R
@@ -73,7 +74,7 @@ private fun MonthPills(
         Box(
             modifier =
                 Modifier
-                    .offset(x = indicatorOffset)
+                    .offset { IntOffset(x = indicatorOffset.roundToPx(), y = 0) }
                     .size(width = FintrackTheme.sizes.monthPillMock, height = FintrackTheme.sizes.monthPillHeight)
                     .clip(FintrackTheme.shapes.full)
                     .background(FintrackTheme.colors.texts.onSurface),

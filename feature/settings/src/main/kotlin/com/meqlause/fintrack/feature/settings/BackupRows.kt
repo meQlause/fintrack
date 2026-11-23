@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.RowSlots
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
@@ -110,7 +111,7 @@ private fun reminderValue(days: Int): String =
     if (days == 0) {
         stringResource(R.string.settings_backup_reminder_off)
     } else {
-        stringResource(R.string.settings_backup_reminder_value, days)
+        pluralStringResource(R.plurals.settings_backup_reminder_value, days, days)
     }
 
 // FR-112: "3 hari", "Hari ini" or "Belum" for the age of the last export
@@ -122,6 +123,6 @@ private fun lastBackupLabel(lastBackupAt: Instant?): String {
     return if (days <= 0) {
         stringResource(R.string.settings_backup_last_today)
     } else {
-        stringResource(R.string.settings_backup_reminder_value, days.toInt())
+        pluralStringResource(R.plurals.settings_backup_reminder_value, days.toInt(), days.toInt())
     }
 }

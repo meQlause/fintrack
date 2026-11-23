@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.IntOffset
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // FR-037, S-05: the Semua, Pengeluaran, Pemasukan and Transfer tabs; the underline slides to the selected one
@@ -73,7 +74,7 @@ internal fun HistoryTypeTabs(
             modifier =
                 Modifier
                     .align(Alignment.BottomStart)
-                    .offset(x = indicatorOffset)
+                    .offset { IntOffset(x = indicatorOffset.roundToPx(), y = 0) }
                     .width(FintrackTheme.sizes.tabIndicatorWidth)
                     .height(FintrackTheme.sizes.tabIndicatorHeight)
                     .clip(FintrackTheme.shapes.full)

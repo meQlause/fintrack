@@ -27,7 +27,9 @@
     <string name="monitored_access_on">Aktif</string>
     <string name="monitored_access_off">Tidak aktif</string>
     <string name="monitored_section_diagnostics">Diagnostik</string>
-    <string name="monitored_counts_value">%1$d diabaikan, %2$d tidak dikenali</string>
+    <plurals name="monitored_counts_value">
+        <item quantity="other">%1$d diabaikan, %2$d tidak dikenali</item>
+    </plurals>
     <string name="monitored_section_apps">Aplikasi</string>
     <string name="monitored_wallet_label">Dompet default</string>
     <string name="monitored_wallet_none">Belum dipilih</string>
@@ -46,7 +48,9 @@
     <string name="backup_password_mismatch">Kata sandi belum sama.</string>
     <string name="backup_password_action">Lanjut</string>
     <string name="backup_restore_title">Pulihkan cadangan?</string>
-    <string name="backup_restore_summary">%1$d dompet, %2$d transaksi, dibuat %3$s.</string>
+    <plurals name="backup_restore_summary">
+        <item quantity="other">%1$d dompet, %2$d transaksi, dibuat %3$s.</item>
+    </plurals>
     <string name="backup_restore_warning">Semua data saat ini akan diganti.</string>
     <string name="backup_restore_confirm">Pulihkan</string>
     <string name="backup_saved">Cadangan berhasil disimpan</string>
@@ -62,7 +66,9 @@
     <string name="backup_ok">Oke</string>
     <string name="settings_backup_reminder_label">Pengingat cadangan (hari)</string>
     <string name="settings_backup_reminder_off">Nonaktif</string>
-    <string name="settings_backup_reminder_value">%1$d hari</string>
+    <plurals name="settings_backup_reminder_value">
+        <item quantity="other">%1$d hari</item>
+    </plurals>
     <string name="settings_backup_reminder_sheet_title">Pengingat cadangan</string>
     <string name="settings_backup_last_never">Belum</string>
     <string name="settings_backup_last_today">Hari ini</string>
@@ -72,12 +78,10 @@
     <string name="backup_csv_title">Ekspor CSV</string>
     <string name="backup_csv_start_label">Dari tanggal (tttt-bb-hh)</string>
     <string name="backup_csv_end_label">Sampai tanggal (tttt-bb-hh)</string>
-    <string name="backup_csv_hint">Contoh: 2026-11-01. Tanggal mulai tidak boleh setelah tanggal selesai.</string>
+    <string name="backup_csv_hint">Contoh: %1$s. Tanggal mulai tidak boleh setelah tanggal selesai.</string>
     <string name="backup_csv_warning">File CSV tidak terenkripsi.</string>
     <string name="backup_csv_action">Simpan</string>
     <string name="backup_csv_saved">Ekspor CSV berhasil disimpan</string>
-    <string name="settings_section_about">Tentang</string>
-    <string name="settings_about_label">Tentang Fintrack</string>
     <string name="about_title">Tentang</string>
     <string name="about_app_name">Fintrack</string>
     <string name="about_version_value">Versi %1$s</string>

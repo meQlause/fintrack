@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackSwitch
 import com.meqlause.fintrack.core.designsystem.component.FormRow
@@ -67,7 +68,7 @@ internal fun EditInstalmentRows(
 // FR-140: the typed tenor, or the words "Lainnya" while it is outside 2..36
 @Composable
 private fun tenorLabel(state: EditTransactionUiState): String =
-    state.instalment.tenor?.let { stringResource(R.string.instalment_tenor_value, it) }
+    state.instalment.tenor?.let { pluralStringResource(R.plurals.instalment_tenor_value, it, it) }
         ?: stringResource(R.string.instalment_tenor_custom)
 
 // FR-140: "Rp500.000 × 6 bulan", the monthly portion of the amount typed so far; BR-035 rounds down
@@ -75,5 +76,5 @@ private fun tenorLabel(state: EditTransactionUiState): String =
 private fun previewLabel(state: EditTransactionUiState): String? {
     val tenor = state.instalment.tenor ?: return null
     val monthly = Money(state.form.amount.rupiah / tenor)
-    return stringResource(R.string.instalment_preview, MoneyFormatter.format(monthly), tenor)
+    return pluralStringResource(R.plurals.instalment_preview, tenor, MoneyFormatter.format(monthly), tenor)
 }

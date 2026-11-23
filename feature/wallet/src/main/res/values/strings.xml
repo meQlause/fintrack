@@ -23,7 +23,6 @@
     <string name="wallet_group_investment">Investasi</string>
     <string name="wallet_group_other">Lainnya</string>
     <string name="wallet_archived_title">Diarsipkan (%1$d)</string>
-    <string name="wallet_archived_label">Diarsipkan</string>
 
     <string name="wallet_type_cash">Tunai</string>
     <string name="wallet_type_bank">Bank</string>

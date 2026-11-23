@@ -3,6 +3,7 @@ package com.meqlause.fintrack.feature.lock
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
@@ -15,10 +16,25 @@ internal fun PinNoticeText(
 ) {
     val text =
         when {
-            remainingSeconds > 0L -> stringResource(R.string.lock_cooldown, remainingSeconds)
-            notice == PinNotice.WRONG -> stringResource(R.string.lock_wrong)
-            notice == PinNotice.MISMATCH -> stringResource(R.string.pin_setup_mismatch)
-            else -> ""
+            remainingSeconds > 0L -> {
+                pluralStringResource(
+                    R.plurals.lock_cooldown,
+                    remainingSeconds.toInt(),
+                    remainingSeconds,
+                )
+            }
+
+            notice == PinNotice.WRONG -> {
+                stringResource(R.string.lock_wrong)
+            }
+
+            notice == PinNotice.MISMATCH -> {
+                stringResource(R.string.pin_setup_mismatch)
+            }
+
+            else -> {
+                ""
+            }
         }
     Text(
         text = text,

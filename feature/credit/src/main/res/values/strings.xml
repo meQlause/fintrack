@@ -12,8 +12,12 @@
     <string name="credit_status_overdue">Terlambat</string>
     <string name="credit_due_date">Jatuh tempo %1$s</string>
     <string name="credit_due_today">Jatuh tempo hari ini</string>
-    <string name="credit_due_in_days">%1$d hari lagi</string>
-    <string name="credit_overdue_days">Terlewat %1$d hari</string>
+    <plurals name="credit_due_in_days">
+        <item quantity="other">%1$d hari lagi</item>
+    </plurals>
+    <plurals name="credit_overdue_days">
+        <item quantity="other">Terlewat %1$d hari</item>
+    </plurals>
     <string name="credit_bill_detail">Total %1$s · dibayar %2$s</string>
     <string name="credit_limit_used">Terpakai</string>
     <string name="credit_limit_left">Sisa</string>
@@ -22,17 +26,13 @@
     <string name="credit_cycle_day">Tanggal %1$d</string>
     <string name="credit_pay_button">Bayar tagihan</string>
     <string name="credit_limit_title">Limit</string>
-    <string name="credit_limit_available">Sisa limit %1$s</string>
     <string name="credit_limit_exceeded">Melebihi limit</string>
     <string name="credit_cycle_title">Siklus</string>
     <string name="credit_cycle_statement">Tutup buku</string>
     <string name="credit_cycle_due">Jatuh tempo</string>
-    <string name="credit_cycle_statement_value">Tanggal %1$d (tiap bulan)</string>
-    <string name="credit_cycle_due_value">Tanggal %1$d (bulan berikutnya)</string>
     <string name="credit_statement_picker_title">Tanggal tutup buku</string>
     <string name="credit_due_picker_title">Tanggal jatuh tempo</string>
     <string name="credit_pay_title">Bayar tagihan</string>
-    <string name="credit_pay_from">Dari</string>
     <string name="credit_pay_amount">Jumlah</string>
     <string name="credit_pay_full">Lunas</string>
     <string name="credit_pay_partial">Sebagian</string>
