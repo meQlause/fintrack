@@ -20,6 +20,7 @@ rootProject.name = "fintrack"
 
 // DOC-03: every module of the module list; dependency edges live in each module's build file
 include(":app")
+include(":baselineprofile")
 include(
     ":core:model",
     ":core:common",
