@@ -1,11 +1,18 @@
 package com.meqlause.fintrack.feature.budget.component
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FintrackCard
 import com.meqlause.fintrack.core.designsystem.component.ProgressBar
+import com.meqlause.fintrack.core.designsystem.component.ScreenCard
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.domain.budget.BudgetStatus
 import com.meqlause.fintrack.core.model.BudgetState
@@ -24,24 +31,37 @@ internal fun BudgetStatusCard(
 ) {
     val colors = FintrackTheme.colors
     val isOver = status.spent > status.budget.limitAmount
-    FintrackCard(modifier = modifier, onClick = onClick) {
-        Text(text = title, style = FintrackTheme.typography.titleMedium, color = colors.texts.onSurface)
-        Text(
-            text =
-                stringResource(
-                    R.string.budget_used,
-                    MoneyFormatter.format(status.spent),
-                    MoneyFormatter.format(status.budget.limitAmount),
-                ),
-            style = FintrackTheme.typography.bodyMedium,
-            color = colors.texts.onSurfaceVariant,
-        )
-        ProgressBar(fraction = status.percent.toFloat() / PERCENT_SCALE, color = barColor(status.state))
-        Text(
-            text = remainingText(status),
-            style = FintrackTheme.typography.labelMedium,
-            color = if (isOver) colors.semantics.error else colors.texts.onSurfaceVariant,
-        )
+    ScreenCard(modifier = modifier.clickable(onClick = onClick)) {
+        Column(modifier = Modifier.padding(FintrackTheme.spacing.large)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(
+                    text = title,
+                    style = FintrackScreenText.style(size = 13f, weight = 600),
+                    color = colors.texts.onSurface,
+                )
+                Text(
+                    text =
+                        stringResource(
+                            R.string.budget_used,
+                            MoneyFormatter.format(status.spent),
+                            MoneyFormatter.format(status.budget.limitAmount),
+                        ),
+                    style = FintrackScreenText.number(size = 13f, weight = 400),
+                    color = colors.texts.onSurfaceVariant,
+                )
+            }
+            ProgressBar(
+                fraction = status.percent.toFloat() / PERCENT_SCALE,
+                color = barColor(status.state),
+                modifier = Modifier.padding(top = FintrackTheme.spacing.small),
+            )
+            Text(
+                text = remainingText(status),
+                style = FintrackScreenText.rowSub(),
+                color = if (isOver) colors.semantics.error else colors.texts.onSurfaceVariant,
+                modifier = Modifier.padding(top = FintrackTheme.spacing.small),
+            )
+        }
     }
 }
 

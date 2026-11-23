@@ -1,79 +1,88 @@
 package com.meqlause.fintrack.feature.loan.list
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.meqlause.fintrack.core.designsystem.component.FintrackCard
+import com.meqlause.fintrack.core.designsystem.component.ScreenRow
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.LoanStatus
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.loan.R
 import com.meqlause.fintrack.feature.loan.loanDateLabel
 
-// FR-153: one person and the open loans to or from them, each row opening its detail
-@Composable
-internal fun PersonGroupItem(
-    group: LoanPersonGroup,
-    onOpenLoan: (Long) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
-    ) {
-        Text(
-            text = group.personName,
-            style = FintrackTheme.typography.titleMedium,
-            color = FintrackTheme.colors.texts.onSurface,
-        )
-        group.rows.forEach { row ->
-            LoanRowItem(loanRow = row, onClick = { onOpenLoan(row.loanId) })
-        }
-    }
-}
-
-// S-17: outstanding amount, progress and the due line of one loan
+// S-17: one loan row, an initial in a round badge, the person over the due line with a 3 px bar, the amount at the right
 @Composable
 internal fun LoanRowItem(
     loanRow: LoanListRow,
+    showDivider: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val dueColor =
         if (loanRow.overdue) FintrackTheme.colors.semantics.error else FintrackTheme.colors.texts.onSurfaceVariant
-    FintrackCard(modifier = modifier.fillMaxWidth(), onClick = onClick) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-        ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
-            ) {
-                Text(
-                    text = dueText(loanRow),
-                    style = FintrackTheme.typography.labelMedium,
-                    color = dueColor,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                RepaymentBar(progress = loanRow.progress)
-            }
+    ScreenRow(
+        modifier = modifier,
+        showDivider = showDivider,
+        onClick = onClick,
+        leading = { LoanAvatar(name = loanRow.personName) },
+        trailing = {
             Text(
                 text = MoneyFormatter.format(loanRow.outstanding),
-                style = FintrackTheme.typography.bodyLarge,
+                style = FintrackScreenText.number(size = 14f, weight = 700),
                 color = FintrackTheme.colors.texts.onSurface,
+                maxLines = 1,
             )
-        }
+        },
+    ) {
+        Text(
+            text = loanRow.personName,
+            style = FintrackScreenText.style(size = 14f, weight = 600),
+            color = FintrackTheme.colors.texts.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            text = dueText(loanRow),
+            style = FintrackScreenText.rowSub(weight = 500),
+            color = dueColor,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        RepaymentBar(progress = loanRow.progress, modifier = Modifier.padding(top = FintrackTheme.spacing.small))
+    }
+}
+
+// S-17: the 38 px round badge with the first letter of the person
+@Composable
+private fun LoanAvatar(name: String) {
+    Box(
+        modifier =
+            Modifier
+                .size(FintrackTheme.sizes.categoryIcon)
+                .clip(CircleShape)
+                .background(FintrackTheme.colors.brands.primaryContainer),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = name.take(1).uppercase(),
+            style = FintrackScreenText.style(size = 15f, weight = 700),
+            color = FintrackTheme.colors.brands.onPrimaryContainer,
+        )
     }
 }
 
@@ -85,7 +94,8 @@ internal fun RepaymentBar(
 ) {
     val track = FintrackTheme.colors.surfaces.surfaceVariant
     val fill = FintrackTheme.colors.brands.primary
-    Canvas(modifier = modifier.fillMaxWidth().height(FintrackTheme.spacing.xSmall)) {
+    val shape = RoundedCornerShape(FintrackScreenSizes.thinBar)
+    Canvas(modifier = modifier.fillMaxWidth().height(FintrackScreenSizes.thinBar).clip(shape)) {
         drawRect(color = track)
         drawRect(color = fill, size = size.copy(width = size.width * progress.coerceIn(0f, 1f)))
     }

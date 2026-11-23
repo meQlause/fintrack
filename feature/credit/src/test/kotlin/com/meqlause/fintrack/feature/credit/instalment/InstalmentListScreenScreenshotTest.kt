@@ -13,7 +13,7 @@ import org.robolectric.annotation.GraphicsMode
 // FR-142, S-16: screenshot references of the instalment list previews in light and dark themes
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(qualifiers = "w411dp-h720dp")
+@Config(qualifiers = "w390dp-h844dp")
 class InstalmentListScreenScreenshotTest {
     @get:Rule
     val composeRule = createComposeRule()

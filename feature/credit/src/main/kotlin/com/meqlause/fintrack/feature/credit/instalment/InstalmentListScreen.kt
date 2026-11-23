@@ -1,7 +1,6 @@
 package com.meqlause.fintrack.feature.credit.instalment
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -16,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackChip
+import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.credit.R
 
@@ -28,27 +29,19 @@ internal fun InstalmentListScreen(
     onOpenInstalment: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-    ) {
-        Text(
-            text = stringResource(R.string.credit_back),
-            style = FintrackTheme.typography.bodyMedium,
-            color = FintrackTheme.colors.brands.primary,
-            modifier = Modifier.clickable(onClick = onBack).padding(vertical = FintrackTheme.spacing.small),
-        )
-        Text(
-            text = stringResource(R.string.instalment_list_title),
-            style = FintrackTheme.typography.headlineSmall,
-            color = FintrackTheme.colors.texts.onSurface,
+    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+        ScreenBackHeader(
+            title = stringResource(R.string.instalment_list_title),
+            backLabel = stringResource(R.string.credit_back),
+            onBack = onBack,
         )
         if (state is InstalmentListUiState.Success) {
-            InstalmentListBody(state = state, onPickFilter = onPickFilter, onOpenInstalment = onOpenInstalment)
+            Column(
+                modifier = Modifier.weight(1f).padding(horizontal = FintrackScreenSizes.screenGutter),
+                verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+            ) {
+                InstalmentListBody(state = state, onPickFilter = onPickFilter, onOpenInstalment = onOpenInstalment)
+            }
         }
     }
 }

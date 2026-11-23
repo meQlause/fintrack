@@ -4,45 +4,48 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FintrackButton
-import com.meqlause.fintrack.core.designsystem.component.FintrackCard
+import com.meqlause.fintrack.core.designsystem.component.ScreenActionButton
+import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.ui.format.MoneyFormatter
-import com.meqlause.fintrack.core.ui.transaction.TransactionRow
-import com.meqlause.fintrack.core.ui.transaction.TransactionRowCallbacks
+import com.meqlause.fintrack.core.ui.transaction.TransactionRowGroup
 import com.meqlause.fintrack.core.ui.transaction.TransactionRowParams
 import com.meqlause.fintrack.feature.wallet.R
 import com.meqlause.fintrack.feature.wallet.WalletLabels
+import com.meqlause.fintrack.core.designsystem.R as DesignR
 
-// FR-017, S-19: stateless wallet detail; header, balance, Pakai and Transfer, then the recent transactions
+// FR-017, S-19: stateless wallet detail; header, balance, stats, Pakai and Transfer, chart, then recent transactions
 @Composable
 internal fun WalletDetailScreen(
     state: WalletDetailUiState,
     callbacks: WalletDetailCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
-    ) {
-        Text(
-            text = stringResource(R.string.wallet_detail_back),
-            style = FintrackTheme.typography.bodyMedium,
-            color = FintrackTheme.colors.brands.primary,
-            modifier = Modifier.clickable(onClick = callbacks.onBack).padding(vertical = FintrackTheme.spacing.small),
+    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+        val success = state as? WalletDetailUiState.Success
+        ScreenBackHeader(
+            title =
+                success
+                    ?.item
+                    ?.wallet
+                    ?.profile
+                    ?.name
+                    .orEmpty(),
+            backLabel = stringResource(R.string.wallet_detail_back),
+            onBack = callbacks.onBack,
+            badge = success?.let { stringResource(WalletLabels.type(it.item.wallet.kind.type)) },
         )
         when (state) {
             WalletDetailUiState.Loading -> Unit
@@ -59,54 +62,30 @@ private fun WalletDetailBody(
     callbacks: WalletDetailCallbacks,
 ) {
     val visible = if (state.expanded) state.rows else state.rows.take(RECENT_LIMIT)
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-        item(key = "header") { HeaderText(state = state) }
-        item(key = "balance") { BalanceCard(state = state) }
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth(),
+        contentPadding =
+            PaddingValues(
+                start = FintrackScreenSizes.screenGutter,
+                end = FintrackScreenSizes.screenGutter,
+                top = FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall,
+                bottom = FintrackTheme.spacing.xxLarge,
+            ),
+    ) {
+        item(key = "balance") {
+            WalletDetailBalance(item = state.item, modifier = Modifier.padding(top = FintrackTheme.spacing.small))
+        }
+        item(key = "stats") { WalletDetailStatsCard(stats = state.stats) }
         item(key = "actions") { ActionRow(callbacks = callbacks) }
-        item(key = "recent-heading") { RecentHeading() }
-        if (state.rows.isEmpty()) {
-            item(key = "no-rows") { EmptyRowsText() }
+        item(key = "chart") {
+            WalletDetailChart(
+                stats = state.stats,
+                colorKey = state.item.wallet.profile.appearance.colorKey,
+                modifier = Modifier.padding(top = FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall),
+            )
         }
-        items(visible, key = { it.transactionId }) { row -> RecentRow(detailRow = row) }
-        if (state.rows.size > RECENT_LIMIT) {
-            item(key = "toggle") {
-                ToggleText(expanded = state.expanded, count = state.rows.size, callbacks = callbacks)
-            }
-        }
-    }
-}
-
-// S-19: the wallet name and its type badge
-@Composable
-private fun HeaderText(state: WalletDetailUiState.Success) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = state.item.wallet.profile.name,
-            style = FintrackTheme.typography.titleMedium,
-            color = FintrackTheme.colors.texts.onSurface,
-        )
-        Text(
-            text = stringResource(WalletLabels.type(state.item.wallet.kind.type)),
-            style = FintrackTheme.typography.bodyMedium,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-        )
-    }
-}
-
-// FR-017, S-19: the current balance of the wallet (BR-004)
-@Composable
-private fun BalanceCard(state: WalletDetailUiState.Success) {
-    FintrackCard {
-        Text(
-            text = stringResource(R.string.wallet_detail_balance_label),
-            style = FintrackTheme.typography.bodyMedium,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-        )
-        Text(
-            text = MoneyFormatter.format(state.item.balance),
-            style = FintrackTheme.typography.numberLarge,
-            color = FintrackTheme.colors.texts.onSurface,
-        )
+        item(key = "recent-heading") { RecentHeading(state = state, callbacks = callbacks) }
+        item(key = "recent") { RecentCard(rows = visible) }
     }
 }
 
@@ -114,71 +93,88 @@ private fun BalanceCard(state: WalletDetailUiState.Success) {
 @Composable
 private fun ActionRow(callbacks: WalletDetailCallbacks) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall),
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
-        FintrackButton(
+        ScreenActionButton(
             text = stringResource(R.string.wallet_detail_use),
+            iconRes = DesignR.drawable.ic_up,
+            tint = FintrackTheme.colors.semantics.expense,
             onClick = callbacks.onUse,
             modifier = Modifier.weight(1f),
         )
-        FintrackButton(
+        ScreenActionButton(
             text = stringResource(R.string.wallet_detail_transfer),
+            iconRes = DesignR.drawable.ic_arrow_r,
+            tint = FintrackTheme.colors.semantics.transfer,
             onClick = callbacks.onTransfer,
             modifier = Modifier.weight(1f),
         )
     }
 }
 
-// S-19: the heading of the recent transactions
+// S-19: "Terbaru" with "Lihat semua (N)" or "Ringkas" at the right, 20 px below the chart
 @Composable
-private fun RecentHeading() {
-    Text(
-        text = stringResource(R.string.wallet_detail_recent),
-        style = FintrackTheme.typography.labelLarge,
-        color = FintrackTheme.colors.texts.onSurfaceVariant,
-        modifier = Modifier.padding(top = FintrackTheme.spacing.small),
-    )
-}
-
-// S-19: one recent transaction in the shared row style
-@Composable
-private fun RecentRow(detailRow: WalletDetailRow) {
-    TransactionRow(
-        params =
-            TransactionRowParams(
-                iconKey = detailRow.appearance.iconKey,
-                colorKey = detailRow.appearance.colorKey,
-                title = detailRow.title.ifBlank { stringResource(R.string.wallet_detail_untitled) },
-                subtitle = detailRow.subtitle,
-                amount = detailRow.amount,
-                type = detailRow.type,
-            ),
-        callbacks = TransactionRowCallbacks(onClick = {}),
-    )
-}
-
-// S-19: "Lihat semua (N)" expands the list in place, "Ringkas" collapses it back to eight rows
-@Composable
-private fun ToggleText(
-    expanded: Boolean,
-    count: Int,
+private fun RecentHeading(
+    state: WalletDetailUiState.Success,
     callbacks: WalletDetailCallbacks,
 ) {
-    val label =
-        if (expanded) {
-            stringResource(R.string.wallet_detail_collapse)
-        } else {
-            stringResource(R.string.wallet_detail_show_all, count)
-        }
-    Text(
-        text = label,
-        style = FintrackTheme.typography.labelLarge,
-        color = FintrackTheme.colors.brands.primary,
+    Row(
         modifier =
             Modifier
-                .clickable(onClick = callbacks.onToggleExpanded)
-                .padding(vertical = FintrackTheme.spacing.small),
+                .fillMaxWidth()
+                .padding(
+                    start = FintrackTheme.spacing.xxSmall,
+                    end = FintrackTheme.spacing.xxSmall,
+                    top = FintrackScreenSizes.groupGap,
+                    bottom = FintrackScreenSizes.groupLabelBottom,
+                ),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = stringResource(R.string.wallet_detail_recent),
+            style = FintrackScreenText.label(),
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
+        if (state.rows.size > RECENT_LIMIT) {
+            val label =
+                if (state.expanded) {
+                    stringResource(R.string.wallet_detail_collapse)
+                } else {
+                    stringResource(R.string.wallet_detail_show_all, state.rows.size)
+                }
+            Text(
+                text = label,
+                style = FintrackScreenText.style(size = 12.5f, weight = 700),
+                color = FintrackTheme.colors.brands.primary,
+                modifier = Modifier.clickable(onClick = callbacks.onToggleExpanded),
+            )
+        }
+    }
+}
+
+// S-19: the recent transactions in one card, or "Belum ada transaksi" when the wallet has none
+@Composable
+private fun RecentCard(rows: List<WalletDetailRow>) {
+    if (rows.isEmpty()) {
+        EmptyRowsText()
+        return
+    }
+    val untitled = stringResource(R.string.wallet_detail_untitled)
+    TransactionRowGroup(
+        rows =
+            rows.map { row ->
+                TransactionRowParams(
+                    iconKey = row.appearance.iconKey,
+                    colorKey = row.appearance.colorKey,
+                    title = row.title.ifBlank { untitled },
+                    subtitle = row.subtitle,
+                    amount = row.amount,
+                    type = row.type,
+                )
+            },
+        onClick = {},
     )
 }
 
@@ -187,8 +183,9 @@ private fun ToggleText(
 private fun EmptyRowsText() {
     Text(
         text = stringResource(R.string.wallet_detail_empty),
-        style = FintrackTheme.typography.bodyMedium,
+        style = FintrackScreenText.style(size = 13f, weight = 400),
         color = FintrackTheme.colors.texts.onSurfaceVariant,
+        modifier = Modifier.fillMaxWidth().padding(FintrackScreenSizes.screenGutter),
     )
 }
 
@@ -199,6 +196,7 @@ private fun MissingText() {
         text = stringResource(R.string.wallet_detail_missing),
         style = FintrackTheme.typography.bodyMedium,
         color = FintrackTheme.colors.texts.onSurfaceVariant,
+        modifier = Modifier.padding(FintrackScreenSizes.screenGutter),
     )
 }
 

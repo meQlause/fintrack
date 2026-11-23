@@ -4,12 +4,17 @@
     <string name="investment_tab_title">Investasi</string>
     <string name="investment_total_title">Total nilai</string>
     <string name="investment_allocation_title">Alokasi</string>
-    <string name="investment_accounts_title">Rekening</string>
-    <string name="investment_activity_title">Aktivitas terbaru</string>
+    <string name="investment_accounts_title">Akun</string>
+    <string name="investment_activity_title">Aktivitas</string>
     <string name="investment_activity_none">Belum ada aktivitas</string>
     <string name="investment_empty_title">Belum ada investasi</string>
     <string name="investment_empty_body">Catat dana yang kamu tanamkan, lalu perbarui nilainya secara berkala.</string>
     <string name="investment_add">Tambah investasi</string>
+    <string name="investment_add_description">Tambah investasi</string>
+    <string name="investment_modal_total">Modal %1$s</string>
+    <string name="investment_account_sub">%1$s · update %2$s</string>
+    <string name="investment_account_never">%1$s · belum diupdate</string>
+    <string name="investment_percent_share">%1$d%%</string>
 
     <!-- ADR-017: investment kinds -->
     <string name="investment_kind_mutual_fund">Reksa dana</string>
@@ -44,8 +49,8 @@
     <string name="investment_action_add">Tambah dana</string>
     <string name="investment_action_withdraw">Tarik</string>
     <string name="investment_timeline_title">Riwayat</string>
-    <string name="investment_put_in">Dana masuk</string>
-    <string name="investment_take_out">Dana keluar</string>
+    <string name="investment_put_in">Tambah dana</string>
+    <string name="investment_take_out">Tarik dana</string>
     <string name="investment_valued">Update nilai</string>
     <string name="investment_back">Kembali</string>
     <string name="investment_missing_title">Investasi tidak ditemukan</string>

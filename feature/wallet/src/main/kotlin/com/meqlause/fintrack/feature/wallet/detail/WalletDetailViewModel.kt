@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import java.time.Clock
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 import javax.inject.Inject
 
 // FR-017, S-19: drives the wallet detail; the route gives the wallet id, the repositories give everything else
@@ -70,27 +69,40 @@ internal class WalletDetailViewModel
             val appearances = categoryList.associate { it.categoryId to it.profile.appearance }
             val wallet = allWallets.firstOrNull { it.walletId == walletId } ?: return WalletDetailUiState.Missing
             val balance = balances[walletId] ?: wallet.terms.initialBalance
-            val related =
-                rows
-                    .filter { it.routing.walletId == walletId || it.routing.targetWalletId == walletId }
-                    .sortedByDescending { it.timing.occurredAt }
-                    .map { it.toRow(appearances) }
-            return WalletDetailUiState.Success(WalletItem(wallet = wallet, balance = balance), related, open)
+            val names = allWallets.associate { it.walletId to it.profile.name }
+            val mine = rows.filter { it.routing.walletId == walletId || it.routing.targetWalletId == walletId }
+            val related = mine.sortedByDescending { it.timing.occurredAt }.map { it.toRow(appearances, names) }
+            return WalletDetailUiState.Success(
+                item = WalletItem(wallet = wallet, balance = balance),
+                rows = related,
+                expanded = open,
+                stats = WalletDetailStats.of(walletId, mine, clock),
+            )
         }
 
-        private fun Transaction.toRow(appearances: Map<CategoryId, Appearance>): WalletDetailRow =
+        // S-19: "BCA · 12:30" or, for a transfer, "BCA → BCA Card · 10:00"
+        private fun Transaction.toRow(
+            appearances: Map<CategoryId, Appearance>,
+            names: Map<WalletId, String>,
+        ): WalletDetailRow =
             WalletDetailRow(
                 transactionId = transactionId.value,
                 title = memo.merchant.ifBlank { memo.note },
-                subtitle = DATE_FORMAT.withZone(clock.zone).format(timing.occurredAt),
+                subtitle = subtitleOf(names),
                 amount = movement.amount,
                 type = movement.type,
                 appearance = rowAppearanceOf(movement.type, routing.categoryId?.let(appearances::get)),
             )
 
+        private fun Transaction.subtitleOf(names: Map<WalletId, String>): String {
+            val from = names[routing.walletId].orEmpty()
+            val target = routing.targetWalletId?.let { names[it] }
+            val route = if (target == null) from else "$from → $target"
+            return route + " · " + TIME_FORMAT.withZone(clock.zone).format(timing.occurredAt)
+        }
+
         private companion object {
             const val STOP_TIMEOUT_MS = 5_000L
-            val DATE_FORMAT: DateTimeFormatter =
-                DateTimeFormatter.ofPattern("d MMM yyyy", Locale.forLanguageTag("id-ID"))
+            val TIME_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
         }
     }

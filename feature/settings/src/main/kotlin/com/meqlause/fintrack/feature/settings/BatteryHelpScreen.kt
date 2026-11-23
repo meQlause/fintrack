@@ -13,7 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
-import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
+import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // DOC-07, S-12: stateless battery help page; the status and the OEM steps come from the route
@@ -25,21 +26,20 @@ internal fun BatteryHelpScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-    ) {
-        FintrackTabHeader(
+    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+        ScreenBackHeader(
             title = stringResource(R.string.battery_title),
-            leading = { BackLabel(onBack = onBack) },
+            backLabel = stringResource(R.string.settings_back),
+            onBack = onBack,
         )
         Column(
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = FintrackScreenSizes.screenGutter)
+                    .padding(bottom = FintrackScreenSizes.screenBottom),
+            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
         ) {
             BatteryStatusText(optimisationIgnored = optimisationIgnored)
             Text(

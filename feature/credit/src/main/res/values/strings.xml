@@ -14,6 +14,12 @@
     <string name="credit_due_today">Jatuh tempo hari ini</string>
     <string name="credit_due_in_days">%1$d hari lagi</string>
     <string name="credit_overdue_days">Terlewat %1$d hari</string>
+    <string name="credit_bill_detail">Total %1$s · dibayar %2$s</string>
+    <string name="credit_limit_used">Terpakai</string>
+    <string name="credit_limit_left">Sisa</string>
+    <string name="credit_cycle_every_month">tiap bulan</string>
+    <string name="credit_cycle_next_month">bulan berikutnya</string>
+    <string name="credit_cycle_day">Tanggal %1$d</string>
     <string name="credit_pay_button">Bayar tagihan</string>
     <string name="credit_limit_title">Limit</string>
     <string name="credit_limit_available">Sisa limit %1$s</string>
@@ -34,7 +40,7 @@
     <string name="credit_pay_cancel">Batal</string>
     <string name="credit_pay_failed">Tagihan belum bisa dibayar. Periksa jumlah dan dompet sumber.</string>
     <string name="credit_pay_no_source">Belum ada dompet sumber</string>
-    <string name="instalment_section_title">Cicilan aktif</string>
+    <string name="instalment_section_title">Cicilan</string>
     <string name="instalment_section_all">Semua cicilan</string>
     <string name="instalment_section_empty">Belum ada cicilan aktif.</string>
     <string name="instalment_list_title">Cicilan</string>

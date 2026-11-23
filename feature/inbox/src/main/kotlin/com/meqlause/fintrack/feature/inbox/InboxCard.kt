@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,11 +24,12 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
-import com.meqlause.fintrack.core.designsystem.component.FintrackButton
-import com.meqlause.fintrack.core.designsystem.component.FintrackCard
-import com.meqlause.fintrack.core.designsystem.component.FintrackChip
+import com.meqlause.fintrack.core.designsystem.component.ScreenCard
+import com.meqlause.fintrack.core.designsystem.component.ScreenCircleButton
+import com.meqlause.fintrack.core.designsystem.component.ScreenPill
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.ui.money.MoneyText
+import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // FR-087, S-07: one pending item; swipe right = Catat, swipe left = Abaikan
 @Composable
@@ -57,7 +58,7 @@ internal fun InboxCard(
             ),
         backgroundContent = { SwipeBackground(swipe.dismissDirection) },
     ) {
-        FintrackCard(modifier = Modifier.fillMaxWidth()) {
+        ScreenCard(modifier = Modifier.fillMaxWidth()) {
             CardBody(card, actions, onPickCategory, onPickWallet)
         }
     }
@@ -93,70 +94,38 @@ private fun CardBody(
     onPickCategory: () -> Unit,
     onPickWallet: () -> Unit,
 ) {
-    val spacing = FintrackTheme.spacing
-    Column(
-        modifier = Modifier.padding(spacing.large),
-        verticalArrangement = Arrangement.spacedBy(spacing.small),
-    ) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(
-                text = "${card.sourceLabel} · ${card.timeLabel}",
-                style = FintrackTheme.typography.labelMedium,
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
+    Column(modifier = Modifier.padding(FintrackScreenSizes.rowPaddingHorizontal)) {
+        InboxHeaderRow(
+            source = card.sourceLabel,
+            title = card.merchant.ifEmpty { card.sourceLabel },
+            subtitle = "${card.sourceLabel} \u00B7 ${card.timeLabel}",
+            amount = { InboxAmount(money = card.amount, type = card.type) },
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium),
+            horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            ScreenPill(
+                label = card.categoryName ?: stringResource(R.string.inbox_pick_category),
+                onClick = onPickCategory,
+                dot = if (card.categoryName != null) FintrackTheme.colors.texts.faint else null,
             )
-            MoneyText(money = card.amount, type = card.type)
+            ScreenPill(label = card.walletName ?: stringResource(R.string.inbox_pick_wallet), onClick = onPickWallet)
+            Spacer(modifier = Modifier.weight(1f))
+            ScreenCircleButton(
+                iconRes = DesignR.drawable.ic_close,
+                description = stringResource(R.string.inbox_dismiss),
+                onClick = { actions.onDismiss(card.itemId) },
+            )
+            ScreenCircleButton(
+                iconRes = DesignR.drawable.ic_check,
+                description = stringResource(R.string.inbox_confirm),
+                onClick = { actions.onConfirm(card.itemId) },
+                filled = true,
+                enabled = card.walletId != null && card.categoryId != null,
+            )
         }
-        Text(
-            text = card.merchant.ifEmpty { card.sourceLabel },
-            style = FintrackTheme.typography.titleMedium,
-            color = FintrackTheme.colors.texts.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        ChipRow(card, onPickCategory, onPickWallet)
-        ButtonRow(card, actions)
-    }
-}
-
-@Composable
-private fun ChipRow(
-    card: InboxCardUi,
-    onPickCategory: () -> Unit,
-    onPickWallet: () -> Unit,
-) {
-    Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-        FintrackChip(
-            label = card.categoryName ?: stringResource(R.string.inbox_pick_category),
-            selected = card.categoryName != null,
-            onClick = onPickCategory,
-        )
-        FintrackChip(
-            label = card.walletName ?: stringResource(R.string.inbox_pick_wallet),
-            selected = card.walletName != null,
-            onClick = onPickWallet,
-        )
-    }
-}
-
-@Composable
-private fun ButtonRow(
-    card: InboxCardUi,
-    actions: InboxActions,
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        TextButton(onClick = { actions.onDismiss(card.itemId) }) {
-            Text(text = stringResource(R.string.inbox_dismiss))
-        }
-        FintrackButton(
-            text = stringResource(R.string.inbox_confirm),
-            onClick = { actions.onConfirm(card.itemId) },
-            modifier = Modifier.weight(1f),
-            enabled = card.walletId != null && card.categoryId != null,
-        )
     }
 }
 

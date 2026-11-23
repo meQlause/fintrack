@@ -13,7 +13,7 @@ import org.robolectric.annotation.GraphicsMode
 // FR-017, S-19: screenshot references of the wallet detail previews in light and dark themes
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(qualifiers = "w411dp-h720dp")
+@Config(qualifiers = "w390dp-h844dp")
 class WalletDetailScreenScreenshotTest {
     @get:Rule
     val composeRule = createComposeRule()

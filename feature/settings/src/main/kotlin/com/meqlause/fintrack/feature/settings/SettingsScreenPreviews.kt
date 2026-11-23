@@ -5,27 +5,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // FR-120, FR-121, S-12: previews of the Pengaturan screen in light and dark themes
+private val previewState = SettingsUiState(pinEnabled = true, biometricSupported = true)
+
 @Composable
 internal fun SettingsLightSample() {
     FintrackTheme(darkTheme = false) {
-        SettingsScreen(state = SettingsUiState(), callbacks = SettingsCallbacks())
+        SettingsScreen(state = previewState, callbacks = SettingsCallbacks(), version = "0.1")
     }
 }
 
 @Composable
 internal fun SettingsDarkSample() {
     FintrackTheme(darkTheme = true) {
-        SettingsScreen(state = SettingsUiState(), callbacks = SettingsCallbacks())
+        SettingsScreen(state = previewState, callbacks = SettingsCallbacks(), version = "0.1")
     }
 }
 
-@Preview(name = "Settings light", showBackground = true)
+@Preview(name = "Settings light", showBackground = true, widthDp = 390, heightDp = 1200)
 @Composable
 internal fun SettingsLightPreview() {
     SettingsLightSample()
 }
 
-@Preview(name = "Settings dark", showBackground = true)
+@Preview(name = "Settings dark", showBackground = true, widthDp = 390, heightDp = 1200)
 @Composable
 internal fun SettingsDarkPreview() {
     SettingsDarkSample()

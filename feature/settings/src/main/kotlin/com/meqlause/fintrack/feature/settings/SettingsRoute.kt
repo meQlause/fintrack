@@ -4,6 +4,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.time.LocalDate
@@ -38,9 +40,11 @@ internal fun SettingsRoute(
         rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(CSV_MIME_TYPE)) { uri ->
             backup.onCsvTarget(uri?.toString())
         }
+    val context = LocalContext.current
     SettingsScreen(
         state = state,
         backup = backupState,
+        version = remember { readVersionName(context) },
         callbacks =
             SettingsCallbacks(
                 onBack = onBack,

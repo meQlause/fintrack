@@ -16,7 +16,7 @@ import org.robolectric.annotation.GraphicsMode
 // FR-010, S-09: the main interaction of the Dompet tab, adding a wallet from the empty state
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(qualifiers = "w411dp-h720dp")
+@Config(qualifiers = "w390dp-h844dp")
 class WalletScreenUiTest {
     @get:Rule
     val composeRule = createComposeRule()

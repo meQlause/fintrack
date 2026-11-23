@@ -13,7 +13,7 @@ import org.robolectric.annotation.GraphicsMode
 // S-08, S-20: the previews are screenshot-tested in light and dark, the reference images are written by Roborazzi
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(qualifiers = "w411dp-h720dp")
+@Config(qualifiers = "w390dp-h844dp")
 class InvestmentScreenshotTest {
     @get:Rule
     val composeRule = createComposeRule()

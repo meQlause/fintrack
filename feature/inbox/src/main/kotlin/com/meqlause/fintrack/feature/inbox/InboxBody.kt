@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.inbox
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,21 +8,29 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
-import com.meqlause.fintrack.core.designsystem.component.FintrackCard
+import com.meqlause.fintrack.core.designsystem.component.ScreenCard
+import com.meqlause.fintrack.core.designsystem.component.ScreenRow
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.ui.money.MoneyText
+import com.meqlause.fintrack.core.ui.format.MoneyFormatter
+import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // S-07: the body under the header; the states are Loading (blank), AccessOff, Empty and Success
 @Composable
@@ -94,10 +103,13 @@ private fun InboxList(
         modifier = Modifier.fillMaxSize(),
         contentPadding =
             PaddingValues(
-                horizontal = FintrackTheme.spacing.large,
-                vertical = FintrackTheme.spacing.small,
+                horizontal = FintrackScreenSizes.screenGutter,
+                vertical = FintrackTheme.spacing.xSmall,
             ),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+        verticalArrangement =
+            Arrangement.spacedBy(
+                FintrackScreenSizes.pillGap + FintrackTheme.spacing.xSmall - FintrackTheme.spacing.xxSmall,
+            ),
     ) {
         if (infoShown) {
             item(key = "info") { InfoCard(onDismiss = onInfoDismiss) }
@@ -139,43 +151,78 @@ private fun LazyListScope.resolvedSection(
 ) {
     if (state.resolved.isEmpty()) return
     item(key = "resolved-header") {
-        TextButton(onClick = onToggleResolved) {
-            Text(text = "${stringResource(R.string.inbox_resolved_title)} (${state.resolved.size})")
-        }
+        Text(
+            text = "${stringResource(R.string.inbox_resolved_title)} (${state.resolved.size})",
+            style = FintrackScreenText.label(),
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+            modifier =
+                Modifier
+                    .padding(top = FintrackTheme.spacing.large, start = FintrackTheme.spacing.xxSmall)
+                    .clickable(onClick = onToggleResolved),
+        )
     }
     if (resolvedOpen) {
-        items(state.resolved, key = { "resolved-${it.itemId}" }) { row -> ResolvedRow(row) }
-    }
-}
-
-@Composable
-private fun InfoCard(onDismiss: () -> Unit) {
-    FintrackCard(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(FintrackTheme.spacing.large)) {
-            Text(
-                text = stringResource(R.string.inbox_info_text),
-                style = FintrackTheme.typography.bodyMedium,
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-            )
-            TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.inbox_info_dismiss))
+        item(key = "resolved-card") {
+            ScreenCard {
+                state.resolved.forEachIndexed { index, row -> ResolvedRow(row, showDivider = index > 0) }
             }
         }
     }
 }
 
 @Composable
-private fun ResolvedRow(resolvedRow: InboxResolvedUi) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = FintrackTheme.spacing.small),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+private fun InfoCard(onDismiss: () -> Unit) {
+    ScreenCard(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(FintrackScreenSizes.rowPaddingHorizontal)) {
+            Text(
+                text = stringResource(R.string.inbox_info_text),
+                style = FintrackScreenText.style(size = 13f, weight = 400),
+                color = FintrackTheme.colors.texts.onSurfaceVariant,
+            )
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.inbox_info_dismiss), color = FintrackTheme.colors.brands.primary)
+            }
+        }
+    }
+}
+
+// S-07: one settled item, a muted line with its amount and a check or a cross at the right
+@Composable
+private fun ResolvedRow(
+    resolvedRow: InboxResolvedUi,
+    showDivider: Boolean,
+) {
+    ScreenRow(
+        showDivider = showDivider,
+        contentPadding =
+            PaddingValues(
+                horizontal = FintrackScreenSizes.rowPaddingHorizontal,
+                vertical = FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall,
+            ),
+        leading = {},
+        trailing = {
+            Icon(
+                painter =
+                    painterResource(
+                        if (resolvedRow.isConfirmed) DesignR.drawable.ic_check else DesignR.drawable.ic_close,
+                    ),
+                contentDescription = null,
+                tint =
+                    if (resolvedRow.isConfirmed) {
+                        FintrackTheme.colors.brands.primary
+                    } else {
+                        FintrackTheme.colors.texts.onSurfaceVariant
+                    },
+                modifier = Modifier.size(FintrackScreenSizes.circleGlyph),
+            )
+        },
     ) {
         Text(
-            text = resolvedRow.label,
-            style = FintrackTheme.typography.bodyMedium,
-            color = FintrackTheme.colors.texts.onSurface,
+            text = resolvedRow.label + " \u00B7 " + MoneyFormatter.format(resolvedRow.amount),
+            style = FintrackScreenText.style(size = 13f, weight = 400),
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
-        MoneyText(money = resolvedRow.amount, type = resolvedRow.type)
     }
 }

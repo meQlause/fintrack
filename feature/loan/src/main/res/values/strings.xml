@@ -2,6 +2,8 @@
 <resources>
     <string name="loan_back">Kembali</string>
     <string name="loan_title">Pinjaman</string>
+    <string name="loan_total_lent">Total piutang</string>
+    <string name="loan_total_borrowed">Total hutang</string>
     <string name="loan_tab_lent">Piutang</string>
     <string name="loan_tab_borrowed">Hutang</string>
     <string name="loan_list_empty">Tidak ada</string>

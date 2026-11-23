@@ -8,16 +8,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
-import com.meqlause.fintrack.core.designsystem.component.FintrackButton
-import com.meqlause.fintrack.core.designsystem.component.FintrackCard
-import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
-import com.meqlause.fintrack.core.designsystem.component.SegmentedControl
+import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.component.ScreenDashedButton
+import com.meqlause.fintrack.core.designsystem.component.ScreenSegments
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.CategoryKind
 import com.meqlause.fintrack.feature.category.component.ArchiveOfferCard
@@ -32,29 +31,28 @@ internal fun CategoryScreen(
     callbacks: CategoryCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-    ) {
-        FintrackTabHeader(
+    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+        ScreenBackHeader(
             title = stringResource(R.string.category_title),
-            leading = { BackLabel(onBack = callbacks.onBack) },
+            backLabel = stringResource(R.string.category_back),
+            onBack = callbacks.onBack,
         )
-        SegmentedControl(
-            options =
-                listOf(
-                    stringResource(R.string.category_tab_expense),
-                    stringResource(R.string.category_tab_income),
-                ),
-            selectedIndex = if (state.kindOrNull() == CategoryKind.INCOME) 1 else 0,
-            onSelect = { index -> callbacks.onSelectKind(kindAt(index)) },
-        )
-        CategoryBody(state = state, callbacks = callbacks, modifier = Modifier.weight(1f))
-        FintrackButton(text = stringResource(R.string.category_add), onClick = callbacks.onAdd)
+        Column(
+            modifier = Modifier.weight(1f).padding(horizontal = FintrackScreenSizes.screenGutter),
+            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+        ) {
+            ScreenSegments(
+                labels =
+                    listOf(
+                        stringResource(R.string.category_tab_expense),
+                        stringResource(R.string.category_tab_income),
+                    ),
+                selected = if (state.kindOrNull() == CategoryKind.INCOME) 1 else 0,
+                onSelect = { index -> callbacks.onSelectKind(kindAt(index)) },
+            )
+            CategoryBody(state = state, callbacks = callbacks, modifier = Modifier.weight(1f))
+            ScreenDashedButton(text = stringResource(R.string.category_add), onClick = callbacks.onAdd)
+        }
         state.editorOrNull()?.let { draft ->
             CategoryEditorSheet(draft = draft, callbacks = callbacks)
         }
@@ -114,18 +112,6 @@ private fun CategoryList(
         items(state.categories, key = { it.categoryId.value }) { category ->
             CategoryListItem(category = category, callbacks = callbacks)
         }
-    }
-}
-
-// FR-020: the back action shown in the tab header
-@Composable
-private fun BackLabel(onBack: () -> Unit) {
-    FintrackCard(onClick = onBack) {
-        Text(
-            text = stringResource(R.string.category_back),
-            style = FintrackTheme.typography.labelLarge,
-            color = FintrackTheme.colors.texts.onSurface,
-        )
     }
 }
 
