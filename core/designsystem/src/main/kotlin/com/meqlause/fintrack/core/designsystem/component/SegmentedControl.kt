@@ -4,11 +4,13 @@ import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -52,7 +54,14 @@ fun SegmentedControl(
             animationSpec = segmentMotion(),
         )
         SegmentPill(width = segmentWidth, offset = pillOffset)
-        Row(modifier = Modifier.fillMaxSize()) {
+        // DOC-08: the row takes its segments' height, so the control never claims the space below it
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+                    .heightIn(min = FintrackTheme.sizes.segmentHeight),
+        ) {
             options.forEachIndexed { index, label ->
                 SegmentOption(
                     label = label,
@@ -69,16 +78,16 @@ fun SegmentedControl(
 private fun segmentMotion(): AnimationSpec<Dp> = FintrackTheme.motion.medium.toSpec()
 
 @Composable
-private fun SegmentPill(
+private fun BoxScope.SegmentPill(
     width: Dp,
     offset: Dp,
 ) {
     Box(
         modifier =
             Modifier
-                .offset { IntOffset(x = offset.roundToPx(), y = 0) }
+                .matchParentSize()
                 .width(width)
-                .fillMaxHeight()
+                .offset { IntOffset(x = offset.roundToPx(), y = 0) }
                 .clip(FintrackTheme.shapes.small)
                 .background(FintrackTheme.colors.surfaces.surface),
     )
