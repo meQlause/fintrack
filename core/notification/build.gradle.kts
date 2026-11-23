@@ -12,5 +12,8 @@ dependencies {
     implementation(libs.coroutines.core)
     implementation(libs.dagger)
     implementation(libs.hilt.android)
+    implementation(libs.hilt.work)
+    implementation(libs.work.runtime.ktx)
+    ksp(libs.hilt.androidx.compiler)
     ksp(libs.hilt.compiler)
 }

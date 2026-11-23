@@ -7,6 +7,7 @@ import com.meqlause.fintrack.core.model.InboxStatus
 import com.meqlause.fintrack.core.model.Resolution
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import java.time.Instant
 
 /** ADR-007, FR-090: in-memory inbox items; the fingerprint is the dedup key (FR-092). */
 public class FakeInboxRepository : InboxRepository {
@@ -61,5 +62,21 @@ public class FakeInboxRepository : InboxRepository {
                 it.copy(resolution = resolution),
             )
         }
+    }
+
+    override suspend fun purgeRawTextResolvedBefore(cutoff: Instant) {
+        store.all().filter { purgeable(it, cutoff) }.forEach { item ->
+            store.replace(item.copy(notice = item.notice.copy(rawTitle = "", rawText = "")))
+        }
+    }
+
+    // FR-092: only resolved items whose resolution is older than the cutoff lose their raw text
+    private fun purgeable(
+        item: InboxItem,
+        cutoff: Instant,
+    ): Boolean {
+        val resolvedAt = item.resolution.resolvedAt ?: return false
+        val resolved = item.resolution.status in setOf(InboxStatus.CONFIRMED, InboxStatus.DISMISSED)
+        return resolved && resolvedAt.isBefore(cutoff)
     }
 }

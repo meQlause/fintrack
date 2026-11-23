@@ -9,6 +9,7 @@ import com.meqlause.fintrack.core.model.InboxItemId
 import com.meqlause.fintrack.core.model.Resolution
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.Instant
 
 /** DOC-03, ADR-007, FR-090: detected notifications in Room; the fingerprint is unique (FR-092). */
 public class LocalInboxRepository(
@@ -46,5 +47,9 @@ public class LocalInboxRepository(
             resolvedAt,
             updatedAt,
         )
+    }
+
+    override suspend fun purgeRawTextResolvedBefore(cutoff: Instant) {
+        inboxItemDao.purgeRawTextResolvedBefore(cutoff.toEpochMilli())
     }
 }

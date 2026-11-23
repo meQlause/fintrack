@@ -44,6 +44,8 @@ dependencies {
     implementation(libs.hilt.core)
     implementation(libs.hilt.android)
     implementation(libs.hilt.lifecycle.viewmodel.compose)
+    implementation(libs.hilt.work)
+    implementation(libs.work.runtime.ktx)
     implementation(libs.androidx.annotation)
     implementation(libs.datastore.core)
     implementation(libs.javax.inject)

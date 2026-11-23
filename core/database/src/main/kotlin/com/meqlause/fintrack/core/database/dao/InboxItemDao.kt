@@ -53,4 +53,11 @@ interface InboxItemDao {
         resolvedAt: Long?,
         updatedAt: Long,
     )
+
+    /** FR-092: clears raw title and text of CONFIRMED or DISMISSED items resolved before the cutoff (epoch millis). */
+    @Query(
+        "UPDATE inbox_item SET rawTitle = '', rawText = '' " +
+            "WHERE status IN ('CONFIRMED', 'DISMISSED') AND resolvedAt IS NOT NULL AND resolvedAt < :resolvedBefore",
+    )
+    suspend fun purgeRawTextResolvedBefore(resolvedBefore: Long)
 }

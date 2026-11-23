@@ -4,6 +4,7 @@ import com.meqlause.fintrack.core.model.InboxItem
 import com.meqlause.fintrack.core.model.InboxItemId
 import com.meqlause.fintrack.core.model.Resolution
 import kotlinx.coroutines.flow.Flow
+import java.time.Instant
 
 /** DOC-03, FR-090: access to notifications detected as payments and waiting for review (FR-091). */
 public interface InboxRepository {
@@ -33,4 +34,7 @@ public interface InboxRepository {
         inboxItemId: InboxItemId,
         resolution: Resolution,
     )
+
+    /** FR-092: clears rawTitle and rawText of CONFIRMED or DISMISSED items resolved before [cutoff]. */
+    public suspend fun purgeRawTextResolvedBefore(cutoff: Instant)
 }

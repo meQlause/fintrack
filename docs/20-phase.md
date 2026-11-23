@@ -438,7 +438,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(inbox): add detected transactions inbox [P5, FR-087]`
 
 ### T5.7 — Raw text purge job
-- [ ] done · Refs: FR-092 · Commit: `feat(notification): purge resolved raw text [P5, FR-092]`
+- [x] done · Refs: FR-092 · Commit: `feat(notification): purge resolved raw text [P5, FR-092]`
 
 ---
 

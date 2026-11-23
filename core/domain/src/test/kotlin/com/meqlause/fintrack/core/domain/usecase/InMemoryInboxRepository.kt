@@ -7,6 +7,7 @@ import com.meqlause.fintrack.core.model.InboxStatus
 import com.meqlause.fintrack.core.model.Resolution
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.time.Instant
 
 // FR-090, FR-092: in-memory inbox items for the domain tests; the fingerprint is the dedup key
 internal class InMemoryInboxRepository : InboxRepository {
@@ -56,4 +57,17 @@ internal class InMemoryInboxRepository : InboxRepository {
 
     private fun InboxItem.withRelated(partner: InboxItemId): InboxItem =
         copy(suggestion = suggestion.copy(relatedInboxItemId = partner))
+
+    override suspend fun purgeRawTextResolvedBefore(cutoff: Instant) {
+        rows.value =
+            rows.value.map { item ->
+                val resolvedAt = item.resolution.resolvedAt
+                val resolved = item.resolution.status in setOf(InboxStatus.CONFIRMED, InboxStatus.DISMISSED)
+                if (resolved && resolvedAt != null && resolvedAt.isBefore(cutoff)) {
+                    item.copy(notice = item.notice.copy(rawTitle = "", rawText = ""))
+                } else {
+                    item
+                }
+            }
+    }
 }
