@@ -105,4 +105,18 @@ class LockViewModelTest {
             assertThat(viewModel.state.value.digits).isEqualTo("1")
             collector.cancel()
         }
+
+    // FR-100: a seventh digit typed before the sixth is handled is ignored
+    @Test
+    fun `given six digits typed when another digit comes at once then it is ignored (FR-100)`() =
+        runTest {
+            setPin("123456")
+            val viewModel = viewModel()
+            val collector = launch { viewModel.state.collect {} }
+            "123456".forEach { viewModel.onDigit(it.toString()) }
+            viewModel.onDigit("7")
+            runCurrent()
+            assertThat(viewModel.state.value.unlocked).isTrue()
+            collector.cancel()
+        }
 }
