@@ -30,7 +30,7 @@ fun FintrackButton(
 ) {
     val colors = FintrackTheme.colors
     val containerColor =
-        if (enabled) colors.brands.primary else colors.brands.primary.copy(alpha = FintrackScreenSizes.disabledAlpha)
+        if (enabled) colors.brands.primary else colors.brands.primary.copy(alpha = FintrackScreenSizes.DISABLED_ALPHA)
     val contentColor = colors.brands.onPrimary
     Box(
         modifier =

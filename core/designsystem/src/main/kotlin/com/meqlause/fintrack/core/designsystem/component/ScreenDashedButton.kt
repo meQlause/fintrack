@@ -25,6 +25,8 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
+private const val DASH_UNITS = 3f
+
 // DOC-08: prototype dashed add button, 50 px tall with a plus and a muted label
 @Composable
 fun ScreenDashedButton(
@@ -66,7 +68,7 @@ private fun DrawScope.dashedBorder(
     corner: Float,
     stroke: Float,
 ) {
-    val pattern = PathEffect.dashPathEffect(floatArrayOf(stroke * 3f, stroke * 3f))
+    val pattern = PathEffect.dashPathEffect(floatArrayOf(stroke * DASH_UNITS, stroke * DASH_UNITS))
     drawRoundRect(
         color = color,
         cornerRadius = CornerRadius(corner),

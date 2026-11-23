@@ -29,38 +29,44 @@ fun SheetCheckRow(
     modifier: Modifier = Modifier,
 ) {
     val colors = FintrackTheme.colors
-    val shape = FintrackTheme.shapes.chip
     Row(
         modifier = modifier.toggleable(value = checked, role = Role.Checkbox, onValueChange = onCheckedChange),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
-        Box(
-            modifier =
-                Modifier
-                    .size(FintrackScreenSizes.checkBox)
-                    .clip(shape)
-                    .background(if (checked) colors.brands.primary else colors.surfaces.background)
-                    .border(
-                        FintrackScreenSizes.checkBoxBorder,
-                        if (checked) colors.brands.primary else colors.surfaces.outline,
-                        shape,
-                    ),
-            contentAlignment = Alignment.Center,
-        ) {
-            if (checked) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_check),
-                    contentDescription = null,
-                    tint = colors.brands.onPrimary,
-                    modifier = Modifier.size(FintrackScreenSizes.checkGlyph),
-                )
-            }
-        }
+        CheckBoxGlyph(checked = checked)
         Text(
             text = label,
             style = FintrackScreenText.style(size = 13f, weight = 600),
             color = if (checked) colors.brands.primary else colors.texts.onSurfaceVariant,
         )
+    }
+}
+
+@Composable
+private fun CheckBoxGlyph(checked: Boolean) {
+    val colors = FintrackTheme.colors
+    val shape = FintrackTheme.shapes.chip
+    Box(
+        modifier =
+            Modifier
+                .size(FintrackScreenSizes.checkBox)
+                .clip(shape)
+                .background(if (checked) colors.brands.primary else colors.surfaces.background)
+                .border(
+                    FintrackScreenSizes.checkBoxBorder,
+                    if (checked) colors.brands.primary else colors.surfaces.outline,
+                    shape,
+                ),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (checked) {
+            Icon(
+                painter = painterResource(R.drawable.ic_check),
+                contentDescription = null,
+                tint = colors.brands.onPrimary,
+                modifier = Modifier.size(FintrackScreenSizes.checkGlyph),
+            )
+        }
     }
 }

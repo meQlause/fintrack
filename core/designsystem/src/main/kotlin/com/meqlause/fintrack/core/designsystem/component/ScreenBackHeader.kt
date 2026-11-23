@@ -48,21 +48,7 @@ fun ScreenBackHeader(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),
     ) {
-        Box(
-            modifier =
-                Modifier
-                    .size(FintrackScreenSizes.iconButton)
-                    .clip(CircleShape)
-                    .clickable(onClick = onBack),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_back),
-                contentDescription = backLabel,
-                tint = FintrackTheme.colors.texts.onSurface,
-                modifier = Modifier.size(FintrackScreenSizes.backGlyph),
-            )
-        }
+        BackButton(backLabel = backLabel, onBack = onBack)
         Text(
             text = title,
             modifier = Modifier.semantics { heading() },
@@ -87,4 +73,26 @@ private fun Badge(text: String) {
                 .background(FintrackTheme.colors.surfaces.surfaceVariant)
                 .padding(horizontal = FintrackTheme.spacing.small, vertical = FintrackScreenSizes.badgePadding),
     )
+}
+
+@Composable
+private fun BackButton(
+    backLabel: String,
+    onBack: () -> Unit,
+) {
+    Box(
+        modifier =
+            Modifier
+                .size(FintrackScreenSizes.iconButton)
+                .clip(CircleShape)
+                .clickable(onClick = onBack),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_back),
+            contentDescription = backLabel,
+            tint = FintrackTheme.colors.texts.onSurface,
+            modifier = Modifier.size(FintrackScreenSizes.backGlyph),
+        )
+    }
 }

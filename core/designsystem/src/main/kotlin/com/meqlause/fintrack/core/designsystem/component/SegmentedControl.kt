@@ -54,22 +54,31 @@ fun SegmentedControl(
             animationSpec = segmentMotion(),
         )
         SegmentPill(width = segmentWidth, offset = pillOffset)
-        // DOC-08: the row takes its segments' height, so the control never claims the space below it
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-                    .heightIn(min = FintrackTheme.sizes.segmentHeight),
-        ) {
-            options.forEachIndexed { index, label ->
-                SegmentOption(
-                    label = label,
-                    selected = index == selectedIndex,
-                    onClick = { onSelect(index) },
-                    modifier = Modifier.weight(1f),
-                )
-            }
+        SegmentRow(options = options, selectedIndex = selectedIndex, onSelect = onSelect)
+    }
+}
+
+// DOC-08: the row takes its segments' height, so the control never claims the space below it
+@Composable
+private fun SegmentRow(
+    options: List<String>,
+    selectedIndex: Int,
+    onSelect: (Int) -> Unit,
+) {
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .heightIn(min = FintrackTheme.sizes.segmentHeight),
+    ) {
+        options.forEachIndexed { index, label ->
+            SegmentOption(
+                label = label,
+                selected = index == selectedIndex,
+                onClick = { onSelect(index) },
+                modifier = Modifier.weight(1f),
+            )
         }
     }
 }

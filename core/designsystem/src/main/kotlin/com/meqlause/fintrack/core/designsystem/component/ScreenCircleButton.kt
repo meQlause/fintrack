@@ -37,7 +37,7 @@ fun ScreenCircleButton(
         modifier =
             modifier
                 .size(FintrackScreenSizes.circleButton)
-                .alpha(if (enabled) 1f else FintrackScreenSizes.disabledAlpha)
+                .alpha(if (enabled) 1f else FintrackScreenSizes.DISABLED_ALPHA)
                 .clip(CircleShape)
                 .then(base)
                 .clickable(enabled = enabled, onClick = onClick),

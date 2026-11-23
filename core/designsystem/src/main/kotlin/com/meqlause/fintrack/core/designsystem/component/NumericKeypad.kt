@@ -51,18 +51,28 @@ fun NumericKeypad(
         verticalArrangement = Arrangement.spacedBy(FintrackScreenSizes.keypadGap),
     ) {
         KEYPAD_ROWS.forEach { keys ->
-            Row(horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.keypadGap)) {
-                keys.forEach { keyLabel ->
-                    if (keyLabel == TRIPLE_ZERO_KEY && !showTripleZero) {
-                        Spacer(modifier = Modifier.weight(1f))
-                    } else {
-                        KeypadKey(
-                            label = keyLabel,
-                            onClick = { if (keyLabel == BACKSPACE_KEY) onBackspace() else onDigit(keyLabel) },
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                }
+            KeypadRow(keys = keys, showTripleZero = showTripleZero, onDigit = onDigit, onBackspace = onBackspace)
+        }
+    }
+}
+
+@Composable
+private fun KeypadRow(
+    keys: List<String>,
+    showTripleZero: Boolean,
+    onDigit: (String) -> Unit,
+    onBackspace: () -> Unit,
+) {
+    Row(horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.keypadGap)) {
+        keys.forEach { keyLabel ->
+            if (keyLabel == TRIPLE_ZERO_KEY && !showTripleZero) {
+                Spacer(modifier = Modifier.weight(1f))
+            } else {
+                KeypadKey(
+                    label = keyLabel,
+                    onClick = { if (keyLabel == BACKSPACE_KEY) onBackspace() else onDigit(keyLabel) },
+                    modifier = Modifier.weight(1f),
+                )
             }
         }
     }

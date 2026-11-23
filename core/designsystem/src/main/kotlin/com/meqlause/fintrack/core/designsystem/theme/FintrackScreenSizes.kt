@@ -36,7 +36,7 @@ object FintrackScreenSizes {
     val segmentInset: Dp = Dp(value = 3f)
     val segmentCorner: Dp = Dp(value = 12f)
     val segmentPillCorner: Dp = Dp(value = 9f)
-    val disabledAlpha: Float = 0.4f
+    const val DISABLED_ALPHA: Float = 0.4f
     val pillTall: Dp = Dp(value = 32f)
     val pillDot: Dp = Dp(value = 8f)
     val circleButton: Dp = Dp(value = 36f)

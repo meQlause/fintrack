@@ -3,7 +3,7 @@ package com.meqlause.fintrack.core.designsystem.icon
 import androidx.annotation.DrawableRes
 import com.meqlause.fintrack.core.designsystem.R
 
-// DOC-08: maps every iconKey stored on categories, wallets and features to a stroke drawable; unknown keys get the fallback
+// DOC-08: maps each iconKey of categories, wallets and features to a stroke drawable; unknown keys fall back
 object FintrackIcons {
     private val drawables: Map<String, Int> =
         mapOf(

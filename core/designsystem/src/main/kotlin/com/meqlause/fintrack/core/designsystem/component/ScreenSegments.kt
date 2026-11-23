@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,24 +37,32 @@ fun ScreenSegments(
                 .padding(FintrackScreenSizes.segmentInset),
     ) {
         labels.forEachIndexed { index, label ->
-            val on = index == selected
-            val colors = FintrackTheme.colors
-            Box(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .clip(RoundedCornerShape(FintrackScreenSizes.segmentPillCorner))
-                        .background(if (on) colors.surfaces.surface else colors.surfaces.surfaceVariant)
-                        .clickable { onSelect(index) },
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = label,
-                    style = FintrackScreenText.style(size = 13f, weight = 600),
-                    color = if (on) colors.texts.onSurface else colors.texts.onSurfaceVariant,
-                )
-            }
+            ScreenSegment(label = label, isOn = index == selected, onClick = { onSelect(index) })
         }
+    }
+}
+
+@Composable
+private fun RowScope.ScreenSegment(
+    label: String,
+    isOn: Boolean,
+    onClick: () -> Unit,
+) {
+    val colors = FintrackTheme.colors
+    Box(
+        modifier =
+            Modifier
+                .weight(1f)
+                .fillMaxHeight()
+                .clip(RoundedCornerShape(FintrackScreenSizes.segmentPillCorner))
+                .background(if (isOn) colors.surfaces.surface else colors.surfaces.surfaceVariant)
+                .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = label,
+            style = FintrackScreenText.style(size = 13f, weight = 600),
+            color = if (isOn) colors.texts.onSurface else colors.texts.onSurfaceVariant,
+        )
     }
 }

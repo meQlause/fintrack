@@ -59,27 +59,43 @@ fun SheetPickRow(
             glyph = FintrackScreenSizes.pickRowGlyph,
             corner = FintrackScreenSizes.pickRowCorner,
         )
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = label, style = FintrackScreenText.label(), color = colors.texts.onSurfaceVariant)
-            Text(
-                text = name,
-                modifier = Modifier.padding(top = FintrackTheme.sizes.hairline),
-                style = FintrackScreenText.style(size = 14.5f, weight = 700),
-                color = colors.texts.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
+        PickLabels(label = label, name = name, modifier = Modifier.weight(1f))
+        PickTrailing(balance = balance)
+    }
+}
+
+@Composable
+private fun PickTrailing(balance: String) {
+    val colors = FintrackTheme.colors
+    Text(
+        text = balance,
+        style = FintrackScreenText.number(size = 12f, weight = 600),
+        color = colors.texts.onSurfaceVariant,
+    )
+    Icon(
+        painter = painterResource(R.drawable.ic_chev_d),
+        contentDescription = null,
+        tint = colors.texts.onSurfaceVariant,
+        modifier = Modifier.size(FintrackScreenSizes.chevron),
+    )
+}
+
+@Composable
+private fun PickLabels(
+    label: String,
+    name: String,
+    modifier: Modifier,
+) {
+    val colors = FintrackTheme.colors
+    Column(modifier = modifier) {
+        Text(text = label, style = FintrackScreenText.label(), color = colors.texts.onSurfaceVariant)
         Text(
-            text = balance,
-            style = FintrackScreenText.number(size = 12f, weight = 600),
-            color = colors.texts.onSurfaceVariant,
-        )
-        Icon(
-            painter = painterResource(R.drawable.ic_chev_d),
-            contentDescription = null,
-            tint = colors.texts.onSurfaceVariant,
-            modifier = Modifier.size(FintrackScreenSizes.chevron),
+            text = name,
+            modifier = Modifier.padding(top = FintrackTheme.sizes.hairline),
+            style = FintrackScreenText.style(size = 14.5f, weight = 700),
+            color = colors.texts.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
