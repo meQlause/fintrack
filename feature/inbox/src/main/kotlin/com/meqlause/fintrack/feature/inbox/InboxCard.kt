@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
@@ -19,11 +20,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextOverflow
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.component.ScreenCircleButton
 import com.meqlause.fintrack.core.designsystem.component.ScreenPill
@@ -35,20 +36,12 @@ import com.meqlause.fintrack.core.designsystem.R as DesignR
 @Composable
 internal fun InboxCard(
     card: InboxCardUi,
-    actions: InboxActions,
-    onPickCategory: () -> Unit,
-    onPickWallet: () -> Unit,
+    actions: InboxItemActions,
+    onPick: (InboxPicker) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val swipe = rememberSwipeToDismissBoxState()
-    LaunchedEffect(swipe.currentValue) {
-        when (swipe.currentValue) {
-            SwipeToDismissBoxValue.StartToEnd -> actions.onConfirm(card.itemId)
-            SwipeToDismissBoxValue.EndToStart -> actions.onDismiss(card.itemId)
-            SwipeToDismissBoxValue.Settled -> Unit
-        }
-        if (swipe.currentValue != SwipeToDismissBoxValue.Settled) swipe.snapTo(SwipeToDismissBoxValue.Settled)
-    }
+    SwipeEffect(swipe = swipe, itemId = card.itemId, actions = actions)
     SwipeToDismissBox(
         state = swipe,
         modifier =
@@ -59,8 +52,25 @@ internal fun InboxCard(
         backgroundContent = { SwipeBackground(swipe.dismissDirection) },
     ) {
         ScreenCard(modifier = Modifier.fillMaxWidth()) {
-            CardBody(card, actions, onPickCategory, onPickWallet)
+            CardBody(card, actions, onPick)
         }
+    }
+}
+
+// FR-087: a completed swipe runs Catat or Abaikan, then the card returns to its resting place
+@Composable
+private fun SwipeEffect(
+    swipe: SwipeToDismissBoxState,
+    itemId: Long,
+    actions: InboxItemActions,
+) {
+    LaunchedEffect(swipe.currentValue) {
+        when (swipe.currentValue) {
+            SwipeToDismissBoxValue.StartToEnd -> actions.onConfirm(itemId)
+            SwipeToDismissBoxValue.EndToStart -> actions.onDismiss(itemId)
+            SwipeToDismissBoxValue.Settled -> Unit
+        }
+        if (swipe.currentValue != SwipeToDismissBoxValue.Settled) swipe.snapTo(SwipeToDismissBoxValue.Settled)
     }
 }
 
@@ -90,75 +100,104 @@ private fun Modifier.swipeAlternatives(
 @Composable
 private fun CardBody(
     card: InboxCardUi,
-    actions: InboxActions,
-    onPickCategory: () -> Unit,
-    onPickWallet: () -> Unit,
+    actions: InboxItemActions,
+    onPick: (InboxPicker) -> Unit,
 ) {
     Column(modifier = Modifier.padding(FintrackScreenSizes.rowPaddingHorizontal)) {
         InboxHeaderRow(
-            source = card.sourceLabel,
-            title = card.merchant.ifEmpty { card.sourceLabel },
-            subtitle = "${card.sourceLabel} \u00B7 ${card.timeLabel}",
+            source = card.text.sourceLabel,
+            title = card.text.merchant.ifEmpty { card.text.sourceLabel },
+            subtitle = "${card.text.sourceLabel} · ${card.text.timeLabel}",
             amount = { InboxAmount(money = card.amount, type = card.type) },
         )
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium),
-            horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            ScreenPill(
-                label = card.categoryName ?: stringResource(R.string.inbox_pick_category),
-                onClick = onPickCategory,
-                dotColor = if (card.categoryName != null) FintrackTheme.colors.texts.faint else null,
-            )
-            ScreenPill(label = card.walletName ?: stringResource(R.string.inbox_pick_wallet), onClick = onPickWallet)
-            Spacer(modifier = Modifier.weight(1f))
-            ScreenCircleButton(
-                iconRes = DesignR.drawable.ic_close,
-                description = stringResource(R.string.inbox_dismiss),
-                onClick = { actions.onDismiss(card.itemId) },
-            )
-            ScreenCircleButton(
-                iconRes = DesignR.drawable.ic_check,
-                description = stringResource(R.string.inbox_confirm),
-                onClick = { actions.onConfirm(card.itemId) },
-                filled = true,
-                enabled = card.walletId != null && card.categoryId != null,
-            )
-        }
+        CardActions(card, actions, onPick)
     }
+}
+
+// FR-087: the category and wallet chips, then the dismiss and the confirm buttons
+@Composable
+private fun CardActions(
+    card: InboxCardUi,
+    actions: InboxItemActions,
+    onPick: (InboxPicker) -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium),
+        horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ScreenPill(
+            label = card.category.name ?: stringResource(R.string.inbox_pick_category),
+            onClick = { onPick(InboxPicker(card.itemId, PickKind.CATEGORY)) },
+            dotColor = if (card.category.name != null) FintrackTheme.colors.texts.faint else null,
+        )
+        ScreenPill(
+            label = card.wallet.name ?: stringResource(R.string.inbox_pick_wallet),
+            onClick = { onPick(InboxPicker(card.itemId, PickKind.WALLET)) },
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        CardButtons(card, actions)
+    }
+}
+
+// FR-087: Abaikan is the outlined cross, Catat the filled check that needs a wallet and a category
+@Composable
+private fun CardButtons(
+    card: InboxCardUi,
+    actions: InboxItemActions,
+) {
+    ScreenCircleButton(
+        iconRes = DesignR.drawable.ic_close,
+        description = stringResource(R.string.inbox_dismiss),
+        onClick = { actions.onDismiss(card.itemId) },
+    )
+    ScreenCircleButton(
+        iconRes = DesignR.drawable.ic_check,
+        description = stringResource(R.string.inbox_confirm),
+        onClick = { actions.onConfirm(card.itemId) },
+        filled = true,
+        enabled = card.wallet.id != null && card.category.id != null,
+    )
 }
 
 @Composable
 private fun RowScope.SwipeBackground(direction: SwipeToDismissBoxValue) {
-    val colors = FintrackTheme.colors
-    val (label, color, align) =
-        when (direction) {
-            SwipeToDismissBoxValue.StartToEnd -> {
-                Triple(stringResource(R.string.inbox_swipe_confirm), colors.brands.primary, Alignment.CenterStart)
-            }
-
-            SwipeToDismissBoxValue.EndToStart -> {
-                Triple(
-                    stringResource(R.string.inbox_swipe_dismiss),
-                    colors.surfaces.surfaceVariant,
-                    Alignment.CenterEnd,
-                )
-            }
-
-            SwipeToDismissBoxValue.Settled -> {
-                Triple("", colors.surfaces.background, Alignment.Center)
-            }
-        }
     Box(
         modifier =
             Modifier
                 .fillMaxSize()
                 .clip(FintrackTheme.shapes.medium)
-                .background(color)
+                .background(swipeColor(direction))
                 .padding(horizontal = FintrackTheme.spacing.large),
-        contentAlignment = align,
+        contentAlignment = swipeAlignment(direction),
     ) {
-        Text(text = label, style = FintrackTheme.typography.labelLarge, color = colors.texts.onSurface)
+        Text(
+            text = swipeLabel(direction),
+            style = FintrackTheme.typography.labelLarge,
+            color = FintrackTheme.colors.texts.onSurface,
+        )
     }
 }
+
+@Composable
+private fun swipeLabel(direction: SwipeToDismissBoxValue): String =
+    when (direction) {
+        SwipeToDismissBoxValue.StartToEnd -> stringResource(R.string.inbox_swipe_confirm)
+        SwipeToDismissBoxValue.EndToStart -> stringResource(R.string.inbox_swipe_dismiss)
+        SwipeToDismissBoxValue.Settled -> ""
+    }
+
+@Composable
+private fun swipeColor(direction: SwipeToDismissBoxValue): Color =
+    when (direction) {
+        SwipeToDismissBoxValue.StartToEnd -> FintrackTheme.colors.brands.primary
+        SwipeToDismissBoxValue.EndToStart -> FintrackTheme.colors.surfaces.surfaceVariant
+        SwipeToDismissBoxValue.Settled -> FintrackTheme.colors.surfaces.background
+    }
+
+private fun swipeAlignment(direction: SwipeToDismissBoxValue): Alignment =
+    when (direction) {
+        SwipeToDismissBoxValue.StartToEnd -> Alignment.CenterStart
+        SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
+        SwipeToDismissBoxValue.Settled -> Alignment.Center
+    }

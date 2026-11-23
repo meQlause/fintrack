@@ -8,45 +8,38 @@ import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.ui.picker.PickerOption
 
+private const val BELANJA_AMOUNT = 25_000L
+private const val KOPI_AMOUNT = 32_000L
+private const val TRANSFER_IN_AMOUNT = 150_000L
+private const val PAIR_AMOUNT = 100_000L
+
 // S-07: sample rows for the screenshot previews; the amounts and labels follow the spec copy
 // design/screens/inbox.png: the prototype inbox seed
 private val sampleCards =
     listOf(
         InboxCardUi(
-            1L,
-            "BCA",
-            "09:42",
-            Money(25_000L),
-            TransactionType.EXPENSE,
-            "INDOMARET KEMANG",
-            1L,
-            "BCA",
-            2L,
-            "Belanja",
+            itemId = 1L,
+            text = InboxCardText(sourceLabel = "BCA", timeLabel = "09:42", merchant = "INDOMARET KEMANG"),
+            amount = Money(BELANJA_AMOUNT),
+            type = TransactionType.EXPENSE,
+            wallet = InboxSlot(id = 1L, name = "BCA"),
+            category = InboxSlot(id = 2L, name = "Belanja"),
         ),
         InboxCardUi(
-            2L,
-            "GoPay",
-            "09:15",
-            Money(32_000L),
-            TransactionType.EXPENSE,
-            "KOPI KENANGAN",
-            2L,
-            "GoPay",
-            1L,
-            "Makanan",
+            itemId = 2L,
+            text = InboxCardText(sourceLabel = "GoPay", timeLabel = "09:15", merchant = "KOPI KENANGAN"),
+            amount = Money(KOPI_AMOUNT),
+            type = TransactionType.EXPENSE,
+            wallet = InboxSlot(id = 2L, name = "GoPay"),
+            category = InboxSlot(id = 1L, name = "Makanan"),
         ),
         InboxCardUi(
-            3L,
-            "DANA",
-            "08:03",
-            Money(150_000L),
-            TransactionType.INCOME,
-            "Transfer masuk dari XXXX",
-            3L,
-            "DANA",
-            3L,
-            "Lainnya",
+            itemId = 3L,
+            text = InboxCardText(sourceLabel = "DANA", timeLabel = "08:03", merchant = "Transfer masuk dari XXXX"),
+            amount = Money(TRANSFER_IN_AMOUNT),
+            type = TransactionType.INCOME,
+            wallet = InboxSlot(id = 3L, name = "DANA"),
+            category = InboxSlot(id = 3L, name = "Lainnya"),
         ),
     )
 
@@ -54,11 +47,9 @@ private val samplePair =
     InboxPairUi(
         fromItemId = 3L,
         toItemId = 4L,
-        fromWalletId = 1L,
-        fromWalletName = "BCA",
-        toWalletId = 5L,
-        toWalletName = "GoPay",
-        amount = Money(100_000L),
+        from = InboxSlot(id = 1L, name = "BCA"),
+        to = InboxSlot(id = 5L, name = "GoPay"),
+        amount = Money(PAIR_AMOUNT),
     )
 
 private val sampleOptions = listOf(PickerOption("1", "BCA"), PickerOption("5", "GoPay"))
@@ -67,10 +58,9 @@ private val sampleState =
     InboxUiState(
         isLoaded = true,
         hasAccess = true,
-        cards = sampleCards,
-        pairs = listOf(samplePair),
+        pending = InboxPending(cards = sampleCards, pairs = listOf(samplePair)),
         resolved = emptyList(),
-        walletOptions = sampleOptions,
+        options = InboxOptions(wallets = sampleOptions),
     )
 
 @Preview(name = "Kotak masuk light", showBackground = true, widthDp = 390, heightDp = 844)

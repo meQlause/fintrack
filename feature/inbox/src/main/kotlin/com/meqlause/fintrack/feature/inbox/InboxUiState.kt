@@ -8,37 +8,56 @@ import com.meqlause.fintrack.core.ui.picker.PickerOption
 internal data class InboxUiState(
     val isLoaded: Boolean = false,
     val hasAccess: Boolean = true,
-    val cards: List<InboxCardUi> = emptyList(),
-    val pairs: List<InboxPairUi> = emptyList(),
+    val pending: InboxPending = InboxPending(),
     val resolved: List<InboxResolvedUi> = emptyList(),
-    val walletOptions: List<PickerOption> = emptyList(),
-    val expenseOptions: List<PickerOption> = emptyList(),
-    val incomeOptions: List<PickerOption> = emptyList(),
+    val options: InboxOptions = InboxOptions(),
     val undoItemId: Long? = null,
 )
 
-// FR-087, S-07: one card of the list; walletId and categoryId are the values that Catat will store
+// S-07: the items waiting for a decision, the pairs first and the single cards after them
+internal data class InboxPending(
+    val cards: List<InboxCardUi> = emptyList(),
+    val pairs: List<InboxPairUi> = emptyList(),
+) {
+    val isEmpty: Boolean get() = cards.isEmpty() && pairs.isEmpty()
+}
+
+// S-18: the choices of the wallet picker and of the expense and income category pickers
+internal data class InboxOptions(
+    val wallets: List<PickerOption> = emptyList(),
+    val expenses: List<PickerOption> = emptyList(),
+    val incomes: List<PickerOption> = emptyList(),
+)
+
+// FR-087, S-07: one card of the list; wallet and category are the values that Catat will store
 internal data class InboxCardUi(
     val itemId: Long,
-    val sourceLabel: String,
-    val timeLabel: String,
+    val text: InboxCardText,
     val amount: Money,
     val type: TransactionType,
+    val wallet: InboxSlot,
+    val category: InboxSlot,
+)
+
+// S-07: the words of one card, the source app, the time and the merchant
+internal data class InboxCardText(
+    val sourceLabel: String,
+    val timeLabel: String,
     val merchant: String,
-    val walletId: Long?,
-    val walletName: String?,
-    val categoryId: Long?,
-    val categoryName: String?,
+)
+
+// FR-087, FR-091: a wallet or category of a card or pair side; id is null until the user or a suggestion picks one
+internal data class InboxSlot(
+    val id: Long?,
+    val name: String?,
 )
 
 // FR-091, S-07: a debit and a credit that look like one transfer; from is the DEBIT side
 internal data class InboxPairUi(
     val fromItemId: Long,
     val toItemId: Long,
-    val fromWalletId: Long?,
-    val fromWalletName: String?,
-    val toWalletId: Long?,
-    val toWalletName: String?,
+    val from: InboxSlot,
+    val to: InboxSlot,
     val amount: Money,
 )
 

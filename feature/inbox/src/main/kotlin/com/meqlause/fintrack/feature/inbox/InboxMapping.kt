@@ -10,95 +10,122 @@ import com.meqlause.fintrack.core.model.Wallet
 import com.meqlause.fintrack.core.ui.format.DateFormatter
 import com.meqlause.fintrack.core.ui.inbox.InboxSourceLabel
 import com.meqlause.fintrack.core.ui.picker.PickerOption
+import java.time.Clock
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
 
-private val RESOLVED_WINDOW: Duration = Duration.ofDays(7L)
+private const val RESOLVED_DAYS = 7L
+private val RESOLVED_WINDOW: Duration = Duration.ofDays(RESOLVED_DAYS)
+
+// FR-084, FR-091, S-07: the stored data the screen is built from; hasAccess is the notification listener grant
+internal data class InboxSnapshot(
+    val items: List<InboxItem>,
+    val wallets: List<Wallet>,
+    val categories: List<Category>,
+    val hasAccess: Boolean,
+)
+
+// S-07: the display names of the wallets and the categories, looked up by id
+private data class InboxNames(
+    val wallets: Map<Long, String>,
+    val categories: Map<Long, String>,
+)
 
 // FR-084, FR-091, S-07: turns the stored items into the screen state; a pair shows once, from its DEBIT side
 internal fun buildInboxState(
-    items: List<InboxItem>,
-    wallets: List<Wallet>,
-    categories: List<Category>,
+    snapshot: InboxSnapshot,
     local: InboxLocal,
-    hasAccess: Boolean,
-    currentTime: Instant,
-    zone: ZoneId,
+    clock: Clock,
 ): InboxUiState {
-    val walletNames = wallets.associate { it.walletId.value to it.profile.name }
-    val categoryNames = categories.associate { it.categoryId.value to it.profile.name }
-    val pending = items.filter { it.resolution.status == InboxStatus.PENDING }.sortedByDescending { it.notice.postedAt }
-    val byId = pending.associateBy { it.inboxItemId.value }
-    val pairs = pairsOf(pending, byId, local.separated)
+    val names =
+        InboxNames(
+            wallets = snapshot.wallets.associate { it.walletId.value to it.profile.name },
+            categories = snapshot.categories.associate { it.categoryId.value to it.profile.name },
+        )
+    val pending =
+        snapshot.items
+            .filter { it.resolution.status == InboxStatus.PENDING }
+            .sortedByDescending { it.notice.postedAt }
+    return InboxUiState(
+        isLoaded = true,
+        hasAccess = snapshot.hasAccess,
+        pending = pendingOf(pending, names, local, clock.zone),
+        resolved = resolvedRows(snapshot.items, Instant.now(clock)),
+        options = optionsState(snapshot),
+        undoItemId = local.undoItemId,
+    )
+}
+
+// FR-087, FR-091: the cards that stand alone and the pairs, after the user's edits and split choices
+private fun pendingOf(
+    pending: List<InboxItem>,
+    names: InboxNames,
+    local: InboxLocal,
+    zone: ZoneId,
+): InboxPending {
+    val pairs = pairsOf(pending, local.separated)
     val pairedIds = pairs.flatMap { listOf(it.first.inboxItemId.value, it.second.inboxItemId.value) }.toSet()
     val cards =
         pending
             .filter { it.inboxItemId.value !in pairedIds }
-            .map { card(it, walletNames, categoryNames, local.edits[it.inboxItemId.value], zone) }
-    return InboxUiState(
-        isLoaded = true,
-        hasAccess = hasAccess,
+            .map { card(it, names, local.edits[it.inboxItemId.value], zone) }
+    return InboxPending(
         cards = cards,
-        pairs = pairs.map { pairCard(it.first, it.second, walletNames, local.edits) },
-        resolved = resolvedRows(items, currentTime),
-        walletOptions = wallets.map { PickerOption(it.walletId.value.toString(), it.profile.name) },
-        expenseOptions = optionsOf(categories, CategoryKind.EXPENSE),
-        incomeOptions = optionsOf(categories, CategoryKind.INCOME),
-        undoItemId = local.undoItemId,
+        pairs = pairs.map { pairCard(it.first, it.second, names, local.edits) },
     )
 }
 
 // FR-091: a pair is a debit and a credit linked to each other, both still pending and not split by the user
 private fun pairsOf(
     pending: List<InboxItem>,
-    byId: Map<Long, InboxItem>,
     separated: Set<Long>,
-): List<Pair<InboxItem, InboxItem>> =
-    pending.mapNotNull { item ->
+): List<Pair<InboxItem, InboxItem>> {
+    val byId = pending.associateBy { it.inboxItemId.value }
+    return pending.mapNotNull { item ->
         val partner =
             item.suggestion.relatedInboxItemId
                 ?.value
                 ?.let { byId[it] } ?: return@mapNotNull null
         val linked = item.inboxItemId.value !in separated && partner.inboxItemId.value !in separated
-        val opposite = item.parsed.direction != partner.parsed.direction
-        val isFromSide = item.parsed.direction == MoneyDirection.DEBIT
-        if (linked && opposite && isFromSide) item to partner else null
+        val isPair = linked && partner.parsed.direction != item.parsed.direction
+        if (isPair && item.parsed.direction == MoneyDirection.DEBIT) item to partner else null
     }
+}
 
 // FR-087: the edit made on the card wins over the suggestion (FR-088, FR-082)
 private fun card(
     item: InboxItem,
-    walletNames: Map<Long, String>,
-    categoryNames: Map<Long, String>,
+    names: InboxNames,
     edit: InboxEdit?,
     zone: ZoneId,
 ): InboxCardUi {
     val walletId = edit?.walletId ?: item.suggestion.suggestedWalletId?.value
     val categoryId = edit?.categoryId ?: item.suggestion.suggestedCategoryId?.value
+    val time =
+        item.notice.postedAt
+            .atZone(zone)
+            .toLocalTime()
     return InboxCardUi(
         itemId = item.inboxItemId.value,
-        sourceLabel = InboxSourceLabel.of(item.notice.packageName),
-        timeLabel =
-            DateFormatter.timeLabel(
-                item.notice.postedAt
-                    .atZone(zone)
-                    .toLocalTime(),
+        text =
+            InboxCardText(
+                sourceLabel = InboxSourceLabel.of(item.notice.packageName),
+                timeLabel = DateFormatter.timeLabel(time),
+                merchant = item.parsed.merchant,
             ),
         amount = item.parsed.amount,
         type = typeOf(item),
-        merchant = item.parsed.merchant,
-        walletId = walletId,
-        walletName = walletId?.let { walletNames[it] },
-        categoryId = categoryId,
-        categoryName = categoryId?.let { categoryNames[it] },
+        wallet = InboxSlot(walletId, walletId?.let { names.wallets[it] }),
+        category = InboxSlot(categoryId, categoryId?.let { names.categories[it] }),
     )
 }
 
+// FR-091: the wallets of a pair, with the edits the user made on either side
 private fun pairCard(
     from: InboxItem,
     toItem: InboxItem,
-    walletNames: Map<Long, String>,
+    names: InboxNames,
     edits: Map<Long, InboxEdit>,
 ): InboxPairUi {
     val fromWallet = edits[from.inboxItemId.value]?.walletId ?: from.suggestion.suggestedWalletId?.value
@@ -106,10 +133,8 @@ private fun pairCard(
     return InboxPairUi(
         fromItemId = from.inboxItemId.value,
         toItemId = toItem.inboxItemId.value,
-        fromWalletId = fromWallet,
-        fromWalletName = fromWallet?.let { walletNames[it] },
-        toWalletId = toWallet,
-        toWalletName = toWallet?.let { walletNames[it] },
+        from = InboxSlot(fromWallet, fromWallet?.let { names.wallets[it] }),
+        to = InboxSlot(toWallet, toWallet?.let { names.wallets[it] }),
         amount = from.parsed.amount,
     )
 }
@@ -138,6 +163,14 @@ private fun resolvedRows(
 // BR-013: a DEBIT item is an expense and a CREDIT item an income
 private fun typeOf(item: InboxItem): TransactionType =
     if (item.parsed.direction == MoneyDirection.DEBIT) TransactionType.EXPENSE else TransactionType.INCOME
+
+// S-18: the wallet and category choices of the picker drawers
+private fun optionsState(snapshot: InboxSnapshot): InboxOptions =
+    InboxOptions(
+        wallets = snapshot.wallets.map { PickerOption(it.walletId.value.toString(), it.profile.name) },
+        expenses = optionsOf(snapshot.categories, CategoryKind.EXPENSE),
+        incomes = optionsOf(snapshot.categories, CategoryKind.INCOME),
+    )
 
 // S-18: category choices of one kind, in the order the user keeps them
 private fun optionsOf(
