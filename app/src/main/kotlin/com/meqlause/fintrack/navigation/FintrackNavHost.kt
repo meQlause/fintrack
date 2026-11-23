@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.feature.budget.navigation.BudgetDestination
 import com.meqlause.fintrack.feature.budget.navigation.BudgetNavigation
@@ -67,6 +66,15 @@ internal fun FintrackNavHost(
 
 // DOC-03: the routes of the app; onboarding leads to Beranda and its PIN offer opens the PIN setup
 private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
+    startGraph(navController)
+    walletGraph(navController)
+    creditAndLoanGraph(navController)
+    settingsGraph(navController)
+    utilityGraph(navController)
+    transactionGraph(navController)
+}
+
+private fun NavGraphBuilder.startGraph(navController: NavHostController) {
     OnboardingGraph.register(
         builder = this,
         onFinished = {
@@ -98,10 +106,25 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onApplyShortcut = { navController.navigate(EditTransactionDestination(quickEntryId = it.value)) },
         onOpenTransaction = { navController.navigate(TransactionDetailDestination(transactionId = it.value)) },
     )
+}
+
+private fun NavGraphBuilder.transactionGraph(navController: NavHostController) {
     // DOC-09, FR-036: Riwayat (S-05); a tapped row opens the S-06 detail for that transaction
     HistoryNavigation.register(builder = this, onOpenTransaction = { id ->
         navController.navigate(TransactionDetailDestination(transactionId = id))
     })
+    // FR-034, S-06: the detail leaves on delete or duplicate; Ubah opens the S-04 sheet above it
+    TransactionDetailNavigation.register(
+        builder = this,
+        onBack = { navController.popBackStack() },
+        onEdit = { id -> navController.navigate(EditTransactionDestination(transactionId = id)) },
+        onShortcuts = { navController.navigate(EditTransactionDestination()) },
+    )
+    // DOC-09, S-04: the add or edit sheet returns to the screen it was opened from
+    EditTransactionNavigation.register(builder = this, onDismiss = { navController.popBackStack() })
+}
+
+private fun NavGraphBuilder.walletGraph(navController: NavHostController) {
     // DOC-09, FR-173: Investasi tab (S-08); an account opens S-20, which leaves to the add sheet for transfers
     InvestmentNavigation.register(
         builder = this,
@@ -131,6 +154,9 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onUse = { navController.navigate(EditTransactionDestination()) },
         onTransfer = { navController.navigate(EditTransactionDestination()) },
     )
+}
+
+private fun NavGraphBuilder.creditAndLoanGraph(navController: NavHostController) {
     // FR-131, S-14: a card or paylater wallet opens its credit detail; Bayar tagihan is the S-15 sheet inside it
     CreditNavigation.register(
         builder = this,
@@ -138,12 +164,15 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenInstalment = { planId -> navController.navigate(InstalmentDetailDestination(planId)) },
         onOpenInstalments = { navController.navigate(InstalmentListDestination) },
     )
-    // FR-150 … FR-158, S-17: the Pinjaman list and the loan detail with repayments and write-off
+    // FR-150 to FR-158, S-17: the Pinjaman list and the loan detail with repayments and write-off
     LoanNavigation.register(
         builder = this,
         onBack = { navController.popBackStack() },
         onOpenLoan = { loanId -> navController.navigate(LoanDetailDestination(loanId)) },
     )
+}
+
+private fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
     // DOC-09, S-12: Pengaturan is opened from the Beranda header; its Kategori row leads to S-10 (FR-020)
     SettingsNavigation.register(
         builder = this,
@@ -160,8 +189,11 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenPinChange = { navController.navigate(PinSetupDestination(PinSetupMode.CHANGE)) },
         onOpenPinRemove = { navController.navigate(PinSetupDestination(PinSetupMode.REMOVE)) },
     )
-    // FR-070 … FR-074, S-11: Anggaran is opened from the Data group of Pengaturan
+    // FR-070 to FR-074, S-11: Anggaran is opened from the Data group of Pengaturan
     BudgetNavigation.register(builder = this, onBack = { navController.popBackStack() })
+}
+
+private fun NavGraphBuilder.utilityGraph(navController: NavHostController) {
     // FR-081, FR-082, FR-090: Aplikasi dipantau (S-13) is opened from the Deteksi otomatis group of Pengaturan
     MonitoredAppsNavigation.register(builder = this, onBack = { navController.popBackStack() })
     // FR-123, S-12: Tentang is opened from the Tentang group of Pengaturan
@@ -169,17 +201,8 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     // DOC-07, S-12: the battery-optimisation help page is opened from the Deteksi otomatis group of Pengaturan
     BatteryHelpNavigation.register(builder = this, onBack = { navController.popBackStack() })
     CategoryNavigation.register(builder = this, onBack = { navController.popBackStack() })
-    // FR-084 … FR-091, S-07: Kotak Masuk is opened from the bell in the Beranda header
+    // FR-084 to FR-091, S-07: Kotak Masuk is opened from the bell in the Beranda header
     InboxNavigation.register(builder = this, onBack = { navController.popBackStack() })
-    // FR-034, S-06: the detail leaves on delete or duplicate; Ubah opens the S-04 sheet above it
-    TransactionDetailNavigation.register(
-        builder = this,
-        onBack = { navController.popBackStack() },
-        onEdit = { id -> navController.navigate(EditTransactionDestination(transactionId = id)) },
-        onShortcuts = { navController.navigate(EditTransactionDestination()) },
-    )
-    // DOC-09, S-04: the add or edit sheet returns to the screen it was opened from
-    EditTransactionNavigation.register(builder = this, onDismiss = { navController.popBackStack() })
 }
 
 // BR-031: card and paylater wallets are the credit wallets and open S-14 instead of S-19

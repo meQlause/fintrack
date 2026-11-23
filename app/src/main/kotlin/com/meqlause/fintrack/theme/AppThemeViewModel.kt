@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-private const val STOP_TIMEOUT_MS = 5_000L
-
 // FR-120: exposes the stored theme choice so the whole app follows it
 @HiltViewModel
 internal class AppThemeViewModel

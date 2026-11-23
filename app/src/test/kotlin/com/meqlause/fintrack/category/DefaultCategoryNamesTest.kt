@@ -27,9 +27,9 @@ class DefaultCategoryNamesTest {
 
     @Test
     fun `given every default category when named then each has a non-blank name (FR-004)`() {
-        val all = DefaultCategory.entries.map { names.nameOf(it) }
+        val labels = DefaultCategory.entries.map { names.nameOf(it) }
 
-        assertThat(all).hasSize(DefaultCategory.entries.size)
-        all.forEach { assertThat(it).isNotEmpty() }
+        assertThat(labels).hasSize(DefaultCategory.entries.size)
+        labels.forEach { assertThat(it).isNotEmpty() }
     }
 }
