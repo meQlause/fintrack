@@ -43,9 +43,12 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import java.time.Instant
 
 // FR-131 to FR-138, S-14, S-15: the credit wallet detail reads the statement and writes bill payments and days
+@RunWith(RobolectricTestRunner::class)
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreditDetailViewModelTest {
     private val dispatcher = StandardTestDispatcher()

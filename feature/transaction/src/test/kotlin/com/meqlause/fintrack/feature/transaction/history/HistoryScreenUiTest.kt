@@ -1,6 +1,11 @@
 package com.meqlause.fintrack.feature.transaction.history
 
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -46,6 +51,9 @@ class HistoryScreenUiTest {
             }
         }
         composeRule.onNodeWithText("Hari ini").performClick()
-        composeRule.onNodeWithText("Transfer").performClick()
+        composeRule
+            .onAllNodes(hasText("Transfer") and SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Button))
+            .onFirst()
+            .performClick()
     }
 }

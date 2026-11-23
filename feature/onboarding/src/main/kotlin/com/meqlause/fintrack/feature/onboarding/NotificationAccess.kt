@@ -20,6 +20,8 @@ internal object NotificationAccess {
 
     /** FR-003: opens the system page where the user grants notification access. */
     fun openSettings(context: Context) {
-        context.startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+        // FR-003: the caller may hold an application context, so the settings page opens in a new task
+        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+        context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 }

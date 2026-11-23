@@ -27,11 +27,14 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
 
 // FR-034, FR-035, FR-038, S-06: the detail ViewModel over fakes; the clock is fixed on 23 Nov 2026 in Jakarta
+@RunWith(RobolectricTestRunner::class)
 @OptIn(ExperimentalCoroutinesApi::class)
 class TransactionDetailViewModelTest {
     @get:Rule

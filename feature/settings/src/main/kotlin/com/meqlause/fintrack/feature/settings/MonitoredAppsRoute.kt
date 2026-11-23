@@ -25,7 +25,8 @@ internal fun MonitoredAppsRoute(onBack: () -> Unit) {
             MonitoredAppsCallbacks(
                 onBack = onBack,
                 onOpenAccessSettings = {
-                    context.startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                    val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                    context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 },
                 onToggle = viewModel::setEnabled,
                 onOpenPicker = viewModel::openPicker,

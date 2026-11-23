@@ -11,6 +11,7 @@ import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.model.BackupAdjunct
 import com.meqlause.fintrack.core.model.BackupLedger
 import com.meqlause.fintrack.core.model.BackupSnapshot
+import com.meqlause.fintrack.core.model.Preferences
 import com.meqlause.fintrack.core.model.Settings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,15 +36,25 @@ class FileBackupRepositoryTest {
     @Test
     fun exportThenReadThenRestoreKeepsEveryTable() =
         runBlocking {
-            store.replaceAll(SampleSnapshot.build())
+            val sample = SampleSnapshot.build()
+            store.replaceAll(sample)
+            settings.update { stored ->
+                stored.copy(
+                    preferences = sample.preferences,
+                    backup = stored.backup.copy(backupReminderDays = sample.backupReminderDays),
+                )
+            }
             repository.export(URI, password)
             assertThat(settings.current.backup.lastBackupAt).isEqualTo(SampleSnapshot.now)
 
             store.replaceAll(emptySnapshot())
+            settings.update { Settings() }
             val read = repository.readBackup(URI, password)
             repository.restore(read)
 
-            assertThat(store.current).isEqualTo(SampleSnapshot.build())
+            assertThat(store.current).isEqualTo(sample)
+            assertThat(settings.current.preferences).isEqualTo(sample.preferences)
+            assertThat(settings.current.backup.backupReminderDays).isEqualTo(sample.backupReminderDays)
         }
 
     @Test
@@ -71,9 +82,7 @@ class FileBackupRepositoryTest {
             createdAt = SampleSnapshot.now,
             ledger = BackupLedger(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()),
             adjunct = BackupAdjunct(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()),
-            preferences =
-                com.meqlause.fintrack.core.model
-                    .Preferences(),
+            preferences = Preferences(),
             backupReminderDays = 0,
         )
 

@@ -98,8 +98,8 @@ internal class CreditDetailViewModel
 
         // FR-132, BR-039: the bill is a TRANSFER from a non-credit wallet, never an EXPENSE; the save rules decide
         fun payBill() {
+            val draft = session.value.pay ?: return
             val success = state.value as? CreditDetailUiState.Success ?: return
-            val draft = success.pay ?: return
             val source = draft.sourceId ?: success.sources.firstOrNull()?.walletId
             val amount = draft.amount.toLongOrNull()
             if (source == null || amount == null) {
