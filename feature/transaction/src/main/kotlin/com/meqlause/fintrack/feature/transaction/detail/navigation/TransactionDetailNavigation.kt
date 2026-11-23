@@ -11,10 +11,16 @@ public object TransactionDetailNavigation {
         builder: NavGraphBuilder,
         onBack: () -> Unit,
         onEdit: (Long) -> Unit,
+        onShortcuts: () -> Unit,
     ) {
         builder.composable<TransactionDetailDestination> { entry ->
             val destination = entry.toRoute<TransactionDetailDestination>()
-            TransactionDetailRoute(transactionId = destination.transactionId, onBack = onBack, onEdit = onEdit)
+            TransactionDetailRoute(
+                transactionId = destination.transactionId,
+                onBack = onBack,
+                onEdit = onEdit,
+                onShortcuts = onShortcuts,
+            )
         }
     }
 }

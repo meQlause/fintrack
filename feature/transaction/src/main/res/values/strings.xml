@@ -81,7 +81,7 @@
         <item>Nov</item>
         <item>Des</item>
     </array>
-    <string name="transaction_detail_back">Kembali</string>
+    <string name="transaction_detail_title">Detail</string>
     <string name="transaction_detail_missing">Transaksi tidak ditemukan</string>
     <string name="transaction_detail_wallet">Dompet</string>
     <string name="transaction_detail_route">Dari → Ke</string>

@@ -12,6 +12,7 @@ internal fun TransactionDetailRoute(
     transactionId: Long,
     onBack: () -> Unit,
     onEdit: (Long) -> Unit,
+    onShortcuts: () -> Unit,
 ) {
     val viewModel: TransactionDetailViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -20,10 +21,14 @@ internal fun TransactionDetailRoute(
     }
     TransactionDetailScreen(
         state = state,
-        onBack = onBack,
-        onEdit = { onEdit(transactionId) },
-        onDuplicate = viewModel::duplicate,
-        onDelete = viewModel::requestDelete,
-        onUndo = viewModel::undoDelete,
+        actions =
+            TransactionDetailCallbacks(
+                onBack = onBack,
+                onShortcuts = onShortcuts,
+                onEdit = { onEdit(transactionId) },
+                onDuplicate = viewModel::duplicate,
+                onDelete = viewModel::requestDelete,
+                onUndo = viewModel::undoDelete,
+            ),
     )
 }

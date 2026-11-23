@@ -32,11 +32,7 @@ internal fun TransactionDetailLightPreview() {
     FintrackTheme(darkTheme = false) {
         TransactionDetailScreen(
             state = TransactionDetailUiState(isLoaded = true, detail = sampleDetail),
-            onBack = {},
-            onEdit = {},
-            onDuplicate = {},
-            onDelete = {},
-            onUndo = {},
+            actions = TransactionDetailCallbacks({}, {}, {}, {}, {}, {}),
         )
     }
 }
@@ -47,11 +43,7 @@ internal fun TransactionDetailDarkPreview() {
     FintrackTheme(darkTheme = true) {
         TransactionDetailScreen(
             state = TransactionDetailUiState(isLoaded = true, detail = sampleDetail, isDeletePending = true),
-            onBack = {},
-            onEdit = {},
-            onDuplicate = {},
-            onDelete = {},
-            onUndo = {},
+            actions = TransactionDetailCallbacks({}, {}, {}, {}, {}, {}),
         )
     }
 }

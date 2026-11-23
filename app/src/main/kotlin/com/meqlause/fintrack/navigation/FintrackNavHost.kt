@@ -175,6 +175,7 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         builder = this,
         onBack = { navController.popBackStack() },
         onEdit = { id -> navController.navigate(EditTransactionDestination(transactionId = id)) },
+        onShortcuts = { navController.navigate(EditTransactionDestination()) },
     )
     // DOC-09, S-04: the add or edit sheet returns to the screen it was opened from
     EditTransactionNavigation.register(builder = this, onDismiss = { navController.popBackStack() })
