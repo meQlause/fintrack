@@ -21,4 +21,8 @@ public class FakeTransactionRepository : TransactionRepository {
     override suspend fun update(transaction: Transaction) {
         store.replace(transaction)
     }
+
+    override suspend fun delete(transactionId: TransactionId) {
+        store.remove(transactionId.value)
+    }
 }

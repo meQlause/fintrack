@@ -394,7 +394,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(transaction): add history screen [P4, FR-036]`
 
 ### T4.9 — Transaction detail (S-06)
-- [ ] done · Refs: FR-034, FR-035, FR-038 · Commit: `feat(transaction): add transaction detail [P4, FR-034]`
+- [x] done · Refs: FR-034, FR-035, FR-038 · Commit: `feat(transaction): add transaction detail [P4, FR-034]`
 
 ### T4.10 — Home (S-03)
 - [ ] done

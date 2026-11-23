@@ -22,4 +22,8 @@ public class LocalTransactionRepository(
     override suspend fun update(transaction: Transaction) {
         transactionDao.update(transaction.toEntity())
     }
+
+    override suspend fun delete(transactionId: TransactionId) {
+        transactionDao.delete(transactionId.value)
+    }
 }

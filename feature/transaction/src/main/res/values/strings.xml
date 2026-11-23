@@ -61,4 +61,20 @@
         <item>Nov</item>
         <item>Des</item>
     </array>
+    <string name="transaction_detail_back">Kembali</string>
+    <string name="transaction_detail_missing">Transaksi tidak ditemukan</string>
+    <string name="transaction_detail_wallet">Dompet</string>
+    <string name="transaction_detail_route">Dari → Ke</string>
+    <string name="transaction_detail_category">Kategori</string>
+    <string name="transaction_detail_time">Waktu</string>
+    <string name="transaction_detail_merchant">Merchant</string>
+    <string name="transaction_detail_note">Catatan</string>
+    <string name="transaction_detail_empty">—</string>
+    <string name="transaction_detail_source">Sumber</string>
+    <string name="transaction_detail_source_manual">Dicatat manual</string>
+    <string name="transaction_detail_source_notification">Terdeteksi dari notifikasi</string>
+    <string name="transaction_detail_edit">Ubah</string>
+    <string name="transaction_detail_duplicate">Catat lagi</string>
+    <string name="transaction_detail_delete">Hapus</string>
+    <string name="transaction_detail_deleted">Transaksi dihapus</string>
 </resources>

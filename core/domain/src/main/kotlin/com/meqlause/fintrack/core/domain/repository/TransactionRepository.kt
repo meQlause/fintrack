@@ -14,4 +14,7 @@ public interface TransactionRepository {
 
     /** FR-034: stores the changed fields of an existing transaction; transactionId selects the row. */
     public suspend fun update(transaction: Transaction)
+
+    /** FR-035: removes the transaction with the given id; an unknown id is ignored. */
+    public suspend fun delete(transactionId: TransactionId)
 }

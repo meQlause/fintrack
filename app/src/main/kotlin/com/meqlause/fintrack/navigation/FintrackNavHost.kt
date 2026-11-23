@@ -12,6 +12,8 @@ import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.SettingsDestination
 import com.meqlause.fintrack.feature.settings.navigation.settingsDestination
+import com.meqlause.fintrack.feature.transaction.detail.navigation.TransactionDetailDestination
+import com.meqlause.fintrack.feature.transaction.detail.navigation.transactionDetailDestination
 import com.meqlause.fintrack.feature.transaction.edit.navigation.EditTransactionDestination
 import com.meqlause.fintrack.feature.transaction.edit.navigation.editTransactionDestination
 import com.meqlause.fintrack.feature.transaction.history.navigation.historyDestination
@@ -55,9 +57,9 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
             onSettingsClick = { navController.navigate(SettingsDestination) },
         )
     }
-    // DOC-09, FR-036: Riwayat (S-05); a tapped row opens the S-04 edit sheet for that transaction
+    // DOC-09, FR-036: Riwayat (S-05); a tapped row opens the S-06 detail for that transaction
     historyDestination(onOpenTransaction = { id ->
-        navController.navigate(EditTransactionDestination(transactionId = id))
+        navController.navigate(TransactionDetailDestination(transactionId = id))
     })
     composable<InvestmentRoute> { PlaceholderTabScreen(mainTab = MainTab.INVESTMENT) }
     walletDestination(onOpenDetail = { navController.navigate(WalletDetailDestination(it.value)) })
@@ -73,6 +75,11 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenCategories = { navController.navigate(CategoryDestination) },
     )
     categoryDestination(onBack = { navController.popBackStack() })
+    // FR-034, S-06: the detail leaves on delete or duplicate; Ubah opens the S-04 sheet above it
+    transactionDetailDestination(
+        onBack = { navController.popBackStack() },
+        onEdit = { id -> navController.navigate(EditTransactionDestination(transactionId = id)) },
+    )
     // DOC-09, S-04: the add or edit sheet returns to the screen it was opened from
     editTransactionDestination(onDismiss = { navController.popBackStack() })
 }

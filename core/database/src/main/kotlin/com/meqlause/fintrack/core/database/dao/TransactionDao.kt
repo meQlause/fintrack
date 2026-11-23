@@ -18,6 +18,10 @@ interface TransactionDao {
     @Update
     suspend fun update(transaction: TransactionEntity)
 
+    /** FR-035: removes the row with the given transactionId; an unknown id is ignored. */
+    @Query("DELETE FROM `transaction` WHERE transactionId = :transactionId")
+    suspend fun delete(transactionId: Long)
+
     /** DOC-02: every transaction in the order it happened. */
     @Query("SELECT * FROM `transaction` ORDER BY occurredAt")
     fun observeAll(): Flow<List<TransactionEntity>>
