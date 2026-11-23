@@ -15,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.feature.settings.R
 
 // FR-123, S-12: stateless Tentang screen with the version, privacy promise, storage notes and licences
 @Composable

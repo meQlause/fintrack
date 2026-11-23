@@ -89,14 +89,15 @@ internal class MonitoredAppsViewModel
         ): List<MonitoredAppRow> {
             val byPackage = stored.associateBy { it.packageName }
             return SupportedApps.displayNames.map { (packageName, name) ->
-                val app = byPackage[packageName]
+                val monitored = byPackage[packageName]
+                val chosen = walletList.firstOrNull { it.walletId == monitored?.defaultWalletId }
                 MonitoredAppRow(
                     packageName = packageName,
                     displayName = name,
-                    isEnabled = app?.isEnabled == true,
-                    defaultWalletId = app?.defaultWalletId,
-                    defaultWalletName = walletList.firstOrNull { it.walletId == app?.defaultWalletId }?.profile?.name,
-                    lastNotificationAt = app?.lastNotificationAt,
+                    isEnabled = monitored?.isEnabled == true,
+                    defaultWalletId = monitored?.defaultWalletId,
+                    defaultWalletName = chosen?.profile?.name,
+                    lastNotificationAt = monitored?.lastNotificationAt,
                 )
             }
         }

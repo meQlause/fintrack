@@ -9,8 +9,13 @@ internal data class SettingsUiState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val periodStartDay: Int = DEFAULT_PERIOD_START_DAY,
     val pinEnabled: Boolean = false,
-    val biometricSupported: Boolean = false,
-    val biometricEnabled: Boolean = false,
+    val biometric: BiometricState = BiometricState(),
     val hideFromRecents: Boolean = false,
     val sheet: SettingsSheet? = null,
+)
+
+// FR-104: whether the device can use biometrics for the PIN, and whether the user turned that on
+internal data class BiometricState(
+    val supported: Boolean = false,
+    val enabled: Boolean = false,
 )

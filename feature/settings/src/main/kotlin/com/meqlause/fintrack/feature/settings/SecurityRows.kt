@@ -25,32 +25,41 @@ internal fun SecurityRows(
     state: SettingsUiState,
     callbacks: SettingsCallbacks,
 ) {
-    SwitchRow(
-        label = stringResource(R.string.settings_pin_label),
-        checked = state.pinEnabled,
-        onCheckedChange = { on -> if (on) callbacks.onOpenPinSetup() else callbacks.onOpenPinRemove() },
-    )
+    PinSwitch(enabled = state.pinEnabled, callbacks = callbacks.security)
     if (state.pinEnabled) {
         SettingsRow(
             label = stringResource(R.string.settings_pin_change_label),
             value = "",
-            onClick = callbacks.onOpenPinChange,
+            onClick = callbacks.security.onOpenPinChange,
             showDivider = true,
         )
     }
-    if (state.pinEnabled && state.biometricSupported) {
+    if (state.pinEnabled && state.biometric.supported) {
         SwitchRow(
             label = stringResource(R.string.settings_biometric_label),
-            checked = state.biometricEnabled,
-            onCheckedChange = callbacks.onToggleBiometric,
+            checked = state.biometric.enabled,
+            onCheckedChange = callbacks.security.onToggleBiometric,
             showDivider = true,
         )
     }
     SwitchRow(
         label = stringResource(R.string.settings_hide_recents_label),
         checked = state.hideFromRecents,
-        onCheckedChange = callbacks.onToggleHideFromRecents,
+        onCheckedChange = callbacks.preferences.onToggleHideFromRecents,
         showDivider = true,
+    )
+}
+
+// FR-100: turning the PIN on starts the setup, turning it off asks for the current PIN first
+@Composable
+private fun PinSwitch(
+    enabled: Boolean,
+    callbacks: SettingsSecurityCallbacks,
+) {
+    SwitchRow(
+        label = stringResource(R.string.settings_pin_label),
+        checked = enabled,
+        onCheckedChange = { on -> if (on) callbacks.onOpenPinSetup() else callbacks.onOpenPinRemove() },
     )
 }
 

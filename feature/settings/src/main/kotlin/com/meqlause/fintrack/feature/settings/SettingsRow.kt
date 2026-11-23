@@ -19,11 +19,9 @@ internal fun SettingsRow(
     label: String,
     value: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
     showDivider: Boolean = false,
 ) {
     ScreenRow(
-        modifier = modifier,
         showDivider = showDivider,
         onClick = onClick,
         contentPadding = rowPadding(),

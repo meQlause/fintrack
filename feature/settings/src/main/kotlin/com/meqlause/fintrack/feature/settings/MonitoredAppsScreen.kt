@@ -19,7 +19,6 @@ import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.picker.OptionsDrawer
-import com.meqlause.fintrack.feature.settings.R
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -44,48 +43,66 @@ internal fun MonitoredAppsScreen(
             backLabel = stringResource(R.string.settings_back),
             onBack = callbacks.onBack,
         )
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = FintrackScreenSizes.screenGutter)
-                    .padding(bottom = FintrackScreenSizes.screenBottom),
-            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-        ) {
-            SettingsSection(title = stringResource(R.string.monitored_section_access)) {
-                SettingsRow(
-                    label = stringResource(R.string.monitored_access_label),
-                    value = accessLabel(state.accessGranted),
-                    onClick = callbacks.onOpenAccessSettings,
-                )
-            }
-            SettingsSection(title = stringResource(R.string.monitored_section_diagnostics), padded = true) {
-                Text(
-                    text = stringResource(R.string.monitored_counts_value, state.ignoredCount, state.unrecognizedCount),
-                    style = FintrackTheme.typography.labelLarge,
-                    color = FintrackTheme.colors.texts.onSurfaceVariant,
-                )
-            }
-            SettingsSection(title = stringResource(R.string.monitored_section_apps), padded = true) {
-                state.apps.forEach { row -> AppRow(monitoredApp = row, callbacks = callbacks) }
-            }
-        }
+        MonitoredAppsContent(state = state, callbacks = callbacks)
     }
     if (state.pickingPackage != null) {
-        OptionsDrawer(
-            title = stringResource(R.string.monitored_wallet_sheet_title),
-            options = state.wallets,
-            selectedKey =
-                state.apps
-                    .firstOrNull { it.packageName == state.pickingPackage }
-                    ?.defaultWalletId
-                    ?.value
-                    ?.toString(),
-            onPick = callbacks.onPickWallet,
-            onClose = callbacks.onDismissPicker,
-        )
+        WalletDrawer(state = state, callbacks = callbacks)
     }
+}
+
+// FR-081, FR-090: the access row, the diagnostic counts and one row per supported app, in one scrolling column
+@Composable
+private fun MonitoredAppsContent(
+    state: MonitoredAppsUiState,
+    callbacks: MonitoredAppsCallbacks,
+) {
+    Column(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = FintrackScreenSizes.screenGutter)
+                .padding(bottom = FintrackScreenSizes.screenBottom),
+        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+    ) {
+        SettingsSection(title = stringResource(R.string.monitored_section_access)) {
+            SettingsRow(
+                label = stringResource(R.string.monitored_access_label),
+                value = accessLabel(state.accessGranted),
+                onClick = callbacks.onOpenAccessSettings,
+            )
+        }
+        SettingsSection(title = stringResource(R.string.monitored_section_diagnostics), padded = true) {
+            Text(
+                text = stringResource(R.string.monitored_counts_value, state.ignoredCount, state.unrecognizedCount),
+                style = FintrackTheme.typography.labelLarge,
+                color = FintrackTheme.colors.texts.onSurfaceVariant,
+            )
+        }
+        SettingsSection(title = stringResource(R.string.monitored_section_apps), padded = true) {
+            state.apps.forEach { row -> AppRow(monitoredApp = row, callbacks = callbacks) }
+        }
+    }
+}
+
+// FR-082: the wallet drawer of the app whose default wallet is being chosen, the current one marked
+@Composable
+private fun WalletDrawer(
+    state: MonitoredAppsUiState,
+    callbacks: MonitoredAppsCallbacks,
+) {
+    OptionsDrawer(
+        title = stringResource(R.string.monitored_wallet_sheet_title),
+        options = state.wallets,
+        selectedKey =
+            state.apps
+                .firstOrNull { it.packageName == state.pickingPackage }
+                ?.defaultWalletId
+                ?.value
+                ?.toString(),
+        onPick = callbacks.onPickWallet,
+        onClose = callbacks.onDismissPicker,
+    )
 }
 
 // FR-081, FR-082, FR-090: one supported app with its switch, default wallet and last received time
@@ -136,11 +153,3 @@ private fun lastReceivedLabel(receivedAt: Instant?): String =
             LAST_RECEIVED_FORMAT.format(receivedAt.atZone(ZoneId.systemDefault())),
         )
     }
-
-// FR-082: the wallet currently chosen for the app whose drawer is open, marked in the list
-private fun selectedWalletKey(state: MonitoredAppsUiState): String? =
-    state.apps
-        .firstOrNull { it.packageName == state.pickingPackage }
-        ?.defaultWalletId
-        ?.value
-        ?.toString()

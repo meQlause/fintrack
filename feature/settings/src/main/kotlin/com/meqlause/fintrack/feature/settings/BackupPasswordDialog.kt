@@ -3,6 +3,7 @@ package com.meqlause.fintrack.feature.settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedSecureTextField
@@ -30,34 +31,7 @@ internal fun BackupPasswordDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = stringResource(titleRes(creating))) },
-        text = {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                OutlinedSecureTextField(
-                    state = firstState,
-                    label = { Text(text = stringResource(R.string.backup_password_label)) },
-                )
-                if (creating) {
-                    OutlinedSecureTextField(
-                        state = repeatState,
-                        label = { Text(text = stringResource(R.string.backup_password_repeat_label)) },
-                        modifier = Modifier.padding(top = FintrackTheme.spacing.small),
-                    )
-                    Text(
-                        text = stringResource(R.string.backup_password_warning),
-                        style = FintrackTheme.typography.bodyLarge,
-                        color = FintrackTheme.colors.texts.onSurfaceVariant,
-                        modifier = Modifier.padding(top = FintrackTheme.spacing.small),
-                    )
-                }
-                error?.let { messageRes ->
-                    Text(
-                        text = stringResource(messageRes),
-                        style = FintrackTheme.typography.bodyLarge,
-                        color = FintrackTheme.colors.texts.onSurfaceVariant,
-                    )
-                }
-            }
-        },
+        text = { PasswordFields(creating, firstState, repeatState, error) },
         confirmButton = {
             TextButton(
                 onClick = { onConfirm(password) },
@@ -68,6 +42,42 @@ internal fun BackupPasswordDialog(
             TextButton(onClick = onDismiss) { Text(text = stringResource(R.string.backup_cancel)) }
         },
     )
+}
+
+// FR-110: the password entries, the repeat entry and warning when a backup is created, then the blocking reason
+@Composable
+private fun PasswordFields(
+    creating: Boolean,
+    firstState: TextFieldState,
+    repeatState: TextFieldState,
+    error: Int?,
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        OutlinedSecureTextField(
+            state = firstState,
+            label = { Text(text = stringResource(R.string.backup_password_label)) },
+        )
+        if (creating) {
+            OutlinedSecureTextField(
+                state = repeatState,
+                label = { Text(text = stringResource(R.string.backup_password_repeat_label)) },
+                modifier = Modifier.padding(top = FintrackTheme.spacing.small),
+            )
+            Text(
+                text = stringResource(R.string.backup_password_warning),
+                style = FintrackTheme.typography.bodyLarge,
+                color = FintrackTheme.colors.texts.onSurfaceVariant,
+                modifier = Modifier.padding(top = FintrackTheme.spacing.small),
+            )
+        }
+        error?.let { messageRes ->
+            Text(
+                text = stringResource(messageRes),
+                style = FintrackTheme.typography.bodyLarge,
+                color = FintrackTheme.colors.texts.onSurfaceVariant,
+            )
+        }
+    }
 }
 
 private fun titleRes(creating: Boolean): Int =

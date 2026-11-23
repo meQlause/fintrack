@@ -24,14 +24,9 @@ internal fun BatteryHelpScreen(
     guide: BatteryGuide,
     onOpenSettings: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
-        ScreenBackHeader(
-            title = stringResource(R.string.battery_title),
-            backLabel = stringResource(R.string.settings_back),
-            onBack = onBack,
-        )
+    Column(modifier = Modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
+        BatteryHeader(onBack = onBack)
         Column(
             modifier =
                 Modifier
@@ -57,6 +52,16 @@ internal fun BatteryHelpScreen(
 }
 
 // DOC-07: says whether the system may still stop Fintrack in the background
+// DOC-07: the back header with the battery page title
+@Composable
+private fun BatteryHeader(onBack: () -> Unit) {
+    ScreenBackHeader(
+        title = stringResource(R.string.battery_title),
+        backLabel = stringResource(R.string.settings_back),
+        onBack = onBack,
+    )
+}
+
 @Composable
 internal fun BatteryStatusText(optimisationIgnored: Boolean) {
     val label =

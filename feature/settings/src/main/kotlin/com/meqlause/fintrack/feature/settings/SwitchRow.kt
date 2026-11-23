@@ -3,7 +3,6 @@ package com.meqlause.fintrack.feature.settings
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import com.meqlause.fintrack.core.designsystem.component.FintrackSwitch
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
@@ -16,11 +15,9 @@ internal fun SwitchRow(
     label: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
     showDivider: Boolean = false,
 ) {
     ScreenRow(
-        modifier = modifier,
         showDivider = showDivider,
         contentPadding =
             PaddingValues(
