@@ -46,13 +46,12 @@ internal fun WalletPickerSection(
                 color = FintrackTheme.colors.texts.onSurfaceVariant,
             )
         }
-        rows.forEach { row -> WalletPickerItem(group = group, pickerRow = row, onPick = onPick) }
+        rows.forEach { row -> WalletPickerItem(pickerRow = row, onPick = onPick) }
     }
 }
 
 @Composable
 private fun WalletPickerItem(
-    group: WalletPickerGroup,
     pickerRow: WalletPickerRow,
     onPick: (WalletId) -> Unit,
 ) {

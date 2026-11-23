@@ -12,7 +12,7 @@ import com.meqlause.fintrack.core.ui.R
 import com.meqlause.fintrack.core.ui.UiPreviewCanvas
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 
-// S-18: wallet picker drawer; sections Tunai, Debit, Kartu kredit, Paylater, Investasi; picking closes it via the caller
+// S-18: wallet picker drawer with sections Tunai, Debit, Kartu kredit, Paylater, Investasi; a pick closes it
 @Composable
 fun WalletPickerDrawer(
     title: String,
@@ -51,25 +51,28 @@ internal fun WalletPickerDrawerSample() {
 @Composable
 private fun sampleRows(limit: String): List<WalletPickerRow> {
     val limitLabel = stringResource(R.string.picker_limit_format, limit)
-    return listOf(
-        sampleRow(1L, R.string.picker_sample_cash, WalletType.CASH, "Rp250.000", isSelected = true),
-        sampleRow(2L, R.string.picker_sample_bca, WalletType.BANK, "Rp4.800.000"),
-        sampleRow(3L, R.string.picker_sample_gopay, WalletType.EWALLET, "Rp120.000"),
-        sampleRow(4L, R.string.picker_sample_card, WalletType.CREDIT_CARD, limitLabel, isBlocked = true),
-        sampleRow(5L, R.string.picker_sample_paylater, WalletType.PAYLATER, limitLabel),
-        sampleRow(6L, R.string.picker_sample_invest, WalletType.INVESTMENT, "Rp1.500.000"),
-    )
+    val samples =
+        listOf(
+            SampleWallet(R.string.picker_sample_cash, WalletType.CASH, "Rp250.000", isSelected = true),
+            SampleWallet(R.string.picker_sample_bca, WalletType.BANK, "Rp4.800.000"),
+            SampleWallet(R.string.picker_sample_gopay, WalletType.EWALLET, "Rp120.000"),
+            SampleWallet(R.string.picker_sample_card, WalletType.CREDIT_CARD, limitLabel, isBlocked = true),
+            SampleWallet(R.string.picker_sample_paylater, WalletType.PAYLATER, limitLabel),
+            SampleWallet(R.string.picker_sample_invest, WalletType.INVESTMENT, "Rp1.500.000"),
+        )
+    return samples.mapIndexed { index, sample -> sample.toRow(rowId = index + 1L) }
 }
 
+private data class SampleWallet(
+    val nameRes: Int,
+    val type: WalletType,
+    val balance: String,
+    val isSelected: Boolean = false,
+    val isBlocked: Boolean = false,
+)
+
 @Composable
-private fun sampleRow(
-    rowId: Long,
-    nameRes: Int,
-    type: WalletType,
-    balance: String,
-    isSelected: Boolean = false,
-    isBlocked: Boolean = false,
-): WalletPickerRow =
+private fun SampleWallet.toRow(rowId: Long): WalletPickerRow =
     WalletPickerRow(
         walletId = WalletId(rowId),
         name = stringResource(nameRes),

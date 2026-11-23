@@ -51,22 +51,7 @@ private fun ShortcutManageRow(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = params.title,
-                style = FintrackTheme.typography.labelLarge,
-                color = FintrackTheme.colors.texts.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Text(
-                text = "${params.walletName} · ${MoneyFormatter.format(params.amount)}",
-                style = FintrackTheme.typography.bodyMedium,
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
+        ShortcutLabels(params = params, modifier = Modifier.weight(1f))
         IconButton(onClick = { onDelete(params.quickEntryId) }) {
             Icon(
                 painter = painterResource(DesignR.drawable.ic_close),
@@ -75,5 +60,28 @@ private fun ShortcutManageRow(
                 modifier = Modifier.padding(FintrackTheme.spacing.xxSmall),
             )
         }
+    }
+}
+
+@Composable
+private fun ShortcutLabels(
+    params: ShortcutTileParams,
+    modifier: Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = params.title,
+            style = FintrackTheme.typography.labelLarge,
+            color = FintrackTheme.colors.texts.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            text = "${params.walletName} · ${MoneyFormatter.format(params.amount)}",
+            style = FintrackTheme.typography.bodyMedium,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }

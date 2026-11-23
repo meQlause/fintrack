@@ -65,27 +65,32 @@ private fun TransactionTitles(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        Row(
-            modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
-        ) {
-            if (params.auto) {
-                Icon(
-                    painter = painterResource(DesignR.drawable.ic_spark),
-                    contentDescription = stringResource(R.string.row_auto_description),
-                    tint = FintrackTheme.colors.brands.primary,
-                    modifier = Modifier.size(FintrackTheme.sizes.tinyGlyph),
-                )
-            }
-            Text(
-                text = params.subtitle,
-                style = FintrackTheme.typography.labelMedium,
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+        TransactionSubtitle(params = params)
+    }
+}
+
+@Composable
+private fun TransactionSubtitle(params: TransactionRowParams) {
+    Row(
+        modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
+    ) {
+        if (params.auto) {
+            Icon(
+                painter = painterResource(DesignR.drawable.ic_spark),
+                contentDescription = stringResource(R.string.row_auto_description),
+                tint = FintrackTheme.colors.brands.primary,
+                modifier = Modifier.size(FintrackTheme.sizes.tinyGlyph),
             )
         }
+        Text(
+            text = params.subtitle,
+            style = FintrackTheme.typography.labelMedium,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 

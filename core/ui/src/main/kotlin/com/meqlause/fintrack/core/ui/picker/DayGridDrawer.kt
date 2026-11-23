@@ -24,6 +24,7 @@ import com.meqlause.fintrack.core.ui.UiPreviewCanvas
 
 private const val DAYS_IN_GRID = 28
 private const val DAYS_PER_ROW = 7
+private val DAY_WEEKS: List<List<Int>> = (1..DAYS_IN_GRID).chunked(DAYS_PER_ROW)
 
 // S-18: 1-28 day grid for the statement or due day (FR-138); picking closes the drawer via the caller
 @Composable
@@ -35,7 +36,7 @@ fun DayGridDrawer(
     modifier: Modifier = Modifier,
 ) {
     PickerDrawer(title = title, onClose = onClose, modifier = modifier) {
-        (1..DAYS_IN_GRID).chunked(DAYS_PER_ROW).forEach { week ->
+        DAY_WEEKS.forEach { week ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),

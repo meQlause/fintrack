@@ -39,20 +39,25 @@ fun ShortcutTile(
             glyph = FintrackTheme.sizes.shortcutGlyph,
             shape = FintrackTheme.shapes.shortcutIcon,
         )
-        Text(
-            text = params.title,
-            modifier = Modifier.padding(top = FintrackTheme.spacing.small),
-            style = FintrackTheme.typography.captionWide,
-            color = FintrackTheme.colors.texts.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            text = MoneyFormatter.formatShort(params.amount),
-            modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall / 2),
-            style = FintrackTheme.typography.numberCompact,
-            color = FintrackTheme.colors.texts.onSurface,
-            maxLines = 1,
-        )
+        ShortcutCaption(params = params)
     }
+}
+
+@Composable
+private fun ShortcutCaption(params: ShortcutTileParams) {
+    Text(
+        text = params.title,
+        modifier = Modifier.padding(top = FintrackTheme.spacing.small),
+        style = FintrackTheme.typography.captionWide,
+        color = FintrackTheme.colors.texts.onSurface,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+    )
+    Text(
+        text = MoneyFormatter.formatShort(params.amount),
+        modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall / 2),
+        style = FintrackTheme.typography.numberCompact,
+        color = FintrackTheme.colors.texts.onSurface,
+        maxLines = 1,
+    )
 }
