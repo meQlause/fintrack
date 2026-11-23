@@ -49,7 +49,7 @@ private fun titleFor(kind: PickKind): String =
         PickKind.CATEGORY -> stringResource(R.string.inbox_picker_category)
     }
 
-private fun optionsFor(
+internal fun optionsFor(
     picker: InboxPicker,
     state: InboxUiState,
 ): List<PickerOption> =
@@ -65,7 +65,7 @@ private fun categoryOptions(
 ): List<PickerOption> =
     if (typeOf(itemId, state) == TransactionType.INCOME) state.options.incomes else state.options.expenses
 
-private fun selectedKey(
+internal fun selectedKey(
     picker: InboxPicker,
     state: InboxUiState,
 ): String? {
@@ -86,7 +86,7 @@ private fun typeOf(
         .firstOrNull { it.itemId == itemId }
         ?.type
 
-private fun onPicked(
+internal fun onPicked(
     picker: InboxPicker,
     option: PickerOption,
     actions: InboxItemActions,
