@@ -158,10 +158,12 @@ class TransactionRulesTest {
         routing: DraftRouting,
         fee: Long = 0L,
         occurredAt: Instant = now,
-    ): TransactionDraft =
-        TransactionDraft(null, Movement(type, Money(amount), Money(fee)), routing, Memo(), occurredAt)
+    ): TransactionDraft = TransactionDraft(null, Movement(type, Money(amount), Money(fee)), routing, Memo(), occurredAt)
 
-    private fun wallet(walletId: WalletId, type: WalletType): Wallet =
+    private fun wallet(
+        walletId: WalletId,
+        type: WalletType,
+    ): Wallet =
         Wallet(
             walletId = walletId,
             kind = WalletKind(type, investKind = null),
@@ -174,7 +176,10 @@ class TransactionRulesTest {
     private fun creditOf(type: WalletType): CreditTerms? =
         if (type == WalletType.CREDIT_CARD) CreditTerms(Money(5_000_000L), statementDay = 25, dueDay = 10) else null
 
-    private fun category(categoryId: CategoryId, kind: CategoryKind): Category =
+    private fun category(
+        categoryId: CategoryId,
+        kind: CategoryKind,
+    ): Category =
         Category(
             categoryId = categoryId,
             profile = CategoryProfile("Kategori", kind, Appearance("tag", "blue"), 0),

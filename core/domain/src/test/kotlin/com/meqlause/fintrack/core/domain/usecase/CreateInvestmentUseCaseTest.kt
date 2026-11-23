@@ -44,7 +44,13 @@ class CreateInvestmentUseCaseTest {
     fun givenNameWithSpacesWhenCreatedThenStoredNameIsTrimmed() {
         runBlocking {
             create("  Emas  ", InvestKind.GOLD, Money(0L), now)
-            assertThat(wallets.observeAll().first().single().profile.name).isEqualTo("Emas")
+            assertThat(
+                wallets
+                    .observeAll()
+                    .first()
+                    .single()
+                    .profile.name,
+            ).isEqualTo("Emas")
         }
     }
 
