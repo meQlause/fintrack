@@ -24,4 +24,41 @@
     <string name="transaction_error_same_wallet">Dompet asal dan tujuan harus berbeda</string>
     <string name="transaction_error_credit_source">Kartu kredit tidak bisa jadi sumber transfer</string>
     <string name="transaction_error_date_too_far">Tanggal terlalu jauh di masa depan</string>
+    <!-- DOC-08, FR-036, FR-037: Indonesian copy of S-05 Riwayat -->
+    <string name="history_title">Riwayat</string>
+    <string name="history_calendar_description">Pilih bulan dan tanggal</string>
+    <string name="history_search_description">Cari</string>
+    <string name="history_search_hint">Cari catatan atau merchant</string>
+    <string name="history_month_picker_title">Pilih bulan</string>
+    <string name="history_year_previous">‹ Tahun</string>
+    <string name="history_year_next">Tahun ›</string>
+    <string name="history_type_every">Semua</string>
+    <string name="history_type_loan">Pinjaman</string>
+    <string name="history_filter_wallet">Dompet</string>
+    <string name="history_filter_category">Kategori</string>
+    <string name="history_filter_day">Tanggal</string>
+    <string name="history_day_label">Tanggal %1$d</string>
+    <string name="history_filter_all">Semua</string>
+    <string name="history_filter_wallet_title">Pilih dompet</string>
+    <string name="history_filter_category_title">Pilih kategori</string>
+    <string name="history_filter_day_title">Pilih tanggal</string>
+    <string name="history_total_income">Pemasukan</string>
+    <string name="history_total_expense">Pengeluaran</string>
+    <string name="history_total_net">Selisih</string>
+    <string name="history_empty_title">Tidak ada transaksi di periode ini</string>
+    <string name="history_search_empty_title">Tidak ditemukan</string>
+    <array name="history_month_names">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>Mei</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Agu</item>
+        <item>Sep</item>
+        <item>Okt</item>
+        <item>Nov</item>
+        <item>Des</item>
+    </array>
 </resources>

@@ -388,7 +388,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(transaction): add quick-entry shortcuts [P4, FR-039]`
 
 ### T4.8 — History list (S-05)
-- [ ] done
+- [x] done
 - Refs: FR-036, FR-037, DOC-09 S-05
 - Include: month strip with sliding indicator, month/year/day picker sheet, type tabs with underline, wallet/category/day filter chips, search, focus-pull transition (no sideways motion), swipe to change month, illustrated empty state.
 - Commit: `feat(transaction): add history screen [P4, FR-036]`
