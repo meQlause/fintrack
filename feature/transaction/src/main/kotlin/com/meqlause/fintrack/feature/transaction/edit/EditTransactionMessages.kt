@@ -16,4 +16,5 @@ internal fun TransactionError.messageRes(): Int =
         TransactionError.SAME_WALLET -> R.string.transaction_error_same_wallet
         TransactionError.CREDIT_SOURCE_NOT_ALLOWED -> R.string.transaction_error_credit_source
         TransactionError.DATE_TOO_FAR -> R.string.transaction_error_date_too_far
+        TransactionError.PERSON_REQUIRED -> R.string.transaction_error_person_required
     }

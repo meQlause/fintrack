@@ -474,7 +474,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(credit): add instalment plans [P7, FR-140]`
 
 ### T7.5 — Loans (S-17) + Pinjaman tab in the editor
-- [ ] done · Refs: FR-150 … FR-158, BR-040 … BR-042, BR-046 · grouped loan form, due-date drawer, repayments, write-off.
+- [x] done · Refs: FR-150 … FR-158, BR-040 … BR-042, BR-046 · grouped loan form, due-date drawer, repayments, write-off.
 - Commit: `feat(loan): add loans and repayments [P7, FR-150]`
 
 ### T7.6 — Investments (S-20) + Investasi tab

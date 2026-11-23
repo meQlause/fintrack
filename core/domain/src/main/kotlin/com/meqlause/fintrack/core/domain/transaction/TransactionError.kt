@@ -31,4 +31,7 @@ public enum class TransactionError {
 
     /** BR-009: occurredAt is more than one day in the future. */
     DATE_TOO_FAR,
+
+    /** FR-150, FR-151: a loan has no person name. */
+    PERSON_REQUIRED,
 }

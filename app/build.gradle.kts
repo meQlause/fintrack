@@ -25,6 +25,7 @@ dependencies {
     implementation(project(":feature:settings"))
     implementation(project(":feature:transaction"))
     implementation(project(":feature:investment"))
+    implementation(project(":feature:loan"))
     implementation(libs.navigation.compose)
     implementation(libs.navigation.runtime)
     implementation(libs.navigation.common)

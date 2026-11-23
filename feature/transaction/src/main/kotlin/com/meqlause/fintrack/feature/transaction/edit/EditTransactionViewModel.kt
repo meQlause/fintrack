@@ -13,7 +13,6 @@ import com.meqlause.fintrack.core.model.LastUsed
 import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.WalletId
-import com.meqlause.fintrack.core.ui.format.DateFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +38,7 @@ internal class EditTransactionViewModel
         private val categoryRepository: CategoryRepository,
         private val settingsRepository: SettingsRepository,
         private val instalments: EditInstalmentController,
+        private val loans: EditLoanController,
         quickEntries: QuickEntryRepository,
         saveQuickEntry: SaveQuickEntryUseCase,
         private val clock: Clock,
@@ -73,7 +73,13 @@ internal class EditTransactionViewModel
                 val shortcut = quickEntryId?.let { shortcuts.find(it) }
                 val form = existing?.toForm() ?: shortcut?.toForm() ?: newForm()
                 val applied = shortcut != null
-                mutableState.update { it.copy(form = form, record = recordFor(existing), appliedShortcut = applied) }
+                mutableState.update {
+                    it.copy(
+                        form = form,
+                        record = recordFor(existing, clock),
+                        appliedShortcut = applied,
+                    )
+                }
             }
         }
 
@@ -150,6 +156,10 @@ internal class EditTransactionViewModel
                     mutableState.update { instalments.tenorPicked(it, event.months) }
                 }
 
+                is EditTransactionEvent.LoanEdited -> {
+                    mutableState.update { loans.reduce(it, event.change) }
+                }
+
                 EditTransactionEvent.SaveRequested -> {
                     save()
                 }
@@ -168,16 +178,6 @@ internal class EditTransactionViewModel
                 type = lastUsed.transactionType,
                 walletId = remembered ?: wallets.firstOrNull()?.walletId,
             )
-        }
-
-        private fun recordFor(existing: Transaction?): EditRecord {
-            val instant = existing?.timing?.occurredAt ?: Instant.now(clock)
-            val zoned = instant.atZone(clock.zone)
-            val label = "${DateFormatter.dayLabel(
-                zoned.toLocalDate(),
-                clock,
-            )}, ${DateFormatter.timeLabel(zoned.toLocalTime())}"
-            return EditRecord(existing = existing, occurredAt = instant, dateLabel = label)
         }
 
         private fun updateForm(transform: (TransactionForm) -> TransactionForm) {
@@ -204,7 +204,7 @@ internal class EditTransactionViewModel
                         targetWalletId = form.targetWalletId.takeIf { type == TransactionType.TRANSFER },
                         categoryId = form.categoryId.takeIf { fitsKind },
                     )
-                current.copy(form = edited, errors = emptySet())
+                current.copy(form = edited, errors = emptySet(), loan = null)
             }
         }
 
@@ -227,7 +227,7 @@ internal class EditTransactionViewModel
             viewModelScope.launch {
                 val current = mutableState.value
                 if (!shortcuts.storeIfKept(current, Instant.now(clock))) return@launch
-                when (val result = instalments.store(current)) {
+                when (val result = if (current.loan != null) loans.store(current) else instalments.store(current)) {
                     is SaveTransactionResult.Saved -> {
                         rememberLastUsed(current.form)
                         mutableState.update { it.copy(isSaved = true) }

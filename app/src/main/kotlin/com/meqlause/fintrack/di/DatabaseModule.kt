@@ -8,6 +8,7 @@ import com.meqlause.fintrack.core.database.dao.BudgetDao
 import com.meqlause.fintrack.core.database.dao.CategoryDao
 import com.meqlause.fintrack.core.database.dao.InboxItemDao
 import com.meqlause.fintrack.core.database.dao.InstallmentPlanDao
+import com.meqlause.fintrack.core.database.dao.LoanDao
 import com.meqlause.fintrack.core.database.dao.MerchantRuleDao
 import com.meqlause.fintrack.core.database.dao.MonitoredAppDao
 import com.meqlause.fintrack.core.database.dao.QuickEntryDao
@@ -73,4 +74,8 @@ object DatabaseModule {
     // FR-172: manual valuations of investment wallets
     @Provides
     fun provideValuationEntryDao(database: FintrackDatabase): ValuationEntryDao = database.valuationEntryDao()
+
+    // FR-150: loans and their repayments
+    @Provides
+    fun provideLoanDao(database: FintrackDatabase): LoanDao = database.loanDao()
 }

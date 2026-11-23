@@ -16,4 +16,12 @@ public class LocalLoanRepository(
     override fun observeAll(): Flow<List<Loan>> = loanDao.observeAll().map { rows -> rows.map { it.toLoan() } }
 
     override suspend fun insert(loan: Loan): LoanId = LoanId(loanDao.insert(loan.toEntity()))
+
+    override suspend fun update(loan: Loan) {
+        loanDao.update(loan.toEntity())
+    }
+
+    override suspend fun delete(loanId: LoanId) {
+        loanDao.delete(loanId.value)
+    }
 }

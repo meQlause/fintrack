@@ -7,4 +7,5 @@ internal enum class EditSheet {
     SHORTCUTS,
     SHORTCUT_MANAGE,
     TENOR,
+    LOAN_DUE,
 }

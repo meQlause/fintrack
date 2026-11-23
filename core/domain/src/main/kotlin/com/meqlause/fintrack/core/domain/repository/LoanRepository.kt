@@ -11,4 +11,10 @@ public interface LoanRepository {
 
     /** FR-150: stores a loan agreement and returns its generated id; the loanId of [loan] is ignored. */
     public suspend fun insert(loan: Loan): LoanId
+
+    /** FR-155, FR-158: stores the changed fields of an existing loan; its loanId selects the row. */
+    public suspend fun update(loan: Loan)
+
+    /** BR-046: removes a loan; its repayments and opening transaction must already be gone. */
+    public suspend fun delete(loanId: LoanId)
 }

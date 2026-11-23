@@ -98,4 +98,19 @@
     <string name="instalment_preview">%1$s × %2$d bulan</string>
     <string name="instalment_per_month">%s / bulan</string>
     <string name="instalment_amount_first">Isi jumlah dulu</string>
+    <string name="transaction_type_loan">Pinjaman</string>
+    <string name="transaction_error_person_required">Nama orang wajib diisi</string>
+    <string name="loan_direction_lent">Saya meminjamkan</string>
+    <string name="loan_direction_borrowed">Saya meminjam</string>
+    <string name="loan_person_hint">Nama orang</string>
+    <string name="loan_wallet_lent">Keluar dari</string>
+    <string name="loan_wallet_borrowed">Masuk ke</string>
+    <string name="loan_due_label">Jatuh tempo</string>
+    <string name="loan_due_drawer_title">Jatuh tempo pinjaman</string>
+    <string name="loan_due_none">Tidak ada</string>
+    <string name="loan_due_one_week">1 minggu</string>
+    <string name="loan_due_two_weeks">2 minggu</string>
+    <string name="loan_due_one_month">1 bulan</string>
+    <string name="loan_due_two_months">2 bulan</string>
+    <string name="loan_due_three_months">3 bulan</string>
 </resources>

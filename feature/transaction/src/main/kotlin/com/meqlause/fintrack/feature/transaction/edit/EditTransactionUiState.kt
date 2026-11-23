@@ -22,6 +22,7 @@ internal data class EditTransactionUiState(
     val appliedShortcut: Boolean = false,
     val shortcutErrors: Set<QuickEntryError> = emptySet(),
     val instalment: InstalmentForm = InstalmentForm(),
+    val loan: LoanForm? = null,
 ) {
     val isEditing: Boolean
         get() = record.existing != null
@@ -35,19 +36,22 @@ internal data class EditTransactionUiState(
 
     // FR-039, BR-047: the "Simpan sebagai pintasan" checkbox is offered for a new expense or income only
     val canKeepShortcut: Boolean
-        get() = !isEditing && !appliedShortcut && !form.isTransfer
+        get() = !isEditing && !appliedShortcut && !form.isTransfer && loan == null
 
     // S-04: Simpan is enabled when the amount is above zero, a wallet and the required route are chosen
     val canSave: Boolean
-        get() =
-            form.amount.rupiah > 0L &&
-                form.walletId != null &&
-                isRouteChosen() &&
-                (!instalmentActive || instalment.tenor != null)
+        get() = form.amount.rupiah > 0L && form.walletId != null && isReadyToSave()
 
     // S-04: categories of the kind the type needs; a transfer has no category
     val categoryChoices: List<Category>
         get() = form.type.categoryKind()?.let(catalog::categoriesOf) ?: emptyList()
+
+    // S-04: the Pinjaman tab needs a person name; the other tabs need a route and a finished instalment
+    private fun isReadyToSave(): Boolean =
+        when (loan) {
+            null -> isRouteChosen() && (!instalmentActive || instalment.tenor != null)
+            else -> loan.personName.isNotBlank()
+        }
 
     private fun isRouteChosen(): Boolean = if (form.isTransfer) form.targetWalletId != null else form.categoryId != null
 }

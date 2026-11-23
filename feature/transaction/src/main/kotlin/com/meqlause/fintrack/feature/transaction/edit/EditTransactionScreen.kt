@@ -65,5 +65,9 @@ private fun EditTransactionSheetContent(
         EditSheet.TENOR -> {
             EditInstalmentTenorDrawer(state = state, onEvent = onEvent)
         }
+
+        EditSheet.LOAN_DUE -> {
+            EditLoanDueDrawer(onEvent = onEvent)
+        }
     }
 }

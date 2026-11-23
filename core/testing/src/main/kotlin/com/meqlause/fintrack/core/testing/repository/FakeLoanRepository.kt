@@ -17,4 +17,8 @@ public class FakeLoanRepository : LoanRepository {
     override fun observeAll(): Flow<List<Loan>> = store.observe()
 
     override suspend fun insert(loan: Loan): LoanId = LoanId(store.append(loan))
+
+    override suspend fun update(loan: Loan) = store.replace(loan)
+
+    override suspend fun delete(loanId: LoanId) = store.remove(loanId.value)
 }

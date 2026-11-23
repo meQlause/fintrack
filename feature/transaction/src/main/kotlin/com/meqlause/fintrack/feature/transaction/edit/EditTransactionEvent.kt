@@ -64,4 +64,8 @@ internal sealed interface EditTransactionEvent {
     data class InstalmentTenorPicked(
         val months: Int?,
     ) : EditTransactionEvent
+
+    data class LoanEdited(
+        val change: LoanChange,
+    ) : EditTransactionEvent
 }

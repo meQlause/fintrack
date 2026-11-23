@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loan_back">Kembali</string>
+    <string name="loan_title">Pinjaman</string>
+    <string name="loan_tab_lent">Piutang</string>
+    <string name="loan_tab_borrowed">Hutang</string>
+    <string name="loan_list_empty">Tidak ada</string>
+    <string name="loan_section_settled">Selesai</string>
+    <string name="loan_due_on">Jatuh tempo %s</string>
+    <string name="loan_due_overdue">Lewat jatuh tempo</string>
+    <string name="loan_due_none">Tanpa jatuh tempo</string>
+    <string name="loan_due_change">Jatuh tempo</string>
+    <string name="loan_status_lent">Piutang · kamu meminjamkan</string>
+    <string name="loan_status_borrowed">Hutang · kamu meminjam</string>
+    <string name="loan_status_settled">Lunas</string>
+    <string name="loan_status_written_off">Diikhlaskan</string>
+    <string name="loan_outstanding_label">Sisa</string>
+    <string name="loan_principal">Pokok %s</string>
+    <string name="loan_timeline_title">Riwayat</string>
+    <string name="loan_movement_lend">Pinjamkan ke %s</string>
+    <string name="loan_movement_borrow">Pinjam dari %s</string>
+    <string name="loan_movement_collect">%s bayar</string>
+    <string name="loan_movement_repay">Bayar ke %s</string>
+    <string name="loan_repay">Catat pembayaran</string>
+    <string name="loan_repay_title">Catat pembayaran</string>
+    <string name="loan_repay_save">Simpan</string>
+    <string name="loan_repay_amount_required">Nominal wajib diisi</string>
+    <string name="loan_repay_above_outstanding">Melebihi sisa pinjaman</string>
+    <string name="loan_repay_wallet_required">Pilih dompet dulu</string>
+    <string name="loan_repay_closed">Pinjaman sudah selesai</string>
+    <string name="loan_repay_not_found">Pinjaman tidak ditemukan</string>
+    <string name="loan_write_off">Ikhlaskan</string>
+    <string name="loan_writeoff_title">Ikhlaskan pinjaman?</string>
+    <string name="loan_writeoff_body">Sisa tidak akan ditagih lagi. Tidak ada uang yang berpindah.</string>
+    <string name="loan_writeoff_confirm">Ya, ikhlaskan</string>
+    <string name="loan_delete">Hapus pinjaman</string>
+    <string name="loan_delete_title">Hapus pinjaman?</string>
+    <string name="loan_delete_body">Pinjaman beserta semua pembayarannya ikut terhapus.</string>
+    <string name="loan_delete_confirm">Hapus</string>
+    <string name="loan_dialog_cancel">Batal</string>
+    <string name="loan_due_drawer_title">Jatuh tempo pinjaman</string>
+    <string name="loan_due_one_week">1 minggu</string>
+    <string name="loan_due_two_weeks">2 minggu</string>
+    <string name="loan_due_one_month">1 bulan</string>
+    <string name="loan_due_two_months">2 bulan</string>
+    <string name="loan_due_three_months">3 bulan</string>
+</resources>

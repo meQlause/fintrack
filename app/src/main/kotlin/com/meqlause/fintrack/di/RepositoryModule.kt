@@ -5,6 +5,7 @@ import com.meqlause.fintrack.core.data.repository.LocalBudgetRepository
 import com.meqlause.fintrack.core.data.repository.LocalCategoryRepository
 import com.meqlause.fintrack.core.data.repository.LocalInboxRepository
 import com.meqlause.fintrack.core.data.repository.LocalInstallmentPlanRepository
+import com.meqlause.fintrack.core.data.repository.LocalLoanRepository
 import com.meqlause.fintrack.core.data.repository.LocalMerchantRuleRepository
 import com.meqlause.fintrack.core.data.repository.LocalMonitoredAppRepository
 import com.meqlause.fintrack.core.data.repository.LocalQuickEntryRepository
@@ -19,6 +20,7 @@ import com.meqlause.fintrack.core.database.dao.BudgetDao
 import com.meqlause.fintrack.core.database.dao.CategoryDao
 import com.meqlause.fintrack.core.database.dao.InboxItemDao
 import com.meqlause.fintrack.core.database.dao.InstallmentPlanDao
+import com.meqlause.fintrack.core.database.dao.LoanDao
 import com.meqlause.fintrack.core.database.dao.MerchantRuleDao
 import com.meqlause.fintrack.core.database.dao.MonitoredAppDao
 import com.meqlause.fintrack.core.database.dao.QuickEntryDao
@@ -32,6 +34,7 @@ import com.meqlause.fintrack.core.domain.repository.BudgetRepository
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.InboxRepository
 import com.meqlause.fintrack.core.domain.repository.InstallmentPlanRepository
+import com.meqlause.fintrack.core.domain.repository.LoanRepository
 import com.meqlause.fintrack.core.domain.repository.MerchantRuleRepository
 import com.meqlause.fintrack.core.domain.repository.MonitoredAppRepository
 import com.meqlause.fintrack.core.domain.repository.QuickEntryRepository
@@ -102,6 +105,11 @@ object RepositoryModule {
     @Singleton
     fun provideBudgetAlertLogRepository(alertLogDao: BudgetAlertLogDao): BudgetAlertLogRepository =
         LocalBudgetAlertLogRepository(alertLogDao)
+
+    // FR-150 … FR-158: loans; their repayments are transactions with the loan id
+    @Provides
+    @Singleton
+    fun provideLoanRepository(loanDao: LoanDao): LoanRepository = LocalLoanRepository(loanDao)
 
     // FR-172, BR-054: manual valuations of investment wallets
     @Provides

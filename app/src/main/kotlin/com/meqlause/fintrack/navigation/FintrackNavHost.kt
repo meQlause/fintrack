@@ -22,6 +22,8 @@ import com.meqlause.fintrack.feature.inbox.navigation.inboxDestination
 import com.meqlause.fintrack.feature.investment.navigation.InvestmentDetailDestination
 import com.meqlause.fintrack.feature.investment.navigation.investmentDestination
 import com.meqlause.fintrack.feature.investment.navigation.investmentDetailDestination
+import com.meqlause.fintrack.feature.loan.navigation.LoanDetailDestination
+import com.meqlause.fintrack.feature.loan.navigation.loanDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.MonitoredAppsDestination
@@ -105,6 +107,11 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onBack = { navController.popBackStack() },
         onOpenInstalment = { planId -> navController.navigate(InstalmentDetailDestination(planId)) },
         onOpenInstalments = { navController.navigate(InstalmentListDestination) },
+    )
+    // FR-150 … FR-158, S-17: the Pinjaman list and the loan detail with repayments and write-off
+    loanDestination(
+        onBack = { navController.popBackStack() },
+        onOpenLoan = { loanId -> navController.navigate(LoanDetailDestination(loanId)) },
     )
     // DOC-09, S-12: Pengaturan is opened from the Beranda header; its Kategori row leads to S-10 (FR-020)
     settingsDestination(

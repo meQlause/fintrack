@@ -7,6 +7,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import com.meqlause.fintrack.core.domain.transaction.TransactionError
 import com.meqlause.fintrack.core.domain.usecase.SaveInstalmentPurchaseUseCase
+import com.meqlause.fintrack.core.domain.usecase.SaveLoanUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveQuickEntryUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveTransactionUseCase
 import com.meqlause.fintrack.core.model.Appearance
@@ -29,6 +30,7 @@ import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.core.testing.coroutine.MainDispatcherRule
 import com.meqlause.fintrack.core.testing.repository.FakeCategoryRepository
 import com.meqlause.fintrack.core.testing.repository.FakeInstallmentPlanRepository
+import com.meqlause.fintrack.core.testing.repository.FakeLoanRepository
 import com.meqlause.fintrack.core.testing.repository.FakeQuickEntryRepository
 import com.meqlause.fintrack.core.testing.repository.FakeSettingsRepository
 import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
@@ -95,6 +97,11 @@ class EditTransactionViewModelTest {
             categoryRepository = categories,
             settingsRepository = settings,
             instalments = EditInstalmentController(saveTransaction, saveInstalment),
+            loans =
+                EditLoanController(
+                    SaveLoanUseCase(FakeLoanRepository(), transactions, PassthroughAtomicRunner(), clock),
+                    clock,
+                ),
             quickEntries = quickEntries,
             saveQuickEntry = SaveQuickEntryUseCase(quickEntries),
             clock = clock,

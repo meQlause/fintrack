@@ -37,11 +37,15 @@ internal fun EditTransactionFormBody(
         EditTransactionHeader(state = state, onEvent = onEvent)
         SegmentedControl(
             options = typeLabels(),
-            selectedIndex = TYPE_ORDER.indexOf(state.form.type),
-            onSelect = { index -> onEvent(EditTransactionEvent.TypeSelected(TYPE_ORDER[index])) },
+            selectedIndex = if (state.loan != null) TYPE_ORDER.size else TYPE_ORDER.indexOf(state.form.type),
+            onSelect = { index -> onEvent(typeTabEvent(index)) },
         )
         EditTransactionAmountBlock(state = state, onEvent = onEvent)
-        EditTransactionRoutingRows(state = state, onEvent = onEvent)
+        if (state.loan != null) {
+            EditLoanRows(state = state, onEvent = onEvent)
+        } else {
+            EditTransactionRoutingRows(state = state, onEvent = onEvent)
+        }
         OutlinedTextField(
             value = state.form.note,
             onValueChange = { note -> onEvent(EditTransactionEvent.NoteChanged(note)) },
@@ -88,11 +92,20 @@ private fun EditTransactionHeader(
     }
 }
 
-// S-04: the three type tabs in the order TYPE_ORDER lists them
+// S-04: the three type tabs in the order TYPE_ORDER lists them, then the Pinjaman tab
 @Composable
 private fun typeLabels(): List<String> =
     listOf(
         stringResource(R.string.transaction_type_expense),
         stringResource(R.string.transaction_type_income),
         stringResource(R.string.transaction_type_transfer),
+        stringResource(R.string.transaction_type_loan),
     )
+
+// S-04: the Pinjaman tab follows the three type tabs; every other index picks its transaction type
+private fun typeTabEvent(index: Int): EditTransactionEvent =
+    if (index == TYPE_ORDER.size) {
+        EditTransactionEvent.LoanEdited(LoanChange.TabSelected)
+    } else {
+        EditTransactionEvent.TypeSelected(TYPE_ORDER[index])
+    }
