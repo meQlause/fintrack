@@ -17,11 +17,12 @@ class NamingSuffixTest {
     }
 
     @Test
-    fun `given repository interfaces when named then each ends with Repository (DOC-05)`() {
+    fun `given repository interfaces when named then each ends with Repository (DOC-05, ADR-023)`() {
         Konsist
             .scopeFromProject()
             .interfaces()
-            .filter { normalized(it.containingFile.path).contains("/core/domain/") }
+            .filter { normalized(it.containingFile.path).contains("/core/domain/src/main/kotlin/") }
+            .filter { normalized(it.containingFile.path).contains("/repository/") }
             .assertTrue { it.name.endsWith("Repository") }
     }
 

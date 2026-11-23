@@ -175,3 +175,16 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
   Qodana reported the whole codebase as unresolved. Inside that analysis container only, `qodana.yaml` bootstrap sets
   `org.gradle.dependency.verification=lenient` (failures are logged, not fatal). The CI `check` job and release builds
   keep strict verification; nothing Qodana resolves is shipped.
+
+### ADR-023 — Repository suffix applies to the repository package; ports live outside it
+- **Status:** Accepted (2026-11-23), approved by the owner.
+- **Context:** `NamingSuffixTest` required every interface anywhere under `core/domain` to end with `Repository`. The
+  domain also needs ports that are not repositories (PIN hashing, atomic transactions, backup files and stores,
+  notifiers, biometric and notification-access checks) and sealed result types. Renaming those to `*Repository`
+  would make the names misleading.
+- **Decision:** The rule checks interfaces in `core/domain/src/main/kotlin/**/repository/` only. Ports move to
+  `com.meqlause.fintrack.core.domain.port` and keep descriptive names; sealed results become sealed classes or stay
+  next to their use case. The same owner decision fixed a bug in `ModuleDependencyTest`: it compared the whole
+  `package …` line with import names, so every same-feature import was reported. It now compares the feature package
+  itself; cross-feature and data-layer imports stay forbidden.
+- **Consequences:** Repository interfaces still must end with `Repository`. Ports are easy to recognise by package.

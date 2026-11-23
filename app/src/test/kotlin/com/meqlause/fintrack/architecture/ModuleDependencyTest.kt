@@ -13,7 +13,7 @@ class ModuleDependencyTest {
             .files
             .filter { file -> normalized(file.path).contains("/feature/") }
             .assertFalse { file ->
-                val ownFeature = FEATURE_PACKAGE.find(file.text)?.value.orEmpty()
+                val ownFeature = FEATURE_PACKAGE.find(file.text)?.groupValues?.get(1)?.plus(".") ?: NO_FEATURE
                 file.imports.any { importItem ->
                     val name = importItem.name
                     val otherFeature = name.startsWith(FEATURE_ROOT) && !name.startsWith(ownFeature)
@@ -26,7 +26,8 @@ class ModuleDependencyTest {
 
     private companion object {
         const val FEATURE_ROOT = "com.meqlause.fintrack.feature."
-        val FEATURE_PACKAGE = Regex("""package com\.meqlause\.fintrack\.feature\.\w+""")
+        const val NO_FEATURE = "<no feature package>"
+        val FEATURE_PACKAGE = Regex("""package (com\.meqlause\.fintrack\.feature\.\w+)""")
         val FORBIDDEN_FOR_FEATURE =
             listOf(
                 "com.meqlause.fintrack.core.data.",
