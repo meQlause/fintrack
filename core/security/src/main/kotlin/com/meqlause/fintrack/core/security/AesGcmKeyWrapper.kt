@@ -1,19 +1,18 @@
 package com.meqlause.fintrack.core.security
 
 import java.security.Key
-import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.spec.GCMParameterSpec
 
-/** NFR-003: AES-256-GCM wrap; the output is the IV, then ciphertext and tag, so the IV is stored with the key. */
+/** NFR-003: AES-256-GCM wrap; the cipher picks the IV (Keystore rejects caller IVs) and it is stored first. */
 class AesGcmKeyWrapper(
     private val wrapKey: Key,
-    private val random: SecureRandom = SecureRandom(),
 ) : KeyWrapper {
     override fun wrap(plain: ByteArray): ByteArray {
-        val nonce = ByteArray(IV_BYTES).also { random.nextBytes(it) }
         val cipher = Cipher.getInstance(TRANSFORMATION)
-        cipher.init(Cipher.ENCRYPT_MODE, wrapKey, GCMParameterSpec(TAG_BITS, nonce))
+        cipher.init(Cipher.ENCRYPT_MODE, wrapKey)
+        val nonce = cipher.iv
+        check(nonce.size == IV_BYTES) { "Unexpected GCM IV length ${nonce.size}" }
         return nonce + cipher.doFinal(plain)
     }
 
