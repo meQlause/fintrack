@@ -492,7 +492,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(wallet): add net worth breakdown [P7, BR-053]`
 
 ### T7.9 — Reminders (bills, loans, investments)
-- [ ] done · Refs: BR-045, BR-055, FR-135, FR-154, FR-176 · Commit: `feat(notification): add due-date and investment reminders [P7, BR-045]`
+- [x] done · Refs: BR-045, BR-055, FR-135, FR-154, FR-176 · Commit: `feat(notification): add due-date and investment reminders [P7, BR-045]`
 
 ### T7.10 — Statistics exclusions (regression)
 - [ ] done · Refs: BR-039, BR-040, BR-052 · tests that bill payments, loan movements and investment transfers/gains never appear in statistics or budgets.
