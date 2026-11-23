@@ -17,4 +17,15 @@ public class LocalInboxRepository(
         inboxItemDao.observeAll().map { rows -> rows.map { it.toInboxItem() } }
 
     override suspend fun insert(item: InboxItem): InboxItemId = InboxItemId(inboxItemDao.insert(item.toEntity()))
+
+    override suspend fun containsFingerprint(fingerprint: String): Boolean = inboxItemDao.existsFingerprint(fingerprint)
+
+    override suspend fun pendingItems(): List<InboxItem> = inboxItemDao.pendingItems().map { it.toInboxItem() }
+
+    override suspend fun linkPair(
+        first: InboxItemId,
+        second: InboxItemId,
+    ) {
+        inboxItemDao.linkPair(first.value, second.value)
+    }
 }

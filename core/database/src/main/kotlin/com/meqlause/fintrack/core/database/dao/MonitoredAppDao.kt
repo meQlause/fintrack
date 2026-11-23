@@ -13,6 +13,17 @@ interface MonitoredAppDao {
     @Insert
     suspend fun insert(monitoredApp: MonitoredAppEntity)
 
+    /** FR-090: the monitored app with this package name, or null when it is not registered. */
+    @Query("SELECT * FROM monitored_app WHERE packageName = :packageName LIMIT 1")
+    suspend fun find(packageName: String): MonitoredAppEntity?
+
+    /** FR-090, FR-082: stamps the time of the last notification received from the app. */
+    @Query("UPDATE monitored_app SET lastNotificationAt = :receivedAt WHERE packageName = :packageName")
+    suspend fun recordNotification(
+        packageName: String,
+        receivedAt: Long,
+    )
+
     /** DOC-02: every monitored app, by package name. */
     @Query("SELECT * FROM monitored_app ORDER BY packageName")
     fun observeAll(): Flow<List<MonitoredAppEntity>>

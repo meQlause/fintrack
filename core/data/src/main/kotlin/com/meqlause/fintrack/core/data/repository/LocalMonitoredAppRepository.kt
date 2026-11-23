@@ -7,6 +7,7 @@ import com.meqlause.fintrack.core.domain.repository.MonitoredAppRepository
 import com.meqlause.fintrack.core.model.MonitoredApp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.Instant
 
 /** DOC-03, ADR-007, FR-090: monitored apps in Room, keyed by package name. */
 public class LocalMonitoredAppRepository(
@@ -17,5 +18,14 @@ public class LocalMonitoredAppRepository(
 
     override suspend fun insert(monitoredApp: MonitoredApp) {
         monitoredAppDao.insert(monitoredApp.toEntity())
+    }
+
+    override suspend fun find(packageName: String): MonitoredApp? = monitoredAppDao.find(packageName)?.toMonitoredApp()
+
+    override suspend fun recordNotification(
+        packageName: String,
+        receivedAt: Instant,
+    ) {
+        monitoredAppDao.recordNotification(packageName, receivedAt.toEpochMilli())
     }
 }

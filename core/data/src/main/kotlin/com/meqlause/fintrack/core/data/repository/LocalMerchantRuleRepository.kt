@@ -18,4 +18,7 @@ public class LocalMerchantRuleRepository(
 
     override suspend fun insert(rule: MerchantRule): MerchantRuleId =
         MerchantRuleId(merchantRuleDao.insert(rule.toEntity()))
+
+    override suspend fun findByKey(merchantKey: String): MerchantRule? =
+        merchantRuleDao.findByKey(merchantKey)?.toMerchantRule()
 }

@@ -11,4 +11,16 @@ public interface InboxRepository {
 
     /** FR-090: stores a detected item and returns its generated id; an item with a known fingerprint is rejected. */
     public suspend fun insert(item: InboxItem): InboxItemId
+
+    /** FR-092: true when an inbox item with this dedup fingerprint already exists. */
+    public suspend fun containsFingerprint(fingerprint: String): Boolean
+
+    /** FR-091: every item still waiting for review, oldest notification first. */
+    public suspend fun pendingItems(): List<InboxItem>
+
+    /** FR-091: makes two items each other's pair partner. */
+    public suspend fun linkPair(
+        first: InboxItemId,
+        second: InboxItemId,
+    )
 }

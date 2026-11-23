@@ -13,6 +13,10 @@ interface MerchantRuleDao {
     @Insert
     suspend fun insert(rule: MerchantRuleEntity): Long
 
+    /** FR-088: the merchant rule for one normalized key, or null when the merchant is unknown. */
+    @Query("SELECT * FROM merchant_rule WHERE merchantKey = :merchantKey LIMIT 1")
+    suspend fun findByKey(merchantKey: String): MerchantRuleEntity?
+
     /** DOC-02: every merchant rule, by normalized key. */
     @Query("SELECT * FROM merchant_rule ORDER BY merchantKey")
     fun observeAll(): Flow<List<MerchantRuleEntity>>

@@ -11,4 +11,7 @@ public interface MerchantRuleRepository {
 
     /** FR-088: stores a rule and returns its generated id; a second rule for the same merchant key is rejected. */
     public suspend fun insert(rule: MerchantRule): MerchantRuleId
+
+    /** FR-088: the rule remembered for a normalized merchant key, or null when there is none. */
+    public suspend fun findByKey(merchantKey: String): MerchantRule?
 }

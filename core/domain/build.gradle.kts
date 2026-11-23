@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     api(project(":core:model"))
+    api(project(":core:parser"))
     api(libs.coroutines.core)
     api(libs.javax.inject)
 
@@ -13,4 +14,5 @@ dependencies {
     testRuntimeOnly(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.assertk)
+    testImplementation(project(":core:testing"))
 }

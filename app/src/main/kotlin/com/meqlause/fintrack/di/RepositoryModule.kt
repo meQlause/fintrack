@@ -1,16 +1,25 @@
 package com.meqlause.fintrack.di
 
 import com.meqlause.fintrack.core.data.repository.LocalCategoryRepository
+import com.meqlause.fintrack.core.data.repository.LocalInboxRepository
+import com.meqlause.fintrack.core.data.repository.LocalMerchantRuleRepository
+import com.meqlause.fintrack.core.data.repository.LocalMonitoredAppRepository
 import com.meqlause.fintrack.core.data.repository.LocalQuickEntryRepository
 import com.meqlause.fintrack.core.data.repository.LocalSettingsRepository
 import com.meqlause.fintrack.core.data.repository.LocalTransactionRepository
 import com.meqlause.fintrack.core.data.repository.LocalWalletRepository
 import com.meqlause.fintrack.core.database.dao.CategoryDao
+import com.meqlause.fintrack.core.database.dao.InboxItemDao
+import com.meqlause.fintrack.core.database.dao.MerchantRuleDao
+import com.meqlause.fintrack.core.database.dao.MonitoredAppDao
 import com.meqlause.fintrack.core.database.dao.QuickEntryDao
 import com.meqlause.fintrack.core.database.dao.TransactionDao
 import com.meqlause.fintrack.core.database.dao.WalletDao
 import com.meqlause.fintrack.core.datastore.SettingsDataSource
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
+import com.meqlause.fintrack.core.domain.repository.InboxRepository
+import com.meqlause.fintrack.core.domain.repository.MerchantRuleRepository
+import com.meqlause.fintrack.core.domain.repository.MonitoredAppRepository
 import com.meqlause.fintrack.core.domain.repository.QuickEntryRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
@@ -47,4 +56,19 @@ object RepositoryModule {
     @Singleton
     fun provideSettingsRepository(dataSource: SettingsDataSource): SettingsRepository =
         LocalSettingsRepository(dataSource)
+
+    // FR-084 … FR-091: detection pipeline storage
+    @Provides
+    @Singleton
+    fun provideInboxRepository(inboxItemDao: InboxItemDao): InboxRepository = LocalInboxRepository(inboxItemDao)
+
+    @Provides
+    @Singleton
+    fun provideMerchantRuleRepository(merchantRuleDao: MerchantRuleDao): MerchantRuleRepository =
+        LocalMerchantRuleRepository(merchantRuleDao)
+
+    @Provides
+    @Singleton
+    fun provideMonitoredAppRepository(monitoredAppDao: MonitoredAppDao): MonitoredAppRepository =
+        LocalMonitoredAppRepository(monitoredAppDao)
 }

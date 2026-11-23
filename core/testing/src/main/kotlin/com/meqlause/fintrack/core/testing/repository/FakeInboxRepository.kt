@@ -3,7 +3,9 @@ package com.meqlause.fintrack.core.testing.repository
 import com.meqlause.fintrack.core.domain.repository.InboxRepository
 import com.meqlause.fintrack.core.model.InboxItem
 import com.meqlause.fintrack.core.model.InboxItemId
+import com.meqlause.fintrack.core.model.InboxStatus
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 /** ADR-007, FR-090: in-memory inbox items; the fingerprint is the dedup key (FR-092). */
 public class FakeInboxRepository : InboxRepository {
@@ -18,4 +20,31 @@ public class FakeInboxRepository : InboxRepository {
 
     override suspend fun insert(item: InboxItem): InboxItemId =
         InboxItemId(store.append(item) { existing -> existing.notice.fingerprint == item.notice.fingerprint })
+
+    override suspend fun containsFingerprint(fingerprint: String): Boolean =
+        store.all().any { it.notice.fingerprint == fingerprint }
+
+    override suspend fun pendingItems(): List<InboxItem> =
+        store.observe().first().filter { it.resolution.status == InboxStatus.PENDING }
+
+    override suspend fun linkPair(
+        first: InboxItemId,
+        second: InboxItemId,
+    ) {
+        store.all().forEach { item ->
+            val partner = partnerOf(item.inboxItemId, first, second) ?: return@forEach
+            store.replace(item.copy(suggestion = item.suggestion.copy(relatedInboxItemId = partner)))
+        }
+    }
+
+    private fun partnerOf(
+        id: InboxItemId,
+        first: InboxItemId,
+        second: InboxItemId,
+    ): InboxItemId? =
+        when (id) {
+            first -> second
+            second -> first
+            else -> null
+        }
 }

@@ -18,4 +18,7 @@ public class FakeMerchantRuleRepository : MerchantRuleRepository {
 
     override suspend fun insert(rule: MerchantRule): MerchantRuleId =
         MerchantRuleId(store.append(rule) { existing -> existing.merchantKey == rule.merchantKey })
+
+    override suspend fun findByKey(merchantKey: String): MerchantRule? =
+        store.all().firstOrNull { it.merchantKey == merchantKey }
 }
