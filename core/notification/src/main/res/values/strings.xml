@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- FR-089: texts of the heads-up prompt from our app, in Indonesian -->
+<!-- FR-089, FR-073: texts of our own notifications, in Indonesian -->
 <resources>
     <string name="inbox_channel_name">Kotak masuk</string>
     <string name="inbox_prompt_title">%1$s di %2$s — Konfirmasi?</string>
@@ -7,4 +7,9 @@
     <string name="inbox_prompt_text">Ketuk untuk meninjau di Kotak masuk</string>
     <string name="inbox_action_confirm">Konfirmasi</string>
     <string name="inbox_action_dismiss">Abaikan</string>
+    <string name="budget_channel_name">Anggaran</string>
+    <string name="budget_alert_title_warning">Anggaran %1$s hampir habis</string>
+    <string name="budget_alert_title_exceeded">Anggaran %1$s terlampaui</string>
+    <string name="budget_alert_title_overall">Anggaran bulan ini</string>
+    <string name="budget_alert_text">Terpakai %1$s dari %2$s</string>
 </resources>

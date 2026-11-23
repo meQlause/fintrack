@@ -1,6 +1,8 @@
 package com.meqlause.fintrack.di
 
 import com.meqlause.fintrack.core.domain.detection.NotificationAccess
+import com.meqlause.fintrack.core.domain.repository.BudgetAlertNotifier
+import com.meqlause.fintrack.core.notification.BudgetNotifier
 import com.meqlause.fintrack.core.notification.NotificationAccessChecker
 import dagger.Binds
 import dagger.Module
@@ -13,4 +15,8 @@ import dagger.hilt.components.SingletonComponent
 abstract class NotificationModule {
     @Binds
     abstract fun bindNotificationAccess(checker: NotificationAccessChecker): NotificationAccess
+
+    // FR-073: budget alerts are posted by core:notification through the domain interface
+    @Binds
+    abstract fun bindBudgetAlertNotifier(notifier: BudgetNotifier): BudgetAlertNotifier
 }

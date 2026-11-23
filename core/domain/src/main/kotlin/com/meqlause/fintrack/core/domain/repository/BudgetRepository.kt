@@ -11,4 +11,7 @@ public interface BudgetRepository {
 
     /** FR-074: stores a budget and returns its generated id; a second budget for the same category is rejected. */
     public suspend fun insert(budget: Budget): BudgetId
+
+    /** FR-070: stores the changed limit of an existing budget; the budgetId of [budget] selects the row. */
+    public suspend fun update(budget: Budget)
 }

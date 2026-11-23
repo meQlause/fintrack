@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":core:notification"))
     implementation(project(":core:security"))
     implementation(project(":feature:onboarding"))
+    implementation(project(":feature:budget"))
     implementation(project(":feature:category"))
     implementation(project(":feature:dashboard"))
     implementation(project(":feature:inbox"))

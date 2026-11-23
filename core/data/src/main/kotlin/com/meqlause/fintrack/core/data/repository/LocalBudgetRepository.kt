@@ -16,4 +16,6 @@ public class LocalBudgetRepository(
     override fun observeAll(): Flow<List<Budget>> = budgetDao.observeAll().map { rows -> rows.map { it.toBudget() } }
 
     override suspend fun insert(budget: Budget): BudgetId = BudgetId(budgetDao.insert(budget.toEntity()))
+
+    override suspend fun update(budget: Budget) = budgetDao.update(budget.toEntity())
 }

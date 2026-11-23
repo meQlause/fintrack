@@ -8,12 +8,14 @@ import com.meqlause.fintrack.feature.settings.SettingsRoute
 public fun NavGraphBuilder.settingsDestination(
     onBack: () -> Unit,
     onOpenCategories: () -> Unit,
+    onOpenBudgets: () -> Unit,
     onOpenMonitoredApps: () -> Unit,
 ) {
     composable<SettingsDestination> {
         SettingsRoute(
             onBack = onBack,
             onOpenCategories = onOpenCategories,
+            onOpenBudgets = onOpenBudgets,
             onOpenMonitoredApps = onOpenMonitoredApps,
         )
     }

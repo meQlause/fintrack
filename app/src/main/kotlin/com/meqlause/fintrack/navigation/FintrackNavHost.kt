@@ -6,6 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.meqlause.fintrack.feature.budget.navigation.BudgetDestination
+import com.meqlause.fintrack.feature.budget.navigation.budgetDestination
 import com.meqlause.fintrack.feature.category.navigation.CategoryDestination
 import com.meqlause.fintrack.feature.category.navigation.categoryDestination
 import com.meqlause.fintrack.feature.dashboard.navigation.HomeDestination
@@ -84,8 +86,11 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     settingsDestination(
         onBack = { navController.popBackStack() },
         onOpenCategories = { navController.navigate(CategoryDestination) },
+        onOpenBudgets = { navController.navigate(BudgetDestination) },
         onOpenMonitoredApps = { navController.navigate(MonitoredAppsDestination) },
     )
+    // FR-070 … FR-074, S-11: Anggaran is opened from the Data group of Pengaturan
+    budgetDestination(onBack = { navController.popBackStack() })
     // FR-081, FR-082, FR-090: Aplikasi dipantau (S-13) is opened from the Deteksi otomatis group of Pengaturan
     monitoredAppsDestination(onBack = { navController.popBackStack() })
     categoryDestination(onBack = { navController.popBackStack() })

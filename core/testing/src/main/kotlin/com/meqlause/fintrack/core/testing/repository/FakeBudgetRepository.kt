@@ -20,4 +20,8 @@ public class FakeBudgetRepository : BudgetRepository {
         BudgetId(
             store.append(budget) { existing -> budget.categoryId != null && existing.categoryId == budget.categoryId },
         )
+
+    override suspend fun update(budget: Budget) {
+        store.replace(budget)
+    }
 }
