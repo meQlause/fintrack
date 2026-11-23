@@ -43,7 +43,14 @@ internal fun StatisticsCategoryRow(
                 .clickable(enabled = onClick != null) { onClick?.invoke() },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(modifier = Modifier.size(FintrackTheme.sizes.categoryDotSize).clip(FintrackTheme.shapes.full).background(color))
+        Box(
+            modifier =
+                Modifier
+                    .size(
+                        FintrackTheme.sizes.categoryDotSize,
+                    ).clip(FintrackTheme.shapes.full)
+                    .background(color),
+        )
         Column(modifier = Modifier.weight(1f).padding(start = FintrackTheme.spacing.small)) {
             Text(
                 text = name,
