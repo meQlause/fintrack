@@ -10,7 +10,7 @@ import java.time.Clock
 // FR-137, FR-146, S-03: turns the domain bills card into the rows Beranda renders; pure apart from the clock
 internal object HomeBillsMapper {
     // FR-137: the amount is what is still due, or the whole statement once it is paid
-    fun map(
+    fun toHomeBills(
         card: BillsCard,
         clock: Clock,
     ): HomeBills =

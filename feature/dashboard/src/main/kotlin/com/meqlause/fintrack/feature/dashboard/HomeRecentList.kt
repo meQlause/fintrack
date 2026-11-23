@@ -1,6 +1,5 @@
 package com.meqlause.fintrack.feature.dashboard
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -32,26 +30,7 @@ internal fun HomeRecentList(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = FintrackTheme.spacing.xxSmall),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = stringResource(R.string.home_recent_title),
-                style = FintrackTheme.typography.caption,
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-            )
-            Text(
-                text = stringResource(R.string.home_recent_all),
-                style = FintrackTheme.typography.captionWide.copy(fontWeight = FontWeight.Bold),
-                color = FintrackTheme.colors.brands.primary,
-                modifier =
-                    Modifier
-                        .clickable(role = Role.Button, onClick = callbacks.onOpenHistory)
-                        .padding(vertical = FintrackTheme.spacing.xSmall),
-            )
-        }
+        RecentHeader(onOpenHistory = callbacks.onOpenHistory)
         if (state.recent.isEmpty()) {
             EmptyState(
                 copy =
@@ -67,5 +46,30 @@ internal fun HomeRecentList(
                 onClick = { index -> callbacks.onOpenTransaction(state.recent[index].transactionId) },
             )
         }
+    }
+}
+
+// FR-043: the "Transaksi terakhir" caption and the "Lihat semua" link that opens Riwayat
+@Composable
+private fun RecentHeader(onOpenHistory: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = FintrackTheme.spacing.xxSmall),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = stringResource(R.string.home_recent_title),
+            style = FintrackTheme.typography.caption,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
+        Text(
+            text = stringResource(R.string.home_recent_all),
+            style = FintrackTheme.typography.captionWide.copy(fontWeight = FontWeight.Bold),
+            color = FintrackTheme.colors.brands.primary,
+            modifier =
+                Modifier
+                    .clickable(role = Role.Button, onClick = onOpenHistory)
+                    .padding(vertical = FintrackTheme.spacing.xSmall),
+        )
     }
 }

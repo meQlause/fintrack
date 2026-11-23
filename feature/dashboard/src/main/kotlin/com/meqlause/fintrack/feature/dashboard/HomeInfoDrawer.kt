@@ -117,7 +117,6 @@ private fun HomeInfoRowLine(
     entry: HomeInfoRow,
     showDivider: Boolean,
 ) {
-    val colors = FintrackTheme.colors
     ScreenRow(
         showDivider = showDivider,
         contentPadding =
@@ -125,15 +124,7 @@ private fun HomeInfoRowLine(
                 horizontal = FintrackScreenSizes.rowPaddingHorizontal,
                 vertical = FintrackScreenSizes.infoRowVertical,
             ),
-        leading = {
-            TintedIconBox(
-                iconKey = entry.iconKey,
-                colorKey = entry.colorKey,
-                size = FintrackScreenSizes.smallIconBox + FintrackTheme.spacing.xxSmall,
-                glyph = FintrackScreenSizes.circleGlyph,
-                corner = FintrackScreenSizes.smallIconCorner,
-            )
-        },
+        leading = { InfoRowIcon(entry = entry) },
         trailing = {
             Text(
                 text = entry.value,
@@ -142,20 +133,39 @@ private fun HomeInfoRowLine(
             )
         },
     ) {
-        Text(
-            text = entry.label,
-            style = FintrackScreenText.style(size = 14f, weight = 600),
-            color = colors.texts.onSurface,
-            maxLines = 1,
-        )
-        Text(
-            text = entry.caption,
-            style = FintrackScreenText.style(size = 12f, weight = 400),
-            color = colors.texts.onSurfaceVariant,
-            maxLines = 1,
-            modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
-        )
+        InfoRowLabels(entry = entry)
     }
+}
+
+// S-03: the tinted icon at the start of an info row
+@Composable
+private fun InfoRowIcon(entry: HomeInfoRow) {
+    TintedIconBox(
+        iconKey = entry.iconKey,
+        colorKey = entry.colorKey,
+        size = FintrackScreenSizes.smallIconBox + FintrackTheme.spacing.xxSmall,
+        glyph = FintrackScreenSizes.circleGlyph,
+        corner = FintrackScreenSizes.smallIconCorner,
+    )
+}
+
+// S-03: the label over the caption of an info row
+@Composable
+private fun InfoRowLabels(entry: HomeInfoRow) {
+    val colors = FintrackTheme.colors
+    Text(
+        text = entry.label,
+        style = FintrackScreenText.style(size = 14f, weight = 600),
+        color = colors.texts.onSurface,
+        maxLines = 1,
+    )
+    Text(
+        text = entry.caption,
+        style = FintrackScreenText.style(size = 12f, weight = 400),
+        color = colors.texts.onSurfaceVariant,
+        maxLines = 1,
+        modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
+    )
 }
 
 @Composable

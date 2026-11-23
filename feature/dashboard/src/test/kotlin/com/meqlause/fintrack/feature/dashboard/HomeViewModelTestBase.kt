@@ -1,9 +1,5 @@
 package com.meqlause.fintrack.feature.dashboard
 
-import assertk.assertThat
-import assertk.assertions.isEqualTo
-import assertk.assertions.isInstanceOf
-import assertk.assertions.isNull
 import com.meqlause.fintrack.core.domain.usecase.ObserveBillsCardUseCase
 import com.meqlause.fintrack.core.domain.usecase.ObserveInvestmentPortfolioUseCase
 import com.meqlause.fintrack.core.domain.usecase.ObserveLoansUseCase
@@ -40,15 +36,11 @@ import com.meqlause.fintrack.core.testing.repository.FakeWalletRepository
 import com.meqlause.fintrack.core.testing.time.FakeClock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
-import org.junit.Test
 import java.time.Instant
 
 // FR-040..043, S-03: shared fixtures for the Beranda view model tests; the clock is pinned to 15 Nov 2026 in Jakarta
@@ -79,17 +71,25 @@ abstract class HomeViewModelTestBase {
         )
     }
 
+    // the fakes behind the view model; a test seeds them before it builds the view model
+    protected val settings = FakeSettingsRepository()
+    protected val quickEntries = FakeQuickEntryRepository()
+    protected val inboxItems = FakeInboxRepository()
+
     internal fun viewModel(
         wallets: FakeWalletRepository,
         transactions: FakeTransactionRepository,
     ): HomeViewModel =
         HomeViewModel(
-            wallets = wallets,
-            transactions = transactions,
-            categories = FakeCategoryRepository(),
-            settings = FakeSettingsRepository(),
-            inboxItems = FakeInboxRepository(),
-            quickEntries = FakeQuickEntryRepository(),
+            repositories =
+                HomeRepositories(
+                    wallets = wallets,
+                    transactions = transactions,
+                    categories = FakeCategoryRepository(),
+                    settings = settings,
+                    inboxItems = inboxItems,
+                    quickEntries = quickEntries,
+                ),
             bills =
                 ObserveBillsCardUseCase(
                     wallets,

@@ -5,7 +5,6 @@ import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.domain.period.Period
 import com.meqlause.fintrack.core.domain.period.PeriodCalculator
 import com.meqlause.fintrack.core.model.Appearance
-import com.meqlause.fintrack.core.model.Category
 import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.Transaction
@@ -25,45 +24,34 @@ internal object HomeCalculator {
     private const val RECENT_COUNT = 5
     private const val PERCENT = 100L
 
-    // FR-040..043: the state for one snapshot; hideOverride wins over the stored hide-by-default setting
+    // FR-040..043: the state for one snapshot; the view model applies the hide override and the open drawer
     fun success(
         snapshot: HomeSnapshot,
         card: BillsCard,
         worth: NetWorth,
-        hideOverride: Boolean?,
-        drawer: HomeDrawer?,
         clock: Clock,
     ): HomeUiState.Success {
         val startDay = snapshot.settings.preferences.periodStartDay
         val period = PeriodCalculator.periodContaining(LocalDate.now(clock), startDay)
         val names = snapshot.categories.associate { it.categoryId to it.profile.name }
         val appearances = snapshot.categories.associate { it.categoryId to it.profile.appearance }
-        val walletNames = snapshot.wallets.associate { it.walletId to it.profile.name }
-        val active = snapshot.wallets.filterNot { it.status.isArchived }
         val inPeriod =
             snapshot.transactions.filter {
-                dateOf(it.timing.occurredAt, clock) in
-                    period.startDate..period.endDate
+                dateOf(it.timing.occurredAt, clock) in period.startDate..period.endDate
             }
         return HomeUiState.Success(
-            hidden = hideOverride ?: snapshot.settings.preferences.hideAmountsByDefault,
-            total = worth.saldo,
+            hidden = snapshot.settings.preferences.hideAmountsByDefault,
             netWorth = worth,
-            wallets =
-                active.map {
-                    HomeWallet(
-                        walletId = it.walletId,
-                        name = it.profile.name,
-                        balance = balanceOf(it, snapshot.moneyByWallet),
-                        isCredit = isCreditWallet(it),
-                        appearance = it.profile.appearance,
-                    )
-                },
-            period = periodOf(period, inPeriod),
-            categories = categoryShares(inPeriod, names, appearances),
-            recent = recentOf(snapshot.transactions, names, appearances, walletNames, clock),
-            drawer = drawer,
-            bills = HomeBillsMapper.map(card, clock),
+            drawer = null,
+            ledger =
+                HomeUiState.Success.Ledger(
+                    total = worth.saldo,
+                    wallets = walletsOf(snapshot),
+                    period = periodOf(period, inPeriod),
+                    categories = categoryShares(inPeriod, names, appearances),
+                    recent = recentOf(snapshot, names, appearances, clock),
+                ),
+            extras = HomeUiState.Success.Extras(bills = HomeBillsMapper.toHomeBills(card, clock)),
         )
     }
 
@@ -72,6 +60,20 @@ internal object HomeCalculator {
         part: Money,
         whole: Money,
     ): Int = if (whole.isZero) 0 else (part.rupiah * PERCENT / whole.rupiah).toInt()
+
+    // FR-040: the active wallets as chips, with the balance and the credit flag already computed
+    private fun walletsOf(snapshot: HomeSnapshot): List<HomeWallet> =
+        snapshot.wallets
+            .filterNot { it.status.isArchived }
+            .map {
+                HomeWallet(
+                    walletId = it.walletId,
+                    name = it.profile.name,
+                    balance = balanceOf(it, snapshot.moneyByWallet),
+                    isCredit = isCreditWallet(it),
+                    appearance = it.profile.appearance,
+                )
+            }
 
     private fun isCreditWallet(wallet: Wallet): Boolean =
         wallet.kind.type == WalletType.CREDIT_CARD || wallet.kind.type == WalletType.PAYLATER
@@ -120,27 +122,40 @@ internal object HomeCalculator {
 
     // FR-043: the five newest transactions, newest first
     private fun recentOf(
-        rows: List<Transaction>,
+        snapshot: HomeSnapshot,
         names: Map<CategoryId, String>,
         appearances: Map<CategoryId, Appearance>,
-        walletNames: Map<WalletId, String>,
         clock: Clock,
-    ): List<HomeRecent> =
-        rows
+    ): List<HomeRecent> {
+        val walletNames = snapshot.wallets.associate { it.walletId to it.profile.name }
+        return snapshot.transactions
             .sortedByDescending { it.timing.occurredAt }
             .take(RECENT_COUNT)
             .map { row ->
                 HomeRecent(
                     transactionId = row.transactionId,
                     title = titleOf(row, row.routing.categoryId?.let { names[it] }),
-                    walletName = walletNames[row.routing.walletId].orEmpty(),
-                    whenLabel = whenLabelOf(row.timing.occurredAt, clock),
                     amount = row.movement.amount,
                     type = row.movement.type,
-                    appearance = RowAppearance.of(row.movement.type, row.routing.categoryId?.let(appearances::get)),
-                    auto = row.origin.source == TransactionSource.NOTIFICATION,
+                    stamp =
+                        HomeRecent.Stamp(
+                            walletName = walletNames[row.routing.walletId].orEmpty(),
+                            whenLabel = whenLabelOf(row.timing.occurredAt, clock),
+                        ),
+                    style =
+                        HomeRecent.Style(
+                            appearance = appearanceOf(row, appearances),
+                            auto = row.origin.source == TransactionSource.NOTIFICATION,
+                        ),
                 )
             }
+    }
+
+    // FR-043: the category colour and icon of the row, or the plain type look when it has no category
+    private fun appearanceOf(
+        row: Transaction,
+        appearances: Map<CategoryId, Appearance>,
+    ): Appearance = RowAppearance.of(row.movement.type, row.routing.categoryId?.let(appearances::get))
 
     private fun titleOf(
         transaction: Transaction,

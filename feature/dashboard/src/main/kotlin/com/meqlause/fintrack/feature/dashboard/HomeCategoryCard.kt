@@ -40,44 +40,59 @@ internal fun HomeCategoryCard(
     val expense = state.period.expense
     FintrackCard(modifier = modifier.fillMaxWidth(), onClick = onOpen) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text =
-                        stringResource(
-                            R.string.home_category_title,
-                            DateFormatter.monthShort(state.period.startDate),
-                        ),
-                    style = FintrackTheme.typography.caption,
-                    color = FintrackTheme.colors.texts.onSurfaceVariant,
-                )
-                HomeAmountText(
-                    money = expense,
-                    hidden = state.hidden,
-                    style = FintrackTheme.typography.numberTotal,
-                    modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
-                )
-            }
-            Box(
-                modifier =
-                    Modifier
-                        .size(FintrackTheme.sizes.iconTile)
-                        .clip(FintrackTheme.shapes.full)
-                        .background(FintrackTheme.colors.surfaces.surfaceVariant),
-                contentAlignment = Alignment.Center,
-            ) {
-                Image(
-                    painter = painterResource(DesignR.drawable.ic_chevron_right),
-                    contentDescription = stringResource(R.string.home_category_open),
-                    colorFilter = ColorFilter.tint(FintrackTheme.colors.texts.onSurface),
-                    modifier = Modifier.size(FintrackTheme.sizes.shortcutGlyph),
-                )
-            }
+            CategoryTotal(state = state, modifier = Modifier.weight(1f))
+            OpenChevron()
         }
         CategoryBar(categories = state.categories, modifier = Modifier.padding(top = FintrackTheme.spacing.stack))
         CategoryLegend(
             categories = state.categories.take(TOP_COUNT),
             total = expense,
             modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
+        )
+    }
+}
+
+// FR-042: the month caption over the period expense total, masked when amounts are hidden
+@Composable
+private fun CategoryTotal(
+    state: HomeUiState.Success,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(
+            text =
+                stringResource(
+                    R.string.home_category_title,
+                    DateFormatter.monthShort(state.period.startDate),
+                ),
+            style = FintrackTheme.typography.caption,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
+        HomeAmountText(
+            money = state.period.expense,
+            hidden = state.hidden,
+            style = FintrackTheme.typography.numberTotal,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
+        )
+    }
+}
+
+// S-03: the round chevron that signals the card opens the Kategori drawer
+@Composable
+private fun OpenChevron() {
+    Box(
+        modifier =
+            Modifier
+                .size(FintrackTheme.sizes.iconTile)
+                .clip(FintrackTheme.shapes.full)
+                .background(FintrackTheme.colors.surfaces.surfaceVariant),
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            painter = painterResource(DesignR.drawable.ic_chevron_right),
+            contentDescription = stringResource(R.string.home_category_open),
+            colorFilter = ColorFilter.tint(FintrackTheme.colors.texts.onSurface),
+            modifier = Modifier.size(FintrackTheme.sizes.shortcutGlyph),
         )
     }
 }

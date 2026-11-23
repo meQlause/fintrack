@@ -23,12 +23,11 @@ internal fun HomeHeaderButton(
     iconRes: Int,
     description: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
     showDot: Boolean = false,
 ) {
     Box(
         modifier =
-            modifier
+            Modifier
                 .size(FintrackScreenSizes.iconButton)
                 .clip(FintrackTheme.shapes.full)
                 .clickable(role = Role.Button, onClick = onClick),

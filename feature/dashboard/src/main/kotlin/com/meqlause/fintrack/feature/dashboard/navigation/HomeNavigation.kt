@@ -5,6 +5,7 @@ import androidx.navigation.compose.composable
 import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.model.TransactionId
 import com.meqlause.fintrack.core.model.WalletId
+import com.meqlause.fintrack.feature.dashboard.HomeCallbacks
 import com.meqlause.fintrack.feature.dashboard.HomeRoute
 
 // DOC-09, FR-040..043: registers Beranda in the host graph; every step out of S-03 is handed to the host
@@ -23,20 +24,25 @@ public object HomeNavigation {
         onApplyShortcut: (QuickEntryId) -> Unit,
         onOpenTransaction: (TransactionId) -> Unit,
     ) {
-        builder.composable<HomeDestination> {
-            HomeRoute(
+        val host =
+            HomeCallbacks.Host(
                 onOpenSettings = onOpenSettings,
                 onOpenInbox = onOpenInbox,
                 onOpenWallet = onOpenWallet,
                 onOpenCreditWallet = onOpenCreditWallet,
-                onOpenInstalments = onOpenInstalments,
-                onOpenLoans = onOpenLoans,
                 onOpenWallets = onOpenWallets,
-                onOpenHistory = onOpenHistory,
-                onQuickEntry = onQuickEntry,
-                onApplyShortcut = onApplyShortcut,
                 onOpenTransaction = onOpenTransaction,
             )
+        val entry =
+            HomeCallbacks.Entry(
+                onOpenHistory = onOpenHistory,
+                onOpenInstalments = onOpenInstalments,
+                onOpenLoans = onOpenLoans,
+                onQuickEntry = onQuickEntry,
+                onApplyShortcut = onApplyShortcut,
+            )
+        builder.composable<HomeDestination> {
+            HomeRoute(host = host, entry = entry)
         }
     }
 }

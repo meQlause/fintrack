@@ -59,7 +59,10 @@
         <item quantity="other">%1$d transaksi</item>
     </plurals>
     <string name="home_theme_description">Ganti tema</string>
-    <string name="home_inbox_banner">%1$d terdeteksi</string>
+    <plurals name="home_inbox_banner">
+        <item quantity="one">%1$d terdeteksi</item>
+        <item quantity="other">%1$d terdeteksi</item>
+    </plurals>
     <string name="home_bills_title">Tagihan</string>
     <string name="home_bills_instalments">Cicilan bulan ini</string>
     <string name="home_bills_loans">Pinjaman</string>

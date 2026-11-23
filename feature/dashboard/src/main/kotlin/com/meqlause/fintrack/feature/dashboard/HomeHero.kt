@@ -37,32 +37,40 @@ internal fun HomeHero(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Column(modifier = Modifier.padding(horizontal = FintrackTheme.spacing.gutter)) {
-            HomeHeroLabel(hidden = state.hidden, onToggle = callbacks.onToggleHidden)
-            Box(modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall)) {
-                if (state.hidden) {
-                    HeroAmount(formatted = stringResource(R.string.home_amount_hidden))
-                } else {
-                    CountUpMoney(money = state.total)
-                }
-            }
-            HomeNetPill(
-                netAmount = state.period.netTotal,
-                hidden = state.hidden,
-                onClick = callbacks.onOpenSummary,
-                modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
-            )
-            HomeWalletShareBar(
-                wallets = state.wallets,
-                modifier = Modifier.padding(top = FintrackTheme.spacing.section),
-            )
-        }
+        HeroSaldo(state = state, callbacks = callbacks)
         HomeWalletRow(
             wallets = state.wallets,
             hidden = state.hidden,
-            onOpenWallet = callbacks.onOpenWallet,
-            onOpenCreditWallet = callbacks.onOpenCreditWallet,
+            callbacks = callbacks,
             modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
+        )
+    }
+}
+
+// FR-040: the Saldo label, the balance, the summary pill and the wallet share bar, inset by the gutter
+@Composable
+private fun HeroSaldo(
+    state: HomeUiState.Success,
+    callbacks: HomeCallbacks,
+) {
+    Column(modifier = Modifier.padding(horizontal = FintrackTheme.spacing.gutter)) {
+        HomeHeroLabel(hidden = state.hidden, onToggle = callbacks.onToggleHidden)
+        Box(modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall)) {
+            if (state.hidden) {
+                HeroAmount(formatted = stringResource(R.string.home_amount_hidden))
+            } else {
+                CountUpMoney(money = state.total)
+            }
+        }
+        HomeNetPill(
+            netAmount = state.period.netTotal,
+            hidden = state.hidden,
+            onClick = callbacks.onOpenSummary,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
+        )
+        HomeWalletShareBar(
+            wallets = state.wallets,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.section),
         )
     }
 }

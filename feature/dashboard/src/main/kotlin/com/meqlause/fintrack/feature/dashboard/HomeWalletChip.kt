@@ -28,12 +28,11 @@ internal fun HomeWalletChip(
     hidden: Boolean,
     percent: Int,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     val shape = FintrackTheme.shapes.medium
     Column(
         modifier =
-            modifier
+            Modifier
                 .width(FintrackTheme.sizes.walletTileWidth)
                 .clip(shape)
                 .border(FintrackTheme.sizes.hairline, FintrackTheme.colors.surfaces.outline, shape)
@@ -41,24 +40,7 @@ internal fun HomeWalletChip(
                 .clickable(role = Role.Button, onClick = onClick)
                 .padding(FintrackTheme.spacing.medium),
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            IconCircle(
-                iconKey = wallet.appearance.iconKey,
-                colorKey = wallet.appearance.colorKey,
-                size = FintrackTheme.sizes.walletChipIcon,
-                glyph = FintrackTheme.sizes.walletChipGlyph,
-                shape = FintrackTheme.shapes.walletIcon,
-            )
-            Text(
-                text = stringResource(R.string.home_percent, percent),
-                style = FintrackTheme.typography.micro,
-                color = FintrackTheme.colors.texts.faint,
-            )
-        }
+        WalletChipHeader(wallet = wallet, percent = percent)
         Text(
             text = wallet.name,
             modifier = Modifier.padding(top = FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall),
@@ -67,18 +49,51 @@ internal fun HomeWalletChip(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
+        WalletChipBalance(wallet = wallet, hidden = hidden)
+    }
+}
+
+// FR-040: the wallet icon on the left and its share of the total on the right
+@Composable
+private fun WalletChipHeader(
+    wallet: HomeWallet,
+    percent: Int,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        IconCircle(
+            iconKey = wallet.appearance.iconKey,
+            colorKey = wallet.appearance.colorKey,
+            size = FintrackTheme.sizes.walletChipIcon,
+            glyph = FintrackTheme.sizes.walletChipGlyph,
+            shape = FintrackTheme.shapes.walletIcon,
+        )
         Text(
-            text =
-                if (hidden) {
-                    stringResource(
-                        R.string.home_amount_hidden,
-                    )
-                } else {
-                    MoneyFormatter.formatShort(wallet.balance)
-                },
-            style = FintrackTheme.typography.numberSmall,
-            color = FintrackTheme.colors.texts.onSurface,
-            maxLines = 1,
+            text = stringResource(R.string.home_percent, percent),
+            style = FintrackTheme.typography.micro,
+            color = FintrackTheme.colors.texts.faint,
         )
     }
+}
+
+// FR-040: the compact balance, or the hidden mask when amounts are hidden
+@Composable
+private fun WalletChipBalance(
+    wallet: HomeWallet,
+    hidden: Boolean,
+) {
+    Text(
+        text =
+            if (hidden) {
+                stringResource(R.string.home_amount_hidden)
+            } else {
+                MoneyFormatter.formatShort(wallet.balance)
+            },
+        style = FintrackTheme.typography.numberSmall,
+        color = FintrackTheme.colors.texts.onSurface,
+        maxLines = 1,
+    )
 }

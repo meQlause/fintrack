@@ -39,29 +39,7 @@ internal fun HomeBillRow(
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
         IconCircle(iconKey = bill.appearance.iconKey, colorKey = bill.appearance.colorKey)
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = bill.name,
-                style = FintrackTheme.typography.labelLarge,
-                color = FintrackTheme.colors.texts.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Text(
-                text = dueText(bill),
-                style = FintrackTheme.typography.labelMedium,
-                color =
-                    if (bill.status ==
-                        StatementStatus.PAID
-                    ) {
-                        FintrackTheme.colors.texts.onSurfaceVariant
-                    } else {
-                        statusColor(bill.status)
-                    },
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
+        BillName(bill = bill, modifier = Modifier.weight(1f))
         Column(horizontalAlignment = Alignment.End) {
             HomeAmountText(
                 money = bill.amount,
@@ -72,6 +50,35 @@ internal fun HomeBillRow(
         }
     }
 }
+
+// FR-137: the bill name over its due line; a paid bill keeps the due line in the muted text colour
+@Composable
+private fun BillName(
+    bill: HomeBill,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = bill.name,
+            style = FintrackTheme.typography.labelLarge,
+            color = FintrackTheme.colors.texts.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Text(
+            text = dueText(bill),
+            style = FintrackTheme.typography.labelMedium,
+            color = dueColor(bill.status),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+    }
+}
+
+// FR-137: the due line is muted once the bill is paid, otherwise it takes the status colour
+@Composable
+private fun dueColor(status: StatementStatus): Color =
+    if (status == StatementStatus.PAID) FintrackTheme.colors.texts.onSurfaceVariant else statusColor(status)
 
 // FR-137, BR-034: the due line of a bill in the words of its status
 @Composable

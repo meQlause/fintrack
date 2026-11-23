@@ -9,10 +9,20 @@ import com.meqlause.fintrack.core.model.TransactionType
 internal data class HomeRecent(
     val transactionId: TransactionId,
     val title: String?,
-    val walletName: String,
-    val whenLabel: String,
     val amount: Money,
     val type: TransactionType,
-    val appearance: Appearance = Appearance("other", "gray"),
-    val auto: Boolean = false,
-)
+    val stamp: Stamp,
+    val style: Style = Style(),
+) {
+    // FR-043: the wallet and the time of day that make up the row subtitle
+    data class Stamp(
+        val walletName: String,
+        val whenLabel: String,
+    )
+
+    // FR-043: the category look of the row and whether a notification created it
+    data class Style(
+        val appearance: Appearance = Appearance("other", "gray"),
+        val auto: Boolean = false,
+    )
+}

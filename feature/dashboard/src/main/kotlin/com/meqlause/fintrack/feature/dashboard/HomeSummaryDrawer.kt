@@ -22,37 +22,46 @@ internal fun HomeSummaryDrawer(
 private fun summaryContent(state: HomeUiState.Success): HomeInfoContent {
     val show = Shown(hidden = state.hidden, mask = stringResource(R.string.home_amount_hidden))
     val worth = state.netWorth
-    val month =
-        state.period.startDate.month
-            .getDisplayName(TextStyle.FULL, Locale.forLanguageTag("id"))
-    val gap = state.period.income - state.period.expense
     return HomeInfoContent(
         title = stringResource(R.string.home_summary_title),
         heroLabel = stringResource(R.string.home_summary_net_worth),
         heroValue = show.plain(worth.total),
         heroNote = stringResource(R.string.home_summary_net_note),
-        sections =
-            listOf(
-                HomeInfoSection(
-                    title = stringResource(R.string.home_summary_month, month),
-                    total = stringResource(R.string.home_summary_gap, show.signed(gap, plus = true)),
-                    tone = if (gap.rupiah >= 0L) HomeTone.INCOME else HomeTone.EXPENSE,
-                    rows = monthRows(state, show),
-                ),
-                HomeInfoSection(
-                    title = stringResource(R.string.home_summary_assets),
-                    total = show.plain(worth.assets),
-                    tone = HomeTone.INCOME,
-                    rows = assetRows(state, show),
-                ),
-                HomeInfoSection(
-                    title = stringResource(R.string.home_summary_debts),
-                    total = show.signed(worth.debts, plus = false),
-                    tone = HomeTone.EXPENSE,
-                    rows = debtRows(state, show),
-                ),
-            ),
+        sections = summarySections(state, show),
         actionLabel = stringResource(R.string.home_summary_action),
+    )
+}
+
+// S-03: the month gap, the assets and the debts, in the order the drawer shows them
+@Composable
+private fun summarySections(
+    state: HomeUiState.Success,
+    show: Shown,
+): List<HomeInfoSection> {
+    val worth = state.netWorth
+    val difference = state.period.income - state.period.expense
+    val month =
+        state.period.startDate.month
+            .getDisplayName(TextStyle.FULL, Locale.forLanguageTag("id"))
+    return listOf(
+        HomeInfoSection(
+            title = stringResource(R.string.home_summary_month, month),
+            total = stringResource(R.string.home_summary_gap, show.signed(difference, plus = true)),
+            tone = if (difference.rupiah >= 0L) HomeTone.INCOME else HomeTone.EXPENSE,
+            rows = monthRows(state, show),
+        ),
+        HomeInfoSection(
+            title = stringResource(R.string.home_summary_assets),
+            total = show.plain(worth.assets),
+            tone = HomeTone.INCOME,
+            rows = assetRows(state, show),
+        ),
+        HomeInfoSection(
+            title = stringResource(R.string.home_summary_debts),
+            total = show.signed(worth.debts, plus = false),
+            tone = HomeTone.EXPENSE,
+            rows = debtRows(state, show),
+        ),
     )
 }
 
@@ -89,36 +98,54 @@ private fun assetRows(
     val worth = state.netWorth
     val rows =
         listOf(
-            worth.saldo to
-                HomeInfoRow(
-                    stringResource(R.string.home_summary_saldo),
-                    stringResource(R.string.home_summary_saldo_sub),
-                    show.plain(worth.saldo),
-                    HomeTone.NORMAL,
-                    "wallet",
-                    "teal",
-                ),
-            worth.investasi to
-                HomeInfoRow(
-                    stringResource(R.string.home_summary_investment),
-                    stringResource(R.string.home_summary_investment_sub),
-                    show.plain(worth.investasi),
-                    HomeTone.NORMAL,
-                    "trend",
-                    "indigo",
-                ),
-            worth.piutang to
-                HomeInfoRow(
-                    stringResource(R.string.home_summary_receivable),
-                    stringResource(R.string.home_summary_receivable_sub),
-                    show.plain(worth.piutang),
-                    HomeTone.NORMAL,
-                    "person",
-                    "cyan",
-                ),
+            worth.saldo to saldoRow(show, worth.saldo),
+            worth.investasi to investmentRow(show, worth.investasi),
+            worth.piutang to receivableRow(show, worth.piutang),
         )
     return rows.sortedByDescending { it.first.rupiah }.map { it.second }
 }
+
+@Composable
+private fun saldoRow(
+    show: Shown,
+    amount: Money,
+): HomeInfoRow =
+    HomeInfoRow(
+        stringResource(R.string.home_summary_saldo),
+        stringResource(R.string.home_summary_saldo_sub),
+        show.plain(amount),
+        HomeTone.NORMAL,
+        "wallet",
+        "teal",
+    )
+
+@Composable
+private fun investmentRow(
+    show: Shown,
+    amount: Money,
+): HomeInfoRow =
+    HomeInfoRow(
+        stringResource(R.string.home_summary_investment),
+        stringResource(R.string.home_summary_investment_sub),
+        show.plain(amount),
+        HomeTone.NORMAL,
+        "trend",
+        "indigo",
+    )
+
+@Composable
+private fun receivableRow(
+    show: Shown,
+    amount: Money,
+): HomeInfoRow =
+    HomeInfoRow(
+        stringResource(R.string.home_summary_receivable),
+        stringResource(R.string.home_summary_receivable_sub),
+        show.plain(amount),
+        HomeTone.NORMAL,
+        "person",
+        "cyan",
+    )
 
 @Composable
 private fun debtRows(

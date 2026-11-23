@@ -15,6 +15,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
+import java.time.LocalDate
 
 // FR-040, S-03: the hide toggle of the hero reports its tap; the wallet state is not needed for it
 @RunWith(RobolectricTestRunner::class)
@@ -27,37 +28,48 @@ class HomeScreenUiTest {
     @Test
     fun givenAmountsShownWhenToggleTappedThenToggleCallbackFires() {
         var toggled = false
-        composeRule.setContent {
-            FintrackTheme(darkTheme = false) {
-                HomeScreen(
-                    state =
-                        HomeUiState.Success(
-                            hidden = false,
-                            total = Money(1_000_000L),
-                            netWorth = NetWorth(Money(1_000_000L), Money(0L), Money(0L), Money(0L), Money(0L)),
-                            wallets = emptyList(),
-                            period =
-                                HomePeriod(
-                                    startDate = java.time.LocalDate.of(2026, 11, 1),
-                                    endDate = java.time.LocalDate.of(2026, 11, 30),
-                                    income = Money(0L),
-                                    expense = Money(0L),
-                                ),
-                            categories = emptyList(),
-                            recent = emptyList(),
-                            drawer = null,
-                        ),
-                    callbacks = HomeCallbacks(onToggleHidden = { toggled = true }),
-                )
-            }
-        }
+        val callbacks = HomeCallbacks(screen = HomeCallbacks.Screen(onToggleHidden = { toggled = true }))
+        setHome(emptyState(), callbacks)
 
-        val label =
-            ApplicationProvider
-                .getApplicationContext<Context>()
-                .getString(R.string.home_hide_amounts)
-        composeRule.onNodeWithContentDescription(label).performClick()
+        composeRule.onNodeWithContentDescription(label(R.string.home_hide_amounts)).performClick()
 
         assertTrue(toggled)
+    }
+
+    private fun setHome(
+        state: HomeUiState.Success,
+        callbacks: HomeCallbacks,
+    ) {
+        composeRule.setContent {
+            FintrackTheme(darkTheme = false) {
+                HomeScreen(state = state, callbacks = callbacks)
+            }
+        }
+    }
+
+    private fun label(resId: Int): String = ApplicationProvider.getApplicationContext<Context>().getString(resId)
+
+    private fun emptyState(): HomeUiState.Success {
+        val zero = Money(0L)
+        return HomeUiState.Success(
+            hidden = false,
+            netWorth = NetWorth(Money(1_000_000L), zero, zero, zero, zero),
+            drawer = null,
+            ledger =
+                HomeUiState.Success.Ledger(
+                    total = Money(1_000_000L),
+                    wallets = emptyList(),
+                    period =
+                        HomePeriod(
+                            startDate = LocalDate.of(2026, 11, 1),
+                            endDate = LocalDate.of(2026, 11, 30),
+                            income = zero,
+                            expense = zero,
+                        ),
+                    categories = emptyList(),
+                    recent = emptyList(),
+                ),
+            extras = HomeUiState.Success.Extras(),
+        )
     }
 }
