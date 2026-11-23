@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-08, FR-120, FR-121: Indonesian copy of S-12 Pengaturan -->
+<resources>
+    <string name="settings_title">Pengaturan</string>
+    <string name="settings_back">Kembali</string>
+    <string name="settings_section_general">Umum</string>
+    <string name="settings_section_data">Data</string>
+    <string name="settings_theme_label">Tampilan</string>
+    <string name="settings_theme_sheet_title">Tampilan</string>
+    <string name="settings_theme_system">Sistem</string>
+    <string name="settings_theme_light">Terang</string>
+    <string name="settings_theme_dark">Gelap</string>
+    <string name="settings_period_label">Awal periode</string>
+    <string name="settings_period_sheet_title">Awal periode</string>
+    <string name="settings_period_value">Tanggal %1$d</string>
+    <string name="settings_categories_label">Kategori</string>
+</resources>

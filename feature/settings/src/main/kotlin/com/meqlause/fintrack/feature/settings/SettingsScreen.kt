@@ -1,0 +1,94 @@
+package com.meqlause.fintrack.feature.settings
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.FintrackCard
+import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
+import com.meqlause.fintrack.core.designsystem.component.FormRow
+import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.feature.settings.R
+
+// FR-120, FR-121, S-12: stateless Pengaturan screen; rows and the open drawer come from SettingsUiState
+@Composable
+internal fun SettingsScreen(
+    state: SettingsUiState,
+    callbacks: SettingsCallbacks,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(FintrackTheme.colors.surfaces.background)
+                .padding(horizontal = FintrackTheme.spacing.large),
+        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+    ) {
+        FintrackTabHeader(
+            title = stringResource(R.string.settings_title),
+            leading = { BackLabel(onBack = callbacks.onBack) },
+        )
+        Column(
+            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
+        ) {
+            SettingsSection(title = stringResource(R.string.settings_section_general)) {
+                FormRow(
+                    label = stringResource(R.string.settings_theme_label),
+                    value = themeLabel(state.themeMode),
+                    onClick = { callbacks.onOpenSheet(SettingsSheet.THEME) },
+                )
+                FormRow(
+                    label = stringResource(R.string.settings_period_label),
+                    value = stringResource(R.string.settings_period_value, state.periodStartDay),
+                    onClick = { callbacks.onOpenSheet(SettingsSheet.PERIOD_DAY) },
+                )
+            }
+            SettingsSection(title = stringResource(R.string.settings_section_data)) {
+                FormRow(
+                    label = stringResource(R.string.settings_categories_label),
+                    value = "",
+                    onClick = callbacks.onOpenCategories,
+                )
+            }
+        }
+    }
+    SettingsSheetHost(state = state, callbacks = callbacks)
+}
+
+// FR-120, FR-121: a grey section label above its rows
+@Composable
+private fun SettingsSection(
+    title: String,
+    content: @Composable () -> Unit,
+) {
+    Column {
+        Text(
+            text = title,
+            style = FintrackTheme.typography.labelLarge,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
+        content()
+    }
+}
+
+// S-12: the back action of the header, shared look with the Kategori screen
+@Composable
+private fun BackLabel(onBack: () -> Unit) {
+    FintrackCard(onClick = onBack) {
+        Text(
+            text = stringResource(R.string.settings_back),
+            style = FintrackTheme.typography.labelLarge,
+            color = FintrackTheme.colors.texts.onSurface,
+        )
+    }
+}

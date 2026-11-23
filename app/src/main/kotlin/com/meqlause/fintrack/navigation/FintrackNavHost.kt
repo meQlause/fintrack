@@ -6,9 +6,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.meqlause.fintrack.feature.category.navigation.CategoryDestination
 import com.meqlause.fintrack.feature.category.navigation.categoryDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
+import com.meqlause.fintrack.feature.settings.navigation.SettingsDestination
+import com.meqlause.fintrack.feature.settings.navigation.settingsDestination
 import com.meqlause.fintrack.feature.wallet.navigation.walletDestination
 import com.meqlause.fintrack.tab.PlaceholderTabScreen
 
@@ -41,10 +44,19 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         // FR-003: the PIN setup screen arrives with feature:lock (T8.1); until then the offer does nothing
         onSetupPin = {},
     )
-    composable<HomeRoute> { PlaceholderTabScreen(mainTab = MainTab.HOME) }
+    composable<HomeRoute> {
+        PlaceholderTabScreen(
+            mainTab = MainTab.HOME,
+            onSettingsClick = { navController.navigate(SettingsDestination) },
+        )
+    }
     composable<HistoryRoute> { PlaceholderTabScreen(mainTab = MainTab.HISTORY) }
     composable<InvestmentRoute> { PlaceholderTabScreen(mainTab = MainTab.INVESTMENT) }
     walletDestination()
-    // DOC-09, FR-020: Kategori is reached from Settings > Data (T4.11 adds the entry point)
+    // DOC-09, S-12: Pengaturan is opened from the Beranda header; its Kategori row leads to S-10 (FR-020)
+    settingsDestination(
+        onBack = { navController.popBackStack() },
+        onOpenCategories = { navController.navigate(CategoryDestination) },
+    )
     categoryDestination(onBack = { navController.popBackStack() })
 }

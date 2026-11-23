@@ -12,10 +12,14 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 @Composable
 internal fun TabHeaderSample() {
     Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.large)) {
-        FintrackTabHeader(title = stringResource(R.string.token_sample_brand)) { FintrackLogo() }
-        FintrackTabHeader(title = stringResource(R.string.sample_tab_history)) {
-            IconTile(iconRes = R.drawable.ic_history)
-        }
+        FintrackTabHeader(
+            title = stringResource(R.string.token_sample_brand),
+            leading = { FintrackLogo() },
+        )
+        FintrackTabHeader(
+            title = stringResource(R.string.sample_tab_history),
+            leading = { IconTile(iconRes = R.drawable.ic_history) },
+        )
     }
 }
 
