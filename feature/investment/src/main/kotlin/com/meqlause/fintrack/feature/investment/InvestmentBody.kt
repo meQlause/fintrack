@@ -1,21 +1,23 @@
 package com.meqlause.fintrack.feature.investment
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
-import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.designsystem.component.ScreenGroup
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.domain.investment.InvestmentPortfolio
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.feature.investment.component.AccountRow
 import com.meqlause.fintrack.feature.investment.component.ActivityRow
-import com.meqlause.fintrack.feature.investment.component.PortfolioCard
+import com.meqlause.fintrack.feature.investment.component.AllocationCard
+import com.meqlause.fintrack.feature.investment.component.PortfolioHero
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // S-08: the list area; while loading it is blank, without accounts it shows the empty state
@@ -56,30 +58,31 @@ private fun PortfolioList(
     val names = portfolio.accounts.associate { it.wallet.walletId to it.wallet.profile.name }
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+        contentPadding = PaddingValues(bottom = FintrackScreenSizes.screenBottom),
     ) {
-        item { PortfolioCard(portfolio = portfolio) }
-        item { SectionTitle(text = stringResource(R.string.investment_accounts_title)) }
-        items(portfolio.accounts, key = { it.wallet.walletId.value }) { account ->
-            AccountRow(account = account, onClick = { onOpenAccount(account.wallet.walletId) })
+        item { PortfolioHero(portfolio = portfolio) }
+        item { AllocationCard(portfolio = portfolio, modifier = Modifier.padding(top = FintrackScreenSizes.screenTop + 2.dp)) }
+        item {
+            ScreenGroup(label = stringResource(R.string.investment_accounts_title)) {
+                portfolio.accounts.forEachIndexed { index, account ->
+                    AccountRow(
+                        account = account,
+                        showDivider = index > 0,
+                        onClick = { onOpenAccount(account.wallet.walletId) },
+                    )
+                }
+            }
         }
-        item { SectionTitle(text = stringResource(R.string.investment_activity_title)) }
-        if (portfolio.recent.isEmpty()) {
-            item { Text(text = stringResource(R.string.investment_activity_none)) }
-        }
-        items(portfolio.recent) { activity ->
-            ActivityRow(activity = activity, subtitle = names[activity.walletId].orEmpty())
+        item {
+            ScreenGroup(label = stringResource(R.string.investment_activity_title)) {
+                portfolio.recent.forEachIndexed { index, activity ->
+                    ActivityRow(
+                        activity = activity,
+                        accountName = names[activity.walletId].orEmpty(),
+                        showDivider = index > 0,
+                    )
+                }
+            }
         }
     }
-}
-
-// S-08: a heading above one group of rows
-@Composable
-internal fun SectionTitle(text: String) {
-    Text(
-        text = text,
-        modifier = Modifier.fillMaxWidth(),
-        style = FintrackTheme.typography.labelLarge,
-        color = FintrackTheme.colors.texts.onSurface,
-    )
 }

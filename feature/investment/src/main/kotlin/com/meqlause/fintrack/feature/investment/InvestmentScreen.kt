@@ -1,16 +1,18 @@
 package com.meqlause.fintrack.feature.investment
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FintrackButton
 import com.meqlause.fintrack.core.designsystem.component.FintrackTabHeader
 import com.meqlause.fintrack.core.designsystem.component.IconTile
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.investment.component.CreateInvestmentSheet
 import com.meqlause.fintrack.feature.investment.component.KindPickerDrawer
@@ -28,19 +30,19 @@ internal fun InvestmentScreen(
             modifier
                 .fillMaxSize()
                 .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+                .padding(horizontal = FintrackScreenSizes.screenGutter)
+                .padding(top = FintrackScreenSizes.screenTop),
     ) {
         FintrackTabHeader(
             title = stringResource(R.string.investment_tab_title),
             leading = { IconTile(iconRes = DesignR.drawable.ic_trend) },
+            trailing = { AddButton(onAdd = callbacks.onAdd) },
         )
         InvestmentBody(
             portfolio = state.portfolio,
             onOpenAccount = callbacks.onOpenAccount,
             modifier = Modifier.weight(1f),
         )
-        FintrackButton(text = stringResource(R.string.investment_add), onClick = callbacks.onAdd)
         state.draft?.let { draft ->
             if (draft.kindPickerOpen) {
                 KindPickerDrawer(selected = draft.kind, callbacks = callbacks)
@@ -48,5 +50,17 @@ internal fun InvestmentScreen(
                 CreateInvestmentSheet(draft = draft, callbacks = callbacks)
             }
         }
+    }
+}
+
+// S-08: the "+" at the right of the header opens the creation sheet
+@Composable
+private fun AddButton(onAdd: () -> Unit) {
+    IconButton(onClick = onAdd) {
+        Icon(
+            painter = painterResource(DesignR.drawable.ic_plus),
+            contentDescription = stringResource(R.string.investment_add_description),
+            tint = FintrackTheme.colors.texts.onSurface,
+        )
     }
 }
