@@ -8,7 +8,6 @@ plugins {
 // Remove a module from this list in the task that adds its first Android code.
 val emptyAndroidModules =
     listOf(
-        ":core:backup",
         ":core:testing",
         ":feature:budget",
         ":feature:credit",

@@ -72,6 +72,18 @@ internal fun SettingsScreen(
                     onClick = callbacks.onOpenMonitoredApps,
                 )
             }
+            SettingsSection(title = stringResource(R.string.settings_section_backup)) {
+                FormRow(
+                    label = stringResource(R.string.settings_backup_create_label),
+                    value = "",
+                    onClick = callbacks.onBackupCreate,
+                )
+                FormRow(
+                    label = stringResource(R.string.settings_backup_restore_label),
+                    value = "",
+                    onClick = callbacks.onBackupRestore,
+                )
+            }
         }
     }
     SettingsSheetHost(state = state, callbacks = callbacks)

@@ -6,6 +6,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":core:backup"))
     implementation(project(":core:common"))
     implementation(project(":core:data"))
     implementation(project(":core:database"))

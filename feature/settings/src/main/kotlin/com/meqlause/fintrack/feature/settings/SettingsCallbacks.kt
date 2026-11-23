@@ -12,4 +12,6 @@ internal data class SettingsCallbacks(
     val onPickThemeMode: (ThemeMode) -> Unit = {},
     val onPickPeriodStartDay: (Int) -> Unit = {},
     val onDismissSheet: () -> Unit = {},
+    val onBackupCreate: () -> Unit = {},
+    val onBackupRestore: () -> Unit = {},
 )

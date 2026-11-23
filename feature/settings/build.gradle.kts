@@ -19,6 +19,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.navigation.compose)
+    implementation(libs.activity.compose)
     implementation(libs.serialization.core)
     implementation(libs.coroutines.core)
     implementation(libs.dagger)

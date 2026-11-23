@@ -1,0 +1,124 @@
+package com.meqlause.fintrack.core.backup
+
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isNull
+import com.meqlause.fintrack.core.common.time.ClockProvider
+import com.meqlause.fintrack.core.domain.backup.BackupFailure
+import com.meqlause.fintrack.core.domain.repository.BackupFiles
+import com.meqlause.fintrack.core.domain.repository.BackupStore
+import com.meqlause.fintrack.core.domain.repository.SettingsRepository
+import com.meqlause.fintrack.core.model.BackupAdjunct
+import com.meqlause.fintrack.core.model.BackupLedger
+import com.meqlause.fintrack.core.model.BackupSnapshot
+import com.meqlause.fintrack.core.model.Settings
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.runBlocking
+import org.junit.Test
+import java.time.Clock
+import java.time.ZoneOffset
+
+// FR-110, FR-111: export proves itself, a wrong password changes nothing, and a restore replaces the store
+class FileBackupRepositoryTest {
+    private val password = "rahasia-123"
+    private val store = FakeBackupStore()
+    private val settings = FakeSettings()
+    private val files = FakeBackupFiles()
+    private val clock =
+        object : ClockProvider {
+            override fun clock(): Clock = Clock.fixed(SampleSnapshot.now, ZoneOffset.UTC)
+        }
+    private val repository = FileBackupRepository(store, settings, files, clock, Dispatchers.Unconfined, "1.0.0")
+
+    @Test
+    fun exportThenReadThenRestoreKeepsEveryTable() =
+        runBlocking {
+            store.replaceAll(SampleSnapshot.build())
+            repository.export(URI, password)
+            assertThat(settings.current.backup.lastBackupAt).isEqualTo(SampleSnapshot.now)
+
+            store.replaceAll(emptySnapshot())
+            val read = repository.readBackup(URI, password)
+            repository.restore(read)
+
+            assertThat(store.current).isEqualTo(SampleSnapshot.build())
+        }
+
+    @Test
+    fun wrongPasswordLeavesTheStoreUntouched() =
+        runBlocking {
+            store.replaceAll(SampleSnapshot.build())
+            repository.export(URI, password)
+            val before = store.current
+            assertThat(failureOf { runBlocking { repository.readBackup(URI, "salah-sandi") } })
+                .isEqualTo(BackupFailure.WRONG_PASSWORD)
+            assertThat(store.current).isEqualTo(before)
+        }
+
+    @Test
+    fun shortPasswordIsRefusedBeforeWriting() =
+        runBlocking {
+            store.replaceAll(SampleSnapshot.build())
+            assertThat(failureOf { runBlocking { repository.export(URI, "pendek") } })
+                .isEqualTo(BackupFailure.PASSWORD_TOO_SHORT)
+            assertThat(files.stored).isNull()
+        }
+
+    private fun emptySnapshot(): BackupSnapshot =
+        BackupSnapshot(
+            createdAt = SampleSnapshot.now,
+            ledger = BackupLedger(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()),
+            adjunct = BackupAdjunct(emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()),
+            preferences =
+                com.meqlause.fintrack.core.model
+                    .Preferences(),
+            backupReminderDays = 0,
+        )
+
+    private companion object {
+        const val URI = "content://test/backup.fintrack"
+    }
+}
+
+internal class FakeBackupStore : BackupStore {
+    var current: BackupSnapshot = SampleSnapshot.build()
+
+    override suspend fun read(): Pair<BackupLedger, BackupAdjunct> = current.ledger to current.adjunct
+
+    override suspend fun replaceAll(snapshot: BackupSnapshot) {
+        current = snapshot
+    }
+}
+
+internal class FakeSettings : SettingsRepository {
+    private val state = MutableStateFlow(Settings())
+    val current: Settings get() = state.value
+
+    override fun observe(): StateFlow<Settings> = state
+
+    override suspend fun update(transform: (Settings) -> Settings) {
+        state.value = transform(state.value)
+    }
+}
+
+internal class FakeBackupFiles : BackupFiles {
+    var stored: ByteArray? = null
+
+    override suspend fun read(
+        uri: String,
+        maxBytes: Long,
+    ): ByteArray = checkNotNull(stored)
+
+    override suspend fun write(
+        uri: String,
+        bytes: ByteArray,
+    ) {
+        stored = bytes
+    }
+
+    override suspend fun delete(uri: String) {
+        stored = null
+    }
+}
