@@ -19,6 +19,10 @@ public class FakeMonitoredAppRepository : MonitoredAppRepository {
         apps.update { it + monitoredApp }
     }
 
+    override suspend fun upsert(monitoredApp: MonitoredApp) {
+        apps.update { list -> list.filterNot { it.packageName == monitoredApp.packageName } + monitoredApp }
+    }
+
     override suspend fun find(packageName: String): MonitoredApp? =
         apps.value.firstOrNull { it.packageName == packageName }
 

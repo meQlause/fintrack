@@ -427,7 +427,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(parser): add bca, gopay and dana parsers [P5, FR-083]`
 
 ### T5.4 — Listener service, monitored apps, diagnostics
-- [ ] done · Refs: FR-080 … FR-082, FR-090, DOC-07 (Android service details) · Commit: `feat(notification): add notification listener [P5, FR-080]`
+- [x] done · Refs: FR-080 … FR-082, FR-090, DOC-07 (Android service details) · Commit: `feat(notification): add notification listener [P5, FR-080]`
 
 ### T5.5 — Detection pipeline
 - [x] done · Refs: FR-084, FR-086, FR-088, FR-091, BR-011 … BR-013 · fingerprint dedup, merchant memory, pairing.

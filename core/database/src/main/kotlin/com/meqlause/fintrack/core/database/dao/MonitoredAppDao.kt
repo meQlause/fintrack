@@ -2,6 +2,7 @@ package com.meqlause.fintrack.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.meqlause.fintrack.core.database.entity.MonitoredAppEntity
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +13,10 @@ interface MonitoredAppDao {
     /** FR-090: registers a notification source keyed by its package name. */
     @Insert
     suspend fun insert(monitoredApp: MonitoredAppEntity)
+
+    /** FR-081, FR-082: stores a monitored app, replacing the row with the same package name. */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(monitoredApp: MonitoredAppEntity)
 
     /** FR-090: the monitored app with this package name, or null when it is not registered. */
     @Query("SELECT * FROM monitored_app WHERE packageName = :packageName LIMIT 1")

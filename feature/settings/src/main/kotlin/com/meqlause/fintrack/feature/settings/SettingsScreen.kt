@@ -60,6 +60,13 @@ internal fun SettingsScreen(
                     onClick = callbacks.onOpenCategories,
                 )
             }
+            SettingsSection(title = stringResource(R.string.settings_section_detection)) {
+                FormRow(
+                    label = stringResource(R.string.settings_monitored_label),
+                    value = "",
+                    onClick = callbacks.onOpenMonitoredApps,
+                )
+            }
         }
     }
     SettingsSheetHost(state = state, callbacks = callbacks)
@@ -67,7 +74,7 @@ internal fun SettingsScreen(
 
 // FR-120, FR-121: a grey section label above its rows
 @Composable
-private fun SettingsSection(
+internal fun SettingsSection(
     title: String,
     content: @Composable () -> Unit,
 ) {
@@ -83,7 +90,7 @@ private fun SettingsSection(
 
 // S-12: the back action of the header, shared look with the Kategori screen
 @Composable
-private fun BackLabel(onBack: () -> Unit) {
+internal fun BackLabel(onBack: () -> Unit) {
     FintrackCard(onClick = onBack) {
         Text(
             text = stringResource(R.string.settings_back),

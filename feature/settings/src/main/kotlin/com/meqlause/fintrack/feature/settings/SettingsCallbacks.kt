@@ -7,6 +7,7 @@ internal data class SettingsCallbacks(
     val onBack: () -> Unit = {},
     val onOpenSheet: (SettingsSheet) -> Unit = {},
     val onOpenCategories: () -> Unit = {},
+    val onOpenMonitoredApps: () -> Unit = {},
     val onPickThemeMode: (ThemeMode) -> Unit = {},
     val onPickPeriodStartDay: (Int) -> Unit = {},
     val onDismissSheet: () -> Unit = {},

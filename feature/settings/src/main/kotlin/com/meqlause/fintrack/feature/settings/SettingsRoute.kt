@@ -10,6 +10,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 internal fun SettingsRoute(
     onBack: () -> Unit,
     onOpenCategories: () -> Unit,
+    onOpenMonitoredApps: () -> Unit,
 ) {
     val viewModel: SettingsViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -20,6 +21,7 @@ internal fun SettingsRoute(
                 onBack = onBack,
                 onOpenSheet = viewModel::openSheet,
                 onOpenCategories = onOpenCategories,
+                onOpenMonitoredApps = onOpenMonitoredApps,
                 onPickThemeMode = viewModel::pickThemeMode,
                 onPickPeriodStartDay = viewModel::pickPeriodStartDay,
                 onDismissSheet = viewModel::dismissSheet,

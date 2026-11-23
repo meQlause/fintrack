@@ -20,6 +20,10 @@ public class LocalMonitoredAppRepository(
         monitoredAppDao.insert(monitoredApp.toEntity())
     }
 
+    override suspend fun upsert(monitoredApp: MonitoredApp) {
+        monitoredAppDao.upsert(monitoredApp.toEntity())
+    }
+
     override suspend fun find(packageName: String): MonitoredApp? = monitoredAppDao.find(packageName)?.toMonitoredApp()
 
     override suspend fun recordNotification(

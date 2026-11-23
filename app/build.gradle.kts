@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:domain"))
     implementation(project(":core:parser"))
+    implementation(project(":core:notification"))
     implementation(project(":core:security"))
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:category"))

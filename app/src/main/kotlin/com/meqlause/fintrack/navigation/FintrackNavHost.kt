@@ -12,7 +12,9 @@ import com.meqlause.fintrack.feature.dashboard.navigation.HomeDestination
 import com.meqlause.fintrack.feature.dashboard.navigation.homeDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
+import com.meqlause.fintrack.feature.settings.navigation.MonitoredAppsDestination
 import com.meqlause.fintrack.feature.settings.navigation.SettingsDestination
+import com.meqlause.fintrack.feature.settings.navigation.monitoredAppsDestination
 import com.meqlause.fintrack.feature.settings.navigation.settingsDestination
 import com.meqlause.fintrack.feature.transaction.detail.navigation.TransactionDetailDestination
 import com.meqlause.fintrack.feature.transaction.detail.navigation.transactionDetailDestination
@@ -79,7 +81,10 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     settingsDestination(
         onBack = { navController.popBackStack() },
         onOpenCategories = { navController.navigate(CategoryDestination) },
+        onOpenMonitoredApps = { navController.navigate(MonitoredAppsDestination) },
     )
+    // FR-081, FR-082, FR-090: Aplikasi dipantau (S-13) is opened from the Deteksi otomatis group of Pengaturan
+    monitoredAppsDestination(onBack = { navController.popBackStack() })
     categoryDestination(onBack = { navController.popBackStack() })
     // FR-034, S-06: the detail leaves on delete or duplicate; Ubah opens the S-04 sheet above it
     transactionDetailDestination(

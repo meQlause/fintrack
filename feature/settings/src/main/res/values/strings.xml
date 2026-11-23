@@ -14,4 +14,19 @@
     <string name="settings_period_sheet_title">Awal periode</string>
     <string name="settings_period_value">Tanggal %1$d</string>
     <string name="settings_categories_label">Kategori</string>
+    <string name="settings_section_detection">Deteksi otomatis</string>
+    <string name="settings_monitored_label">Aplikasi dipantau</string>
+    <string name="monitored_title">Aplikasi dipantau</string>
+    <string name="monitored_section_access">Akses notifikasi</string>
+    <string name="monitored_access_label">Akses notifikasi</string>
+    <string name="monitored_access_on">Aktif</string>
+    <string name="monitored_access_off">Tidak aktif</string>
+    <string name="monitored_section_diagnostics">Diagnostik</string>
+    <string name="monitored_counts_value">%1$d diabaikan, %2$d tidak dikenali</string>
+    <string name="monitored_section_apps">Aplikasi</string>
+    <string name="monitored_wallet_label">Dompet default</string>
+    <string name="monitored_wallet_none">Belum dipilih</string>
+    <string name="monitored_wallet_sheet_title">Dompet default</string>
+    <string name="monitored_last_none">Terakhir diterima: belum pernah</string>
+    <string name="monitored_last_format">Terakhir diterima: %1$s</string>
 </resources>
