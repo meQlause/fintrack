@@ -188,3 +188,14 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
   `package …` line with import names, so every same-feature import was reported. It now compares the feature package
   itself; cross-feature and data-layer imports stay forbidden.
 - **Consequences:** Repository interfaces still must end with `Repository`. Ports are easy to recognise by package.
+
+### ADR-024 — Feature coverage thresholds measure ViewModels and logic, not composables
+- **Status:** Accepted (2026-11-23), approved by the owner.
+- **Context:** docs/06 sets 85% line / 75% branch coverage for `feature:*` ViewModels. The Kover setup applied it to
+  the whole feature module, composables included. The Compose compiler adds branches to every composable (default
+  parameters, recomposition), so the branch target was out of reach even with thorough UI tests.
+- **Decision:** In `feature:*` modules Kover also excludes functions annotated `@Composable` and the compiler-made
+  `ComposableSingletons` classes. ViewModels, state, reducers, mappers and other logic keep the 85% / 75% target.
+  Core module targets and the 75% overall target are unchanged.
+- **Consequences:** Composables are checked by UI tests and Roborazzi screenshots instead of the coverage number.
+

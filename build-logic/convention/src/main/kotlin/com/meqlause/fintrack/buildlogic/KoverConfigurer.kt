@@ -27,6 +27,10 @@ private val EXCLUDED_CLASSES =
         "*_Impl\$*",
     )
 private const val PREVIEW_ANNOTATION = "androidx.compose.ui.tooling.preview.Preview"
+private const val COMPOSABLE_ANNOTATION = "androidx.compose.runtime.Composable"
+
+// ADR-024: classes the Compose compiler generates for composable lambdas
+private val COMPOSE_GENERATED_CLASSES = listOf("*ComposableSingletons*")
 
 internal fun Project.coverageTarget(): CoverageTarget? =
     when {
@@ -47,6 +51,11 @@ internal fun Project.configureKover() {
                 excludes {
                     classes(*EXCLUDED_CLASSES.toTypedArray())
                     annotatedBy(PREVIEW_ANNOTATION)
+                    // ADR-024: feature thresholds measure ViewModels and logic; composables are covered by UI tests
+                    if (path.startsWith(":feature:")) {
+                        annotatedBy(COMPOSABLE_ANNOTATION)
+                        classes(*COMPOSE_GENERATED_CLASSES.toTypedArray())
+                    }
                 }
             }
             if (target != null && hasKotlinSources()) {
