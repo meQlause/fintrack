@@ -24,6 +24,7 @@ internal fun SettingsScreen(
     state: SettingsUiState,
     callbacks: SettingsCallbacks,
     modifier: Modifier = Modifier,
+    backup: BackupUiState = BackupUiState(),
 ) {
     Column(
         modifier =
@@ -76,16 +77,7 @@ internal fun SettingsScreen(
                 SecurityRows(state = state, callbacks = callbacks)
             }
             SettingsSection(title = stringResource(R.string.settings_section_backup)) {
-                FormRow(
-                    label = stringResource(R.string.settings_backup_create_label),
-                    value = "",
-                    onClick = callbacks.onBackupCreate,
-                )
-                FormRow(
-                    label = stringResource(R.string.settings_backup_restore_label),
-                    value = "",
-                    onClick = callbacks.onBackupRestore,
-                )
+                BackupRows(backup = backup, callbacks = callbacks)
             }
         }
     }

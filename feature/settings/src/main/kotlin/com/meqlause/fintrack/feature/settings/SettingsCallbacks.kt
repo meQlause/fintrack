@@ -19,4 +19,6 @@ internal data class SettingsCallbacks(
     val onBackupRestore: () -> Unit = {},
     val onToggleBiometric: (Boolean) -> Unit = {},
     val onToggleHideFromRecents: (Boolean) -> Unit = {},
+    val onBackupReminder: () -> Unit = {},
+    val onBackupCsv: () -> Unit = {},
 )

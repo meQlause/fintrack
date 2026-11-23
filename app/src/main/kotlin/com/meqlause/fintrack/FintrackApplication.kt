@@ -32,6 +32,7 @@ class FintrackApplication :
         super.onCreate()
         RawTextPurgeScheduler.schedule(this)
         ReminderScheduler.schedule(this)
+        ReminderScheduler.scheduleBackupReminder(this)
         budgetAlertWatcher.start()
         ProcessLifecycleOwner.get().lifecycle.addObserver(appLockGate)
     }
