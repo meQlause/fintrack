@@ -24,6 +24,7 @@ import com.meqlause.fintrack.core.model.WalletProfile
 import com.meqlause.fintrack.core.model.WalletStatus
 import com.meqlause.fintrack.core.model.WalletTerms
 import com.meqlause.fintrack.core.model.WalletType
+import com.meqlause.fintrack.core.testing.repository.FakeCategoryRepository
 import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
 import com.meqlause.fintrack.core.testing.repository.FakeWalletRepository
 import com.meqlause.fintrack.core.testing.time.FakeClock
@@ -70,6 +71,7 @@ class WalletDetailViewModelTest {
             savedStateHandle = SavedStateHandle(mapOf("walletId" to walletId)),
             wallets = wallets,
             transactions = transactions,
+            categories = FakeCategoryRepository(),
             clock = clock,
         )
 

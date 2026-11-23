@@ -44,7 +44,10 @@ internal fun ColumnScope.StatisticsContent(
         if (statistics == null || statistics.categories.isEmpty()) {
             StatisticsEmpty()
         } else {
-            StatisticsSummary(statistics = statistics)
+            StatisticsSummary(
+                statistics = statistics,
+                appearances = state.categories.associate { it.categoryId to it.profile.appearance },
+            )
             StatisticsCategoryList(statistics = statistics, state = state, onEvent = onEvent)
             StatisticsDailyBars(statistics = statistics)
         }

@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.dashboard
 
+import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.WalletId
 
@@ -9,4 +10,5 @@ internal data class HomeWallet(
     val name: String,
     val balance: Money,
     val isCredit: Boolean = false,
+    val appearance: Appearance = Appearance("wallet", "gray"),
 )

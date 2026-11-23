@@ -26,8 +26,7 @@ import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
-import com.meqlause.fintrack.core.ui.transaction.TransactionRow
-import com.meqlause.fintrack.core.ui.transaction.TransactionRowCallbacks
+import com.meqlause.fintrack.core.ui.transaction.TransactionRowGroup
 import com.meqlause.fintrack.feature.transaction.R
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
@@ -89,10 +88,10 @@ private fun HistoryDayList(
     LazyColumn(contentPadding = PaddingValues(bottom = FintrackTheme.sizes.navBarHeight)) {
         state.groups.forEach { group ->
             item(key = "day-${group.label}", contentType = DAY_HEADER_TYPE) { DayHeader(group = group) }
-            items(group.rows, key = { it.transactionId }, contentType = { TRANSACTION_ROW_TYPE }) { row ->
-                TransactionRow(
-                    params = row.toParams(),
-                    callbacks = TransactionRowCallbacks(onClick = { onOpenTransaction(row.transactionId) }),
+            item(key = "rows-${group.label}", contentType = TRANSACTION_ROW_TYPE) {
+                TransactionRowGroup(
+                    rows = group.rows.map { it.toParams() },
+                    onClick = { index -> onOpenTransaction(group.rows[index].transactionId) },
                 )
             }
         }

@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.core.ui.shortcut
 
+import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.QuickEntryId
 
@@ -9,4 +10,5 @@ public data class ShortcutTileParams(
     public val title: String,
     public val amount: Money,
     public val walletName: String,
+    public val appearance: Appearance = Appearance("other", "gray"),
 )

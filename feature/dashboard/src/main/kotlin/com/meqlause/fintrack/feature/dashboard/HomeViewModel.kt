@@ -78,6 +78,7 @@ internal class HomeViewModel
                                 it.walletId to
                                     it.profile.name
                             },
+                            data.categories.associate { it.categoryId to it.profile.appearance },
                         ),
                     removedShortcut = gone,
                 )

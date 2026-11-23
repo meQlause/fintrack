@@ -8,6 +8,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.model.Appearance
+import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
 
 private const val FULL_TURN = 360f
@@ -17,9 +19,10 @@ private const val TOP_OF_CIRCLE = -90f
 @Composable
 internal fun StatisticsDonut(
     statistics: PeriodStatistics,
+    appearances: Map<CategoryId, Appearance>,
     modifier: Modifier = Modifier,
 ) {
-    val palette = statisticsPalette(FintrackTheme.colors)
+    val colors = statistics.categories.map { statisticsColorOf(it, appearances) }
     val donutStroke = FintrackTheme.sizes.donutStrokeWidth
     Canvas(modifier = modifier.size(FintrackTheme.sizes.donutSize)) {
         val strokePx = donutStroke.toPx()
@@ -29,7 +32,7 @@ internal fun StatisticsDonut(
         statistics.categories.forEachIndexed { index, change ->
             val sweep = FULL_TURN * change.amount.rupiah / statistics.total.rupiah.toFloat()
             drawArc(
-                color = palette[index % palette.size],
+                color = colors[index],
                 startAngle = start,
                 sweepAngle = sweep,
                 useCenter = false,

@@ -2,6 +2,7 @@ package com.meqlause.fintrack.feature.transaction.history
 
 import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.ui.format.DateFormatter
+import com.meqlause.fintrack.core.ui.transaction.rowAppearanceOf
 import java.time.ZoneId
 
 // FR-036: a transaction as one list row; the title falls back to the category, the subtitle names wallet and time
@@ -18,6 +19,7 @@ internal fun Transaction.toRowItem(
             memo.merchant.ifBlank { memo.note }.takeIf { it.isNotBlank() }
                 ?: routing.categoryId?.let(names::categoryName),
         subtitle = "${walletLabel(names)} · $time",
+        appearance = rowAppearanceOf(movement.type, routing.categoryId?.let(names::categoryAppearance)),
     )
 }
 

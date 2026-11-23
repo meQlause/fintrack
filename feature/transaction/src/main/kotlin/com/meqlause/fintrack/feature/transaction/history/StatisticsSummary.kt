@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.model.Appearance
+import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
@@ -18,13 +20,16 @@ import com.meqlause.fintrack.feature.transaction.R
 
 // FR-060, S-08: the donut of the category shares with the total in its centre and the change against the last period
 @Composable
-internal fun StatisticsSummary(statistics: PeriodStatistics) {
+internal fun StatisticsSummary(
+    statistics: PeriodStatistics,
+    appearances: Map<CategoryId, Appearance>,
+) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.large),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(contentAlignment = Alignment.Center) {
-            StatisticsDonut(statistics = statistics)
+            StatisticsDonut(statistics = statistics, appearances = appearances)
             StatisticsTotal(statistics = statistics)
         }
         StatisticsTotalChange(statistics = statistics)

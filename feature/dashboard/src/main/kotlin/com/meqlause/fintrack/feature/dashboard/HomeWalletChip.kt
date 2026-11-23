@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
+import com.meqlause.fintrack.core.designsystem.icon.IconCircle
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // FR-040: one wallet as name and balance; tapping it opens the wallet detail (S-19)
@@ -31,13 +32,20 @@ internal fun HomeWalletChip(
                 .clickable(role = Role.Button, onClick = onClick)
                 .padding(horizontal = FintrackTheme.spacing.medium, vertical = FintrackTheme.spacing.small),
     ) {
+        IconCircle(
+            iconKey = wallet.appearance.iconKey,
+            colorKey = wallet.appearance.colorKey,
+            size = FintrackTheme.sizes.walletChipIcon,
+            glyph = FintrackTheme.sizes.walletChipGlyph,
+        )
         Text(
             text = wallet.name,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.small),
             style = FintrackTheme.typography.labelMedium,
             color = FintrackTheme.colors.texts.onSurfaceVariant,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        HomeAmountText(money = wallet.balance, hidden = hidden, style = FintrackTheme.typography.bodyLarge)
+        HomeAmountText(money = wallet.balance, hidden = hidden, style = FintrackTheme.typography.numberSmall)
     }
 }

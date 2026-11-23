@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.transaction.history
 
+import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionType
 
@@ -10,4 +11,5 @@ internal data class HistoryRowItem(
     val amount: Money,
     val title: String?,
     val subtitle: String,
+    val appearance: Appearance = Appearance("other", "gray"),
 )

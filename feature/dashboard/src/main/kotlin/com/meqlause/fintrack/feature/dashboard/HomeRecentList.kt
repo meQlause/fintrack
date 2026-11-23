@@ -17,8 +17,7 @@ import androidx.compose.ui.semantics.Role
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.ui.transaction.TransactionRow
-import com.meqlause.fintrack.core.ui.transaction.TransactionRowCallbacks
+import com.meqlause.fintrack.core.ui.transaction.TransactionRowGroup
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // FR-043, S-03: the five most recent transactions; a row opens its transaction and "Lihat semua" opens Riwayat
@@ -63,12 +62,10 @@ internal fun HomeRecentList(
                 iconRes = DesignR.drawable.ic_history,
             )
         } else {
-            state.recent.forEach { row ->
-                TransactionRow(
-                    params = row.toParams(),
-                    callbacks = TransactionRowCallbacks(onClick = { callbacks.onOpenTransaction(row.transactionId) }),
-                )
-            }
+            TransactionRowGroup(
+                rows = state.recent.map { it.toParams() },
+                onClick = { index -> callbacks.onOpenTransaction(state.recent[index].transactionId) },
+            )
         }
     }
 }

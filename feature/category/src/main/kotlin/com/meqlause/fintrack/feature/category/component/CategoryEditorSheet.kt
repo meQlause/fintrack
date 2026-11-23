@@ -1,6 +1,7 @@
 package com.meqlause.fintrack.feature.category.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -9,7 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomSheet
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
-import com.meqlause.fintrack.core.designsystem.component.FintrackChip
+import com.meqlause.fintrack.core.designsystem.icon.ColorSwatch
+import com.meqlause.fintrack.core.designsystem.icon.IconChoice
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.category.CategoryAppearance
 import com.meqlause.fintrack.feature.category.CategoryCallbacks
@@ -53,40 +55,41 @@ private fun CategoryEditorFields(
         singleLine = true,
     )
     Text(text = stringResource(R.string.category_editor_icon), style = FintrackTheme.typography.labelLarge)
-    ChoiceRow(
-        keys = CategoryAppearance.iconKeys,
-        selected = draft.iconKey,
-        labelRes = R.string.category_icon_option,
-        onSelect = callbacks.editor.onIconChange,
-    )
+    ChoiceGrid(keys = CategoryAppearance.iconKeys) { key ->
+        IconChoice(
+            iconKey = key,
+            colorKey = draft.colorKey,
+            selected = key == draft.iconKey,
+            onSelect = { callbacks.editor.onIconChange(key) },
+        )
+    }
     Text(text = stringResource(R.string.category_editor_color), style = FintrackTheme.typography.labelLarge)
-    ChoiceRow(
-        keys = CategoryAppearance.colorKeys,
-        selected = draft.colorKey,
-        labelRes = R.string.category_color_option,
-        onSelect = callbacks.editor.onColorChange,
-    )
+    ChoiceGrid(keys = CategoryAppearance.colorKeys) { key ->
+        ColorSwatch(
+            colorKey = key,
+            selected = key == draft.colorKey,
+            onSelect = { callbacks.editor.onColorChange(key) },
+        )
+    }
 }
 
 // FR-021: the heading says whether the draft creates a new category or edits a stored one
 private fun titleRes(draft: CategoryEditor): Int =
     if (draft.categoryId == null) R.string.category_editor_new else R.string.category_editor_edit
 
-// FR-021: a wrapping-free row of chips; each chip is labelled by its position in the catalogue
+// FR-021: the choices in rows of eight, each cell drawn by the caller
 @Composable
-private fun ChoiceRow(
+private fun ChoiceGrid(
     keys: List<String>,
-    selected: String,
-    labelRes: Int,
-    onSelect: (String) -> Unit,
+    cell: @Composable (String) -> Unit,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall)) {
-        keys.forEachIndexed { index, key ->
-            FintrackChip(
-                label = stringResource(labelRes, index + 1),
-                selected = key == selected,
-                onClick = { onSelect(key) },
-            )
+    Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall)) {
+        keys.chunked(GRID_COLUMNS).forEach { line ->
+            Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall)) {
+                line.forEach { key -> cell(key) }
+            }
         }
     }
 }
+
+private const val GRID_COLUMNS = 8

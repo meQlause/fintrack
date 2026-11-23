@@ -1,15 +1,22 @@
 package com.meqlause.fintrack.feature.transaction.history
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
-import com.meqlause.fintrack.core.designsystem.theme.FintrackColors
+import com.meqlause.fintrack.core.designsystem.icon.categoryColorOf
+import com.meqlause.fintrack.core.domain.statistics.CategoryChange
+import com.meqlause.fintrack.core.model.Appearance
+import com.meqlause.fintrack.core.model.CategoryId
 
-// S-08: category slices and bars take their colours from the design tokens, in a fixed order
-internal fun statisticsPalette(colors: FintrackColors): List<Color> =
-    listOf(
-        colors.brands.primary,
-        colors.semantics.warning,
-        colors.semantics.transfer,
-        colors.semantics.income,
-        colors.semantics.expense,
-        colors.texts.faint,
-    )
+private const val UNCATEGORIZED_COLOR_KEY = "gray"
+
+// S-08: a category's slice, bar and dot take the category's own colour; uncategorised spending is gray
+@Composable
+@ReadOnlyComposable
+internal fun statisticsColorOf(
+    change: CategoryChange,
+    appearances: Map<CategoryId, Appearance>,
+): Color {
+    val key = change.categoryId?.let { appearances[it]?.colorKey } ?: UNCATEGORIZED_COLOR_KEY
+    return categoryColorOf(key)
+}

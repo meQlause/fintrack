@@ -26,6 +26,4 @@
     <string name="category_editor_color">Warna</string>
     <string name="category_editor_save">Simpan</string>
     <string name="category_editor_cancel">Batal</string>
-    <string name="category_icon_option">Ikon %1$d</string>
-    <string name="category_color_option">Warna %1$d</string>
 </resources>

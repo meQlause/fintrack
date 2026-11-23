@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import com.meqlause.fintrack.core.designsystem.component.IconTile
+import com.meqlause.fintrack.core.designsystem.icon.IconCircle
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.ui.R
@@ -67,7 +67,7 @@ private fun WalletPickerItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
-        IconTile(iconRes = group.iconRes)
+        IconCircle(iconKey = pickerRow.appearance.iconKey, colorKey = pickerRow.appearance.colorKey)
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = pickerRow.name,

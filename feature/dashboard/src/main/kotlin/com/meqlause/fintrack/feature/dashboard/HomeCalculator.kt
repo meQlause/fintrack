@@ -4,6 +4,7 @@ import com.meqlause.fintrack.core.domain.bills.BillsCard
 import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.domain.period.Period
 import com.meqlause.fintrack.core.domain.period.PeriodCalculator
+import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Category
 import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.Money
@@ -13,6 +14,7 @@ import com.meqlause.fintrack.core.model.Wallet
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.core.ui.format.DateFormatter
+import com.meqlause.fintrack.core.ui.transaction.rowAppearanceOf
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
@@ -34,6 +36,7 @@ internal object HomeCalculator {
         val startDay = snapshot.settings.preferences.periodStartDay
         val period = PeriodCalculator.periodContaining(LocalDate.now(clock), startDay)
         val names = snapshot.categories.associate { it.categoryId to it.profile.name }
+        val appearances = snapshot.categories.associate { it.categoryId to it.profile.appearance }
         val walletNames = snapshot.wallets.associate { it.walletId to it.profile.name }
         val active = snapshot.wallets.filterNot { it.status.isArchived }
         val inPeriod =
@@ -47,11 +50,17 @@ internal object HomeCalculator {
             netWorth = worth,
             wallets =
                 active.map {
-                    HomeWallet(it.walletId, it.profile.name, balanceOf(it, snapshot.moneyByWallet), isCreditWallet(it))
+                    HomeWallet(
+                        walletId = it.walletId,
+                        name = it.profile.name,
+                        balance = balanceOf(it, snapshot.moneyByWallet),
+                        isCredit = isCreditWallet(it),
+                        appearance = it.profile.appearance,
+                    )
                 },
             period = periodOf(period, inPeriod),
             categories = categoryShares(inPeriod, names),
-            recent = recentOf(snapshot.transactions, names, walletNames, clock),
+            recent = recentOf(snapshot.transactions, names, appearances, walletNames, clock),
             drawer = drawer,
             bills = HomeBillsMapper.map(card, clock),
         )
@@ -110,6 +119,7 @@ internal object HomeCalculator {
     private fun recentOf(
         rows: List<Transaction>,
         names: Map<CategoryId, String>,
+        appearances: Map<CategoryId, Appearance>,
         walletNames: Map<WalletId, String>,
         clock: Clock,
     ): List<HomeRecent> =
@@ -124,6 +134,7 @@ internal object HomeCalculator {
                     whenLabel = whenLabelOf(row.timing.occurredAt, clock),
                     amount = row.movement.amount,
                     type = row.movement.type,
+                    appearance = rowAppearanceOf(row.movement.type, row.routing.categoryId?.let(appearances::get)),
                 )
             }
 

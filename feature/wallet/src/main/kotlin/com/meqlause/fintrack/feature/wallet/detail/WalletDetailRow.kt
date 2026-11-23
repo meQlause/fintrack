@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.wallet.detail
 
+import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionType
 
@@ -10,4 +11,5 @@ internal data class WalletDetailRow(
     val subtitle: String,
     val amount: Money,
     val type: TransactionType,
+    val appearance: Appearance = Appearance("other", "gray"),
 )

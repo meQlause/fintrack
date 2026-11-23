@@ -23,7 +23,6 @@ import com.meqlause.fintrack.core.ui.transaction.TransactionRowCallbacks
 import com.meqlause.fintrack.core.ui.transaction.TransactionRowParams
 import com.meqlause.fintrack.feature.wallet.R
 import com.meqlause.fintrack.feature.wallet.WalletLabels
-import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // FR-017, S-19: stateless wallet detail; header, balance, Pakai and Transfer, then the recent transactions
 @Composable
@@ -145,12 +144,11 @@ private fun RecentHeading() {
 // S-19: one recent transaction in the shared row style
 @Composable
 private fun RecentRow(detailRow: WalletDetailRow) {
-    val colors = FintrackTheme.colors
     TransactionRow(
         params =
             TransactionRowParams(
-                iconRes = DesignR.drawable.ic_wallet,
-                iconColor = colors.brands.primary,
+                iconKey = detailRow.appearance.iconKey,
+                colorKey = detailRow.appearance.colorKey,
                 title = detailRow.title.ifBlank { stringResource(R.string.wallet_detail_untitled) },
                 subtitle = detailRow.subtitle,
                 amount = detailRow.amount,

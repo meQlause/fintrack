@@ -22,7 +22,7 @@ internal fun StatisticsCategoryList(
     state: HistoryUiState,
     onEvent: (HistoryEvent) -> Unit,
 ) {
-    val palette = statisticsPalette(FintrackTheme.colors)
+    val appearances = state.categories.associate { it.categoryId to it.profile.appearance }
     val names = state.categories.associate { it.categoryId to it.profile.name }
     val drillType =
         if (statistics.type == TransactionType.INCOME) HistoryTypeFilter.INCOME else HistoryTypeFilter.EXPENSE
@@ -41,7 +41,7 @@ internal fun StatisticsCategoryList(
                 statistics = statistics,
                 change = change,
                 name = change.categoryId?.let { names[it] } ?: stringResource(R.string.history_stats_uncategorized),
-                color = palette[index % palette.size],
+                color = statisticsColorOf(change, appearances),
                 onClick = open,
             )
         }

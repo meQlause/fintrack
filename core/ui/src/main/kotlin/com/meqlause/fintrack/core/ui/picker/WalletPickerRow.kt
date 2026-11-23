@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.core.ui.picker
 
+import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.model.WalletType
 
@@ -11,4 +12,5 @@ data class WalletPickerRow(
     val shownBalanceText: String,
     val isSelected: Boolean = false,
     val isBlocked: Boolean = false,
+    val appearance: Appearance = Appearance("wallet", "gray"),
 )

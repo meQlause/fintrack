@@ -70,6 +70,7 @@ internal class HistoryViewModel
                 HistoryNames(
                     wallets = wallets.associate { it.walletId to it.profile.name },
                     categories = categories.associate { it.categoryId to it.profile.name },
+                    appearances = categories.associate { it.categoryId to it.profile.appearance },
                 )
             val content = buildHistoryContent(transactions, current.filter, period, names, clock)
             val statistics =

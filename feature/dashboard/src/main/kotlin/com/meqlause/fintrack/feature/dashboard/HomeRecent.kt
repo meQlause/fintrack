@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.dashboard
 
+import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionId
 import com.meqlause.fintrack.core.model.TransactionType
@@ -12,4 +13,5 @@ internal data class HomeRecent(
     val whenLabel: String,
     val amount: Money,
     val type: TransactionType,
+    val appearance: Appearance = Appearance("other", "gray"),
 )

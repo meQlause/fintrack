@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
+import com.meqlause.fintrack.core.designsystem.icon.IconCircle
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.StatementStatus
 
@@ -28,14 +29,19 @@ internal fun HomeBillRow(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().clickable(role = Role.Button, onClick = onClick),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(role = Role.Button, onClick = onClick)
+                .padding(horizontal = FintrackTheme.sizes.rowInset, vertical = FintrackTheme.spacing.medium),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
+        IconCircle(iconKey = "bill", colorKey = "purple")
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = bill.name,
-                style = FintrackTheme.typography.bodyLarge,
+                style = FintrackTheme.typography.labelLarge,
                 color = FintrackTheme.colors.texts.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -49,7 +55,7 @@ internal fun HomeBillRow(
             )
         }
         Column(horizontalAlignment = Alignment.End) {
-            HomeAmountText(money = bill.amount, hidden = hidden, style = FintrackTheme.typography.bodyLarge)
+            HomeAmountText(money = bill.amount, hidden = hidden, style = FintrackTheme.typography.numberRow)
             StatusChip(status = bill.status)
         }
     }
