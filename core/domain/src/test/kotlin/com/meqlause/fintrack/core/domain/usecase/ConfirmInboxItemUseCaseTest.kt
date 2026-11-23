@@ -18,24 +18,27 @@ import com.meqlause.fintrack.core.model.Resolution
 import com.meqlause.fintrack.core.model.Suggestion
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.WalletId
-import com.meqlause.fintrack.core.testing.repository.FakeInboxRepository
-import com.meqlause.fintrack.core.testing.repository.FakeMerchantRuleRepository
-import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
-import com.meqlause.fintrack.core.testing.repository.PassthroughAtomicRunner
-import com.meqlause.fintrack.core.testing.time.FakeClock
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
+import java.time.Clock
 import java.time.Instant
+import java.time.ZoneOffset
 
 // FR-087, FR-091, BR-011 … BR-013: confirming creates one transaction and remembers the merchant
 class ConfirmInboxItemUseCaseTest {
     private val now: Instant = Instant.parse("2026-11-23T07:05:00Z")
-    private val inbox = FakeInboxRepository()
-    private val transactions = FakeTransactionRepository()
-    private val rules = FakeMerchantRuleRepository()
+    private val inbox = InMemoryInboxRepository()
+    private val transactions = InMemoryTransactionRepository()
+    private val rules = InMemoryMerchantRuleRepository()
     private val useCase =
-        ConfirmInboxItemUseCase(inbox, transactions, rules, PassthroughAtomicRunner(), FakeClock(now))
+        ConfirmInboxItemUseCase(
+            inbox,
+            transactions,
+            rules,
+            ImmediateAtomicRunner(),
+            Clock.fixed(now, ZoneOffset.UTC),
+        )
     private val wallet = WalletId(1L)
     private val category = CategoryId(2L)
 

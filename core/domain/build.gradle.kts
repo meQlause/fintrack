@@ -13,5 +13,4 @@ dependencies {
     testRuntimeOnly(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.assertk)
-    testImplementation(project(":core:testing"))
 }

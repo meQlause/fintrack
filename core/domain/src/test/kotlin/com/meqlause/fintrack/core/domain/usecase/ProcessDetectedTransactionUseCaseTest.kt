@@ -19,22 +19,20 @@ import com.meqlause.fintrack.core.model.MonitoredApp
 import com.meqlause.fintrack.core.model.ParsedTransaction
 import com.meqlause.fintrack.core.model.RawNotification
 import com.meqlause.fintrack.core.model.WalletId
-import com.meqlause.fintrack.core.testing.repository.FakeInboxRepository
-import com.meqlause.fintrack.core.testing.repository.FakeMerchantRuleRepository
-import com.meqlause.fintrack.core.testing.repository.FakeMonitoredAppRepository
-import com.meqlause.fintrack.core.testing.time.FakeClock
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
+import java.time.Clock
 import java.time.Instant
+import java.time.ZoneOffset
 
 // FR-084, FR-086, FR-088, FR-091: detected payments are stored as PENDING, deduplicated and paired
 class ProcessDetectedTransactionUseCaseTest {
     private val start: Instant = Instant.parse("2026-11-23T10:00:00Z")
-    private val clock = FakeClock(start)
-    private val inbox = FakeInboxRepository()
-    private val rules = FakeMerchantRuleRepository()
-    private val apps = FakeMonitoredAppRepository()
+    private val clock: Clock = Clock.fixed(start, ZoneOffset.UTC)
+    private val inbox = InMemoryInboxRepository()
+    private val rules = InMemoryMerchantRuleRepository()
+    private val apps = InMemoryMonitoredAppRepository()
     private val bcaDefaultWallet = WalletId(7)
 
     @Test

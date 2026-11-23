@@ -26,4 +26,8 @@ internal class InMemoryTransactionRepository : TransactionRepository {
     override suspend fun update(transaction: Transaction) {
         rows.value = rows.value.map { if (it.transactionId == transaction.transactionId) transaction else it }
     }
+
+    override suspend fun delete(transactionId: TransactionId) {
+        rows.value = rows.value.filterNot { it.transactionId == transactionId }
+    }
 }
