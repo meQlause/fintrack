@@ -82,6 +82,7 @@ internal fun sampleHistoryState(): HistoryUiState =
         totals = HistoryTotals(income = Money(9_700_000L), expense = Money(8_214_500L)),
         hasRecords = true,
         isLoaded = true,
+        activeMonths = setOf(YearMonth.of(2026, 10), YearMonth.of(2026, 11)),
     )
 
 private fun sampleRow(

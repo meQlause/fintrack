@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.semantics.Role
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.transaction.R
 import java.time.YearMonth
@@ -34,10 +36,11 @@ import java.time.YearMonth
 @Composable
 internal fun HistoryMonthStrip(
     month: YearMonth,
+    activeMonths: Set<YearMonth>,
     onPick: (YearMonth) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium)) {
-        MonthPills(month = month, onPick = onPick)
+        MonthPills(month = month, activeMonths = activeMonths, onPick = onPick)
     }
 }
 
@@ -45,6 +48,7 @@ internal fun HistoryMonthStrip(
 @Composable
 private fun MonthPills(
     month: YearMonth,
+    activeMonths: Set<YearMonth>,
     onPick: (YearMonth) -> Unit,
 ) {
     val names = stringArrayResource(R.array.history_month_names).toList()
@@ -79,6 +83,7 @@ private fun MonthPills(
                 MonthPill(
                     label = label,
                     selected = index == selectedIndex,
+                    hasDot = YearMonth.of(month.year, index + 1) in activeMonths,
                     onClick = { onPick(YearMonth.of(month.year, index + 1)) },
                 )
             }
@@ -90,6 +95,7 @@ private fun MonthPills(
 private fun MonthPill(
     label: String,
     selected: Boolean,
+    hasDot: Boolean,
     onClick: () -> Unit,
 ) {
     val colors = FintrackTheme.colors
@@ -101,10 +107,18 @@ private fun MonthPill(
                 .selectable(selected = selected, role = Role.Tab, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = label,
-            style = FintrackTheme.typography.tabLabel,
-            color = if (selected) colors.surfaces.background else colors.texts.onSurfaceVariant,
-        )
+        val tone = if (selected) colors.surfaces.background else colors.texts.onSurfaceVariant
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(text = label, style = FintrackTheme.typography.tabLabel, color = tone)
+            if (hasDot) {
+                Box(
+                    modifier =
+                        Modifier
+                            .padding(start = FintrackTheme.spacing.xSmall)
+                            .size(FintrackScreenSizes.monthDot)
+                            .background(if (selected) tone else colors.texts.faint, CircleShape),
+                )
+            }
+        }
     }
 }

@@ -11,6 +11,10 @@ internal data class HistoryFilter(
     val dayOfMonth: Int? = null,
     val query: String = "",
 ) {
+    // S-05: the wallet, category or day filter is set, so its chip stays on screen outside the search mode
+    val hasEntryFilter: Boolean
+        get() = walletId != null || categoryId != null || dayOfMonth != null
+
     // FR-037: true when any filter narrows the list, which turns an empty result into "Tidak ditemukan"
     val isActive: Boolean
         get() =

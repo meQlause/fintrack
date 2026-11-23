@@ -78,6 +78,7 @@ object FintrackScreenSizes {
     val chartBarCorner: Dp = Dp(value = 2f)
     val chartGap: Dp = Dp(value = 2f)
     val sheetTop: Dp = Dp(value = 10f)
+    val monthDot: Dp = Dp(value = 4f)
     val infoRowVertical: Dp = Dp(value = 11f)
     val headerDotShift: Dp = Dp(value = 8f)
     val bannerHeight: Dp = Dp(value = 52f)

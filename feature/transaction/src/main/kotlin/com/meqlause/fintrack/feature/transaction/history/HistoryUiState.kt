@@ -24,6 +24,7 @@ internal data class HistoryUiState(
     val totals: HistoryTotals = HistoryTotals(),
     val hasRecords: Boolean = false,
     val isLoaded: Boolean = false,
+    val activeMonths: Set<YearMonth> = emptySet(),
     val view: HistoryView = HistoryView.LIST,
     val statisticsType: TransactionType = TransactionType.EXPENSE,
     val isCategoriesExpanded: Boolean = false,

@@ -87,6 +87,7 @@ internal class HistoryViewModel
                 groups = content.groups,
                 totals = content.totals,
                 hasRecords = content.hasRecords,
+                activeMonths = transactions.map { YearMonth.from(it.timing.occurredAt.atZone(clock.zone)) }.toSet(),
                 isLoaded = true,
                 view = current.view,
                 statisticsType = current.statisticsType,

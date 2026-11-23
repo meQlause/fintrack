@@ -39,7 +39,11 @@ internal fun HistoryScreen(
                 modifier = gutter.fillMaxWidth(),
             )
         }
-        HistoryMonthStrip(month = state.month, onPick = { onEvent(HistoryEvent.MonthPicked(it)) })
+        HistoryMonthStrip(
+            month = state.month,
+            activeMonths = state.activeMonths,
+            onPick = { onEvent(HistoryEvent.MonthPicked(it)) },
+        )
         Column(modifier = gutter.weight(1f)) {
             HistoryViewSwitch(view = state.view, onPick = { onEvent(HistoryEvent.ViewPicked(it)) })
             HistoryBody(state = state, onEvent = onEvent, onOpenTransaction = onOpenTransaction)
@@ -60,7 +64,9 @@ private fun ColumnScope.HistoryBody(
         return
     }
     HistoryTypeTabs(selected = state.filter.type, onPick = { onEvent(HistoryEvent.TypePicked(it)) })
-    HistoryFilterChips(state = state, onEvent = onEvent)
+    if (state.isSearchOpen || state.filter.hasEntryFilter) {
+        HistoryFilterChips(state = state, onEvent = onEvent)
+    }
     HistoryTotalsStrip(totals = state.totals)
     HistoryMonthContent(state = state, onEvent = onEvent, onOpenTransaction = onOpenTransaction)
 }
