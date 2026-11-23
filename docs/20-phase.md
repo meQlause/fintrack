@@ -519,7 +519,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - [x] done · Refs: FR-112, FR-113 · Commit: `feat(backup): add reminder and csv export [P8, FR-113]`
 
 ### T8.5 — About & privacy screen
-- [ ] done · Refs: FR-123 · Commit: `feat(settings): add about and privacy screen [P8, FR-123]`
+- [x] done · Refs: FR-123 · Commit: `feat(settings): add about and privacy screen [P8, FR-123]`
 
 ---
 

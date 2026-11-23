@@ -77,4 +77,18 @@
     <string name="backup_csv_warning">File CSV tidak terenkripsi.</string>
     <string name="backup_csv_action">Simpan</string>
     <string name="backup_csv_saved">Ekspor CSV berhasil disimpan</string>
+    <string name="settings_section_about">Tentang</string>
+    <string name="settings_about_label">Tentang Fintrack</string>
+    <string name="about_title">Tentang</string>
+    <string name="about_app_name">Fintrack</string>
+    <string name="about_version_value">Versi %1$s</string>
+    <string name="about_section_privacy">Privasi</string>
+    <string name="about_privacy_statement">Data keuanganmu tidak pernah meninggalkan perangkat ini. Aplikasi ini tidak memiliki izin internet.</string>
+    <string name="about_section_storage">Penyimpanan data</string>
+    <string name="about_storage_database">Transaksi, dompet, kategori, dan anggaran disimpan di database lokal yang terenkripsi, hanya di perangkat ini.</string>
+    <string name="about_storage_key">Kunci enkripsi disimpan di Android Keystore dan tidak bisa diekspor.</string>
+    <string name="about_storage_backup">Cadangan hanya dibuat saat kamu memintanya, dan disimpan ke lokasi yang kamu pilih.</string>
+    <string name="about_storage_csv">Ekspor CSV tidak terenkripsi.</string>
+    <string name="about_section_licenses">Lisensi open source</string>
+    <string name="about_license_font">Plus Jakarta Sans, lisensi SIL Open Font (OFL).</string>
 </resources>

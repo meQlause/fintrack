@@ -9,6 +9,7 @@ internal data class SettingsCallbacks(
     val onOpenCategories: () -> Unit = {},
     val onOpenBudgets: () -> Unit = {},
     val onOpenMonitoredApps: () -> Unit = {},
+    val onOpenAbout: () -> Unit = {},
     val onOpenPinSetup: () -> Unit = {},
     val onOpenPinChange: () -> Unit = {},
     val onOpenPinRemove: () -> Unit = {},

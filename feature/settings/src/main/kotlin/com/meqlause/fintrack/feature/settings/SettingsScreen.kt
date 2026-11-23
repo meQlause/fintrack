@@ -76,6 +76,13 @@ internal fun SettingsScreen(
             SettingsSection(title = stringResource(R.string.settings_section_security)) {
                 SecurityRows(state = state, callbacks = callbacks)
             }
+            SettingsSection(title = stringResource(R.string.settings_section_about)) {
+                FormRow(
+                    label = stringResource(R.string.settings_about_label),
+                    value = "",
+                    onClick = callbacks.onOpenAbout,
+                )
+            }
             SettingsSection(title = stringResource(R.string.settings_section_backup)) {
                 BackupRows(backup = backup, callbacks = callbacks)
             }
