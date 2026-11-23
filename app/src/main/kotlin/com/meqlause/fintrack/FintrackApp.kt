@@ -1,7 +1,12 @@
 package com.meqlause.fintrack
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -15,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.meqlause.fintrack.core.designsystem.component.FintrackBarItem
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomBar
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomBarCallbacks
+import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.transaction.edit.navigation.EditTransactionDestination
 import com.meqlause.fintrack.lock.AppLockGate
@@ -32,7 +38,7 @@ fun FintrackApp(
 ) {
     val showOnboarding by startViewModel.showOnboarding.collectAsStateWithLifecycle()
     val locked by lockGate.isLocked.collectAsStateWithLifecycle()
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         showOnboarding?.let { onboardingNeeded ->
             FintrackShell(onboardingNeeded = onboardingNeeded, modifier = Modifier.fillMaxSize())
         }
@@ -52,17 +58,18 @@ private fun FintrackShell(
     val items = MainTab.entries.map { FintrackBarItem(stringResource(it.labelRes), it.iconRes) }
     val isOnboardingShown = destination?.route == OnboardingDestination::class.java.name
     Box(modifier = modifier.fillMaxSize()) {
+        // NFR-010: Android 15+ draws edge to edge, so content starts below the status bar
         FintrackNavHost(
             navController = navController,
             onboardingNeeded = onboardingNeeded,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.statusBars),
         )
         if (destination != null && !isOnboardingShown) {
             FintrackBottomBar(
                 items = items,
                 selectedIndex = MainTab.entries.indexOfFirst { it.isSelectedIn(destination) },
                 callbacks = barCallbacks(navController),
-                modifier = Modifier.align(Alignment.BottomCenter),
+                modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding(),
             )
         }
     }

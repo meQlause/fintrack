@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -19,7 +20,11 @@ fun LockOverlay(
     when (locked) {
         true -> {
             BackHandler(enabled = true) {}
-            LockRoute(onUnlocked = onUnlocked, modifier = modifier)
+            // NFR-010: the lock screen keeps its keypad clear of the system bars on edge-to-edge devices
+            LockRoute(
+                onUnlocked = onUnlocked,
+                modifier = modifier.background(FintrackTheme.colors.surfaces.background).systemBarsPadding(),
+            )
         }
 
         null -> {
