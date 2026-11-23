@@ -46,33 +46,48 @@ internal fun PayBillSheet(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             singleLine = true,
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-            FintrackChip(
-                label = stringResource(R.string.credit_pay_full),
-                selected = false,
-                onClick = callbacks.onFillRemaining,
-            )
-            FintrackChip(
-                label = stringResource(R.string.credit_pay_partial),
-                selected = false,
-                onClick = callbacks.onClearEntry,
-            )
-        }
-        if (draft.failed) {
-            Text(
-                text = stringResource(R.string.credit_pay_failed),
-                style = FintrackTheme.typography.bodyMedium,
-                color = FintrackTheme.colors.semantics.error,
-            )
-        }
-        Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-            FintrackButton(
-                text = stringResource(R.string.credit_pay_save),
-                onClick = callbacks.onPay,
-                enabled = sources.isNotEmpty(),
-            )
-            FintrackButton(text = stringResource(R.string.credit_pay_cancel), onClick = callbacks.onDismissPay)
-        }
+        PayAmountChips(callbacks = callbacks)
+        if (draft.failed) PayFailedNotice()
+        PayButtons(canPay = sources.isNotEmpty(), callbacks = callbacks)
+    }
+}
+
+// FR-133: shown when the payment could not be stored
+@Composable
+private fun PayFailedNotice() {
+    Text(
+        text = stringResource(R.string.credit_pay_failed),
+        style = FintrackTheme.typography.bodyMedium,
+        color = FintrackTheme.colors.semantics.error,
+    )
+}
+
+// FR-132: save the payment, or cancel the sheet
+@Composable
+private fun PayButtons(
+    canPay: Boolean,
+    callbacks: CreditDetailCallbacks,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
+        FintrackButton(text = stringResource(R.string.credit_pay_save), onClick = callbacks.onPay, enabled = canPay)
+        FintrackButton(text = stringResource(R.string.credit_pay_cancel), onClick = callbacks.onDismissPay)
+    }
+}
+
+// FR-133: fill the whole remaining bill, or clear the entry to type a part of it
+@Composable
+private fun PayAmountChips(callbacks: CreditDetailCallbacks) {
+    Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
+        FintrackChip(
+            label = stringResource(R.string.credit_pay_full),
+            selected = false,
+            onClick = callbacks.onFillRemaining,
+        )
+        FintrackChip(
+            label = stringResource(R.string.credit_pay_partial),
+            selected = false,
+            onClick = callbacks.onClearEntry,
+        )
     }
 }
 

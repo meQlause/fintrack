@@ -68,13 +68,13 @@ private fun ColumnScope.InstalmentDetailBody(
     state: InstalmentDetailUiState.Success,
     callbacks: InstalmentDetailCallbacks,
 ) {
-    val row = state.instalmentRow
+    val planRow = state.instalmentRow
     LazyColumn(
         modifier = Modifier.fillMaxWidth().weight(1f),
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
-        item { InstalmentSummary(instalmentRow = row) }
-        item { ActionRows(instalmentRow = row, callbacks = callbacks) }
+        item { InstalmentSummary(instalmentRow = planRow) }
+        item { ActionRows(instalmentRow = planRow, callbacks = callbacks) }
         item {
             Text(
                 text = stringResource(R.string.instalment_schedule_title),
@@ -82,7 +82,7 @@ private fun ColumnScope.InstalmentDetailBody(
                 color = FintrackTheme.colors.texts.onSurfaceVariant,
             )
         }
-        items(items = row.portions, key = { it.number }) { portion -> PortionLine(portion = portion) }
+        items(items = planRow.portions, key = { it.number }) { portion -> PortionLine(portion = portion) }
     }
     if (state.confirmDelete) {
         DeleteDialog(onConfirm = callbacks.onConfirmDelete, onDismiss = callbacks.onDismissDelete)
@@ -95,14 +95,7 @@ private fun InstalmentSummary(instalmentRow: InstalmentRow) {
     val colors = FintrackTheme.colors
     Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
         Text(text = instalmentRow.title, style = FintrackTheme.typography.headlineSmall, color = colors.texts.onSurface)
-        Text(
-            text = "${instalmentRow.cardName} · ${stringResource(
-                R.string.instalment_monthly,
-                MoneyFormatter.format(instalmentRow.monthly),
-            )}",
-            style = FintrackTheme.typography.bodyMedium,
-            color = colors.texts.onSurfaceVariant,
-        )
+        InstalmentSubtitle(instalmentRow = instalmentRow)
         ProgressBar(fraction = instalmentRow.billed.toFloat() / instalmentRow.tenor, color = colors.brands.primary)
         Text(
             text = stringResource(R.string.instalment_progress, instalmentRow.billed, instalmentRow.tenor),
@@ -164,20 +157,27 @@ private fun PortionLine(portion: InstalmentPortionRow) {
                 color = colors.texts.onSurfaceVariant,
             )
         }
-        Text(
-            text = MoneyFormatter.format(portion.amount),
-            style = FintrackTheme.typography.bodyMedium,
-            color = colors.texts.onSurface,
-        )
-        Text(
-            text =
-                stringResource(
-                    if (portion.billed) R.string.instalment_portion_billed else R.string.instalment_portion_pending,
-                ),
-            style = FintrackTheme.typography.labelMedium,
-            color = colors.texts.onSurfaceVariant,
-        )
+        PortionState(portion = portion)
     }
+}
+
+// S-16: the amount of one portion and whether its statement has billed it
+@Composable
+private fun PortionState(portion: InstalmentPortionRow) {
+    val colors = FintrackTheme.colors
+    Text(
+        text = MoneyFormatter.format(portion.amount),
+        style = FintrackTheme.typography.bodyMedium,
+        color = colors.texts.onSurface,
+    )
+    Text(
+        text =
+            stringResource(
+                if (portion.billed) R.string.instalment_portion_billed else R.string.instalment_portion_pending,
+            ),
+        style = FintrackTheme.typography.labelMedium,
+        color = colors.texts.onSurfaceVariant,
+    )
 }
 
 @Composable

@@ -68,25 +68,7 @@ private fun InstalmentCard(
 ) {
     ScreenRow(
         style = RowStyle(showDivider = showDivider, onClick = onClick),
-        slots =
-            RowSlots(leading = {}, trailing = {
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = stringResource(R.string.instalment_progress, item.billed, item.tenor),
-                        style = FintrackScreenText.number(size = 14.5f, weight = 700),
-                        color = FintrackTheme.colors.texts.onSurface,
-                    )
-                    Text(
-                        text =
-                            stringResource(
-                                R.string.instalment_remaining,
-                                "Rp" + MoneyFormatter.formatCompact(item.remaining),
-                            ),
-                        style = FintrackScreenText.rowSub(),
-                        color = FintrackTheme.colors.texts.onSurfaceVariant,
-                    )
-                }
-            }),
+        slots = RowSlots(leading = {}, trailing = { InstalmentProgress(item) }),
     ) {
         Text(
             text = item.title,
@@ -99,6 +81,23 @@ private fun InstalmentCard(
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
         ProgressLine(fraction = if (item.tenor > 0) item.billed.toFloat() / item.tenor else 0f)
+    }
+}
+
+// S-14: "3/12" over the principal that is still left
+@Composable
+private fun InstalmentProgress(item: InstalmentRow) {
+    Column(horizontalAlignment = Alignment.End) {
+        Text(
+            text = stringResource(R.string.instalment_progress, item.billed, item.tenor),
+            style = FintrackScreenText.number(size = 14.5f, weight = 700),
+            color = FintrackTheme.colors.texts.onSurface,
+        )
+        Text(
+            text = stringResource(R.string.instalment_remaining, "Rp" + MoneyFormatter.formatCompact(item.remaining)),
+            style = FintrackScreenText.rowSub(),
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
     }
 }
 

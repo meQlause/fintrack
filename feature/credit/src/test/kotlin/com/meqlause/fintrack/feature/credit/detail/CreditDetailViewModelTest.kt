@@ -72,7 +72,7 @@ class CreditDetailViewModelTest {
     fun givenCardWithSpendingWhenObservedThenTheBillIsDue() =
         runTest {
             val cardId = wallets.insert(wallet("BCA Visa", WalletType.CREDIT_CARD))
-            transactions.insert(row(cardId, TransactionType.EXPENSE, 3_500_000L, null, "2026-10-05T03:00:00Z"))
+            transactions.insert(expenseRow(cardId, 3_500_000L, "2026-10-05T03:00:00Z"))
             val viewModel = viewModel(cardId)
 
             val collector = backgroundScope.launch { viewModel.state.collect {} }
@@ -89,7 +89,7 @@ class CreditDetailViewModelTest {
         runTest {
             val cardId = wallets.insert(wallet("BCA Visa", WalletType.CREDIT_CARD))
             val bankId = wallets.insert(wallet("BCA", WalletType.BANK))
-            transactions.insert(row(cardId, TransactionType.EXPENSE, 3_500_000L, null, "2026-10-05T03:00:00Z"))
+            transactions.insert(expenseRow(cardId, 3_500_000L, "2026-10-05T03:00:00Z"))
             val viewModel = viewModel(cardId)
             val collector = backgroundScope.launch { viewModel.state.collect {} }
             advanceUntilIdle()
@@ -152,17 +152,15 @@ class CreditDetailViewModelTest {
             audit = audit,
         )
 
-    private fun row(
+    private fun expenseRow(
         walletId: WalletId,
-        type: TransactionType,
         amount: Long,
-        target: WalletId?,
         occurredAt: String,
     ): Transaction =
         Transaction(
             transactionId = TransactionId(0L),
-            movement = Movement(type, Money(amount)),
-            routing = Routing(walletId, target, categoryId = null, loanId = null),
+            movement = Movement(TransactionType.EXPENSE, Money(amount)),
+            routing = Routing(walletId, null, categoryId = null, loanId = null),
             memo = Memo(),
             origin = Origin(TransactionSource.MANUAL, inboxItemId = null),
             timing = Timing(Instant.parse(occurredAt), audit),

@@ -4,11 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.meqlause.fintrack.core.domain.repository.InstallmentPlanRepository
-import com.meqlause.fintrack.core.domain.repository.TransactionRepository
-import com.meqlause.fintrack.core.domain.repository.WalletRepository
-import com.meqlause.fintrack.core.domain.usecase.DeleteInstalmentPlanUseCase
-import com.meqlause.fintrack.core.domain.usecase.PayOffInstalmentUseCase
 import com.meqlause.fintrack.core.model.InstallmentPlan
 import com.meqlause.fintrack.core.model.InstallmentPlanId
 import com.meqlause.fintrack.core.model.Transaction
@@ -32,18 +27,20 @@ internal class InstalmentDetailViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
-        private val plans: InstallmentPlanRepository,
-        private val transactions: TransactionRepository,
-        private val wallets: WalletRepository,
-        private val payOffInstalment: PayOffInstalmentUseCase,
-        private val deleteInstalment: DeleteInstalmentPlanUseCase,
+        private val sources: InstalmentSources,
+        private val actions: InstalmentActions,
         private val clock: Clock,
     ) : ViewModel() {
         private val planId = InstallmentPlanId(savedStateHandle.toRoute<InstalmentDetailDestination>().planId)
         private val session = MutableStateFlow(Session())
 
         val state: StateFlow<InstalmentDetailUiState> =
-            combine(plans.observeAll(), transactions.observeAll(), wallets.observeAll(), session) {
+            combine(
+                sources.plans.observeAll(),
+                sources.transactions.observeAll(),
+                sources.wallets.observeAll(),
+                session,
+            ) {
                 planRows,
                 rows,
                 all,
@@ -54,7 +51,7 @@ internal class InstalmentDetailViewModel
 
         // FR-144: all remaining portions are billed on the next statement (BR-037)
         fun payOff() {
-            viewModelScope.launch { payOffInstalment(planId) }
+            viewModelScope.launch { actions.payOffInstalment(planId) }
         }
 
         fun requestDelete() {
@@ -68,7 +65,7 @@ internal class InstalmentDetailViewModel
         // FR-145: the screen closes first so the removed plan is not shown as missing while it goes
         fun confirmDelete() {
             session.update { it.copy(closed = true) }
-            viewModelScope.launch { deleteInstalment(planId) }
+            viewModelScope.launch { actions.deleteInstalment(planId) }
         }
 
         private fun buildState(
@@ -78,17 +75,21 @@ internal class InstalmentDetailViewModel
             current: Session,
         ): InstalmentDetailUiState {
             if (current.closed) return InstalmentDetailUiState.Closed
-            val plan = planRows.firstOrNull { it.installmentPlanId == planId } ?: return InstalmentDetailUiState.Missing
-            val walletId = plan.purchase.walletId
-            val wallet = allWallets.firstOrNull { it.walletId == walletId } ?: return InstalmentDetailUiState.Missing
-            val terms = wallet.terms.credit ?: return InstalmentDetailUiState.Missing
-            val today = LocalDate.now(clock)
-            val row = plan.toRow(wallet.profile.name, rows, terms.statementDay, today, clock.zone)
-            return if (row == null) {
-                InstalmentDetailUiState.Missing
-            } else {
-                InstalmentDetailUiState.Success(row, current.confirmDelete)
-            }
+            val planRow = rowOf(planRows, rows, allWallets) ?: return InstalmentDetailUiState.Missing
+            return InstalmentDetailUiState.Success(planRow, current.confirmDelete)
+        }
+
+        // BR-035: the plan of this screen as a row, or null when the plan, its card or its terms are gone
+        private fun rowOf(
+            planRows: List<InstallmentPlan>,
+            rows: List<Transaction>,
+            allWallets: List<Wallet>,
+        ): InstalmentRow? {
+            val plan = planRows.firstOrNull { it.installmentPlanId == planId } ?: return null
+            val wallet = allWallets.firstOrNull { it.walletId == plan.purchase.walletId } ?: return null
+            val terms = wallet.terms.credit ?: return null
+            val cutOff = StatementCutOff(statementDay = terms.statementDay, today = LocalDate.now(clock))
+            return plan.toRow(wallet.profile.name, rows, cutOff, clock.zone)
         }
 
         private data class Session(

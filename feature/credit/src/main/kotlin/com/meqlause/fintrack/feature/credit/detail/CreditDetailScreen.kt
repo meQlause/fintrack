@@ -34,30 +34,14 @@ internal fun CreditDetailScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
-        val success = state as? CreditDetailUiState.Success
-        ScreenBackHeader(
-            title =
-                HeaderTitle(
-                    text = success?.name.orEmpty(),
-                    badge =
-                        success?.let {
-                            stringResource(CreditLabels.type(it.type))
-                        },
-                ),
-            back = BackAction(label = stringResource(R.string.credit_back), onBack = callbacks.onBack),
-        )
+        CreditDetailHeader(state = state, onBack = callbacks.onBack)
         when (state) {
             CreditDetailUiState.Loading -> {
                 Unit
             }
 
             CreditDetailUiState.Missing -> {
-                Text(
-                    text = stringResource(R.string.credit_missing),
-                    style = FintrackTheme.typography.bodyLarge,
-                    color = FintrackTheme.colors.texts.onSurfaceVariant,
-                    modifier = Modifier.padding(FintrackScreenSizes.screenGutter),
-                )
+                CreditMissingNotice()
             }
 
             is CreditDetailUiState.Success -> {
@@ -67,6 +51,34 @@ internal fun CreditDetailScreen(
     }
 }
 
+// S-14: the back header, titled with the wallet name and badged with its type once loaded
+@Composable
+private fun CreditDetailHeader(
+    state: CreditDetailUiState,
+    onBack: () -> Unit,
+) {
+    val success = state as? CreditDetailUiState.Success
+    ScreenBackHeader(
+        title =
+            HeaderTitle(
+                text = success?.name.orEmpty(),
+                badge = success?.let { stringResource(CreditLabels.type(it.type)) },
+            ),
+        back = BackAction(label = stringResource(R.string.credit_back), onBack = onBack),
+    )
+}
+
+// S-14: shown when the id is not a credit wallet
+@Composable
+private fun CreditMissingNotice() {
+    Text(
+        text = stringResource(R.string.credit_missing),
+        style = FintrackTheme.typography.bodyLarge,
+        color = FintrackTheme.colors.texts.onSurfaceVariant,
+        modifier = Modifier.padding(FintrackScreenSizes.screenGutter),
+    )
+}
+
 // S-14: the header and the three cards; the day drawer and the pay sheet open over them
 @Composable
 private fun CreditDetailBody(
@@ -74,30 +86,7 @@ private fun CreditDetailBody(
     callbacks: CreditDetailCallbacks,
 ) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = FintrackScreenSizes.screenGutter)
-                    .padding(top = FintrackTheme.spacing.small, bottom = FintrackTheme.spacing.xxLarge),
-        ) {
-            BillCard(state = state, onPay = callbacks.onOpenPay)
-            LimitBar(
-                state = state,
-                modifier =
-                    Modifier.padding(
-                        top =
-                            FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall,
-                    ),
-            )
-            CycleRows(terms = state.terms, onOpenPicker = callbacks.onOpenPicker)
-            InstalmentSection(
-                instalments = state.instalments,
-                onOpenInstalment = callbacks.onOpenInstalment,
-                onOpenAll = callbacks.onOpenInstalments,
-            )
-        }
+        CreditDetailCards(state = state, callbacks = callbacks)
         state.picker?.let { day ->
             DayGridDrawer(
                 title = stringResource(pickerTitle(day)),
@@ -108,6 +97,34 @@ private fun CreditDetailBody(
         state.payDraft?.let { draft ->
             PayBillSheet(draft = draft, sources = state.sources, callbacks = callbacks)
         }
+    }
+}
+
+// S-14: the bill, the limit, the cycle days and the active instalments, in one scrolling column
+@Composable
+private fun CreditDetailCards(
+    state: CreditDetailUiState.Success,
+    callbacks: CreditDetailCallbacks,
+) {
+    Column(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = FintrackScreenSizes.screenGutter)
+                .padding(top = FintrackTheme.spacing.small, bottom = FintrackTheme.spacing.xxLarge),
+    ) {
+        BillCard(state = state, onPay = callbacks.onOpenPay)
+        LimitBar(
+            state = state,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall),
+        )
+        CycleRows(terms = state.terms, onOpenPicker = callbacks.onOpenPicker)
+        InstalmentSection(
+            instalments = state.instalments,
+            onOpenInstalment = callbacks.onOpenInstalment,
+            onOpenAll = callbacks.onOpenInstalments,
+        )
     }
 }
 

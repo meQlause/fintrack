@@ -11,41 +11,42 @@ private fun sampleState(): InstalmentListUiState.Success =
     InstalmentListUiState.Success(
         rows =
             listOf(
-                InstalmentRow(
-                    planId = 1L,
-                    title = "HP baru",
-                    cardName = "BCA Visa",
+                sampleRow(
+                    plan = InstalmentPlanInfo(planId = 1L, title = "HP baru", cardName = "BCA Visa"),
                     tenor = 6,
                     billed = 2,
-                    monthly = Money(500_000L),
-                    remaining = Money(2_000_000L),
-                    nextMonth = YearMonth.of(2026, 12),
-                    payoffMonth = null,
-                    portions = emptyList(),
+                    amounts = InstalmentAmounts(Money(rupiah = 500_000L), Money(rupiah = 2_000_000L)),
                 ),
-                InstalmentRow(
-                    planId = 2L,
-                    title = "Sepatu lari",
-                    cardName = "Kredivo",
+                sampleRow(
+                    plan = InstalmentPlanInfo(planId = 2L, title = "Sepatu lari", cardName = "Kredivo"),
                     tenor = 3,
                     billed = 1,
-                    monthly = Money(200_000L),
-                    remaining = Money(400_000L),
-                    nextMonth = YearMonth.of(2026, 12),
-                    payoffMonth = null,
-                    portions = emptyList(),
+                    amounts = InstalmentAmounts(Money(rupiah = 200_000L), Money(rupiah = 400_000L)),
                 ),
             ),
         filter = InstalmentFilter.ACTIVE,
     )
 
+private fun sampleRow(
+    plan: InstalmentPlanInfo,
+    tenor: Int,
+    billed: Int,
+    amounts: InstalmentAmounts,
+): InstalmentRow =
+    InstalmentRow(
+        plan = plan,
+        progress = InstalmentProgress(tenor = tenor, billed = billed, nextMonth = SAMPLE_NEXT, payoffMonth = null),
+        amounts = amounts,
+        portions = emptyList(),
+    )
+
+private val SAMPLE_NEXT = YearMonth.parse("2026-12")
+
 @Composable
 private fun InstalmentListSample() {
     InstalmentListScreen(
         state = sampleState(),
-        onBack = {},
-        onPickFilter = {},
-        onOpenInstalment = {},
+        callbacks = InstalmentListCallbacks(onBack = {}, onPickFilter = {}, onOpenInstalment = {}),
     )
 }
 

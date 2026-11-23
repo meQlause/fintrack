@@ -65,7 +65,12 @@ internal class InstalmentListViewModel
         ): InstalmentRow? {
             val wallet = allWallets.firstOrNull { it.walletId == plan.purchase.walletId } ?: return null
             val terms = wallet.terms.credit ?: return null
-            return plan.toRow(wallet.profile.name, rows, terms.statementDay, today, clock.zone)
+            return plan.toRow(
+                cardName = wallet.profile.name,
+                transactions = rows,
+                cutOff = StatementCutOff(statementDay = terms.statementDay, today = today),
+                zone = clock.zone,
+            )
         }
 
         private companion object {

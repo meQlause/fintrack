@@ -13,8 +13,6 @@ import com.meqlause.fintrack.core.domain.transaction.DraftRouting
 import com.meqlause.fintrack.core.domain.transaction.SaveTransactionResult
 import com.meqlause.fintrack.core.domain.transaction.TransactionDraft
 import com.meqlause.fintrack.core.domain.usecase.SaveTransactionUseCase
-import com.meqlause.fintrack.core.model.Audit
-import com.meqlause.fintrack.core.model.CreditTerms
 import com.meqlause.fintrack.core.model.InstallmentPlan
 import com.meqlause.fintrack.core.model.Memo
 import com.meqlause.fintrack.core.model.Money
@@ -23,8 +21,8 @@ import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.Wallet
 import com.meqlause.fintrack.core.model.WalletId
-import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.feature.credit.instalment.InstalmentRow
+import com.meqlause.fintrack.feature.credit.instalment.StatementCutOff
 import com.meqlause.fintrack.feature.credit.instalment.toRow
 import com.meqlause.fintrack.feature.credit.navigation.CreditDetailDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -141,27 +139,13 @@ internal class CreditDetailViewModel
             val picker = session.value.picker ?: return
             viewModelScope.launch {
                 val wallet = wallets.observeAll().first().firstOrNull { it.walletId == walletId } ?: return@launch
-                wallets.update(withDay(wallet, picker, pickedDay))
+                wallets.update(wallet.withCreditDay(picker, pickedDay, Instant.now(clock)))
                 session.update { it.copy(picker = null) }
             }
         }
 
         private fun markFailed() {
             session.update { s -> s.withPay { it.copy(failed = true) } }
-        }
-
-        private fun withDay(
-            wallet: Wallet,
-            picker: CreditDay,
-            newDay: Int,
-        ): Wallet {
-            val credit = requireNotNull(wallet.terms.credit)
-            val updated =
-                if (picker == CreditDay.STATEMENT) credit.copy(statementDay = newDay) else credit.copy(dueDay = newDay)
-            return wallet.copy(
-                terms = wallet.terms.copy(credit = updated),
-                audit = Audit(createdAt = wallet.audit.createdAt, updatedAt = Instant.now(clock)),
-            )
         }
 
         private fun buildState(
@@ -175,36 +159,46 @@ internal class CreditDetailViewModel
             val today = LocalDate.now(clock)
             val account = CreditAccountFactory.build(wallet, rows, planRows, clock.zone)
             return CreditDetailUiState.Success(
-                name = wallet.profile.name,
-                type = wallet.kind.type,
-                terms = terms,
-                statement = StatementCalculator.current(account, today),
-                outstanding = StatementCalculator.outstandingOn(account, today),
-                availableLimit = StatementCalculator.availableLimit(account, today),
+                identity = CreditIdentity(name = wallet.profile.name, type = wallet.kind.type),
+                figures =
+                    CreditFigures(
+                        terms = terms,
+                        statement = StatementCalculator.current(account, today),
+                        outstanding = StatementCalculator.outstandingOn(account, today),
+                        availableLimit = StatementCalculator.availableLimit(account, today),
+                    ),
                 today = today,
-                sources = allWallets.filter { isPayable(it) }.map { PaySource(it.walletId, it.profile.name) },
-                payDraft = current.payDraft,
+                pay =
+                    PayState(
+                        sources =
+                            allWallets
+                                .filter {
+                                    it.isPayableSource()
+                                }.map { PaySource(it.walletId, it.profile.name) },
+                        payDraft = current.payDraft,
+                    ),
                 picker = current.picker,
-                instalments = activeInstalments(wallet, terms, planRows, rows, today),
+                instalments = activeInstalments(wallet, planRows, rows, today),
             )
         }
 
         // S-14: the plans of this card that still have portions to bill, shown in the Cicilan aktif section
         private fun activeInstalments(
             wallet: Wallet,
-            terms: CreditTerms,
             planRows: List<InstallmentPlan>,
             rows: List<Transaction>,
             today: LocalDate,
         ): List<InstalmentRow> =
             planRows
                 .filter { it.purchase.walletId == walletId }
-                .mapNotNull { it.toRow(wallet.profile.name, rows, terms.statementDay, today, clock.zone) }
-                .filterNot { it.isFinished }
-
-        // BR-039: a credit wallet can never be the source of a bill payment, so only other wallets are offered
-        private fun isPayable(wallet: Wallet): Boolean =
-            wallet.kind.type != WalletType.CREDIT_CARD && wallet.kind.type != WalletType.PAYLATER
+                .mapNotNull {
+                    it.toRow(
+                        cardName = wallet.profile.name,
+                        transactions = rows,
+                        cutOff = StatementCutOff(statementDay = wallet.terms.credit?.statementDay ?: 1, today = today),
+                        zone = clock.zone,
+                    )
+                }.filterNot { it.isFinished }
 
         private data class Session(
             val payDraft: PayDraft? = null,

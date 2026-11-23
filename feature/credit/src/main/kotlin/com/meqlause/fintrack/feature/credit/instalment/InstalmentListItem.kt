@@ -37,30 +37,9 @@ internal fun InstalmentListItem(
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
         Text(text = instalmentRow.title, style = FintrackTheme.typography.titleMedium, color = colors.texts.onSurface)
-        Text(
-            text = "${instalmentRow.cardName} · ${stringResource(
-                R.string.instalment_monthly,
-                MoneyFormatter.format(instalmentRow.monthly),
-            )}",
-            style = FintrackTheme.typography.bodyMedium,
-            color = colors.texts.onSurfaceVariant,
-        )
+        InstalmentSubtitle(instalmentRow = instalmentRow)
         ProgressBar(fraction = instalmentRow.billed.toFloat() / instalmentRow.tenor, color = colors.brands.primary)
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = stringResource(R.string.instalment_progress, instalmentRow.billed, instalmentRow.tenor),
-                style = FintrackTheme.typography.labelLarge,
-                color = colors.texts.onSurface,
-            )
-            Text(
-                text = remainingLabel(instalmentRow),
-                style = FintrackTheme.typography.bodyMedium,
-                color = colors.texts.onSurfaceVariant,
-            )
-        }
+        ProgressLine(instalmentRow = instalmentRow)
         instalmentRow.nextMonth?.let { month ->
             Text(
                 text = stringResource(R.string.instalment_next_bill, month.label()),
@@ -68,6 +47,27 @@ internal fun InstalmentListItem(
                 color = colors.texts.onSurfaceVariant,
             )
         }
+    }
+}
+
+// FR-142: "2/6" and what is left of the principal
+@Composable
+private fun ProgressLine(instalmentRow: InstalmentRow) {
+    val colors = FintrackTheme.colors
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = stringResource(R.string.instalment_progress, instalmentRow.billed, instalmentRow.tenor),
+            style = FintrackTheme.typography.labelLarge,
+            color = colors.texts.onSurface,
+        )
+        Text(
+            text = remainingLabel(instalmentRow),
+            style = FintrackTheme.typography.bodyMedium,
+            color = colors.texts.onSurfaceVariant,
+        )
     }
 }
 

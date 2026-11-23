@@ -33,33 +33,10 @@ internal fun LimitBar(
     val used = state.outstanding.rupiah
     val fraction = if (limit > 0L) (used.toFloat() / limit.toFloat()).coerceIn(0f, 1f) else 0f
     val over = state.availableLimit.rupiah < 0L
-    val colors = FintrackTheme.colors
     ScreenCard(modifier = modifier) {
         Column(modifier = Modifier.padding(FintrackTheme.spacing.large)) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(
-                    text = stringResource(R.string.credit_limit_title),
-                    style = FintrackScreenText.label(),
-                    color = colors.texts.onSurfaceVariant,
-                )
-                Text(
-                    text = MoneyFormatter.format(state.terms.creditLimit),
-                    style = FintrackScreenText.number(size = 12.5f, weight = 600),
-                    color = colors.texts.onSurface,
-                )
-            }
-            Box(
-                modifier =
-                    Modifier
-                        .padding(top = FintrackTheme.spacing.medium - FintrackTheme.spacing.xxSmall)
-                        .fillMaxWidth()
-                        .height(FintrackScreenSizes.limitBar)
-                        .clip(RoundedCornerShape(FintrackScreenSizes.thinBar))
-                        .background(colors.surfaces.surfaceVariant),
-            ) {
-                val barColor = if (over) colors.semantics.error else colors.brands.primary
-                Box(modifier = Modifier.fillMaxHeight().fillMaxWidth(fraction).background(barColor))
-            }
+            LimitTitle(state = state)
+            LimitTrack(fraction = fraction, over = over)
             Row(
                 modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.small),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -71,6 +48,45 @@ internal fun LimitBar(
                 Figure(label = stringResource(R.string.credit_limit_left), value = availableText(state, over))
             }
         }
+    }
+}
+
+// FR-131: the "Limit" label and the credit limit
+@Composable
+private fun LimitTitle(state: CreditDetailUiState.Success) {
+    val colors = FintrackTheme.colors
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(
+            text = stringResource(R.string.credit_limit_title),
+            style = FintrackScreenText.label(),
+            color = colors.texts.onSurfaceVariant,
+        )
+        Text(
+            text = MoneyFormatter.format(state.terms.creditLimit),
+            style = FintrackScreenText.number(size = 12.5f, weight = 600),
+            color = colors.texts.onSurface,
+        )
+    }
+}
+
+// BR-044: the bar of the used part; it turns red over the limit
+@Composable
+private fun LimitTrack(
+    fraction: Float,
+    over: Boolean,
+) {
+    val colors = FintrackTheme.colors
+    Box(
+        modifier =
+            Modifier
+                .padding(top = FintrackTheme.spacing.medium - FintrackTheme.spacing.xxSmall)
+                .fillMaxWidth()
+                .height(FintrackScreenSizes.limitBar)
+                .clip(RoundedCornerShape(FintrackScreenSizes.thinBar))
+                .background(colors.surfaces.surfaceVariant),
+    ) {
+        val barColor = if (over) colors.semantics.error else colors.brands.primary
+        Box(modifier = Modifier.fillMaxHeight().fillMaxWidth(fraction).background(barColor))
     }
 }
 

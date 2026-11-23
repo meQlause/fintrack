@@ -41,18 +41,7 @@ internal fun BillCard(
     val status = statement.status
     ScreenCard(modifier = modifier) {
         Column(modifier = Modifier.padding(FintrackScreenSizes.billInset)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = stringResource(R.string.credit_bill_title, monthLabel(statement)),
-                    style = FintrackScreenText.label(),
-                    color = colors.texts.onSurfaceVariant,
-                )
-                StatusChip(status = status)
-            }
+            BillHeader(statement = statement)
             Text(
                 text = MoneyFormatter.format(statement.breakdown.remainingDue),
                 style = FintrackScreenText.number(size = 34f, weight = 700),
@@ -65,17 +54,7 @@ internal fun BillCard(
                 color = statusColor(status),
                 modifier = Modifier.padding(top = FintrackTheme.spacing.xSmall),
             )
-            Text(
-                text =
-                    stringResource(
-                        R.string.credit_bill_detail,
-                        MoneyFormatter.format(statement.breakdown.statementAmount),
-                        MoneyFormatter.format(statement.breakdown.paidSinceCutoff),
-                    ),
-                style = FintrackScreenText.rowSubNumber(),
-                color = colors.texts.onSurfaceVariant,
-                modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
-            )
+            BillBreakdown(statement = statement)
             ScreenPrimaryButton(
                 text = stringResource(R.string.credit_pay_button),
                 onClick = onPay,
@@ -83,6 +62,39 @@ internal fun BillCard(
             )
         }
     }
+}
+
+// FR-131: the month of the bill and its status chip
+@Composable
+private fun BillHeader(statement: StatementSummary) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = stringResource(R.string.credit_bill_title, monthLabel(statement)),
+            style = FintrackScreenText.label(),
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+        )
+        StatusChip(status = statement.status)
+    }
+}
+
+// FR-131: the statement amount and what was paid since the cut-off
+@Composable
+private fun BillBreakdown(statement: StatementSummary) {
+    Text(
+        text =
+            stringResource(
+                R.string.credit_bill_detail,
+                MoneyFormatter.format(statement.breakdown.statementAmount),
+                MoneyFormatter.format(statement.breakdown.paidSinceCutoff),
+            ),
+        style = FintrackScreenText.rowSubNumber(),
+        color = FintrackTheme.colors.texts.onSurfaceVariant,
+        modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
+    )
 }
 
 // S-14: the status pill, amber while due, orange when late, teal once paid and grey before the statement
@@ -108,15 +120,15 @@ private fun dueLine(
     statement: StatementSummary,
     today: LocalDate,
 ): String {
-    val due = statement.period.dueDate
-    val days = ChronoUnit.DAYS.between(today, due)
+    val dueOn = statement.period.dueDate
+    val days = ChronoUnit.DAYS.between(today, dueOn)
     val countdown =
         when {
             days > 0L -> pluralStringResource(R.plurals.credit_due_in_days, days.toInt(), days.toInt())
             days == 0L -> stringResource(R.string.credit_due_today)
             else -> pluralStringResource(R.plurals.credit_overdue_days, (-days).toInt(), (-days).toInt())
         }
-    return stringResource(R.string.credit_due_date, DUE_FORMAT.format(due)) + " · " + countdown
+    return stringResource(R.string.credit_due_date, DUE_FORMAT.format(dueOn)) + " · " + countdown
 }
 
 @Composable

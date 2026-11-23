@@ -17,9 +17,12 @@ internal fun InstalmentListRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     InstalmentListScreen(
         state = state,
-        onBack = onBack,
-        onPickFilter = viewModel::pickFilter,
-        onOpenInstalment = onOpenInstalment,
+        callbacks =
+            InstalmentListCallbacks(
+                onBack = onBack,
+                onPickFilter = viewModel::pickFilter,
+                onOpenInstalment = onOpenInstalment,
+            ),
         modifier = modifier,
     )
 }

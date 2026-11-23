@@ -26,22 +26,20 @@ import com.meqlause.fintrack.feature.credit.R
 @Composable
 internal fun InstalmentListScreen(
     state: InstalmentListUiState,
-    onBack: () -> Unit,
-    onPickFilter: (InstalmentFilter) -> Unit,
-    onOpenInstalment: (Long) -> Unit,
+    callbacks: InstalmentListCallbacks,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
         ScreenBackHeader(
             title = HeaderTitle(text = stringResource(R.string.instalment_list_title)),
-            back = BackAction(label = stringResource(R.string.credit_back), onBack = onBack),
+            back = BackAction(label = stringResource(R.string.credit_back), onBack = callbacks.onBack),
         )
         if (state is InstalmentListUiState.Success) {
             Column(
                 modifier = Modifier.weight(1f).padding(horizontal = FintrackScreenSizes.screenGutter),
                 verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
             ) {
-                InstalmentListBody(state = state, onPickFilter = onPickFilter, onOpenInstalment = onOpenInstalment)
+                InstalmentListBody(state = state, callbacks = callbacks)
             }
         }
     }
@@ -51,15 +49,14 @@ internal fun InstalmentListScreen(
 @Composable
 private fun ColumnScope.InstalmentListBody(
     state: InstalmentListUiState.Success,
-    onPickFilter: (InstalmentFilter) -> Unit,
-    onOpenInstalment: (Long) -> Unit,
+    callbacks: InstalmentListCallbacks,
 ) {
     Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
         InstalmentFilter.entries.forEach { filter ->
             FintrackChip(
                 label = stringResource(filterLabel(filter)),
                 selected = state.filter == filter,
-                onClick = { onPickFilter(filter) },
+                onClick = { callbacks.onPickFilter(filter) },
             )
         }
     }
@@ -75,7 +72,7 @@ private fun ColumnScope.InstalmentListBody(
             verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
         ) {
             items(items = state.rows, key = { it.planId }) { row ->
-                InstalmentListItem(instalmentRow = row, onClick = { onOpenInstalment(row.planId) })
+                InstalmentListItem(instalmentRow = row, onClick = { callbacks.onOpenInstalment(row.planId) })
             }
         }
     }

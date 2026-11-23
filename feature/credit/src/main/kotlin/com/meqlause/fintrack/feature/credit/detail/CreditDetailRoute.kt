@@ -19,21 +19,41 @@ internal fun CreditDetailRoute(
     CreditDetailScreen(
         state = state,
         callbacks =
-            CreditDetailCallbacks(
-                onBack = onBack,
-                onOpenPay = viewModel::openPay,
-                onDismissPay = viewModel::dismissPay,
-                onAmountChange = viewModel::setPayAmount,
-                onPickSource = viewModel::pickSource,
-                onFillRemaining = viewModel::fillRemaining,
-                onClearEntry = viewModel::clearAmount,
-                onPay = viewModel::payBill,
-                onOpenPicker = viewModel::openPicker,
-                onDismissPicker = viewModel::dismissPicker,
-                onPickDay = viewModel::pickDay,
-                onOpenInstalment = onOpenInstalment,
-                onOpenInstalments = onOpenInstalments,
+            creditCallbacks(
+                viewModel,
+                onBack,
+                CreditDetailCallbacks.Plans(onOpenInstalment, onOpenInstalments),
             ),
         modifier = modifier,
     )
 }
+
+// FR-131 to FR-138: the view model's actions and the host's links gathered for the screen
+private fun creditCallbacks(
+    viewModel: CreditDetailViewModel,
+    onBack: () -> Unit,
+    plans: CreditDetailCallbacks.Plans,
+): CreditDetailCallbacks =
+    CreditDetailCallbacks(
+        onBack = onBack,
+        bill =
+            CreditDetailCallbacks.Bill(
+                onOpenPay = viewModel::openPay,
+                onDismissPay = viewModel::dismissPay,
+                onPay = viewModel::payBill,
+            ),
+        entry =
+            CreditDetailCallbacks.Entry(
+                onAmountChange = viewModel::setPayAmount,
+                onPickSource = viewModel::pickSource,
+                onFillRemaining = viewModel::fillRemaining,
+                onClearEntry = viewModel::clearAmount,
+            ),
+        days =
+            CreditDetailCallbacks.Days(
+                onOpenPicker = viewModel::openPicker,
+                onDismissPicker = viewModel::dismissPicker,
+                onPickDay = viewModel::pickDay,
+            ),
+        plans = plans,
+    )
