@@ -28,7 +28,7 @@ private val CSV_HEADER =
         "sumber",
     )
 
-// FR-113, DOC-11: writes the chosen date range as UTF-8 CSV with a byte order mark; the file is not encrypted
+/** FR-113, DOC-11: writes the chosen date range as UTF-8 CSV with a byte order mark; the file is not encrypted */
 public class FileTransactionCsvRepository(
     private val transactions: TransactionRepository,
     private val wallets: WalletRepository,

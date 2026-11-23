@@ -27,15 +27,7 @@ internal data class InboxItemDto(
     fun toModel(): InboxItem =
         InboxItem(
             inboxItemId = InboxItemId(inboxItemId),
-            notice =
-                RawNotice(
-                    notice.packageName,
-                    notice.parserId,
-                    notice.rawTitle,
-                    notice.rawText,
-                    BackupValues.instant(notice.postedAt),
-                    notice.fingerprint,
-                ),
+            notice = noticeModel(),
             parsed =
                 ParsedAmount(
                     Money(parsed.amount),
@@ -55,6 +47,16 @@ internal data class InboxItemDto(
                     resolution.resolvedAt?.let(BackupValues::instant),
                 ),
             audit = audit.toModel(),
+        )
+
+    private fun noticeModel(): RawNotice =
+        RawNotice(
+            notice.packageName,
+            notice.parserId,
+            notice.rawTitle,
+            notice.rawText,
+            BackupValues.instant(notice.postedAt),
+            notice.fingerprint,
         )
 
     companion object {

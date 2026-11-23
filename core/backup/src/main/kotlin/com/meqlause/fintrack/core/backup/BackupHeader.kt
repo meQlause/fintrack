@@ -23,23 +23,24 @@ internal class BackupHeader(
     companion object {
         // DOC-11: rejects files that are not backups or use another container version before any decryption
         fun parse(bytes: ByteArray): BackupHeader {
-            if (bytes.size < BackupFormat.HEADER_BYTES) throw BackupException(BackupFailure.CORRUPT)
+            if (bytes.size < BackupFormat.HEADER_BYTES) reject(BackupFailure.CORRUPT)
             val buffer = ByteBuffer.wrap(bytes, 0, BackupFormat.HEADER_BYTES)
             val magic = ByteArray(BackupFormat.MAGIC.length)
             buffer.get(magic)
-            if (!magic.contentEquals(BackupFormat.MAGIC.toByteArray(Charsets.US_ASCII))) {
-                throw BackupException(BackupFailure.NOT_BACKUP)
-            }
+            val magicText = BackupFormat.MAGIC.toByteArray(Charsets.US_ASCII)
+            if (!magic.contentEquals(magicText)) reject(BackupFailure.NOT_BACKUP)
             val version = buffer.getShort().toInt() and UNSIGNED_SHORT_MASK
-            if (version != BackupFormat.CONTAINER_VERSION) throw BackupException(BackupFailure.UNSUPPORTED_VERSION)
+            if (version != BackupFormat.CONTAINER_VERSION) reject(BackupFailure.UNSUPPORTED_VERSION)
             val salt = ByteArray(BackupFormat.SALT_BYTES)
             buffer.get(salt)
-            val iv = ByteArray(BackupFormat.IV_BYTES)
-            buffer.get(iv)
+            val ivBytes = ByteArray(BackupFormat.IV_BYTES)
+            buffer.get(ivBytes)
             val iterations = buffer.getInt()
-            if (iterations !in 1..BackupFormat.MAX_ITERATIONS) throw BackupException(BackupFailure.CORRUPT)
-            return BackupHeader(salt, iv, iterations)
+            if (iterations !in 1..BackupFormat.MAX_ITERATIONS) reject(BackupFailure.CORRUPT)
+            return BackupHeader(salt, ivBytes, iterations)
         }
+
+        private fun reject(failure: BackupFailure): Nothing = throw BackupException(failure)
 
         private const val UNSIGNED_SHORT_MASK = 0xFFFF
     }

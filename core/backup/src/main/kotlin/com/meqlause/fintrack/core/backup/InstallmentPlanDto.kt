@@ -9,7 +9,6 @@ import com.meqlause.fintrack.core.model.Schedule
 import com.meqlause.fintrack.core.model.TransactionId
 import com.meqlause.fintrack.core.model.WalletId
 import kotlinx.serialization.Serializable
-import java.time.YearMonth
 
 // DOC-11: one instalment plan row in the backup; portions are recomputed, never stored
 @Serializable

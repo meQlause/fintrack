@@ -7,9 +7,9 @@ internal object BackupValidator {
     private const val MAX_PERIOD_START_DAY = 28
 
     fun validate(snapshot: BackupSnapshot) {
-        val ids = BackupIds(snapshot)
-        LedgerRules.validate(snapshot.ledger, ids)
-        AdjunctRules.validate(snapshot.adjunct, ids)
+        val refs = BackupIds(snapshot)
+        LedgerRules.validate(snapshot.ledger, refs)
+        AdjunctRules.validate(snapshot.adjunct, refs)
         BackupChecks.ensure(snapshot.preferences.periodStartDay in 1..MAX_PERIOD_START_DAY)
         BackupChecks.ensure(snapshot.backupReminderDays >= 0)
     }

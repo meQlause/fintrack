@@ -8,7 +8,7 @@ import com.meqlause.fintrack.core.domain.backup.BackupFailure
 import com.meqlause.fintrack.core.domain.port.BackupFiles
 import java.io.IOException
 
-// DOC-11: reads and writes the file the user picked through the system picker; no network is involved
+/** DOC-11: reads and writes the file the user picked through the system picker; no network is involved */
 public class ContentBackupFiles(
     private val context: Context,
 ) : BackupFiles {

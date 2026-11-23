@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
-// FR-110, FR-111, DOC-11: encrypted export that proves itself by reading the file back, and validated restore
+/** FR-110, FR-111, DOC-11: encrypted export that proves itself by reading the file back, and validated restore */
 public class FileBackupRepository(
     private val store: BackupStore,
     private val settings: SettingsRepository,
