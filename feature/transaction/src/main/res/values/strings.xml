@@ -35,6 +35,8 @@
     <string name="history_month_previous">Bulan sebelumnya</string>
     <string name="history_month_next">Bulan berikutnya</string>
     <string name="history_type_every">Semua</string>
+    <string name="history_type_expense">Keluar</string>
+    <string name="history_type_income">Masuk</string>
     <string name="history_type_loan">Pinjaman</string>
     <string name="history_filter_wallet">Dompet</string>
     <string name="history_filter_category">Kategori</string>
@@ -44,8 +46,8 @@
     <string name="history_filter_wallet_title">Pilih dompet</string>
     <string name="history_filter_category_title">Pilih kategori</string>
     <string name="history_filter_day_title">Pilih tanggal</string>
-    <string name="history_total_income">Pemasukan</string>
-    <string name="history_total_expense">Pengeluaran</string>
+    <string name="history_total_income">Masuk</string>
+    <string name="history_total_expense">Keluar</string>
     <string name="history_total_net">Selisih</string>
     <string name="history_view_list">Daftar</string>
     <string name="history_view_statistics">Statistik</string>

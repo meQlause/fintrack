@@ -37,9 +37,8 @@ internal fun HistoryTypeTabs(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .padding(
-                    top = FintrackTheme.spacing.small,
-                ).heightIn(min = FintrackTheme.sizes.touchTarget),
+                .padding(top = FintrackTheme.spacing.small / 2 + FintrackTheme.spacing.xxSmall)
+                .height(FintrackTheme.sizes.typeTabHeight),
     ) {
         val tabWidth = maxWidth / types.size
         val indicatorOffset by animateDpAsState(
@@ -53,8 +52,7 @@ internal fun HistoryTypeTabs(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-                    .heightIn(min = FintrackTheme.sizes.touchTarget),
+                    .height(FintrackTheme.sizes.typeTabHeight),
         ) {
             types.forEach { type ->
                 TypeTab(
@@ -103,7 +101,7 @@ private fun TypeTab(
     ) {
         Text(
             text = stringResource(type.labelRes),
-            style = FintrackTheme.typography.labelLarge,
+            style = FintrackTheme.typography.tabWide,
             color = if (selected) colors.texts.onSurface else colors.texts.onSurfaceVariant,
         )
     }

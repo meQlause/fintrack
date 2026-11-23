@@ -19,27 +19,31 @@ internal fun HistoryScreen(
     onOpenTransaction: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val gutter = Modifier.padding(horizontal = FintrackTheme.spacing.gutter)
     Column(
         modifier =
             modifier
                 .fillMaxSize()
                 .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large, vertical = FintrackTheme.spacing.large),
+                .padding(top = FintrackTheme.spacing.stack),
     ) {
         HistoryHeader(
             onCalendarClick = { onEvent(HistoryEvent.SheetOpened(HistorySheet.MONTH)) },
             onSearchClick = { onEvent(HistoryEvent.SearchToggled) },
+            modifier = gutter,
         )
         if (state.isSearchOpen && state.view == HistoryView.LIST) {
             HistorySearchField(
                 query = state.filter.query,
                 onQueryChange = { onEvent(HistoryEvent.QueryChanged(it)) },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = gutter.fillMaxWidth(),
             )
         }
         HistoryMonthStrip(month = state.month, onPick = { onEvent(HistoryEvent.MonthPicked(it)) })
-        HistoryViewSwitch(view = state.view, onPick = { onEvent(HistoryEvent.ViewPicked(it)) })
-        HistoryBody(state = state, onEvent = onEvent, onOpenTransaction = onOpenTransaction)
+        Column(modifier = gutter.weight(1f)) {
+            HistoryViewSwitch(view = state.view, onPick = { onEvent(HistoryEvent.ViewPicked(it)) })
+            HistoryBody(state = state, onEvent = onEvent, onOpenTransaction = onOpenTransaction)
+        }
     }
     HistorySheetHost(state = state, onEvent = onEvent)
 }

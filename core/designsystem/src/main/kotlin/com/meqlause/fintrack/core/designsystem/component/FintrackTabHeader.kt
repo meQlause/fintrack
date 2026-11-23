@@ -24,7 +24,7 @@ fun FintrackTabHeader(
     Row(
         modifier = modifier.fillMaxWidth().heightIn(min = FintrackTheme.sizes.tabHeaderHeight),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small + FintrackTheme.spacing.xxSmall),
     ) {
         leading()
         // NFR-010: the title is a heading for screen-reader navigation; the row grows at font scale 2.0

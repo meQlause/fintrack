@@ -12,4 +12,5 @@ internal data class HistoryRowItem(
     val title: String?,
     val subtitle: String,
     val appearance: Appearance = Appearance("other", "gray"),
+    val auto: Boolean = false,
 )

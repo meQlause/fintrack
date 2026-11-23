@@ -24,7 +24,7 @@ fun IconTile(
         modifier =
             modifier
                 .size(FintrackTheme.sizes.iconTile)
-                .clip(FintrackTheme.shapes.small)
+                .clip(FintrackTheme.shapes.shortcutIcon)
                 .background(brands.primaryContainer),
         contentAlignment = Alignment.Center,
     ) {

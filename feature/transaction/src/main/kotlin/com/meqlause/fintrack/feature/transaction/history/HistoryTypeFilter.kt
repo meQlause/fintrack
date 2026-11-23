@@ -8,8 +8,8 @@ internal enum class HistoryTypeFilter(
     val labelRes: Int,
 ) {
     EVERY(R.string.history_type_every),
-    EXPENSE(R.string.transaction_type_expense),
-    INCOME(R.string.transaction_type_income),
+    EXPENSE(R.string.history_type_expense),
+    INCOME(R.string.history_type_income),
     TRANSFER(R.string.transaction_type_transfer),
     ;
 

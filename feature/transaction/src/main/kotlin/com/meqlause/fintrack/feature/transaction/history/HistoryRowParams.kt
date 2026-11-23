@@ -16,6 +16,7 @@ internal fun HistoryRowItem.toParams(): TransactionRowParams =
         subtitle = subtitle,
         amount = amount,
         type = type,
+        auto = auto,
     )
 
 private fun typeLabelRes(type: TransactionType): Int =

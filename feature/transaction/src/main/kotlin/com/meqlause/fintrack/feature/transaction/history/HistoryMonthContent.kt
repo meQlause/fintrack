@@ -22,9 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.ui.format.AmountSign
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.core.ui.transaction.TransactionRowGroup
 import com.meqlause.fintrack.feature.transaction.R
@@ -102,21 +104,25 @@ private fun HistoryDayList(
 private fun DayHeader(group: HistoryDayGroup) {
     Row(
         modifier =
-            Modifier.fillMaxWidth().padding(
-                top = FintrackTheme.spacing.large,
-                bottom = FintrackTheme.spacing.small,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
+            Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = FintrackTheme.spacing.xSmall,
+                    end = FintrackTheme.spacing.xSmall,
+                    top = FintrackTheme.spacing.section,
+                    bottom = FintrackTheme.spacing.small,
+                ),
+        verticalAlignment = Alignment.Bottom,
     ) {
         Text(
             text = group.label,
-            style = FintrackTheme.typography.labelLarge,
+            style = FintrackTheme.typography.captionWide.copy(fontWeight = FontWeight.Bold),
             color = FintrackTheme.colors.texts.onSurface,
             modifier = Modifier.weight(1f),
         )
         Text(
-            text = MoneyFormatter.format(group.netTotal),
-            style = FintrackTheme.typography.labelMedium,
+            text = MoneyFormatter.formatSigned(group.netTotal, AmountSign.PLUS),
+            style = FintrackTheme.typography.caption,
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
     }

@@ -35,6 +35,8 @@ class FintrackTypography {
     val captionWide: TextStyle = typeStyle(size = 12.5f, lineHeight = 16f, weight = 600)
     val numberCompact: TextStyle = typeStyle(size = 13.5f, lineHeight = 18f, weight = 700, tabular = true)
     val badge: TextStyle = typeStyle(size = 10.5f, lineHeight = 14f, weight = 700)
+    val tab: TextStyle = typeStyle(size = 13f, lineHeight = 18f, weight = 600)
+    val tabWide: TextStyle = typeStyle(size = 13.5f, lineHeight = 18f, weight = 600)
     val micro: TextStyle = typeStyle(size = 11f, lineHeight = 14f, weight = 600, tabular = true)
     val numberLarge: TextStyle = typeStyle(size = 28f, lineHeight = 36f, weight = 700, tabular = true)
     val numberTotal: TextStyle = typeStyle(size = 20f, lineHeight = 26f, weight = 700, tabular = true)

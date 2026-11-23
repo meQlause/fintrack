@@ -38,13 +38,13 @@ class HistoryScreenUiTest {
                 )
             }
         }
-        composeRule.onNodeWithText("Warung Bu Tini").performClick()
+        composeRule.onNodeWithText("Makan siang").performClick()
         assertEquals(listOf(1L), opened)
     }
 
-    /** FR-036: the day header and the transfer row without a merchant are drawn. */
+    /** FR-036: the day header and the Transfer tab are drawn. */
     @Test
-    fun givenSampleListWhenRenderedThenDayHeaderAndTransferTitleAreShown() {
+    fun givenSampleListWhenRenderedThenDayHeaderAndTransferTabAreShown() {
         composeRule.setContent {
             FintrackTheme(darkTheme = false) {
                 HistoryScreen(state = sampleHistoryState(), onEvent = {}, onOpenTransaction = {})
@@ -52,7 +52,7 @@ class HistoryScreenUiTest {
         }
         composeRule.onNodeWithText("Hari ini").performClick()
         composeRule
-            .onAllNodes(hasText("Transfer") and SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Button))
+            .onAllNodes(hasText("Transfer") and SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Tab))
             .onFirst()
             .performClick()
     }

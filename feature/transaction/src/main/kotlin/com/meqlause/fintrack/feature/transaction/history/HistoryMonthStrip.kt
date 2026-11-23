@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,11 +37,6 @@ internal fun HistoryMonthStrip(
     onPick: (YearMonth) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium)) {
-        Text(
-            text = month.year.toString(),
-            style = FintrackTheme.typography.labelLarge,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-        )
         MonthPills(month = month, onPick = onPick)
     }
 }
@@ -55,23 +51,30 @@ private fun MonthPills(
     val selectedIndex = month.monthValue - 1
     val motion = FintrackTheme.motion.medium
     val scrollState = rememberScrollState()
-    val pillPx = with(LocalDensity.current) { FintrackTheme.sizes.monthPillWidth.roundToPx() }
+    val pillPx =
+        with(LocalDensity.current) { (FintrackTheme.sizes.monthPillMock + FintrackTheme.spacing.xSmall).roundToPx() }
     val indicatorOffset by animateDpAsState(
-        targetValue = FintrackTheme.sizes.monthPillWidth * selectedIndex.toFloat(),
+        targetValue = (FintrackTheme.sizes.monthPillMock + FintrackTheme.spacing.xSmall) * selectedIndex.toFloat(),
         animationSpec = tween(durationMillis = motion.durationMillis, easing = motion.easing),
         label = "history-month-indicator",
     )
     LaunchedEffect(selectedIndex) { scrollState.animateScrollTo(selectedIndex * pillPx) }
-    Box(modifier = Modifier.fillMaxWidth().horizontalScroll(scrollState)) {
+    Box(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .horizontalScroll(scrollState)
+                .padding(horizontal = FintrackTheme.spacing.gutter),
+    ) {
         Box(
             modifier =
                 Modifier
                     .offset(x = indicatorOffset)
-                    .size(width = FintrackTheme.sizes.monthPillWidth, height = FintrackTheme.sizes.monthPillHeight)
+                    .size(width = FintrackTheme.sizes.monthPillMock, height = FintrackTheme.sizes.monthPillHeight)
                     .clip(FintrackTheme.shapes.full)
-                    .background(FintrackTheme.colors.brands.primaryContainer),
+                    .background(FintrackTheme.colors.texts.onSurface),
         )
-        Row {
+        Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall)) {
             names.forEachIndexed { index, label ->
                 MonthPill(
                     label = label,
@@ -93,15 +96,15 @@ private fun MonthPill(
     Box(
         modifier =
             Modifier
-                .width(FintrackTheme.sizes.monthPillWidth)
+                .width(FintrackTheme.sizes.monthPillMock)
                 .height(FintrackTheme.sizes.monthPillHeight)
                 .selectable(selected = selected, role = Role.Tab, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = label,
-            style = FintrackTheme.typography.labelLarge,
-            color = if (selected) colors.brands.onPrimaryContainer else colors.texts.onSurfaceVariant,
+            style = FintrackTheme.typography.tab,
+            color = if (selected) colors.surfaces.background else colors.texts.onSurfaceVariant,
         )
     }
 }

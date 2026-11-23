@@ -23,5 +23,7 @@ class FintrackShapes {
     val card: CornerBasedShape = RoundedCornerShape(size = Dp(value = 18f))
     val walletIcon: CornerBasedShape = RoundedCornerShape(size = Dp(value = 9f))
     val chip: CornerBasedShape = RoundedCornerShape(size = Dp(value = 6f))
+    val segmentTrack: CornerBasedShape = RoundedCornerShape(size = Dp(value = 12f))
+    val segmentPill: CornerBasedShape = RoundedCornerShape(size = Dp(value = 9f))
     val shortcutIcon: CornerBasedShape = RoundedCornerShape(size = Dp(value = 10f))
 }

@@ -7,6 +7,7 @@ import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.HistoryView
 import com.meqlause.fintrack.feature.transaction.R
+import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // S-05: the "Daftar | Statistik" switch that sits under the month strip
 @Composable
@@ -17,8 +18,16 @@ internal fun HistoryViewSwitch(
     HistorySegmented(
         options =
             listOf(
-                HistorySegmentOption(HistoryView.LIST, stringResource(R.string.history_view_list)),
-                HistorySegmentOption(HistoryView.STATISTICS, stringResource(R.string.history_view_statistics)),
+                HistorySegmentOption(
+                    HistoryView.LIST,
+                    stringResource(R.string.history_view_list),
+                    DesignR.drawable.ic_history,
+                ),
+                HistorySegmentOption(
+                    HistoryView.STATISTICS,
+                    stringResource(R.string.history_view_statistics),
+                    DesignR.drawable.ic_stats,
+                ),
             ),
         selected = view,
         onPick = onPick,
