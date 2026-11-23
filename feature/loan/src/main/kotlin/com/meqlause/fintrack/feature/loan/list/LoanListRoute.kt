@@ -15,11 +15,11 @@ internal fun LoanListRoute(
 ) {
     val viewModel: LoanListViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
-    LoanListScreen(
-        state = state,
-        onBack = onBack,
-        onPickDirection = viewModel::pickDirection,
-        onOpenLoan = onOpenLoan,
-        modifier = modifier,
-    )
+    val callbacks =
+        LoanListCallbacks(
+            onBack = onBack,
+            onPickDirection = viewModel::pickDirection,
+            onOpenLoan = onOpenLoan,
+        )
+    LoanListScreen(state = state, callbacks = callbacks, modifier = modifier)
 }

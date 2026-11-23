@@ -54,7 +54,7 @@ private fun LoanSheetHost(
     state: LoanDetailUiState,
     onEvent: (LoanDetailEvent) -> Unit,
 ) {
-    val sheet = state.sheet ?: return
+    val sheet = state.overlay.sheet ?: return
     ModalBottomSheet(onDismissRequest = { onEvent(LoanDetailEvent.DismissSheet) }) {
         FintrackBottomSheet {
             when (sheet) {
@@ -71,7 +71,7 @@ private fun LoanDialogHost(
     state: LoanDetailUiState,
     onEvent: (LoanDetailEvent) -> Unit,
 ) {
-    val dialog = state.dialog ?: return
+    val dialog = state.overlay.dialog ?: return
     LoanConfirmDialog(
         dialog = dialog,
         onConfirm = { onEvent(LoanDetailEvent.DialogConfirmed) },

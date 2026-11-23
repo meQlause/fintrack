@@ -8,19 +8,41 @@ import com.meqlause.fintrack.core.model.LoanStatus
 import com.meqlause.fintrack.core.model.Money
 import java.time.LocalDate
 
+private const val ANDI_OUTSTANDING = 300_000L
+private const val DIMAS_OUTSTANDING = 150_000L
+private const val SAMPLE_YEAR = 2026
+private const val SAMPLE_MONTH = 11
+private const val SAMPLE_DAY = 30
+
 // FR-153, S-17: previews of the loan list with two people, one overdue loan and one settled loan
 private fun sampleState(): LoanListUiState {
+    val dueDate = LocalDate.of(SAMPLE_YEAR, SAMPLE_MONTH, SAMPLE_DAY)
     val open =
         listOf(
-            LoanListRow(1L, "Andi", Money(300_000L), 0f, LocalDate.of(2026, 11, 30), LoanStatus.OPEN, overdue = false),
-            LoanListRow(3L, "Dimas", Money(150_000L), 0f, null, LoanStatus.OPEN, overdue = false),
+            LoanListRow(
+                loanId = 1L,
+                personName = "Andi",
+                outstanding = Money(ANDI_OUTSTANDING),
+                progress = 0f,
+                due = LoanDue(date = dueDate, overdue = false),
+                status = LoanStatus.OPEN,
+            ),
+            LoanListRow(
+                loanId = 2L,
+                personName = "Dimas",
+                outstanding = Money(DIMAS_OUTSTANDING),
+                progress = 0f,
+                due = LoanDue(date = null, overdue = false),
+                status = LoanStatus.OPEN,
+            ),
         )
     return LoanListUiState(direction = LoanDirection.LENT, groups = open.groupedByPerson(), settled = emptyList())
 }
 
 @Composable
 private fun LoanListSample() {
-    LoanListScreen(state = sampleState(), onBack = {}, onPickDirection = {}, onOpenLoan = {})
+    val callbacks = LoanListCallbacks(onBack = {}, onPickDirection = {}, onOpenLoan = {})
+    LoanListScreen(state = sampleState(), callbacks = callbacks)
 }
 
 @Preview(name = "Loan list light", showBackground = true, widthDp = 390, heightDp = 844)

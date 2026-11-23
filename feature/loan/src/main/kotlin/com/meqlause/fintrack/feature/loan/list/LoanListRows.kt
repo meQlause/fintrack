@@ -25,7 +25,7 @@ import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.loan.R
 import com.meqlause.fintrack.feature.loan.loanDateLabel
 
-// S-17: one loan row, an initial in a round badge, the person over the due line with a 3 px bar, the amount at the right
+// S-17: one loan row, an initial in a round badge, the person over the due line and a bar, the amount at the right
 @Composable
 internal fun LoanRowItem(
     loanRow: LoanListRow,
@@ -33,8 +33,6 @@ internal fun LoanRowItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val dueColor =
-        if (loanRow.overdue) FintrackTheme.colors.semantics.error else FintrackTheme.colors.texts.onSurfaceVariant
     ScreenRow(
         modifier = modifier,
         showDivider = showDivider,
@@ -49,22 +47,30 @@ internal fun LoanRowItem(
             )
         },
     ) {
-        Text(
-            text = loanRow.personName,
-            style = FintrackScreenText.style(size = 14f, weight = 600),
-            color = FintrackTheme.colors.texts.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            text = dueText(loanRow),
-            style = FintrackScreenText.rowSub(weight = 500),
-            color = dueColor,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        RepaymentBar(progress = loanRow.progress, modifier = Modifier.padding(top = FintrackTheme.spacing.small))
+        LoanRowTexts(loanRow)
     }
+}
+
+// S-17: the person's name, then the due line in the error colour when the loan is overdue, then the repayment bar
+@Composable
+private fun LoanRowTexts(loanRow: LoanListRow) {
+    val dueColor =
+        if (loanRow.due.overdue) FintrackTheme.colors.semantics.error else FintrackTheme.colors.texts.onSurfaceVariant
+    Text(
+        text = loanRow.personName,
+        style = FintrackScreenText.style(size = 14f, weight = 600),
+        color = FintrackTheme.colors.texts.onSurface,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+    )
+    Text(
+        text = dueText(loanRow),
+        style = FintrackScreenText.rowSub(weight = 500),
+        color = dueColor,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+    )
+    RepaymentBar(progress = loanRow.progress, modifier = Modifier.padding(top = FintrackTheme.spacing.small))
 }
 
 // S-17: the 38 px round badge with the first letter of the person
@@ -107,7 +113,7 @@ private fun dueText(loanRow: LoanListRow): String =
     when {
         loanRow.status == LoanStatus.SETTLED -> stringResource(R.string.loan_status_settled)
         loanRow.status == LoanStatus.WRITTEN_OFF -> stringResource(R.string.loan_status_written_off)
-        loanRow.overdue -> stringResource(R.string.loan_due_overdue)
-        loanRow.dueDate == null -> stringResource(R.string.loan_due_none)
-        else -> stringResource(R.string.loan_due_on, loanRow.dueDate.loanDateLabel())
+        loanRow.due.overdue -> stringResource(R.string.loan_due_overdue)
+        loanRow.due.date == null -> stringResource(R.string.loan_due_none)
+        else -> stringResource(R.string.loan_due_on, loanRow.due.date.loanDateLabel())
     }

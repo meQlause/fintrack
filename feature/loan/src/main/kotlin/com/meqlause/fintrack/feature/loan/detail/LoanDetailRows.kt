@@ -81,11 +81,11 @@ private fun DueRow(
     canChange: Boolean,
     onEvent: (LoanDetailEvent) -> Unit,
 ) {
-    val due =
+    val dueOn =
         entry.loan.agreement.dueDate
             ?.atZone(ZoneId.systemDefault())
             ?.toLocalDate()
-    val value = due?.loanDateLabel() ?: stringResource(R.string.loan_due_none)
+    val value = dueOn?.loanDateLabel() ?: stringResource(R.string.loan_due_none)
     if (canChange) {
         FormRow(
             label = stringResource(R.string.loan_due_change),
