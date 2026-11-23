@@ -12,7 +12,9 @@ import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.SettingsDestination
 import com.meqlause.fintrack.feature.settings.navigation.settingsDestination
+import com.meqlause.fintrack.feature.transaction.edit.navigation.EditTransactionDestination
 import com.meqlause.fintrack.feature.transaction.edit.navigation.editTransactionDestination
+import com.meqlause.fintrack.feature.transaction.history.navigation.historyDestination
 import com.meqlause.fintrack.feature.wallet.navigation.walletDestination
 import com.meqlause.fintrack.tab.PlaceholderTabScreen
 
@@ -51,7 +53,10 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
             onSettingsClick = { navController.navigate(SettingsDestination) },
         )
     }
-    composable<HistoryRoute> { PlaceholderTabScreen(mainTab = MainTab.HISTORY) }
+    // DOC-09, FR-036: Riwayat (S-05); a tapped row opens the S-04 edit sheet for that transaction
+    historyDestination(onOpenTransaction = { id ->
+        navController.navigate(EditTransactionDestination(transactionId = id))
+    })
     composable<InvestmentRoute> { PlaceholderTabScreen(mainTab = MainTab.INVESTMENT) }
     walletDestination()
     // DOC-09, S-12: Pengaturan is opened from the Beranda header; its Kategori row leads to S-10 (FR-020)
