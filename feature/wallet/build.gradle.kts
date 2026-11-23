@@ -1,4 +1,47 @@
-// DOC-03: feature:wallet, see 03 module list
+// DOC-03: feature:wallet, S-09 Dompet (FR-010..016); depends on model, domain, ui and designsystem only
 plugins {
     id("fintrack.android.feature")
+    id("fintrack.android.hilt")
+    alias(libs.plugins.kotlin.serialization)
+}
+
+dependencies {
+    implementation(project(":core:model"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:designsystem"))
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.foundation.layout)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.text)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.navigation.compose)
+    implementation(libs.serialization.core)
+    implementation(libs.coroutines.core)
+    implementation(libs.dagger)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.hilt.lifecycle.viewmodel.compose)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.lifecycle.runtime.compose)
+    ksp(libs.hilt.compiler)
+    debugImplementation(libs.compose.ui.tooling)
+
+    testImplementation(project(":core:testing"))
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.junit4)
+    testImplementation(libs.assertk)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.robolectric.annotations)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.compose.ui.test)
+    testImplementation(libs.compose.ui.test.junit4)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.core)
+    debugRuntimeOnly(libs.compose.ui.test.manifest)
 }

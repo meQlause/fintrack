@@ -23,6 +23,10 @@ public class LocalWalletRepository(
 
     override suspend fun insert(wallet: Wallet): WalletId = WalletId(walletDao.insert(wallet.toEntity()))
 
+    override suspend fun update(wallet: Wallet) {
+        walletDao.update(wallet.toEntity())
+    }
+
     override suspend fun delete(wallet: Wallet) {
         walletDao.delete(wallet.toEntity())
     }

@@ -27,6 +27,10 @@ internal class InMemoryWalletRepository : WalletRepository {
         return WalletId(lastId)
     }
 
+    override suspend fun update(wallet: Wallet) {
+        rows.update { list -> list.map { if (it.walletId == wallet.walletId) wallet else it } }
+    }
+
     override suspend fun delete(wallet: Wallet) {
         rows.update { list -> list.filterNot { it.walletId == wallet.walletId } }
     }

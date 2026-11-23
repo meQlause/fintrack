@@ -19,7 +19,6 @@ val emptyAndroidModules =
         ":feature:loan",
         ":feature:lock",
         ":feature:statistics",
-        ":feature:wallet",
     )
 
 dependencyAnalysis {

@@ -366,7 +366,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(ui): add shared picker drawers [P4, DOC-09]`
 
 ### T4.3 — Wallets: Dompet tab + create/edit sheet (S-09)
-- [ ] done · Refs: FR-010 … FR-016, FR-139, FR-170 · Note: type and investment kind are chosen via drawers (no chip piles). Net worth block (BR-053) arrives in T7.8.
+- [x] done · Refs: FR-010 … FR-016, FR-139, FR-170 · Note: type and investment kind are chosen via drawers (no chip piles). Net worth block (BR-053) arrives in T7.8.
 - Commit: `feat(wallet): add wallet list and editor [P4, FR-010]`
 
 ### T4.4 — Wallet detail (S-19)

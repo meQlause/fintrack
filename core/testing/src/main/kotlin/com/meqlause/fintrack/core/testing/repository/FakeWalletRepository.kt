@@ -32,6 +32,10 @@ public class FakeWalletRepository(
 
     override suspend fun insert(wallet: Wallet): WalletId = WalletId(store.append(wallet))
 
+    override suspend fun update(wallet: Wallet) {
+        store.replace(wallet)
+    }
+
     override suspend fun delete(wallet: Wallet) {
         store.remove(wallet.walletId.value)
     }
