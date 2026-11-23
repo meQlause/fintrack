@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-08, FR-010..016, FR-139, FR-170: Indonesian copy of S-09 Dompet -->
+<resources>
+    <string name="wallet_tab_title">Dompet</string>
+    <string name="wallet_total_label">Total saldo</string>
+    <string name="wallet_add">Tambah Dompet</string>
+    <string name="wallet_empty_title">Belum ada dompet</string>
+    <string name="wallet_empty_body">Tambahkan dompet untuk mencatat di mana uangmu disimpan.</string>
+
+    <string name="wallet_group_cash">Tunai</string>
+    <string name="wallet_group_bank">Bank</string>
+    <string name="wallet_group_ewallet">E-Wallet</string>
+    <string name="wallet_group_credit">Kredit</string>
+    <string name="wallet_group_investment">Investasi</string>
+    <string name="wallet_group_other">Lainnya</string>
+    <string name="wallet_archived_title">Diarsipkan (%1$d)</string>
+    <string name="wallet_archived_label">Diarsipkan</string>
+
+    <string name="wallet_type_cash">Tunai</string>
+    <string name="wallet_type_bank">Bank</string>
+    <string name="wallet_type_ewallet">E-Wallet</string>
+    <string name="wallet_type_credit_card">Kartu kredit</string>
+    <string name="wallet_type_paylater">Paylater</string>
+    <string name="wallet_type_investment">Investasi</string>
+    <string name="wallet_type_other">Lainnya</string>
+
+    <string name="wallet_kind_mutual_fund">Reksa dana</string>
+    <string name="wallet_kind_stock">Saham</string>
+    <string name="wallet_kind_gold">Emas</string>
+    <string name="wallet_kind_deposit">Deposito</string>
+    <string name="wallet_kind_crypto">Kripto</string>
+    <string name="wallet_kind_other">Lainnya</string>
+
+    <string name="wallet_editor_new">Dompet baru</string>
+    <string name="wallet_editor_edit">Ubah dompet</string>
+    <string name="wallet_field_name">Nama</string>
+    <string name="wallet_field_type">Jenis</string>
+    <string name="wallet_field_invest_kind">Jenis investasi</string>
+    <string name="wallet_field_initial_balance">Saldo awal</string>
+    <string name="wallet_field_invested">Modal awal</string>
+    <string name="wallet_field_debt">Utang saat ini</string>
+    <string name="wallet_field_limit">Limit</string>
+    <string name="wallet_field_statement_day">Tutup buku</string>
+    <string name="wallet_field_due_day">Jatuh tempo</string>
+    <string name="wallet_day_value">Tanggal %1$d</string>
+    <string name="wallet_include_total">Hitung di total saldo</string>
+    <string name="wallet_name_blank">Nama dompet wajib diisi</string>
+    <string name="wallet_name_too_long">Nama dompet maksimal 30 karakter</string>
+    <string name="wallet_limit_invalid">Limit harus lebih dari nol</string>
+    <string name="wallet_save">Simpan</string>
+    <string name="wallet_cancel">Batal</string>
+    <string name="wallet_archive">Arsipkan</string>
+    <string name="wallet_restore">Pulihkan</string>
+
+    <string name="wallet_picker_type_title">Jenis dompet</string>
+    <string name="wallet_picker_invest_title">Jenis investasi</string>
+    <string name="wallet_picker_statement_title">Tanggal tutup buku</string>
+    <string name="wallet_picker_due_title">Tanggal jatuh tempo</string>
+</resources>

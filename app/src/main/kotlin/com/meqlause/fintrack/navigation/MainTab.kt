@@ -4,6 +4,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import com.meqlause.fintrack.R
+import com.meqlause.fintrack.feature.wallet.navigation.WalletDestination
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // DOC-09: the four tabs of the bottom bar, in bar order; the centre add button is not a tab
@@ -27,7 +28,7 @@ enum class MainTab(
             HOME -> HomeRoute::class.java.name
             HISTORY -> HistoryRoute::class.java.name
             INVESTMENT -> InvestmentRoute::class.java.name
-            WALLET -> WalletRoute::class.java.name
+            WALLET -> WalletDestination::class.java.name
         }
 
     // DOC-09: switching tabs keeps each tab's back stack and never stacks the same tab twice
@@ -41,7 +42,7 @@ enum class MainTab(
             HOME -> controller.navigate(HomeRoute, options)
             HISTORY -> controller.navigate(HistoryRoute, options)
             INVESTMENT -> controller.navigate(InvestmentRoute, options)
-            WALLET -> controller.navigate(WalletRoute, options)
+            WALLET -> controller.navigate(WalletDestination, options)
         }
     }
 }

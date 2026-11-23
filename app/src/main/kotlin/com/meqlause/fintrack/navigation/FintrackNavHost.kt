@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.meqlause.fintrack.feature.category.navigation.categoryDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
+import com.meqlause.fintrack.feature.wallet.navigation.walletDestination
 import com.meqlause.fintrack.tab.PlaceholderTabScreen
 
 // DOC-03: app owns the NavHost; onboarding (FR-001) starts when it is needed, otherwise Beranda is the start
@@ -43,7 +44,7 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     composable<HomeRoute> { PlaceholderTabScreen(mainTab = MainTab.HOME) }
     composable<HistoryRoute> { PlaceholderTabScreen(mainTab = MainTab.HISTORY) }
     composable<InvestmentRoute> { PlaceholderTabScreen(mainTab = MainTab.INVESTMENT) }
-    composable<WalletRoute> { PlaceholderTabScreen(mainTab = MainTab.WALLET) }
+    walletDestination()
     // DOC-09, FR-020: Kategori is reached from Settings > Data (T4.11 adds the entry point)
     categoryDestination(onBack = { navController.popBackStack() })
 }

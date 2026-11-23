@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.meqlause.fintrack.core.database.entity.WalletEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -13,6 +14,10 @@ interface WalletDao {
     /** DOC-02: inserts a wallet and returns its generated id. */
     @Insert
     suspend fun insert(wallet: WalletEntity): Long
+
+    /** FR-011, FR-012: overwrites the row of an existing wallet. */
+    @Update
+    suspend fun update(wallet: WalletEntity)
 
     /** BR-008: fails with a constraint violation while any row still references the wallet. */
     @Delete

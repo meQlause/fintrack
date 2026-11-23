@@ -21,7 +21,6 @@ val emptyAndroidModules =
         ":feature:settings",
         ":feature:statistics",
         ":feature:transaction",
-        ":feature:wallet",
     )
 
 dependencyAnalysis {

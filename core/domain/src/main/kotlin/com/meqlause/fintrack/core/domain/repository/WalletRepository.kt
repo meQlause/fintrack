@@ -16,6 +16,9 @@ public interface WalletRepository {
     /** FR-010: stores a wallet and returns its generated id; the walletId of [wallet] is ignored. */
     public suspend fun insert(wallet: Wallet): WalletId
 
+    /** FR-011, FR-012: stores the changed fields of an existing wallet, including its archive state. */
+    public suspend fun update(wallet: Wallet)
+
     /** BR-008: removes a wallet that no transaction refers to. */
     public suspend fun delete(wallet: Wallet)
 }
