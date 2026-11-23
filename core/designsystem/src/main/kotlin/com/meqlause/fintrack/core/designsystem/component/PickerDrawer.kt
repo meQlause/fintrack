@@ -34,44 +34,11 @@ fun PickerDrawer(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     FintrackBottomSheet(modifier = modifier.heightIn(max = FintrackTheme.sizes.drawerMaxHeight)) {
-        DrawerHeader(title = title, onClose = onClose)
+        SheetHeader(title = title, onClose = onClose)
         Column(
             modifier = Modifier.weight(1f, fill = false).fillMaxWidth().verticalScroll(rememberScrollState()),
             content = content,
         )
-    }
-}
-
-@Composable
-private fun DrawerHeader(
-    title: String,
-    onClose: () -> Unit,
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(bottom = FintrackTheme.spacing.small),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(
-            text = title,
-            style = FintrackTheme.typography.titleMedium,
-            color = FintrackTheme.colors.texts.onSurface,
-        )
-        Box(
-            modifier =
-                Modifier
-                    .size(FintrackTheme.sizes.touchTarget)
-                    .clip(FintrackTheme.shapes.full)
-                    .clickable(role = Role.Button, onClick = onClose),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_close),
-                contentDescription = stringResource(R.string.component_close),
-                tint = FintrackTheme.colors.texts.onSurfaceVariant,
-                modifier = Modifier.size(FintrackTheme.sizes.iconSmall),
-            )
-        }
     }
 }
 

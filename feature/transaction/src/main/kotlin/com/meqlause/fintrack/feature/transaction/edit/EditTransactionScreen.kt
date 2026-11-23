@@ -31,7 +31,7 @@ internal fun EditTransactionScreen(
     ) {
         FintrackBottomSheet(modifier = modifier) {
             Column(modifier = Modifier.fillMaxWidth()) {
-                EditTransactionSheetContent(state = state, onEvent = onEvent)
+                EditTransactionSheetContent(state = state, onEvent = onEvent, onClose = onDismiss)
                 state.removedShortcut?.let {
                     UndoSnackbar(
                         message = stringResource(UiR.string.shortcut_deleted),
@@ -48,10 +48,11 @@ internal fun EditTransactionScreen(
 private fun EditTransactionSheetContent(
     state: EditTransactionUiState,
     onEvent: (EditTransactionEvent) -> Unit,
+    onClose: () -> Unit,
 ) {
     when (val openSheet = state.openSheet) {
         null -> {
-            EditTransactionFormBody(state = state, onEvent = onEvent)
+            EditTransactionFormBody(state = state, onEvent = onEvent, onClose = onClose)
         }
 
         EditSheet.SHORTCUTS, EditSheet.SHORTCUT_MANAGE -> {

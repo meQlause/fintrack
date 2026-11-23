@@ -16,9 +16,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.R
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
-// DOC-08: primary action button, full width, at least the 48 dp touch target, labelLarge text
+// DOC-08: primary action button of the prototype: full width, 52 px tall, 16 px radius, 15 px bold label
 @Composable
 fun FintrackButton(
     text: String,
@@ -27,19 +29,20 @@ fun FintrackButton(
     enabled: Boolean = true,
 ) {
     val colors = FintrackTheme.colors
-    val containerColor = if (enabled) colors.brands.primary else colors.surfaces.surfaceVariant
-    val contentColor = if (enabled) colors.brands.onPrimary else colors.texts.faint
+    val containerColor =
+        if (enabled) colors.brands.primary else colors.brands.primary.copy(alpha = FintrackScreenSizes.disabledAlpha)
+    val contentColor = colors.brands.onPrimary
     Box(
         modifier =
             modifier
                 .fillMaxWidth()
-                .heightIn(min = FintrackTheme.sizes.touchTarget)
+                .heightIn(min = FintrackScreenSizes.saveHeight)
                 .clip(FintrackTheme.shapes.medium)
                 .background(containerColor)
                 .clickable(enabled = enabled, role = Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Text(text = text, style = FintrackTheme.typography.labelLarge, color = contentColor)
+        Text(text = text, style = FintrackScreenText.style(size = 15f, weight = 700), color = contentColor)
     }
 }
 

@@ -3,12 +3,12 @@ package com.meqlause.fintrack.feature.transaction.edit
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.component.SheetCheckRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.transaction.R
 
@@ -20,17 +20,11 @@ internal fun EditShortcutKeepRow(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = state.keepAsShortcut,
-                onCheckedChange = { onEvent(EditTransactionEvent.ShortcutToggled(it)) },
-            )
-            Text(
-                text = stringResource(R.string.shortcut_keep_label),
-                style = FintrackTheme.typography.bodyLarge,
-                color = FintrackTheme.colors.texts.onSurface,
-            )
-        }
+        SheetCheckRow(
+            label = stringResource(R.string.shortcut_keep_label),
+            checked = state.keepAsShortcut,
+            onCheckedChange = { onEvent(EditTransactionEvent.ShortcutToggled(it)) },
+        )
         if (state.shortcutErrors.isNotEmpty()) {
             Text(
                 text = stringResource(R.string.shortcut_title_invalid),

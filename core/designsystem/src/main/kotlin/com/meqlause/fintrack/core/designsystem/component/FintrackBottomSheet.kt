@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.R
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // DOC-08: modal sheet panel with a drag handle and the large top radius; the host owns the scrim and dismissal
@@ -31,9 +32,10 @@ fun FintrackBottomSheet(
                 .clip(FintrackTheme.shapes.sheet)
                 .background(FintrackTheme.colors.surfaces.background)
                 .padding(
-                    start = FintrackTheme.spacing.large,
-                    end = FintrackTheme.spacing.large,
-                    bottom = FintrackTheme.spacing.large,
+                    start = FintrackScreenSizes.screenGutter,
+                    top = FintrackScreenSizes.sheetTop,
+                    end = FintrackScreenSizes.screenGutter,
+                    bottom = FintrackScreenSizes.screenGutter,
                 ),
     ) {
         SheetDragHandle()
@@ -47,7 +49,7 @@ private fun ColumnScope.SheetDragHandle() {
         modifier =
             Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(vertical = FintrackTheme.spacing.small)
+                .padding(bottom = FintrackScreenSizes.sheetHandleBottom)
                 .width(FintrackTheme.sizes.dragHandleWidth)
                 .height(FintrackTheme.sizes.dragHandleHeight)
                 .clip(FintrackTheme.shapes.full)

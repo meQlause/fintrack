@@ -17,7 +17,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.font.FontWeight
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.transaction.R
 import com.meqlause.fintrack.core.designsystem.R as DesignR
@@ -32,24 +33,24 @@ internal fun ShortcutChip(
     Row(
         modifier =
             modifier
-                .height(FintrackTheme.sizes.chipHeight)
+                .height(FintrackScreenSizes.pillTall)
                 .clip(shape)
                 .background(FintrackTheme.colors.surfaces.surface)
                 .border(FintrackTheme.sizes.hairline, FintrackTheme.colors.surfaces.outline, shape)
                 .clickable(role = Role.Button, onClick = onClick)
                 .padding(horizontal = FintrackTheme.spacing.medium),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),
+        horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.actionTallGap),
     ) {
         Icon(
             painter = painterResource(DesignR.drawable.ic_bolt),
             contentDescription = null,
             tint = FintrackTheme.colors.brands.primary,
-            modifier = Modifier.size(FintrackTheme.sizes.shortcutGlyph),
+            modifier = Modifier.size(FintrackScreenSizes.tinyIcon),
         )
         Text(
             text = stringResource(R.string.transaction_shortcut_chip),
-            style = FintrackTheme.typography.captionWide.copy(fontWeight = FontWeight.Bold),
+            style = FintrackScreenText.style(size = 12.5f, weight = 700),
             color = FintrackTheme.colors.texts.onSurface,
         )
     }

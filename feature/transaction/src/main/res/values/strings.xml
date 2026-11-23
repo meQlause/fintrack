@@ -3,7 +3,7 @@
 <resources>
     <string name="transaction_title_add">Baru</string>
     <string name="transaction_shortcut_chip">Pintasan</string>
-    <string name="transaction_title_edit">Ubah Transaksi</string>
+    <string name="transaction_title_edit">Ubah</string>
     <string name="transaction_type_expense">Pengeluaran</string>
     <string name="transaction_type_income">Pemasukan</string>
     <string name="transaction_type_transfer">Transfer</string>
@@ -14,6 +14,12 @@
     <string name="transaction_fee_label">Biaya admin</string>
     <string name="transaction_note_hint">Catatan</string>
     <string name="transaction_save">Simpan</string>
+    <string name="transaction_group_cash">Tunai</string>
+    <string name="transaction_group_debit">Debit</string>
+    <string name="transaction_group_credit">Kartu kredit</string>
+    <string name="transaction_group_paylater">Paylater</string>
+    <string name="transaction_group_other">Lainnya</string>
+    <string name="transaction_pay_group">%1$s · %2$s</string>
     <string name="transaction_swap_description">Tukar dompet asal dan tujuan</string>
     <string name="transaction_error_amount_required">Masukkan jumlah</string>
     <string name="transaction_error_amount_too_large">Jumlah terlalu besar</string>
@@ -105,10 +111,12 @@
     <string name="instalment_amount_first">Isi jumlah dulu</string>
     <string name="transaction_type_loan">Pinjaman</string>
     <string name="transaction_error_person_required">Nama orang wajib diisi</string>
-    <string name="loan_direction_lent">Saya meminjamkan</string>
-    <string name="loan_direction_borrowed">Saya meminjam</string>
-    <string name="loan_person_hint">Nama orang</string>
-    <string name="loan_wallet_lent">Keluar dari</string>
+    <string name="loan_direction_lent">Pinjamkan</string>
+    <string name="loan_direction_borrowed">Pinjam</string>
+    <string name="loan_person_hint">Nama peminjam</string>
+    <string name="loan_person_hint_borrowed">Pinjam dari siapa?</string>
+    <string name="transaction_title_loan">Pinjaman baru</string>
+    <string name="loan_wallet_lent">Dari</string>
     <string name="loan_wallet_borrowed">Masuk ke</string>
     <string name="loan_due_label">Jatuh tempo</string>
     <string name="loan_due_drawer_title">Jatuh tempo pinjaman</string>

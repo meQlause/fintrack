@@ -29,7 +29,7 @@ class FintrackSizes {
     val heroBarHeight: Dp = Dp(value = 6f)
     val categoryBarHeight: Dp = Dp(value = 8f)
     val eyeButton: Dp = Dp(value = 28f)
-    val keypadKey: Dp = Dp(value = 52f)
+    val keypadKey: Dp = Dp(value = 50f)
     val detailIcon: Dp = Dp(value = 56f)
     val detailGlyph: Dp = Dp(value = 24f)
     val actionHeight: Dp = Dp(value = 60f)

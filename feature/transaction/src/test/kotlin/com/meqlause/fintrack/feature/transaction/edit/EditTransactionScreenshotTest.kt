@@ -29,4 +29,16 @@ class EditTransactionScreenshotTest {
         composeRule.setContent { EditTransactionDarkPreview(state = expenseSample()) }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/EditTransaction_dark.png")
     }
+
+    @Test
+    fun givenTransferSampleWhenRenderedThenItMatchesReference() {
+        composeRule.setContent { EditTransactionLightPreview(state = transferSample()) }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/EditTransactionTransfer_light.png")
+    }
+
+    @Test
+    fun givenLoanSampleWhenRenderedThenItMatchesReference() {
+        composeRule.setContent { EditTransactionLightPreview(state = loanSample()) }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/EditTransactionLoan_light.png")
+    }
 }

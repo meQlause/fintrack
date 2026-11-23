@@ -22,6 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.R
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 private const val BACKSPACE_KEY = "backspace"
@@ -46,10 +48,10 @@ fun NumericKeypad(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+        verticalArrangement = Arrangement.spacedBy(FintrackScreenSizes.keypadGap),
     ) {
         KEYPAD_ROWS.forEach { keys ->
-            Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.keypadGap)) {
                 keys.forEach { keyLabel ->
                     if (keyLabel == TRIPLE_ZERO_KEY && !showTripleZero) {
                         Spacer(modifier = Modifier.weight(1f))
@@ -92,7 +94,11 @@ private fun KeypadKey(
                 modifier = Modifier.size(FintrackTheme.sizes.iconMedium),
             )
         } else {
-            Text(text = label, style = FintrackTheme.typography.numberMedium, color = colors.texts.onSurface)
+            Text(
+                text = label,
+                style = FintrackScreenText.number(size = 20f, weight = 500),
+                color = colors.texts.onSurface,
+            )
         }
     }
 }

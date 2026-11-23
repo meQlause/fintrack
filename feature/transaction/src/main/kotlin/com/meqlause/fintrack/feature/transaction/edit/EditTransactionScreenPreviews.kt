@@ -48,13 +48,13 @@ internal fun EditTransactionDarkPreview(
     }
 }
 
-// S-04: an expense of Rp25.000 paid from BCA into the Makan category
+// S-04: the mockup's empty expense: Rp0 with Makan picked and BCA as the paying wallet
 internal fun expenseSample(): EditTransactionUiState =
     EditTransactionUiState(
         form =
             TransactionForm(
                 type = TransactionType.EXPENSE,
-                rupiahDigits = "25000",
+                rupiahDigits = "",
                 walletId = WalletId(1L),
                 categoryId = CategoryId(1L),
             ),
@@ -62,13 +62,13 @@ internal fun expenseSample(): EditTransactionUiState =
         record = EditRecord(existing = null, occurredAt = Instant.EPOCH, dateLabel = "Hari ini, 14:05"),
     )
 
-// S-04: a transfer from BCA to the credit card, which is allowed as the target
+// S-04: a transfer from BCA to GoPay
 internal fun transferSample(): EditTransactionUiState =
     EditTransactionUiState(
         form =
             TransactionForm(
                 type = TransactionType.TRANSFER,
-                rupiahDigits = "500000",
+                rupiahDigits = "",
                 walletId = WalletId(1L),
                 targetWalletId = WalletId(2L),
             ),
@@ -76,18 +76,26 @@ internal fun transferSample(): EditTransactionUiState =
         record = EditRecord(existing = null, occurredAt = Instant.EPOCH, dateLabel = "Hari ini, 14:05"),
     )
 
+// S-04: the Pinjaman tab with nobody named yet, lent from BCA
+internal fun loanSample(): EditTransactionUiState = expenseSample().copy(loan = LoanForm())
+
 internal fun sampleCatalog(): EditCatalog =
     EditCatalog(
         wallets =
             listOf(
-                sampleWallet(1L, "BCA", WalletType.BANK),
-                sampleWallet(2L, "Kartu BCA", WalletType.CREDIT_CARD),
+                sampleWallet(1L, "BCA", WalletType.BANK, Appearance("bank", "blue")),
+                sampleWallet(2L, "GoPay", WalletType.EWALLET, Appearance("ewallet", "teal")),
             ),
-        moneyByWallet = mapOf(WalletId(1L) to Money(1_250_000L)),
+        moneyByWallet = mapOf(WalletId(1L) to Money(10_000_000L), WalletId(2L) to Money(222_000L)),
         categories =
             listOf(
-                sampleCategory(1L, "Makan", CategoryKind.EXPENSE),
-                sampleCategory(2L, "Gaji", CategoryKind.INCOME),
+                sampleCategory(1L, "Makan", CategoryKind.EXPENSE, Appearance("food", "orange")),
+                sampleCategory(3L, "Transport", CategoryKind.EXPENSE, Appearance("transport", "blue")),
+                sampleCategory(4L, "Belanja", CategoryKind.EXPENSE, Appearance("shopping", "pink")),
+                sampleCategory(5L, "Tagihan", CategoryKind.EXPENSE, Appearance("bill", "purple")),
+                sampleCategory(6L, "Hiburan", CategoryKind.EXPENSE, Appearance("entertainment", "indigo")),
+                sampleCategory(7L, "Kesehatan", CategoryKind.EXPENSE, Appearance("health", "red")),
+                sampleCategory(2L, "Gaji", CategoryKind.INCOME, Appearance("salary", "green")),
             ),
     )
 
@@ -95,12 +103,13 @@ private fun sampleWallet(
     walletKey: Long,
     name: String,
     type: WalletType,
+    appearance: Appearance,
 ): Wallet =
     Wallet(
         walletId = WalletId(walletKey),
         kind = WalletKind(type, null),
         terms = WalletTerms(Money(0L), null),
-        profile = WalletProfile(name, Appearance("wallet", "teal"), walletKey.toInt()),
+        profile = WalletProfile(name, appearance, walletKey.toInt()),
         status = WalletStatus(),
         audit = Audit(Instant.EPOCH, Instant.EPOCH),
     )
@@ -109,10 +118,11 @@ private fun sampleCategory(
     categoryKey: Long,
     name: String,
     kind: CategoryKind,
+    appearance: Appearance,
 ): Category =
     Category(
         categoryId = CategoryId(categoryKey),
-        profile = CategoryProfile(name, kind, Appearance("tag", "teal"), categoryKey.toInt()),
+        profile = CategoryProfile(name, kind, appearance, categoryKey.toInt()),
         state = CategoryState(isDefault = true, isArchived = false),
         audit = Audit(Instant.EPOCH, Instant.EPOCH),
     )
