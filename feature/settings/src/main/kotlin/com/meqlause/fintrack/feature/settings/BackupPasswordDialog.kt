@@ -80,11 +80,11 @@ private fun PasswordFields(
     }
 }
 
-private fun titleRes(creating: Boolean): Int =
+internal fun titleRes(creating: Boolean): Int =
     if (creating) R.string.backup_password_title_create else R.string.backup_password_title_restore
 
 // FR-110: the reason a new backup password cannot be used yet, or null when it can; restores accept any entry
-private fun passwordError(
+internal fun passwordError(
     creating: Boolean,
     password: String,
     repeated: String,

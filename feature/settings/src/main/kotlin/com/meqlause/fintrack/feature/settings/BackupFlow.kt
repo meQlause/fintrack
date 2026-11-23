@@ -165,7 +165,7 @@ private fun OutcomeDialog(
     )
 }
 
-private fun outcomeRes(outcome: BackupOutcome): Int =
+internal fun outcomeRes(outcome: BackupOutcome): Int =
     when (outcome) {
         BackupOutcome.Saved -> R.string.backup_saved
         BackupOutcome.Restored -> R.string.backup_restored
@@ -174,7 +174,7 @@ private fun outcomeRes(outcome: BackupOutcome): Int =
     }
 
 // FR-110, FR-111: Indonesian message of each failure reason
-private fun failureRes(failure: BackupFailure): Int =
+internal fun failureRes(failure: BackupFailure): Int =
     when (failure) {
         BackupFailure.PASSWORD_TOO_SHORT -> R.string.backup_password_too_short
         BackupFailure.TOO_LARGE -> R.string.backup_error_too_large

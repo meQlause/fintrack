@@ -20,4 +20,15 @@ class BatteryGuideForTest {
     fun givenUnknownMakerWhenResolvedThenTheGenericGuideIsUsed() {
         assertThat(batteryGuideFor("Nokia").brand).isEqualTo(R.string.battery_brand_generic)
     }
+
+    @Test
+    fun givenOppoFamilyWhenResolvedThenTheOppoGuideIsUsed() {
+        assertThat(batteryGuideFor("realme").brand).isEqualTo(R.string.battery_brand_oppo)
+        assertThat(batteryGuideFor("OnePlus").brand).isEqualTo(R.string.battery_brand_oppo)
+    }
+
+    @Test
+    fun givenVivoWhenResolvedThenTheVivoGuideIsUsed() {
+        assertThat(batteryGuideFor("vivo").brand).isEqualTo(R.string.battery_brand_vivo)
+    }
 }
