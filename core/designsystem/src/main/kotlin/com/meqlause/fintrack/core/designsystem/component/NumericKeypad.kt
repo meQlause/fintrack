@@ -73,11 +73,11 @@ private fun KeypadKey(
     modifier: Modifier,
 ) {
     val colors = FintrackTheme.colors
-    val shape = FintrackTheme.shapes.full
+    val shape = FintrackTheme.shapes.keypadKey
     Box(
         modifier =
             modifier
-                .heightIn(min = FintrackTheme.sizes.touchTarget)
+                .heightIn(min = FintrackTheme.sizes.keypadKey)
                 .clip(shape)
                 .background(colors.surfaces.surface)
                 .border(FintrackTheme.sizes.hairline, colors.surfaces.outline, shape)

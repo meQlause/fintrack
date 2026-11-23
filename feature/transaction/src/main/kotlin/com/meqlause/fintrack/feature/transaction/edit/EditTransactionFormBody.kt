@@ -15,10 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
 import com.meqlause.fintrack.core.designsystem.component.NumericKeypad
-import com.meqlause.fintrack.core.designsystem.component.SegmentedControl
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.feature.transaction.R
+import com.meqlause.fintrack.feature.transaction.history.HistorySegmentOption
+import com.meqlause.fintrack.feature.transaction.history.HistorySegmented
 import com.meqlause.fintrack.core.ui.R as UiR
 
 private val TYPE_ORDER = listOf(TransactionType.EXPENSE, TransactionType.INCOME, TransactionType.TRANSFER)
@@ -35,10 +36,10 @@ internal fun EditTransactionFormBody(
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
         EditTransactionHeader(state = state, onEvent = onEvent)
-        SegmentedControl(
-            options = typeLabels(),
-            selectedIndex = if (state.loan != null) TYPE_ORDER.size else TYPE_ORDER.indexOf(state.form.type),
-            onSelect = { index -> onEvent(typeTabEvent(index)) },
+        HistorySegmented(
+            options = typeOptions(),
+            selected = if (state.loan != null) TYPE_ORDER.size else TYPE_ORDER.indexOf(state.form.type),
+            onPick = { index -> onEvent(typeTabEvent(index)) },
         )
         EditTransactionAmountBlock(state = state, onEvent = onEvent)
         if (state.loan != null) {
@@ -80,27 +81,27 @@ private fun EditTransactionHeader(
                 stringResource(
                     if (state.isEditing) R.string.transaction_title_edit else R.string.transaction_title_add,
                 ),
-            style = FintrackTheme.typography.titleMedium,
+            style = FintrackTheme.typography.sheetTitle,
             color = FintrackTheme.colors.texts.onSurface,
             modifier = Modifier.weight(1f),
         )
         if (!state.isEditing) {
-            TextButton(onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.SHORTCUTS)) }) {
-                Text(text = stringResource(UiR.string.shortcut_drawer_title))
-            }
+            ShortcutChip(onClick = { onEvent(EditTransactionEvent.SheetOpened(EditSheet.SHORTCUTS)) })
         }
     }
 }
 
-// S-04: the three type tabs in the order TYPE_ORDER lists them, then the Pinjaman tab
+// S-04, DOC-08: Keluar, Masuk, Transfer and Pinjaman; the picked expense reads red and income green
 @Composable
-private fun typeLabels(): List<String> =
-    listOf(
-        stringResource(R.string.transaction_type_expense),
-        stringResource(R.string.transaction_type_income),
-        stringResource(R.string.transaction_type_transfer),
-        stringResource(R.string.transaction_type_loan),
+private fun typeOptions(): List<HistorySegmentOption<Int>> {
+    val colors = FintrackTheme.colors
+    return listOf(
+        HistorySegmentOption(0, stringResource(R.string.history_type_expense), activeColor = colors.semantics.expense),
+        HistorySegmentOption(1, stringResource(R.string.history_type_income), activeColor = colors.semantics.income),
+        HistorySegmentOption(2, stringResource(R.string.transaction_type_transfer)),
+        HistorySegmentOption(3, stringResource(R.string.transaction_type_loan)),
     )
+}
 
 // S-04: the Pinjaman tab follows the three type tabs; every other index picks its transaction type
 private fun typeTabEvent(index: Int): EditTransactionEvent =

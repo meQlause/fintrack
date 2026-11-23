@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- DOC-08, FR-030..FR-034: Indonesian copy of S-04 Catat / Ubah Transaksi -->
 <resources>
-    <string name="transaction_title_add">Catat Transaksi</string>
+    <string name="transaction_title_add">Baru</string>
+    <string name="transaction_shortcut_chip">Pintasan</string>
     <string name="transaction_title_edit">Ubah Transaksi</string>
     <string name="transaction_type_expense">Pengeluaran</string>
     <string name="transaction_type_income">Pemasukan</string>
