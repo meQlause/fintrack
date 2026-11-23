@@ -13,6 +13,8 @@ private const val BACKUP_TAG = "backup_reminder"
 private const val BACKUP_NOTIFICATION_ID = 1
 
 // FR-112: posts the backup reminder on its own channel
+
+/** FR-112: posts the backup reminder on the backup_reminder channel. */
 @Singleton
 public class BackupReminderNotifier
     @Inject

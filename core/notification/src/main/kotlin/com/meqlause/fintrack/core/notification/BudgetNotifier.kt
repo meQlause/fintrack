@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -19,6 +18,8 @@ internal const val BUDGET_NOTIFICATION_TAG = "budget"
 private const val BUDGET_CHANNEL_ID = "budget_alert"
 
 // FR-073: local alert when a budget crosses 80 or 100 percent; the channel is default importance (docs/07)
+
+/** FR-073: posts the local notification when a budget crosses 80 % or 100 %. */
 @Singleton
 public class BudgetNotifier
     @Inject
@@ -36,7 +37,7 @@ public class BudgetNotifier
                     .setSmallIcon(R.drawable.ic_inbox_notification)
                     .setContentTitle(title(alert))
                     .setContentText(text(alert))
-                    .setContentIntent(openAppIntent())
+                    .setContentIntent(openAppIntent(context))
                     .setAutoCancel(true)
                     .build()
             manager.notify(BUDGET_NOTIFICATION_TAG, alert.budgetId.value.toInt(), notification)
@@ -75,20 +76,9 @@ public class BudgetNotifier
         }
 
         private fun text(alert: BudgetAlert): String =
-            context.getString(R.string.budget_alert_text, rupiah(alert.spent.rupiah), rupiah(alert.limit.rupiah))
-
-        private fun openAppIntent(): PendingIntent? {
-            val launch = context.packageManager.getLaunchIntentForPackage(context.packageName) ?: return null
-            return PendingIntent.getActivity(context, 0, launch, PendingIntent.FLAG_IMMUTABLE)
-        }
-
-        // BR-009 display only: whole rupiah with dot grouping, as in Indonesian copy
-        private fun rupiah(amount: Long): String =
-            "Rp" +
-                amount
-                    .toString()
-                    .reversed()
-                    .chunked(3)
-                    .joinToString(".")
-                    .reversed()
+            context.getString(
+                R.string.budget_alert_text,
+                rupiahText(alert.spent.rupiah),
+                rupiahText(alert.limit.rupiah),
+            )
     }

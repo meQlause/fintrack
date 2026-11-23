@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 
 private const val OPEN_APP_REQUEST = 0
+private const val RUPIAH_GROUP = 3
 
 // FR-135: the runtime grant is needed on Android 13 and later; without it nothing is posted
 internal fun canPostNotifications(context: Context): Boolean =
@@ -25,6 +26,6 @@ internal fun rupiahText(amount: Long): String =
         amount
             .toString()
             .reversed()
-            .chunked(3)
+            .chunked(RUPIAH_GROUP)
             .joinToString(".")
             .reversed()

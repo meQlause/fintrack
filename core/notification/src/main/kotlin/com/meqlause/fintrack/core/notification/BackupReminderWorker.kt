@@ -10,6 +10,8 @@ import dagger.assisted.AssistedInject
 import java.time.Instant
 
 // FR-112: daily job that posts the backup reminder when a backup is due
+
+/** FR-112: daily job that posts the backup reminder when a backup is due. */
 @HiltWorker
 public class BackupReminderWorker
     @AssistedInject

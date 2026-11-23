@@ -9,6 +9,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
 // FR-092: daily job that clears the raw notification text of resolved inbox items
+
+/** FR-092: daily job that purges the raw text of inbox items resolved 30 days ago. */
 @HiltWorker
 public class RawTextPurgeWorker
     @AssistedInject

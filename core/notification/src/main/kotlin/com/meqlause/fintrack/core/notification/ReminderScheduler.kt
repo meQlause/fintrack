@@ -13,7 +13,7 @@ private const val REMINDER_WORK_NAME = "due-reminders"
 private const val REMINDER_INTERVAL_DAYS = 1L
 private const val BACKUP_REMINDER_WORK_NAME = "backup-reminder"
 
-// BR-045: schedules the daily reminder job for 09:00; KEEP leaves an existing schedule untouched
+/** BR-045: schedules the daily reminder job for 09:00; KEEP leaves an existing schedule untouched */
 public object ReminderScheduler {
     /** BR-045: the first run is at the next 09:00 local time, then every day. */
     public fun schedule(context: Context) {
@@ -26,7 +26,7 @@ public object ReminderScheduler {
             .enqueueUniquePeriodicWork(REMINDER_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request)
     }
 
-    /** FR-112: schedules the daily backup reminder job at the same run hour; KEEP leaves an existing schedule untouched. */
+    /** FR-112: schedules the daily backup reminder at the same run hour; KEEP keeps an existing schedule. */
     public fun scheduleBackupReminder(context: Context) {
         val request =
             PeriodicWorkRequestBuilder<BackupReminderWorker>(REMINDER_INTERVAL_DAYS, TimeUnit.DAYS)

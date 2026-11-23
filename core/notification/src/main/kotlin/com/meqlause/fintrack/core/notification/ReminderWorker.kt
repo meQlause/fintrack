@@ -10,7 +10,7 @@ import dagger.assisted.AssistedInject
 import java.time.LocalDate
 import java.time.ZoneId
 
-// BR-045, BR-055: daily job that posts the bill, loan and investment reminders due today
+/** BR-045, BR-055: daily job that posts the bill, loan and investment reminders due today */
 @HiltWorker
 public class ReminderWorker
     @AssistedInject

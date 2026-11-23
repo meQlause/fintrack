@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 private const val ENABLED_LISTENERS = "enabled_notification_listeners"
 
-// FR-080, FR-090: the listener is enabled when this package is in the system's enabled listener list
+/** FR-080, FR-090: the listener is enabled when this package is in the system's enabled listener list */
 public class NotificationAccessChecker
     @Inject
     constructor(

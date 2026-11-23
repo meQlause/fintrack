@@ -16,7 +16,7 @@ import javax.inject.Singleton
 private const val REMINDER_CHANNEL_ID = "bill_reminder"
 private const val REMINDER_TAG = "reminder"
 
-// BR-045, BR-055: posts one reminder; the id derives from the reminder key, so a repeat replaces it
+/** BR-045, BR-055: posts one reminder; the id derives from the reminder key, so a repeat replaces it */
 @Singleton
 public class ReminderNotifier
     @Inject

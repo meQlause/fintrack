@@ -20,6 +20,8 @@ private const val INBOX_CHANNEL_ID = "inbox"
 private const val FLAGS = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
 
 // FR-089: optional heads-up prompt from our app with Konfirmasi and Abaikan actions; nothing leaves the device
+
+/** FR-089: posts the optional heads-up prompt for a pending inbox item. */
 @Singleton
 public class InboxNotifier
     @Inject
@@ -37,7 +39,7 @@ public class InboxNotifier
                     .setSmallIcon(R.drawable.ic_inbox_notification)
                     .setContentTitle(title(item))
                     .setContentText(context.getString(R.string.inbox_prompt_text))
-                    .setContentIntent(openAppIntent())
+                    .setContentIntent(openAppIntent(context))
                     .setAutoCancel(true)
             if (item.suggestion.suggestedWalletId != null && item.suggestion.suggestedCategoryId != null) {
                 builder.addAction(action(item, InboxActionReceiver.ACTION_CONFIRM, R.string.inbox_action_confirm, 0))
@@ -62,7 +64,7 @@ public class InboxNotifier
         }
 
         private fun title(item: InboxItem): String {
-            val amount = rupiah(item.parsed.amount.rupiah)
+            val amount = rupiahText(item.parsed.amount.rupiah)
             val merchant = item.parsed.merchant
             return if (merchant.isEmpty()) {
                 context.getString(R.string.inbox_prompt_title_unknown, amount)
@@ -87,19 +89,4 @@ public class InboxNotifier
             val icon = Icon.createWithResource(context, R.drawable.ic_inbox_notification)
             return Notification.Action.Builder(icon, context.getString(labelRes), pending).build()
         }
-
-        private fun openAppIntent(): PendingIntent? {
-            val launch = context.packageManager.getLaunchIntentForPackage(context.packageName) ?: return null
-            return PendingIntent.getActivity(context, 0, launch, PendingIntent.FLAG_IMMUTABLE)
-        }
-
-        // BR-009 display only: amounts are whole rupiah with dot grouping, as in Indonesian copy
-        private fun rupiah(amount: Long): String =
-            "Rp" +
-                amount
-                    .toString()
-                    .reversed()
-                    .chunked(3)
-                    .joinToString(".")
-                    .reversed()
     }

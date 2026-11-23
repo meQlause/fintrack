@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 private const val PURGE_WORK_NAME = "raw-text-purge"
 private const val PURGE_INTERVAL_DAYS = 1L
 
-// FR-092: schedules the daily raw text purge; KEEP leaves an existing schedule untouched
+/** FR-092: schedules the daily raw text purge; KEEP leaves an existing schedule untouched */
 public object RawTextPurgeScheduler {
     /** FR-092: enqueues the daily purge once; calling it again at every app start changes nothing. */
     public fun schedule(context: Context) {

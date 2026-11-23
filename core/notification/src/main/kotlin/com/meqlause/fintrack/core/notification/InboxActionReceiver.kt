@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 // FR-089: handles Konfirmasi and Abaikan of the heads-up prompt without opening the app
+
+/** FR-087: handles the confirm and dismiss actions of inbox notifications. */
 @AndroidEntryPoint
 public class InboxActionReceiver : BroadcastReceiver() {
     @Inject public lateinit var confirmSuggested: ConfirmSuggestedInboxItemUseCase
@@ -32,7 +34,7 @@ public class InboxActionReceiver : BroadcastReceiver() {
         val pending = goAsync()
         appScope.launch(Dispatchers.Default) {
             try {
-                act(intent.action, itemId)
+                perform(intent.action, itemId)
             } finally {
                 context
                     .getSystemService(NotificationManager::class.java)
@@ -42,7 +44,7 @@ public class InboxActionReceiver : BroadcastReceiver() {
         }
     }
 
-    private suspend fun act(
+    private suspend fun perform(
         action: String?,
         itemId: InboxItemId,
     ) {
@@ -52,6 +54,7 @@ public class InboxActionReceiver : BroadcastReceiver() {
         }
     }
 
+    /** FR-087: intent actions and extras of the inbox notification buttons. */
     public companion object {
         public const val ACTION_CONFIRM: String = "com.meqlause.fintrack.action.INBOX_CONFIRM"
         public const val ACTION_DISMISS: String = "com.meqlause.fintrack.action.INBOX_DISMISS"

@@ -20,6 +20,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 // FR-080 … FR-083: reads notifications of enabled monitored apps on-device; nothing is sent anywhere
+
+/** FR-080: reads monitored app notifications on-device and hands them to the inbox pipeline. */
 @AndroidEntryPoint
 public class FintrackNotificationListener : NotificationListenerService() {
     @Inject public lateinit var monitoredApps: MonitoredAppRepository
@@ -52,10 +54,10 @@ public class FintrackNotificationListener : NotificationListenerService() {
     private suspend fun detect(posted: StatusBarNotification) {
         val monitored = monitoredApps.find(posted.packageName)
         if (monitored == null || !monitored.isEnabled) return
-        val raw = posted.toRawNotification()
-        monitoredApps.recordNotification(raw.packageName, raw.postedAt)
-        when (val result = parsers.parse(raw)) {
-            is ParseResult.Transaction -> promptIfStored(detectTransaction(raw, result.parsed))
+        val notice = posted.toRawNotification()
+        monitoredApps.recordNotification(notice.packageName, notice.postedAt)
+        when (val result = parsers.parse(notice)) {
+            is ParseResult.Transaction -> promptIfStored(detectTransaction(notice, result.parsed))
             is ParseResult.Ignored -> counters.countIgnored()
             ParseResult.Unrecognized -> counters.countUnrecognized()
         }
