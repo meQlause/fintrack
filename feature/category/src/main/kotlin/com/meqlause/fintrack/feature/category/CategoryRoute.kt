@@ -22,7 +22,7 @@ public fun CategoryRoute(
 }
 
 // S-10: wires every screen action to the matching ViewModel function
-private fun categoryCallbacks(
+internal fun categoryCallbacks(
     viewModel: CategoryViewModel,
     onBack: () -> Unit,
 ): CategoryCallbacks =
