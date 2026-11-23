@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DOC-08, DOC-09, FR-040..043: Indonesian copy of S-03 Beranda -->
+<resources>
+    <string name="home_title">Fintrack</string>
+    <string name="home_settings_description">Buka pengaturan</string>
+    <string name="home_balance_label">Saldo</string>
+    <string name="home_hide_amounts">Sembunyikan saldo</string>
+    <string name="home_show_amounts">Tampilkan saldo</string>
+    <string name="home_amount_hidden">Rp••••••</string>
+    <string name="home_net_suffix">%1$s bulan ini</string>
+    <string name="home_summary_open">Lihat ringkasan keuangan</string>
+
+    <string name="home_quick_title">Catat cepat</string>
+    <string name="home_quick_add">Baru</string>
+    <string name="home_quick_add_description">Catat transaksi baru</string>
+
+    <string name="home_category_title">Pengeluaran periode ini</string>
+    <string name="home_category_open">Lihat semua kategori pengeluaran</string>
+    <string name="home_category_none">Tanpa kategori</string>
+    <string name="home_category_legend">%1$s %2$d%%</string>
+    <string name="home_percent">%1$d%%</string>
+
+    <string name="home_recent_title">Transaksi terbaru</string>
+    <string name="home_recent_all">Lihat semua</string>
+    <string name="home_row_subtitle">%1$s · %2$s</string>
+    <string name="home_type_expense">Pengeluaran</string>
+    <string name="home_type_income">Pemasukan</string>
+    <string name="home_type_transfer">Transfer</string>
+    <string name="home_type_loan">Pinjaman</string>
+    <string name="home_empty_title">Belum ada transaksi</string>
+    <string name="home_empty_body">Tekan + untuk mencatat transaksi pertamamu</string>
+
+    <string name="home_summary_title">Ringkasan</string>
+    <string name="home_summary_net_worth">Kekayaan bersih</string>
+    <string name="home_summary_income">Pemasukan</string>
+    <string name="home_summary_expense">Pengeluaran</string>
+    <string name="home_summary_action">Lihat dompet</string>
+
+    <string name="home_categories_title">Kategori</string>
+    <plurals name="home_category_count">
+        <item quantity="one">%1$d transaksi</item>
+        <item quantity="other">%1$d transaksi</item>
+    </plurals>
+</resources>

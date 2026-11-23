@@ -13,7 +13,6 @@ val emptyAndroidModules =
         ":core:testing",
         ":feature:budget",
         ":feature:credit",
-        ":feature:dashboard",
         ":feature:inbox",
         ":feature:investment",
         ":feature:loan",

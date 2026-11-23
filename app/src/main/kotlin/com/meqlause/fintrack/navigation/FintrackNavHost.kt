@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.meqlause.fintrack.feature.category.navigation.CategoryDestination
 import com.meqlause.fintrack.feature.category.navigation.categoryDestination
+import com.meqlause.fintrack.feature.dashboard.navigation.HomeDestination
+import com.meqlause.fintrack.feature.dashboard.navigation.homeDestination
 import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.onboarding.onboardingGraph
 import com.meqlause.fintrack.feature.settings.navigation.SettingsDestination
@@ -32,7 +34,7 @@ internal fun FintrackNavHost(
             fintrackGraph(navController)
         }
     } else {
-        NavHost(navController = navController, startDestination = HomeRoute, modifier = modifier) {
+        NavHost(navController = navController, startDestination = HomeDestination, modifier = modifier) {
             fintrackGraph(navController)
         }
     }
@@ -42,19 +44,22 @@ internal fun FintrackNavHost(
 private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
     onboardingGraph(
         onFinished = {
-            navController.navigate(HomeRoute) {
+            navController.navigate(HomeDestination) {
                 popUpTo<OnboardingDestination> { inclusive = true }
             }
         },
         // FR-003: the PIN setup screen arrives with feature:lock (T8.1); until then the offer does nothing
         onSetupPin = {},
     )
-    composable<HomeRoute> {
-        PlaceholderTabScreen(
-            mainTab = MainTab.HOME,
-            onSettingsClick = { navController.navigate(SettingsDestination) },
-        )
-    }
+    // DOC-09, FR-040..043: Beranda (S-03); Catat cepat opens the add sheet, a row opens its transaction
+    homeDestination(
+        onOpenSettings = { navController.navigate(SettingsDestination) },
+        onOpenWallet = { navController.navigate(WalletDetailDestination(it.value)) },
+        onOpenWallets = { MainTab.WALLET.navigateFrom(navController) },
+        onOpenHistory = { MainTab.HISTORY.navigateFrom(navController) },
+        onQuickEntry = { navController.navigate(EditTransactionDestination()) },
+        onOpenTransaction = { navController.navigate(EditTransactionDestination(transactionId = it.value)) },
+    )
     // DOC-09, FR-036: Riwayat (S-05); a tapped row opens the S-04 edit sheet for that transaction
     historyDestination(onOpenTransaction = { id ->
         navController.navigate(EditTransactionDestination(transactionId = id))
