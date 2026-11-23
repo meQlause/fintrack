@@ -4,6 +4,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- NFR-001: WorkManager merges ACCESS_NETWORK_STATE in, but the app schedules no network constraints -->
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE"
+        tools:node="remove" />
+
     <application
         android:name=".FintrackApplication"
         android:allowBackup="false"

@@ -2,15 +2,20 @@ package com.meqlause.fintrack.feature.category
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 // DOC-03, FR-020: stateful entry of S-10; the only composable that touches CategoryViewModel
 @Composable
-public fun CategoryRoute(onBack: () -> Unit) {
+public fun CategoryRoute(
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val viewModel: CategoryViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     CategoryScreen(
+        modifier = modifier,
         state = state,
         callbacks =
             CategoryCallbacks(

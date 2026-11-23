@@ -7,6 +7,7 @@ import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.InstallmentPlanRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import com.meqlause.fintrack.core.domain.transaction.DraftRouting
+import com.meqlause.fintrack.core.domain.transaction.RollbackSignal
 import com.meqlause.fintrack.core.domain.transaction.SaveTransactionResult
 import com.meqlause.fintrack.core.domain.transaction.TransactionDraft
 import com.meqlause.fintrack.core.model.Audit
@@ -140,11 +141,6 @@ public class SaveInstalmentPurchaseUseCase
             draft.occurredAt.atZone(clock.zone).toLocalDate(),
             wallets.statementDayOf(walletId),
         )
-
-        // BR-011: thrown inside the atomic block so the whole store rolls back, then unwrapped into the rule errors
-        private class RollbackSignal(
-            val result: SaveTransactionResult.Rejected,
-        ) : RuntimeException()
 
         private companion object {
             const val DEFAULT_TITLE = "Cicilan"

@@ -13,7 +13,7 @@ import com.meqlause.fintrack.core.domain.usecase.ObserveBillsCardUseCase
 import com.meqlause.fintrack.core.domain.usecase.ObserveNetWorthUseCase
 import com.meqlause.fintrack.core.model.QuickEntry
 import com.meqlause.fintrack.core.model.QuickEntryId
-import com.meqlause.fintrack.core.ui.shortcut.toTileParams
+import com.meqlause.fintrack.core.ui.shortcut.ShortcutTileMapping
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -71,7 +71,14 @@ internal class HomeViewModel
                 removedShortcut,
             ) { (data, card, worth), hide, open, entries, gone ->
                 HomeCalculator.success(data, card, worth, hide, open, clock).copy(
-                    shortcuts = entries.toTileParams(data.wallets.associate { it.walletId to it.profile.name }),
+                    shortcuts =
+                        ShortcutTileMapping.toTileParams(
+                            entries,
+                            data.wallets.associate {
+                                it.walletId to
+                                    it.profile.name
+                            },
+                        ),
                     removedShortcut = gone,
                 )
             }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), HomeUiState.Loading)

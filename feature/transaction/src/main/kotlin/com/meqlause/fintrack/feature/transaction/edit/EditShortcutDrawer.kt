@@ -9,8 +9,8 @@ import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutGrid
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutManageList
+import com.meqlause.fintrack.core.ui.shortcut.ShortcutTileMapping
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutTileParams
-import com.meqlause.fintrack.core.ui.shortcut.toTileParams
 import com.meqlause.fintrack.core.ui.R as UiR
 
 // FR-039, S-04: the "⚡ Pintasan" drawer (3-column grid) and its "Atur pintasan" manage view
@@ -22,7 +22,7 @@ internal fun EditShortcutDrawer(
     modifier: Modifier = Modifier,
 ) {
     val manage = sheet == EditSheet.SHORTCUT_MANAGE
-    val items: List<ShortcutTileParams> = state.shortcuts.toTileParams(state.walletNames())
+    val items: List<ShortcutTileParams> = ShortcutTileMapping.toTileParams(state.shortcuts, state.walletNames())
     PickerDrawer(
         title = stringResource(if (manage) UiR.string.shortcut_manage_title else UiR.string.shortcut_drawer_title),
         onClose = { onEvent(EditTransactionEvent.SheetDismissed) },

@@ -7,11 +7,14 @@ import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import com.meqlause.fintrack.core.domain.category.DefaultCategory
+import dagger.hilt.android.testing.HiltTestApplication
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
+@Config(application = HiltTestApplication::class)
 class DefaultCategoryNamesTest {
     private val names = DefaultCategoryNames(ApplicationProvider.getApplicationContext<Context>())
 
