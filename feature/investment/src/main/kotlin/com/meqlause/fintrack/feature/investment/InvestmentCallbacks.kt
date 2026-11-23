@@ -10,8 +10,5 @@ internal data class InvestmentCallbacks(
     val onNameChange: (String) -> Unit,
     val onOpenKindPicker: (Boolean) -> Unit,
     val onPickKind: (InvestKind) -> Unit,
-    val onDigit: (String) -> Unit,
-    val onBackspace: () -> Unit,
-    val onSave: () -> Unit,
-    val onDismiss: () -> Unit,
+    val sheet: AmountSheetCallbacks,
 )

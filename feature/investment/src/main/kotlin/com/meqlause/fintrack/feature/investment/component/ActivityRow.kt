@@ -2,6 +2,7 @@ package com.meqlause.fintrack.feature.investment.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -33,25 +34,32 @@ internal fun ActivityRow(
         modifier = modifier.fillMaxWidth().padding(vertical = FintrackTheme.spacing.xSmall),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = stringResource(titleRes(activity.kind)),
-                style = typography.bodyLarge,
-                color = colors.texts.onSurface,
-            )
-            Text(
-                text = detail,
-                style = typography.labelMedium,
-                color = colors.texts.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
+        ActivityText(title = stringResource(titleRes(activity.kind)), detail = detail)
         Text(
             text = MoneyFormatter.formatSigned(activity.amount, signOf(activity.kind)),
             style = typography.bodyLarge,
             color = colors.texts.onSurface,
             maxLines = 1,
+        )
+    }
+}
+
+// FR-173: the heading of an entry with its date and account line underneath
+@Composable
+private fun RowScope.ActivityText(
+    title: String,
+    detail: String,
+) {
+    val colors = FintrackTheme.colors
+    val typography = FintrackTheme.typography
+    Column(modifier = Modifier.weight(1f)) {
+        Text(text = title, style = typography.bodyLarge, color = colors.texts.onSurface)
+        Text(
+            text = detail,
+            style = typography.labelMedium,
+            color = colors.texts.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

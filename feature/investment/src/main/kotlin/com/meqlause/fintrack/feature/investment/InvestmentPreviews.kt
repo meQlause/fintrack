@@ -37,7 +37,7 @@ private fun previewWallet(
     Wallet(
         walletId = WalletId(walletKey),
         kind = WalletKind(type = WalletType.INVESTMENT, investKind = kind),
-        terms = WalletTerms(initialBalance = Money(1_000_000L), credit = null),
+        terms = WalletTerms(initialBalance = Money(PREVIEW_BALANCE), credit = null),
         profile = WalletProfile(name = name, appearance = Appearance("trend", "gray"), sortOrder = walletKey.toInt()),
         status = WalletStatus(),
         audit = previewAudit,
@@ -51,19 +51,25 @@ private fun previewAccount(
         wallet = wallet,
         valuation =
             InvestmentValuation(
-                modal = Money(2_000_000L),
+                modal = Money(PREVIEW_MODAL),
                 currentValue = Money(current),
                 lastValuedAt = previewTime,
             ),
     )
 
+private const val BIBIT_KEY = 1L
+private const val EMAS_KEY = 2L
+private const val BIBIT_VALUE = 2_080_000L
+private const val EMAS_VALUE = 1_850_000L
+private const val EMAS_PUT_IN = 500_000L
+
 private fun previewPortfolio(): InvestmentPortfolio {
-    val bibit = previewAccount(previewWallet(1L, "Bibit", InvestKind.MUTUAL_FUND), 2_080_000L)
-    val emas = previewAccount(previewWallet(2L, "Emas Pegadaian", InvestKind.GOLD), 1_850_000L)
+    val bibit = previewAccount(previewWallet(BIBIT_KEY, "Bibit", InvestKind.MUTUAL_FUND), BIBIT_VALUE)
+    val emas = previewAccount(previewWallet(EMAS_KEY, "Emas Pegadaian", InvestKind.GOLD), EMAS_VALUE)
     val recent =
         listOf(
-            InvestmentActivity(WalletId(1L), previewTime, ActivityKind.VALUATION, Money(2_080_000L)),
-            InvestmentActivity(WalletId(2L), previewTime, ActivityKind.PUT_IN, Money(500_000L)),
+            InvestmentActivity(WalletId(BIBIT_KEY), previewTime, ActivityKind.VALUATION, Money(BIBIT_VALUE)),
+            InvestmentActivity(WalletId(EMAS_KEY), previewTime, ActivityKind.PUT_IN, Money(EMAS_PUT_IN)),
         )
     return InvestmentPortfolio(accounts = listOf(bibit, emas), recent = recent)
 }
@@ -75,10 +81,7 @@ private fun previewCallbacks(): InvestmentCallbacks =
         onNameChange = {},
         onOpenKindPicker = {},
         onPickKind = {},
-        onDigit = {},
-        onBackspace = {},
-        onSave = {},
-        onDismiss = {},
+        sheet = AmountSheetCallbacks(onDigit = {}, onBackspace = {}, onSave = {}, onDismiss = {}),
     )
 
 @Composable
@@ -120,8 +123,8 @@ internal fun InvestmentDetailDarkPreview() {
 
 @Composable
 private fun DetailSample() {
-    val account = previewAccount(previewWallet(1L, "Bibit", InvestKind.MUTUAL_FUND), 2_080_000L)
-    val activity = listOf(InvestmentActivity(WalletId(1L), previewTime, ActivityKind.PUT_IN, Money(500_000L)))
+    val account = previewAccount(previewWallet(BIBIT_KEY, "Bibit", InvestKind.MUTUAL_FUND), BIBIT_VALUE)
+    val activity = listOf(InvestmentActivity(WalletId(BIBIT_KEY), previewTime, ActivityKind.PUT_IN, Money(EMAS_PUT_IN)))
     val state = InvestmentDetailUiState(loaded = true, detail = InvestmentDetail(account, activity))
     InvestmentDetailScreen(state = state, callbacks = detailCallbacks())
 }
@@ -130,9 +133,9 @@ private fun detailCallbacks(): InvestmentDetailCallbacks =
     InvestmentDetailCallbacks(
         onBack = {},
         onOpenValuation = {},
-        onDigit = {},
-        onBackspace = {},
-        onSaveValuation = {},
-        onDismissValuation = {},
         onTransfer = {},
+        valuation = AmountSheetCallbacks(onDigit = {}, onBackspace = {}, onSave = {}, onDismiss = {}),
     )
+
+private const val PREVIEW_BALANCE = 1_000_000L
+private const val PREVIEW_MODAL = 2_000_000L
