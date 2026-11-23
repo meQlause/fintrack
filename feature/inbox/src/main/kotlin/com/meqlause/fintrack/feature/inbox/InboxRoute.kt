@@ -26,7 +26,10 @@ internal fun InboxRoute(onBack: () -> Unit) {
             onSplitPair = viewModel::splitPair,
             onChooseWallet = viewModel::chooseWallet,
             onChooseCategory = viewModel::chooseCategory,
-            onEnableAccess = { context.startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)) },
+            onEnableAccess = {
+                val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            },
         )
     InboxScreen(state = state, actions = actions)
 }

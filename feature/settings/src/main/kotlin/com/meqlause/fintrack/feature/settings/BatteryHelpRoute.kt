@@ -23,7 +23,10 @@ internal fun BatteryHelpRoute(onBack: () -> Unit) {
     BatteryHelpScreen(
         optimisationIgnored = ignored,
         guide = batteryGuideFor(Build.MANUFACTURER),
-        onOpenSettings = { context.startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)) },
+        onOpenSettings = {
+            val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+            context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        },
         onBack = onBack,
     )
 }
