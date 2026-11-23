@@ -495,7 +495,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - [x] done · Refs: BR-045, BR-055, FR-135, FR-154, FR-176 · Commit: `feat(notification): add due-date and investment reminders [P7, BR-045]`
 
 ### T7.10 — Statistics exclusions (regression)
-- [ ] done · Refs: BR-039, BR-040, BR-052 · tests that bill payments, loan movements and investment transfers/gains never appear in statistics or budgets.
+- [x] done · Refs: BR-039, BR-040, BR-052 · tests that bill payments, loan movements and investment transfers/gains never appear in statistics or budgets.
 - Commit: `test(domain): guard statistics against transfers and loans [P7, BR-040]`
 
 ### T7.11 — Credit / pay-later detection hints
