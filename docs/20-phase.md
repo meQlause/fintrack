@@ -526,7 +526,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 ## P9 — Polish & release to friends
 
 ### T9.1 — Performance: baseline profile, cold start, 10k list
-- [ ] done · Refs: NFR-004, NFR-005 · Commit: `perf(app): add baseline profile [P9, NFR-004]`
+- [x] done · Refs: NFR-004, NFR-005 · Commit: `perf(app): add baseline profile [P9, NFR-004]`
 
 ### T9.2 — Accessibility pass
 - [ ] done · Refs: NFR-010 · TalkBack walkthrough notes in the commit body; font-scale 2.0 screenshots.

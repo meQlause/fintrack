@@ -72,6 +72,10 @@ private fun focusPull(
 
 private const val FOCUS_SCALE = 0.96f
 
+// NFR-005: lazy items of one kind share a content type so the list reuses their compositions while scrolling
+private const val DAY_HEADER_TYPE = "day-header"
+private const val TRANSACTION_ROW_TYPE = "transaction-row"
+
 @Composable
 private fun HistoryDayList(
     state: HistoryUiState,
@@ -84,8 +88,8 @@ private fun HistoryDayList(
     }
     LazyColumn(contentPadding = PaddingValues(bottom = FintrackTheme.sizes.navBarHeight)) {
         state.groups.forEach { group ->
-            item(key = "day-${group.label}") { DayHeader(group = group) }
-            items(group.rows, key = { it.transactionId }) { row ->
+            item(key = "day-${group.label}", contentType = DAY_HEADER_TYPE) { DayHeader(group = group) }
+            items(group.rows, key = { it.transactionId }, contentType = { TRANSACTION_ROW_TYPE }) { row ->
                 TransactionRow(
                     params = row.toParams(),
                     callbacks = TransactionRowCallbacks(onClick = { onOpenTransaction(row.transactionId) }),

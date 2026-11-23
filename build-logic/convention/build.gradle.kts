@@ -44,6 +44,10 @@ gradlePlugin {
             id = "fintrack.android.hilt"
             implementationClass = "$conventionPackage.AndroidHiltConventionPlugin"
         }
+        register("androidBaselineProfile") {
+            id = "fintrack.android.baselineprofile"
+            implementationClass = "$conventionPackage.AndroidBaselineProfileConventionPlugin"
+        }
         register("jvmLibrary") {
             id = "fintrack.jvm.library"
             implementationClass = "$conventionPackage.JvmLibraryConventionPlugin"

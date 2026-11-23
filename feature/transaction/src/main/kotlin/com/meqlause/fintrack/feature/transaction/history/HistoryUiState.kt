@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.transaction.history
 
+import androidx.compose.runtime.Immutable
 import com.meqlause.fintrack.core.domain.period.Period
 import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
 import com.meqlause.fintrack.core.model.Category
@@ -9,6 +10,7 @@ import com.meqlause.fintrack.core.model.Wallet
 import java.time.YearMonth
 
 // FR-036, FR-037, S-05: everything the Riwayat screen draws; the screen holds no state of its own
+@Immutable
 internal data class HistoryUiState(
     val month: YearMonth,
     val period: Period? = null,

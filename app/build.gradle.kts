@@ -3,9 +3,13 @@ plugins {
     id("fintrack.android.application")
     id("fintrack.android.hilt")
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.baselineprofile)
 }
 
 dependencies {
+    // NFR-004: the generated profile is installed on first launch, so cold start runs precompiled code
+    baselineProfile(project(":baselineprofile"))
+    implementation(libs.profileinstaller)
     implementation(project(":core:backup"))
     implementation(project(":core:common"))
     implementation(project(":core:data"))
