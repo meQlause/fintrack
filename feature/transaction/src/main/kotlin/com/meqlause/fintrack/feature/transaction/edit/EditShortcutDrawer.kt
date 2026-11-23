@@ -22,11 +22,12 @@ internal fun EditShortcutDrawer(
     modifier: Modifier = Modifier,
 ) {
     val manage = sheet == EditSheet.SHORTCUT_MANAGE
-    val items: List<ShortcutTileParams> = ShortcutTileMapping.toTileParams(
-        state.shortcuts,
-        state.walletNames(),
-        state.catalog.categories.associate { it.categoryId to it.profile.appearance },
-    )
+    val items: List<ShortcutTileParams> =
+        ShortcutTileMapping.toTileParams(
+            state.shortcuts,
+            state.walletNames(),
+            state.catalog.categories.associate { it.categoryId to it.profile.appearance },
+        )
     PickerDrawer(
         title = stringResource(if (manage) UiR.string.shortcut_manage_title else UiR.string.shortcut_drawer_title),
         onClose = { onEvent(EditTransactionEvent.SheetDismissed) },

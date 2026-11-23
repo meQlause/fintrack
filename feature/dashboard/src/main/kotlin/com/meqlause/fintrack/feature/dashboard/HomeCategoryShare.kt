@@ -7,4 +7,5 @@ internal data class HomeCategoryShare(
     val name: String?,
     val amount: Money,
     val count: Int,
+    val colorKey: String = "gray",
 )

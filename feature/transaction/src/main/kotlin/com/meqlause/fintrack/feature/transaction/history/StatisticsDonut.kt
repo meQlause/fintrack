@@ -8,9 +8,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
 import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.CategoryId
-import com.meqlause.fintrack.core.domain.statistics.PeriodStatistics
 
 private const val FULL_TURN = 360f
 private const val TOP_OF_CIRCLE = -90f

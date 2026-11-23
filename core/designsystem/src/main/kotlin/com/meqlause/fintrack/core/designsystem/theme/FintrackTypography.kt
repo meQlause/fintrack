@@ -25,10 +25,24 @@ class FintrackTypography {
         )
 
     val numberHero: TextStyle = typeStyle(size = 40f, lineHeight = 48f, weight = 800, tabular = true)
+
+    // DOC-08: mockup hero balance digits (44 px / 700) and the muted Rp prefix (20 px / 600)
+    val numberDisplay: TextStyle = typeStyle(size = 44f, lineHeight = 46f, weight = 700, tabular = true)
+    val prefixDisplay: TextStyle = typeStyle(size = 20f, lineHeight = 24f, weight = 600)
+
+    // DOC-08: mockup .lbl (12 px / 600) and the 12.5 px pill and tile title
+    val caption: TextStyle = typeStyle(size = 12f, lineHeight = 16f, weight = 600)
+    val captionWide: TextStyle = typeStyle(size = 12.5f, lineHeight = 16f, weight = 600)
+    val numberCompact: TextStyle = typeStyle(size = 13.5f, lineHeight = 18f, weight = 700, tabular = true)
+    val badge: TextStyle = typeStyle(size = 10.5f, lineHeight = 14f, weight = 700)
+    val micro: TextStyle = typeStyle(size = 11f, lineHeight = 14f, weight = 600, tabular = true)
     val numberLarge: TextStyle = typeStyle(size = 28f, lineHeight = 36f, weight = 700, tabular = true)
+    val numberTotal: TextStyle = typeStyle(size = 20f, lineHeight = 26f, weight = 700, tabular = true)
     val numberMedium: TextStyle = typeStyle(size = 18f, lineHeight = 24f, weight = 700, tabular = true)
+
     // DOC-09: prototype wallet chip balance, 15 px bold
     val numberSmall: TextStyle = typeStyle(size = 15f, lineHeight = 20f, weight = 700, tabular = true)
+
     // DOC-09: the prototype .row amount, 14 px semibold with tabular figures
     val numberRow: TextStyle = typeStyle(size = 14f, lineHeight = 20f, weight = 600, tabular = true)
     val headlineSmall: TextStyle = typeStyle(size = 24f, lineHeight = 32f, weight = 700)

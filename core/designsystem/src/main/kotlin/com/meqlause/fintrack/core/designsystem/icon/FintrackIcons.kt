@@ -39,7 +39,22 @@ object FintrackIcons {
 
     // DOC-08: the icons a category can wear, in picker order
     val categoryKeys: List<String> =
-        listOf("food", "transport", "shopping", "bill", "entertainment", "health", "phone", "gift", "fee", "home", "salary", "bonus", "business", "other")
+        listOf(
+            "food",
+            "transport",
+            "shopping",
+            "bill",
+            "entertainment",
+            "health",
+            "phone",
+            "gift",
+            "fee",
+            "home",
+            "salary",
+            "bonus",
+            "business",
+            "other",
+        )
 
     @DrawableRes
     fun drawableFor(iconKey: String): Int = drawables[iconKey] ?: R.drawable.ic_other

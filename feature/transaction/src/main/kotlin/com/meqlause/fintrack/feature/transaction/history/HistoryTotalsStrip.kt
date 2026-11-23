@@ -40,7 +40,14 @@ internal fun HistoryTotalsStrip(totals: HistoryTotals) {
                 color = colors.semantics.income,
                 modifier = Modifier.weight(1f),
             )
-            Box(modifier = Modifier.width(FintrackTheme.sizes.hairline).fillMaxHeight().background(colors.surfaces.outline))
+            Box(
+                modifier =
+                    Modifier
+                        .width(
+                            FintrackTheme.sizes.hairline,
+                        ).fillMaxHeight()
+                        .background(colors.surfaces.outline),
+            )
             TotalCell(
                 label = stringResource(R.string.history_total_expense),
                 value = totals.expense,

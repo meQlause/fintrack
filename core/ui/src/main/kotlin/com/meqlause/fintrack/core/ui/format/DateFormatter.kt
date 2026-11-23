@@ -35,5 +35,6 @@ object DateFormatter {
     // ISO weekdays run Monday = 1 to Sunday = 7, so Sunday maps to index 0 of the Indonesian list
     private fun weekdayShort(date: LocalDate): String = weekdaysId[date.dayOfWeek.value % SUNDAY_INDEX]
 
-    private fun monthShort(date: LocalDate): String = monthsId[date.monthValue - 1]
+    /** DOC-08: three-letter Indonesian month, e.g. Nov, Agu, Mei. */
+    fun monthShort(date: LocalDate): String = monthsId[date.monthValue - 1]
 }

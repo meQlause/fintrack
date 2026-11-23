@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.dashboard
 
+import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.StatementStatus
 import com.meqlause.fintrack.core.model.WalletId
@@ -11,4 +12,5 @@ internal data class HomeBill(
     val status: StatementStatus,
     val amount: Money,
     val dateLabel: String,
+    val appearance: Appearance = Appearance("card", "slate"),
 )

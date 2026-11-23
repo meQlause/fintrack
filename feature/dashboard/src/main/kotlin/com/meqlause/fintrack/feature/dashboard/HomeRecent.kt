@@ -14,4 +14,5 @@ internal data class HomeRecent(
     val amount: Money,
     val type: TransactionType,
     val appearance: Appearance = Appearance("other", "gray"),
+    val auto: Boolean = false,
 )

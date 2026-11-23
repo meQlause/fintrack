@@ -33,12 +33,5 @@ internal fun CountUpMoney(
         )
     }
     val shown = Money((money.rupiah.toDouble() * progress.value).roundToLong())
-    Text(
-        text = MoneyFormatter.format(shown),
-        modifier = modifier,
-        style = FintrackTheme.typography.numberHero,
-        color = FintrackTheme.colors.texts.onSurface,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-    )
+    HeroAmount(formatted = MoneyFormatter.format(shown), modifier = modifier)
 }

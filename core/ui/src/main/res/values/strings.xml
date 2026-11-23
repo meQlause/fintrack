@@ -3,6 +3,7 @@
 <resources>
     <string name="sample_row_expense_title">Makan siang</string>
     <string name="sample_row_expense_subtitle">Tunai  ·  12:40</string>
+    <string name="row_auto_description">Dicatat otomatis</string>
     <string name="sample_row_income_title">Gaji</string>
     <string name="sample_row_income_subtitle">BCA  ·  08:03</string>
     <!-- S-18: picker drawers (shared, core:ui) -->

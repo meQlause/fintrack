@@ -48,6 +48,13 @@ object MoneyFormatter {
         return if (money.rupiah < 0L) MINUS_SIGN + body else body
     }
 
+    /** DOC-08: compact form with the Rp prefix, as the mockup short(): Rp223rb, Rp1,5jt. */
+    fun formatShort(money: Money): String = CURRENCY_PREFIX + formatCompact(money)
+
+    /** DOC-08: compact form without prefix and with an explicit sign: +1,5jt, −500rb. */
+    fun formatCompactSigned(money: Money): String =
+        if (money.rupiah < 0L) formatCompact(money) else PLUS_SIGN + formatCompact(money)
+
     private fun magnitude(rupiah: Long): Long = if (rupiah < 0L) -rupiah else rupiah
 
     private fun roundedDivide(

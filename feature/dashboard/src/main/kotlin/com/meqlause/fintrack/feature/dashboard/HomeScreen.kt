@@ -23,10 +23,13 @@ internal fun HomeScreen(
             modifier
                 .fillMaxSize()
                 .background(FintrackTheme.colors.surfaces.background)
-                .padding(horizontal = FintrackTheme.spacing.large, vertical = FintrackTheme.spacing.large),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
+                .padding(top = FintrackTheme.spacing.stack),
     ) {
-        HomeHeader(onSettingsClick = callbacks.onOpenSettings, onInboxClick = callbacks.onOpenInbox)
+        HomeHeader(
+            onSettingsClick = callbacks.onOpenSettings,
+            onInboxClick = callbacks.onOpenInbox,
+            modifier = Modifier.padding(horizontal = FintrackTheme.spacing.gutter),
+        )
         when (state) {
             HomeUiState.Loading -> HomeSkeleton(modifier = Modifier.weight(1f))
             is HomeUiState.Success -> HomeBody(state = state, callbacks = callbacks, modifier = Modifier.weight(1f))
@@ -44,29 +47,39 @@ private fun HomeBody(
     callbacks: HomeCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier.verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
-    ) {
-        HomeHero(state = state, callbacks = callbacks)
+    val gutter = Modifier.padding(horizontal = FintrackTheme.spacing.gutter)
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+        HomeHero(state = state, callbacks = callbacks, modifier = Modifier.padding(top = FintrackTheme.spacing.hero))
         HomeQuickEntry(
             shortcuts = state.shortcuts,
             onNewEntry = callbacks.onQuickEntry,
             onApplyShortcut = callbacks.onApplyShortcut,
             onManage = callbacks.onOpenShortcuts,
+            modifier = Modifier.padding(top = FintrackTheme.spacing.section),
         )
         if (state.bills.bills.isNotEmpty()) {
             HomeBillsCard(
                 bills = state.bills,
+                receivable = state.netWorth.piutang,
+                payable = state.netWorth.hutang,
                 hidden = state.hidden,
                 onOpenCreditWallet = callbacks.onOpenCreditWallet,
                 onOpenInstalments = callbacks.onOpenInstalments,
+                modifier = gutter.padding(top = FintrackTheme.spacing.stack),
             )
         }
         if (state.categories.isNotEmpty()) {
-            HomeCategoryCard(state = state, onOpen = callbacks.onOpenCategories)
+            HomeCategoryCard(
+                state = state,
+                onOpen = callbacks.onOpenCategories,
+                modifier = gutter.padding(top = FintrackTheme.spacing.stack),
+            )
         }
-        HomeRecentList(state = state, callbacks = callbacks)
+        HomeRecentList(
+            state = state,
+            callbacks = callbacks,
+            modifier = gutter.padding(top = FintrackTheme.spacing.block),
+        )
         HomeShortcutUndo(state = state, callbacks = callbacks)
     }
 }

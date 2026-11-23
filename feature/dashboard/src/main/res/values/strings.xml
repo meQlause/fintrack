@@ -8,22 +8,21 @@
     <string name="home_hide_amounts">Sembunyikan saldo</string>
     <string name="home_show_amounts">Tampilkan saldo</string>
     <string name="home_amount_hidden">Rp••••••</string>
-    <string name="home_net_suffix">%1$s bulan ini</string>
+    <string name="home_net_words">bulan ini</string>
     <string name="home_summary_open">Lihat ringkasan keuangan</string>
 
     <string name="home_quick_title">Catat cepat</string>
     <string name="home_quick_add">Baru</string>
     <string name="home_shortcut_manage">Atur</string>
 
-    <string name="home_category_title">Pengeluaran periode ini</string>
+    <string name="home_category_title">Pengeluaran %1$s</string>
     <string name="home_category_open">Lihat semua kategori pengeluaran</string>
     <string name="home_category_none">Tanpa kategori</string>
-    <string name="home_category_legend">%1$s %2$d%%</string>
     <string name="home_percent">%1$d%%</string>
 
-    <string name="home_recent_title">Transaksi terbaru</string>
-    <string name="home_recent_all">Lihat semua</string>
-    <string name="home_row_subtitle">%1$s · %2$s</string>
+    <string name="home_recent_title">Terbaru</string>
+    <string name="home_recent_all">Semua</string>
+    <string name="home_row_subtitle">%1$s  ·  %2$s</string>
     <string name="home_type_expense">Pengeluaran</string>
     <string name="home_type_income">Pemasukan</string>
     <string name="home_type_transfer">Transfer</string>
@@ -49,6 +48,7 @@
     </plurals>
     <string name="home_bills_title">Tagihan</string>
     <string name="home_bills_instalments">Cicilan bulan ini</string>
+    <string name="home_bills_loans">Pinjaman</string>
     <string name="home_bill_status_not_issued">Belum terbit</string>
     <string name="home_bill_status_paid">Lunas</string>
     <string name="home_bill_status_due">Belum dibayar</string>

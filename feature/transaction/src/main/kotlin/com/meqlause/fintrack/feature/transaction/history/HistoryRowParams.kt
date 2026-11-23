@@ -18,7 +18,6 @@ internal fun HistoryRowItem.toParams(): TransactionRowParams =
         type = type,
     )
 
-
 private fun typeLabelRes(type: TransactionType): Int =
     when (type) {
         TransactionType.EXPENSE -> R.string.transaction_type_expense

@@ -9,4 +9,5 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 // DOC-08: the colour a category key shows on the current surface, for charts and swatches outside IconCircle
 @Composable
 @ReadOnlyComposable
-fun categoryColorOf(colorKey: String): Color = CategoryPalette.colorFor(colorKey, FintrackTheme.colors.surfaces.background)
+fun categoryColorOf(colorKey: String): Color =
+    CategoryPalette.colorFor(colorKey, FintrackTheme.colors.surfaces.background)

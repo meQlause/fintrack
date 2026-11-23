@@ -8,8 +8,8 @@ import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import com.meqlause.fintrack.core.model.Appearance
-import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.Category
+import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.Wallet

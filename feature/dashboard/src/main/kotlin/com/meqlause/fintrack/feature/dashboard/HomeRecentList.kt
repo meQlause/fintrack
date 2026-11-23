@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -29,27 +30,26 @@ internal fun HomeRecentList(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
+        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = FintrackTheme.spacing.xxSmall),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = stringResource(R.string.home_recent_title),
-                style = FintrackTheme.typography.labelLarge,
+                style = FintrackTheme.typography.caption,
                 color = FintrackTheme.colors.texts.onSurfaceVariant,
             )
             Text(
                 text = stringResource(R.string.home_recent_all),
-                style = FintrackTheme.typography.labelLarge,
+                style = FintrackTheme.typography.captionWide.copy(fontWeight = FontWeight.Bold),
                 color = FintrackTheme.colors.brands.primary,
                 modifier =
                     Modifier
-                        .clip(FintrackTheme.shapes.full)
                         .clickable(role = Role.Button, onClick = callbacks.onOpenHistory)
-                        .padding(horizontal = FintrackTheme.spacing.small, vertical = FintrackTheme.spacing.xSmall),
+                        .padding(vertical = FintrackTheme.spacing.xSmall),
             )
         }
         if (state.recent.isEmpty()) {

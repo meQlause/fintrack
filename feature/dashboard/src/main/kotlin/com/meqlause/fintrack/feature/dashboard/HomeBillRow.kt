@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
@@ -37,7 +38,7 @@ internal fun HomeBillRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
-        IconCircle(iconKey = "bill", colorKey = "purple")
+        IconCircle(iconKey = bill.appearance.iconKey, colorKey = bill.appearance.colorKey)
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = bill.name,
@@ -49,13 +50,24 @@ internal fun HomeBillRow(
             Text(
                 text = dueText(bill),
                 style = FintrackTheme.typography.labelMedium,
-                color = statusColor(bill.status),
+                color =
+                    if (bill.status ==
+                        StatementStatus.PAID
+                    ) {
+                        FintrackTheme.colors.texts.onSurfaceVariant
+                    } else {
+                        statusColor(bill.status)
+                    },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
         Column(horizontalAlignment = Alignment.End) {
-            HomeAmountText(money = bill.amount, hidden = hidden, style = FintrackTheme.typography.numberRow)
+            HomeAmountText(
+                money = bill.amount,
+                hidden = hidden,
+                style = FintrackTheme.typography.numberRow.copy(fontWeight = FontWeight.Bold),
+            )
             StatusChip(status = bill.status)
         }
     }
@@ -100,7 +112,8 @@ private fun statusColor(status: StatementStatus): Color =
     when (status) {
         StatementStatus.OVERDUE -> FintrackTheme.colors.semantics.error
         StatementStatus.DUE -> FintrackTheme.colors.semantics.warning
-        StatementStatus.NOT_ISSUED, StatementStatus.PAID -> FintrackTheme.colors.texts.onSurfaceVariant
+        StatementStatus.PAID -> FintrackTheme.colors.semantics.income
+        StatementStatus.NOT_ISSUED -> FintrackTheme.colors.texts.onSurfaceVariant
     }
 
 private const val CHIP_ALPHA = 0.12f

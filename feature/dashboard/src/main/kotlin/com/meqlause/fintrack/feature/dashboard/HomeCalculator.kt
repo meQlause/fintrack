@@ -9,6 +9,7 @@ import com.meqlause.fintrack.core.model.Category
 import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.Transaction
+import com.meqlause.fintrack.core.model.TransactionSource
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.Wallet
 import com.meqlause.fintrack.core.model.WalletId
@@ -59,7 +60,7 @@ internal object HomeCalculator {
                     )
                 },
             period = periodOf(period, inPeriod),
-            categories = categoryShares(inPeriod, names),
+            categories = categoryShares(inPeriod, names, appearances),
             recent = recentOf(snapshot.transactions, names, appearances, walletNames, clock),
             drawer = drawer,
             bills = HomeBillsMapper.map(card, clock),
@@ -103,6 +104,7 @@ internal object HomeCalculator {
     private fun categoryShares(
         rows: List<Transaction>,
         names: Map<CategoryId, String>,
+        appearances: Map<CategoryId, Appearance>,
     ): List<HomeCategoryShare> =
         rows
             .filter { it.movement.type == TransactionType.EXPENSE }
@@ -112,6 +114,7 @@ internal object HomeCalculator {
                     name = categoryId?.let { names[it] },
                     amount = group.fold(Money(0L)) { running, row -> running + row.movement.amount },
                     count = group.size,
+                    colorKey = categoryId?.let { appearances[it]?.colorKey } ?: "gray",
                 )
             }.sortedByDescending { it.amount }
 
@@ -135,6 +138,7 @@ internal object HomeCalculator {
                     amount = row.movement.amount,
                     type = row.movement.type,
                     appearance = rowAppearanceOf(row.movement.type, row.routing.categoryId?.let(appearances::get)),
+                    auto = row.origin.source == TransactionSource.NOTIFICATION,
                 )
             }
 

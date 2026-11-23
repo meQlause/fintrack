@@ -15,8 +15,8 @@ internal fun HomeRecent.toParams(): TransactionRowParams =
         subtitle = stringResource(R.string.home_row_subtitle, walletName, whenLabel),
         amount = amount,
         type = type,
+        auto = auto,
     )
-
 
 private fun typeLabelOf(type: TransactionType): Int =
     when (type) {

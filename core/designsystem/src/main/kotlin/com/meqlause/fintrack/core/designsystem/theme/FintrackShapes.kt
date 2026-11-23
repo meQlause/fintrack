@@ -18,4 +18,10 @@ class FintrackShapes {
 
     // DOC-09: category icon box corner from the prototype (12 px), not a circle
     val categoryIcon: CornerBasedShape = RoundedCornerShape(size = Dp(value = 12f))
+
+    // DOC-08: mockup .card radius (18 px) and the 9 px box of the wallet tile icon
+    val card: CornerBasedShape = RoundedCornerShape(size = Dp(value = 18f))
+    val walletIcon: CornerBasedShape = RoundedCornerShape(size = Dp(value = 9f))
+    val chip: CornerBasedShape = RoundedCornerShape(size = Dp(value = 6f))
+    val shortcutIcon: CornerBasedShape = RoundedCornerShape(size = Dp(value = 10f))
 }

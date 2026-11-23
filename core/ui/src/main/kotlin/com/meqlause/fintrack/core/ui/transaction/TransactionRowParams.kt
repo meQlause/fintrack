@@ -11,4 +11,5 @@ data class TransactionRowParams(
     val subtitle: String,
     val amount: Money,
     val type: TransactionType,
+    val auto: Boolean = false,
 )

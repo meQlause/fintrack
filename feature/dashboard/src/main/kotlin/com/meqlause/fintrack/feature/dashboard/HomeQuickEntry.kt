@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +31,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutTile
@@ -51,21 +51,15 @@ internal fun HomeQuickEntry(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
+        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(R.string.home_quick_title),
-                style = FintrackTheme.typography.labelLarge,
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-                modifier = Modifier.weight(1f),
-            )
-            TextButton(onClick = onManage) {
-                Text(text = stringResource(R.string.home_shortcut_manage))
-            }
-        }
+        QuickEntryHeader(onManage = onManage)
         Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()).height(IntrinsicSize.Min),
+            modifier =
+                Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = FintrackTheme.spacing.gutter)
+                    .height(IntrinsicSize.Min),
             horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
         ) {
             shortcuts.forEach { params ->
@@ -104,11 +98,11 @@ private fun NewShortcutTile(onClick: () -> Unit) {
             tint = FintrackTheme.colors.texts.onSurfaceVariant,
             modifier = Modifier.size(FintrackTheme.sizes.iconSmall),
         )
-        Spacer(modifier = Modifier.height(FintrackTheme.spacing.xSmall))
+        Spacer(modifier = Modifier.height(FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall))
         Text(
             text = stringResource(R.string.home_quick_add),
-            style = FintrackTheme.typography.labelLarge,
-            color = FintrackTheme.colors.texts.onSurface,
+            style = FintrackTheme.typography.captionWide,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
     }
 }
@@ -127,4 +121,33 @@ private fun DrawScope.drawDashedOutline(
         cornerRadius = CornerRadius(cornerRadius - half),
         style = Stroke(width = strokeWidth, pathEffect = PathEffect.dashPathEffect(DASH_INTERVALS)),
     )
+}
+
+// DOC-08: the "Catat cepat" caption and the primary "Atur" action, inset by the screen gutter plus 2 px
+@Composable
+private fun QuickEntryHeader(onManage: () -> Unit) {
+    Row(
+        modifier =
+            Modifier.fillMaxWidth().padding(
+                horizontal =
+                    FintrackTheme.spacing.gutter + FintrackTheme.spacing.xxSmall,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = stringResource(R.string.home_quick_title),
+            style = FintrackTheme.typography.caption,
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
+            modifier = Modifier.weight(1f),
+        )
+        Text(
+            text = stringResource(R.string.home_shortcut_manage),
+            modifier =
+                Modifier
+                    .clickable(role = Role.Button, onClick = onManage)
+                    .padding(vertical = FintrackTheme.spacing.xSmall),
+            style = FintrackTheme.typography.captionWide.copy(fontWeight = FontWeight.Bold),
+            color = FintrackTheme.colors.brands.primary,
+        )
+    }
 }

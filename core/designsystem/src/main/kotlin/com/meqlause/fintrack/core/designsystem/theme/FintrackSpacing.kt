@@ -14,4 +14,12 @@ class FintrackSpacing {
     val xLarge: Dp = Dp(value = 24f)
     val xxLarge: Dp = Dp(value = 32f)
     val xxxLarge: Dp = Dp(value = 48f)
+
+    // DOC-08: the mockup screen gutter is 20 px
+    val gutter: Dp = Dp(value = 20f)
+    val section: Dp = Dp(value = 18f)
+    val stack: Dp = Dp(value = 14f)
+    val chipInset: Dp = Dp(value = 7f)
+    val block: Dp = Dp(value = 22f)
+    val hero: Dp = Dp(value = 26f)
 }

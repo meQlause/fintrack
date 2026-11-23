@@ -19,10 +19,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
+import com.meqlause.fintrack.core.designsystem.icon.categoryColorOf
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.Money
+import com.meqlause.fintrack.core.ui.format.DateFormatter
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // FR-042, S-03: the expense card: period total, one slim stacked bar and the top three categories; tap opens Kategori
@@ -37,24 +43,42 @@ internal fun HomeCategoryCard(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = stringResource(R.string.home_category_title),
-                    style = FintrackTheme.typography.labelLarge,
+                    text =
+                        stringResource(
+                            R.string.home_category_title,
+                            DateFormatter.monthShort(state.period.startDate),
+                        ),
+                    style = FintrackTheme.typography.caption,
                     color = FintrackTheme.colors.texts.onSurfaceVariant,
                 )
-                HomeAmountText(money = expense, hidden = state.hidden, style = FintrackTheme.typography.numberLarge)
+                HomeAmountText(
+                    money = expense,
+                    hidden = state.hidden,
+                    style = FintrackTheme.typography.numberTotal,
+                    modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
+                )
             }
-            Image(
-                painter = painterResource(DesignR.drawable.ic_chevron_right),
-                contentDescription = stringResource(R.string.home_category_open),
-                colorFilter = ColorFilter.tint(FintrackTheme.colors.texts.onSurfaceVariant),
-                modifier = Modifier.size(FintrackTheme.sizes.iconSmall),
-            )
+            Box(
+                modifier =
+                    Modifier
+                        .size(FintrackTheme.sizes.iconTile)
+                        .clip(FintrackTheme.shapes.full)
+                        .background(FintrackTheme.colors.surfaces.surfaceVariant),
+                contentAlignment = Alignment.Center,
+            ) {
+                Image(
+                    painter = painterResource(DesignR.drawable.ic_chevron_right),
+                    contentDescription = stringResource(R.string.home_category_open),
+                    colorFilter = ColorFilter.tint(FintrackTheme.colors.texts.onSurface),
+                    modifier = Modifier.size(FintrackTheme.sizes.shortcutGlyph),
+                )
+            }
         }
-        CategoryBar(categories = state.categories, modifier = Modifier.padding(top = FintrackTheme.spacing.medium))
+        CategoryBar(categories = state.categories, modifier = Modifier.padding(top = FintrackTheme.spacing.stack))
         CategoryLegend(
             categories = state.categories.take(TOP_COUNT),
             total = expense,
-            modifier = Modifier.padding(top = FintrackTheme.spacing.small),
+            modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
         )
     }
 }
@@ -69,16 +93,17 @@ private fun CategoryBar(
         modifier =
             modifier
                 .fillMaxWidth()
-                .height(FintrackTheme.spacing.xSmall)
-                .clip(FintrackTheme.shapes.full),
+                .height(FintrackTheme.sizes.categoryBarHeight)
+                .clip(FintrackTheme.shapes.small),
+        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xxSmall),
     ) {
-        categories.forEachIndexed { index, share ->
+        categories.forEach { share ->
             Box(
                 modifier =
                     Modifier
                         .weight(share.amount.rupiah.toFloat())
                         .fillMaxHeight()
-                        .background(homeSegmentColor(FintrackTheme.colors, index)),
+                        .background(categoryColorOf(share.colorKey)),
             )
         }
     }
@@ -91,26 +116,23 @@ private fun CategoryLegend(
     total: Money,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
-    ) {
-        categories.forEachIndexed { index, share ->
+    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.stack)) {
+        categories.forEach { share ->
             Row(
-                modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
+                horizontalArrangement =
+                    Arrangement.spacedBy(FintrackTheme.spacing.xSmall + FintrackTheme.spacing.xxSmall),
             ) {
                 Box(
                     modifier =
                         Modifier
-                            .size(FintrackTheme.spacing.small)
+                            .size(FintrackTheme.sizes.smallDot)
                             .clip(FintrackTheme.shapes.full)
-                            .background(homeSegmentColor(FintrackTheme.colors, index)),
+                            .background(categoryColorOf(share.colorKey)),
                 )
                 Text(
                     text = legendText(share = share, total = total),
-                    style = FintrackTheme.typography.labelMedium,
+                    style = FintrackTheme.typography.captionWide.copy(fontWeight = FontWeight.Medium),
                     color = FintrackTheme.colors.texts.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -120,14 +142,18 @@ private fun CategoryLegend(
     }
 }
 
+// DOC-08: the name in the muted weight, then the percentage in bold
 @Composable
 private fun legendText(
     share: HomeCategoryShare,
     total: Money,
-): String {
-    val name = share.name ?: stringResource(R.string.home_category_none)
+) = buildAnnotatedString {
+    append(share.name ?: stringResource(R.string.home_category_none))
+    append(" ")
     val percent = HomeCalculator.percentOf(share.amount, total)
-    return stringResource(R.string.home_category_legend, name, percent)
+    withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = FintrackTheme.colors.texts.onSurface)) {
+        append(stringResource(R.string.home_percent, percent))
+    }
 }
 
 private const val TOP_COUNT = 3

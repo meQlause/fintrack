@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
@@ -21,6 +24,7 @@ import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.ui.R
 import com.meqlause.fintrack.core.ui.UiPreviewCanvas
 import com.meqlause.fintrack.core.ui.money.MoneyText
+import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // DOC-08 / DOC-09: icon circle, title and wallet · time, then the signed amount; one tappable row in a list
 @Composable
@@ -39,7 +43,7 @@ fun TransactionRow(
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
         IconCircle(iconKey = params.iconKey, colorKey = params.colorKey)
-        TransactionTitles(title = params.title, subtitle = params.subtitle, modifier = Modifier.weight(1f))
+        TransactionTitles(params = params, modifier = Modifier.weight(1f))
         MoneyText(
             money = params.amount,
             type = params.type,
@@ -50,26 +54,38 @@ fun TransactionRow(
 
 @Composable
 private fun TransactionTitles(
-    title: String,
-    subtitle: String,
+    params: TransactionRowParams,
     modifier: Modifier,
 ) {
     Column(modifier = modifier) {
         Text(
-            text = title,
+            text = params.title,
             style = FintrackTheme.typography.labelLarge,
             color = FintrackTheme.colors.texts.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        Text(
-            text = subtitle,
+        Row(
             modifier = Modifier.padding(top = FintrackTheme.spacing.xxSmall),
-            style = FintrackTheme.typography.labelMedium,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
+        ) {
+            if (params.auto) {
+                Icon(
+                    painter = painterResource(DesignR.drawable.ic_spark),
+                    contentDescription = stringResource(R.string.row_auto_description),
+                    tint = FintrackTheme.colors.brands.primary,
+                    modifier = Modifier.size(FintrackTheme.sizes.tinyGlyph),
+                )
+            }
+            Text(
+                text = params.subtitle,
+                style = FintrackTheme.typography.labelMedium,
+                color = FintrackTheme.colors.texts.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 
