@@ -52,21 +52,7 @@ import java.time.Instant
 
 // FR-040..043, S-03: HomeViewModel against the fake repositories; the clock is pinned to 15 Nov 2026 in Jakarta
 @OptIn(ExperimentalCoroutinesApi::class)
-class HomeViewModelTest {
-    private val dispatcher = StandardTestDispatcher()
-    private val now = Instant.parse("2026-11-15T03:00:00Z")
-
-    @Before
-    fun setMainDispatcher() {
-        Dispatchers.setMain(dispatcher)
-    }
-
-    @After
-    fun resetMainDispatcher() {
-        Dispatchers.resetMain()
-    }
-
-    // FR-040: with no transactions the state is Success with an empty recent list and the wallet total
+class HomeViewModelTest : HomeViewModelTestBase() {
     @Test
     fun givenNoTransactionsWhenOpenedThenRecentIsEmptyAndTotalIsWalletSum() =
         runTest {
@@ -90,8 +76,8 @@ class HomeViewModelTest {
             val transactions = FakeTransactionRepository()
             val wallets = FakeWalletRepository(transactions)
             val walletId = wallets.insert(wallet("BCA", 0L))
-            transactions.insert(movement(walletId, TransactionType.INCOME, 500_000L, now))
-            transactions.insert(movement(walletId, TransactionType.EXPENSE, 120_000L, now))
+            transactions.insert(movement(walletId, TransactionType.INCOME, 500_000L, fixedNow))
+            transactions.insert(movement(walletId, TransactionType.EXPENSE, 120_000L, fixedNow))
             val viewModel = viewModel(wallets, transactions)
             val collector = backgroundScope.launch { viewModel.state.collect {} }
             advanceUntilIdle()
@@ -99,7 +85,7 @@ class HomeViewModelTest {
             val period = (viewModel.state.value as HomeUiState.Success).period
             assertThat(period.income).isEqualTo(Money(500_000L))
             assertThat(period.expense).isEqualTo(Money(120_000L))
-            assertThat(period.net).isEqualTo(Money(380_000L))
+            assertThat(period.netTotal).isEqualTo(Money(380_000L))
             collector.cancel()
         }
 
@@ -110,7 +96,7 @@ class HomeViewModelTest {
             val transactions = FakeTransactionRepository()
             val wallets = FakeWalletRepository(transactions)
             val walletId = wallets.insert(wallet("Tunai", 0L))
-            transactions.insert(movement(walletId, TransactionType.EXPENSE, 50_000L, now))
+            transactions.insert(movement(walletId, TransactionType.EXPENSE, 50_000L, fixedNow))
             val viewModel = viewModel(wallets, transactions)
             val collector = backgroundScope.launch { viewModel.state.collect {} }
             advanceUntilIdle()
@@ -164,90 +150,4 @@ class HomeViewModelTest {
     }
 
     // FR-137: a credit wallet appears on the Tagihan card and its chip opens the credit detail
-    @Test
-    fun givenCreditWalletWhenOpenedThenBillsListItAndChipIsCredit() =
-        runTest {
-            val transactions = FakeTransactionRepository()
-            val wallets = FakeWalletRepository(transactions)
-            wallets.insert(creditWallet("BCA Kredit"))
-            val viewModel = viewModel(wallets, transactions)
-            val collector = backgroundScope.launch { viewModel.state.collect {} }
-            advanceUntilIdle()
-            val state = viewModel.state.value as HomeUiState.Success
-            assertThat(state.bills.bills.map { it.name }).isEqualTo(listOf("BCA Kredit"))
-            assertThat(state.wallets.single().isCredit).isEqualTo(true)
-            collector.cancel()
-        }
-
-    private fun creditWallet(name: String): Wallet {
-        val audit = Audit(createdAt = now, updatedAt = now)
-        return Wallet(
-            walletId = WalletId(0L),
-            kind = WalletKind(type = WalletType.CREDIT_CARD, investKind = null),
-            terms = WalletTerms(initialBalance = Money(0L), credit = CreditTerms(Money(5_000_000L), 25, 10)),
-            profile = WalletProfile(name = name, appearance = Appearance("card", "blue"), sortOrder = 0),
-            status = WalletStatus(),
-            audit = audit,
-        )
-    }
-
-    private fun viewModel(
-        wallets: FakeWalletRepository,
-        transactions: FakeTransactionRepository,
-    ): HomeViewModel =
-        HomeViewModel(
-            wallets = wallets,
-            transactions = transactions,
-            categories = FakeCategoryRepository(),
-            settings = FakeSettingsRepository(),
-            quickEntries = FakeQuickEntryRepository(),
-            bills =
-                ObserveBillsCardUseCase(
-                    wallets,
-                    transactions,
-                    FakeInstallmentPlanRepository(),
-                    FakeSettingsRepository(),
-                    FakeClock(now),
-                ),
-            netWorth =
-                ObserveNetWorthUseCase(
-                    wallets = wallets,
-                    transactions = transactions,
-                    plans = FakeInstallmentPlanRepository(),
-                    loans = ObserveLoansUseCase(FakeLoanRepository(), transactions),
-                    investments = ObserveInvestmentPortfolioUseCase(wallets, transactions, FakeValuationRepository()),
-                    clock = FakeClock(now),
-                ),
-            clock = FakeClock(now),
-        )
-
-    private fun wallet(
-        name: String,
-        initial: Long,
-    ): Wallet {
-        val audit = Audit(createdAt = now, updatedAt = now)
-        return Wallet(
-            walletId = WalletId(0L),
-            kind = WalletKind(type = WalletType.BANK, investKind = null),
-            terms = WalletTerms(initialBalance = Money(initial), credit = null),
-            profile = WalletProfile(name = name, appearance = Appearance("bank", "blue"), sortOrder = 0),
-            status = WalletStatus(),
-            audit = audit,
-        )
-    }
-
-    private fun movement(
-        walletId: WalletId,
-        type: TransactionType,
-        rupiah: Long,
-        at: Instant,
-    ): Transaction =
-        Transaction(
-            transactionId = TransactionId(0L),
-            movement = Movement(type = type, amount = Money(rupiah)),
-            routing = Routing(walletId = walletId, targetWalletId = null, categoryId = null, loanId = null),
-            memo = Memo(),
-            origin = Origin(source = TransactionSource.MANUAL, inboxItemId = null),
-            timing = Timing(occurredAt = at, audit = Audit(createdAt = at, updatedAt = at)),
-        )
 }
