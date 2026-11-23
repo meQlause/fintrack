@@ -5,6 +5,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.meqlause.fintrack.budget.BudgetAlertWatcher
 import com.meqlause.fintrack.core.notification.RawTextPurgeScheduler
+import com.meqlause.fintrack.core.notification.ReminderScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -25,6 +26,7 @@ class FintrackApplication :
     override fun onCreate() {
         super.onCreate()
         RawTextPurgeScheduler.schedule(this)
+        ReminderScheduler.schedule(this)
         budgetAlertWatcher.start()
     }
 }
