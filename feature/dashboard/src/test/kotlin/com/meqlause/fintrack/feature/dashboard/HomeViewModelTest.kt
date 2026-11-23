@@ -24,6 +24,7 @@ import com.meqlause.fintrack.core.model.WalletStatus
 import com.meqlause.fintrack.core.model.WalletTerms
 import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.core.testing.repository.FakeCategoryRepository
+import com.meqlause.fintrack.core.testing.repository.FakeQuickEntryRepository
 import com.meqlause.fintrack.core.testing.repository.FakeSettingsRepository
 import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
 import com.meqlause.fintrack.core.testing.repository.FakeWalletRepository
@@ -163,6 +164,7 @@ class HomeViewModelTest {
             transactions = transactions,
             categories = FakeCategoryRepository(),
             settings = FakeSettingsRepository(),
+            quickEntries = FakeQuickEntryRepository(),
             clock = FakeClock(now),
         )
 

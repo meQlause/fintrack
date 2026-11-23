@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.model.TransactionId
 import com.meqlause.fintrack.core.model.WalletId
 
@@ -16,6 +17,7 @@ internal fun HomeRoute(
     onOpenWallets: () -> Unit,
     onOpenHistory: () -> Unit,
     onQuickEntry: () -> Unit,
+    onApplyShortcut: (QuickEntryId) -> Unit,
     onOpenTransaction: (TransactionId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -35,6 +37,10 @@ internal fun HomeRoute(
                 onQuickEntry = onQuickEntry,
                 onOpenTransaction = onOpenTransaction,
                 onOpenHistory = onOpenHistory,
+                onApplyShortcut = onApplyShortcut,
+                onOpenShortcuts = viewModel::openShortcuts,
+                onDeleteShortcut = viewModel::deleteShortcut,
+                onRestoreShortcut = viewModel::restoreShortcut,
             ),
         modifier = modifier,
     )

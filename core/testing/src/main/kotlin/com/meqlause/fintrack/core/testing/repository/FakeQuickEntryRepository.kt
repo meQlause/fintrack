@@ -17,4 +17,6 @@ public class FakeQuickEntryRepository : QuickEntryRepository {
     override fun observeAll(): Flow<List<QuickEntry>> = store.observe()
 
     override suspend fun insert(quickEntry: QuickEntry): QuickEntryId = QuickEntryId(store.append(quickEntry))
+
+    override suspend fun delete(quickEntryId: QuickEntryId) = store.remove(quickEntryId.value)
 }

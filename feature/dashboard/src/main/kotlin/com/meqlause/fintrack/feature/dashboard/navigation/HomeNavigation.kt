@@ -2,6 +2,7 @@ package com.meqlause.fintrack.feature.dashboard.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.model.TransactionId
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.feature.dashboard.HomeRoute
@@ -13,6 +14,7 @@ public fun NavGraphBuilder.homeDestination(
     onOpenWallets: () -> Unit,
     onOpenHistory: () -> Unit,
     onQuickEntry: () -> Unit,
+    onApplyShortcut: (QuickEntryId) -> Unit,
     onOpenTransaction: (TransactionId) -> Unit,
 ) {
     composable<HomeDestination> {
@@ -22,6 +24,7 @@ public fun NavGraphBuilder.homeDestination(
             onOpenWallets = onOpenWallets,
             onOpenHistory = onOpenHistory,
             onQuickEntry = onQuickEntry,
+            onApplyShortcut = onApplyShortcut,
             onOpenTransaction = onOpenTransaction,
         )
     }

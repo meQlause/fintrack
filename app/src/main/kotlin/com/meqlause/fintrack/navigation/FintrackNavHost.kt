@@ -60,6 +60,7 @@ private fun NavGraphBuilder.fintrackGraph(navController: NavHostController) {
         onOpenWallets = { MainTab.WALLET.navigateFrom(navController) },
         onOpenHistory = { MainTab.HISTORY.navigateFrom(navController) },
         onQuickEntry = { navController.navigate(EditTransactionDestination()) },
+        onApplyShortcut = { navController.navigate(EditTransactionDestination(quickEntryId = it.value)) },
         onOpenTransaction = { navController.navigate(TransactionDetailDestination(transactionId = it.value)) },
     )
     // DOC-09, FR-036: Riwayat (S-05); a tapped row opens the S-06 detail for that transaction

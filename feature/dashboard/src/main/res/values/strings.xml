@@ -12,7 +12,7 @@
 
     <string name="home_quick_title">Catat cepat</string>
     <string name="home_quick_add">Baru</string>
-    <string name="home_quick_add_description">Catat transaksi baru</string>
+    <string name="home_shortcut_manage">Atur</string>
 
     <string name="home_category_title">Pengeluaran periode ini</string>
     <string name="home_category_open">Lihat semua kategori pengeluaran</string>

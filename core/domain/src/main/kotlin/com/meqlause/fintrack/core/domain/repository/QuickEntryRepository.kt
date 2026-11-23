@@ -11,4 +11,7 @@ public interface QuickEntryRepository {
 
     /** FR-039: stores a shortcut and returns its generated id; the quickEntryId of [quickEntry] is ignored. */
     public suspend fun insert(quickEntry: QuickEntry): QuickEntryId
+
+    /** FR-039: removes a shortcut from the manager; the transactions it once filled are untouched. */
+    public suspend fun delete(quickEntryId: QuickEntryId)
 }

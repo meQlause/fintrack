@@ -24,6 +24,7 @@ class FintrackSizes {
     val dragHandleHeight: Dp = Dp(value = 4f)
     val snackbarHeight: Dp = Dp(value = 44f)
     val drawerMaxHeight: Dp = Dp(value = 640f)
+    val shortcutTileWidth: Dp = Dp(value = 112f)
 
     // DOC-09: floating bottom bar geometry (prototype .navbar, .navblob, .fab)
     val navBarHeight: Dp = Dp(value = 76f)

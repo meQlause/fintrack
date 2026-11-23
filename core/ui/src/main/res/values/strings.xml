@@ -26,4 +26,10 @@
     <string name="picker_sample_option_none">Tanpa jatuh tempo</string>
     <string name="picker_sample_option_week">1 minggu</string>
     <string name="picker_sample_option_month">1 bulan</string>
+    <!-- FR-039: shortcut copy shared by the add sheet and Beranda (core:ui) -->
+    <string name="shortcut_empty">Belum ada pintasan</string>
+    <string name="shortcut_delete_description">Hapus pintasan</string>
+    <string name="shortcut_deleted">Pintasan dihapus</string>
+    <string name="shortcut_drawer_title">⚡ Pintasan</string>
+    <string name="shortcut_manage_title">Atur pintasan</string>
 </resources>

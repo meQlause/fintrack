@@ -384,7 +384,7 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - Commit: `feat(transaction): add transaction editor sheet [P4, FR-030]`
 
 ### T4.7 — Shortcuts (pintasan)
-- [ ] done · Refs: FR-039, BR-047 · Home tiles, header "⚡ Pintasan" drawer (3-column grid), "Simpan sebagai pintasan", manager drawer with undo.
+- [x] done · Refs: FR-039, BR-047 · Home tiles, header "⚡ Pintasan" drawer (3-column grid), "Simpan sebagai pintasan", manager drawer with undo.
 - Commit: `feat(transaction): add quick-entry shortcuts [P4, FR-039]`
 
 ### T4.8 — History list (S-05)

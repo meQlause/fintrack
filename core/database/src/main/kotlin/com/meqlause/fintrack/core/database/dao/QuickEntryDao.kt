@@ -16,4 +16,8 @@ interface QuickEntryDao {
     /** DOC-02: every shortcut in the user's chosen order. */
     @Query("SELECT * FROM quick_entry ORDER BY sortOrder")
     fun observeAll(): Flow<List<QuickEntryEntity>>
+
+    /** FR-039: removes a shortcut; the manager offers undo for five seconds. */
+    @Query("DELETE FROM quick_entry WHERE quickEntryId = :quickEntryId")
+    suspend fun delete(quickEntryId: Long)
 }

@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.dashboard
 
+import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.model.TransactionId
 import com.meqlause.fintrack.core.model.WalletId
 
@@ -15,4 +16,8 @@ internal data class HomeCallbacks(
     val onQuickEntry: () -> Unit = {},
     val onOpenTransaction: (TransactionId) -> Unit = {},
     val onOpenHistory: () -> Unit = {},
+    val onApplyShortcut: (QuickEntryId) -> Unit = {},
+    val onOpenShortcuts: () -> Unit = {},
+    val onDeleteShortcut: (QuickEntryId) -> Unit = {},
+    val onRestoreShortcut: () -> Unit = {},
 )

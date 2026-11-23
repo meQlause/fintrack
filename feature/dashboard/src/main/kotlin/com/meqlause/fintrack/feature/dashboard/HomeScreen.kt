@@ -49,11 +49,17 @@ private fun HomeBody(
         verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
         HomeHero(state = state, callbacks = callbacks)
-        HomeQuickEntry(onQuickEntry = callbacks.onQuickEntry)
+        HomeQuickEntry(
+            shortcuts = state.shortcuts,
+            onNewEntry = callbacks.onQuickEntry,
+            onApplyShortcut = callbacks.onApplyShortcut,
+            onManage = callbacks.onOpenShortcuts,
+        )
         if (state.categories.isNotEmpty()) {
             HomeCategoryCard(state = state, onOpen = callbacks.onOpenCategories)
         }
         HomeRecentList(state = state, callbacks = callbacks)
+        HomeShortcutUndo(state = state, callbacks = callbacks)
     }
 }
 
@@ -83,6 +89,10 @@ private fun HomeDrawers(
 
         HomeDrawer.CATEGORIES -> {
             HomeCategoriesDrawer(state = state, onClose = callbacks.onCloseDrawer)
+        }
+
+        HomeDrawer.SHORTCUTS -> {
+            HomeShortcutDrawer(state = state, callbacks = callbacks)
         }
 
         null -> {

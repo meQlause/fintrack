@@ -4,4 +4,5 @@ package com.meqlause.fintrack.feature.dashboard
 internal enum class HomeDrawer {
     SUMMARY,
     CATEGORIES,
+    SHORTCUTS,
 }

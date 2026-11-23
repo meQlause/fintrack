@@ -4,6 +4,7 @@ import android.content.Context
 import com.meqlause.fintrack.core.database.FintrackDatabase
 import com.meqlause.fintrack.core.database.FintrackDatabaseFactory
 import com.meqlause.fintrack.core.database.dao.CategoryDao
+import com.meqlause.fintrack.core.database.dao.QuickEntryDao
 import com.meqlause.fintrack.core.database.dao.TransactionDao
 import com.meqlause.fintrack.core.database.dao.WalletDao
 import com.meqlause.fintrack.core.security.AndroidKeystoreWrapper
@@ -36,4 +37,8 @@ object DatabaseModule {
 
     @Provides
     fun provideTransactionDao(database: FintrackDatabase): TransactionDao = database.transactionDao()
+
+    // FR-039: shortcuts are read and written through the Room DAO
+    @Provides
+    fun provideQuickEntryDao(database: FintrackDatabase): QuickEntryDao = database.quickEntryDao()
 }

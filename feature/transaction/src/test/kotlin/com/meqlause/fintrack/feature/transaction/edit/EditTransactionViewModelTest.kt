@@ -6,6 +6,7 @@ import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import com.meqlause.fintrack.core.domain.transaction.TransactionError
+import com.meqlause.fintrack.core.domain.usecase.SaveQuickEntryUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveTransactionUseCase
 import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Audit
@@ -25,6 +26,7 @@ import com.meqlause.fintrack.core.model.WalletTerms
 import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.core.testing.coroutine.MainDispatcherRule
 import com.meqlause.fintrack.core.testing.repository.FakeCategoryRepository
+import com.meqlause.fintrack.core.testing.repository.FakeQuickEntryRepository
 import com.meqlause.fintrack.core.testing.repository.FakeSettingsRepository
 import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
 import com.meqlause.fintrack.core.testing.repository.FakeWalletRepository
@@ -48,6 +50,7 @@ class EditTransactionViewModelTest {
     private val wallets = FakeWalletRepository(transactions)
     private val categories = FakeCategoryRepository()
     private val settings = FakeSettingsRepository()
+    private val quickEntries = FakeQuickEntryRepository()
 
     private fun newViewModel(): EditTransactionViewModel =
         EditTransactionViewModel(
@@ -56,6 +59,8 @@ class EditTransactionViewModelTest {
             categoryRepository = categories,
             settingsRepository = settings,
             saveTransaction = SaveTransactionUseCase(transactions, wallets, categories, clock),
+            quickEntries = quickEntries,
+            saveQuickEntry = SaveQuickEntryUseCase(quickEntries),
             clock = clock,
         )
 

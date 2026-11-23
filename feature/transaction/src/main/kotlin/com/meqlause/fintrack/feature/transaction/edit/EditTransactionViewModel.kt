@@ -3,10 +3,12 @@ package com.meqlause.fintrack.feature.transaction.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
+import com.meqlause.fintrack.core.domain.repository.QuickEntryRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
 import com.meqlause.fintrack.core.domain.transaction.SaveTransactionResult
+import com.meqlause.fintrack.core.domain.usecase.SaveQuickEntryUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveTransactionUseCase
 import com.meqlause.fintrack.core.model.LastUsed
 import com.meqlause.fintrack.core.model.Transaction
@@ -38,14 +40,20 @@ internal class EditTransactionViewModel
         private val categoryRepository: CategoryRepository,
         private val settingsRepository: SettingsRepository,
         private val saveTransaction: SaveTransactionUseCase,
+        quickEntries: QuickEntryRepository,
+        saveQuickEntry: SaveQuickEntryUseCase,
         private val clock: Clock,
     ) : ViewModel() {
         private val mutableState = MutableStateFlow(EditTransactionUiState())
+        private val shortcuts = EditShortcutController(quickEntries, saveQuickEntry, mutableState, viewModelScope)
 
         // S-04: the form, the catalogs and the open drawer, emitted again after every change
         val state: StateFlow<EditTransactionUiState> = mutableState.asStateFlow()
 
         init {
+            viewModelScope.launch {
+                shortcuts.observe().collect { list -> mutableState.update { it.copy(shortcuts = list) } }
+            }
             viewModelScope.launch {
                 combine(
                     walletRepository.observeAll(),
@@ -57,11 +65,16 @@ internal class EditTransactionViewModel
         }
 
         // FR-033, FR-034: a new sheet starts from the last used type and wallet; an existing transaction is loaded
-        fun open(transactionId: Long?) {
+        fun open(
+            transactionId: Long?,
+            quickEntryId: Long? = null,
+        ) {
             viewModelScope.launch {
                 val existing = transactionId?.let { findTransaction(it) }
-                val form = existing?.toForm() ?: newForm()
-                mutableState.update { it.copy(form = form, record = recordFor(existing)) }
+                val shortcut = quickEntryId?.let { shortcuts.find(it) }
+                val form = existing?.toForm() ?: shortcut?.toForm() ?: newForm()
+                val applied = shortcut != null
+                mutableState.update { it.copy(form = form, record = recordFor(existing), appliedShortcut = applied) }
             }
         }
 
@@ -112,6 +125,22 @@ internal class EditTransactionViewModel
 
                 is EditTransactionEvent.NoteChanged -> {
                     updateForm { it.copy(note = event.note.take(MAX_NOTE_LENGTH)) }
+                }
+
+                is EditTransactionEvent.ShortcutPicked -> {
+                    shortcuts.pick(event.quickEntryId)
+                }
+
+                is EditTransactionEvent.ShortcutDeleted -> {
+                    shortcuts.delete(event.quickEntryId)
+                }
+
+                EditTransactionEvent.ShortcutRestored -> {
+                    shortcuts.restore()
+                }
+
+                is EditTransactionEvent.ShortcutToggled -> {
+                    mutableState.update { it.copy(keepAsShortcut = event.keep) }
                 }
 
                 EditTransactionEvent.SaveRequested -> {
@@ -198,6 +227,7 @@ internal class EditTransactionViewModel
         private fun save() {
             viewModelScope.launch {
                 val current = mutableState.value
+                if (!shortcuts.storeIfKept(current, Instant.now(clock))) return@launch
                 when (val result = saveTransaction(current.toDraft())) {
                     is SaveTransactionResult.Saved -> {
                         rememberLastUsed(current.form)

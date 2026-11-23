@@ -77,4 +77,7 @@
     <string name="transaction_detail_duplicate">Catat lagi</string>
     <string name="transaction_detail_delete">Hapus</string>
     <string name="transaction_detail_deleted">Transaksi dihapus</string>
+    <!-- FR-039: shortcut copy that belongs to the add sheet -->
+    <string name="shortcut_keep_label">Simpan sebagai pintasan</string>
+    <string name="shortcut_title_invalid">Judul pintasan 1–24 karakter, jumlah 1 sampai 999 miliar</string>
 </resources>

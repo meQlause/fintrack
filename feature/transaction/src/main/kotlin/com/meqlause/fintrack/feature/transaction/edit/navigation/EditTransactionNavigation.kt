@@ -9,6 +9,10 @@ import com.meqlause.fintrack.feature.transaction.edit.EditTransactionRoute
 public fun NavGraphBuilder.editTransactionDestination(onDismiss: () -> Unit) {
     composable<EditTransactionDestination> { entry ->
         val destination = entry.toRoute<EditTransactionDestination>()
-        EditTransactionRoute(transactionId = destination.transactionId, onDismiss = onDismiss)
+        EditTransactionRoute(
+            transactionId = destination.transactionId,
+            quickEntryId = destination.quickEntryId,
+            onDismiss = onDismiss,
+        )
     }
 }

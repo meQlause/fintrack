@@ -4,4 +4,6 @@ package com.meqlause.fintrack.feature.transaction.edit
 internal enum class EditSheet {
     WALLET,
     TARGET_WALLET,
+    SHORTCUTS,
+    SHORTCUT_MANAGE,
 }

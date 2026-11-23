@@ -1,6 +1,7 @@
 package com.meqlause.fintrack.feature.transaction.edit
 
 import com.meqlause.fintrack.core.model.CategoryId
+import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.WalletId
 
@@ -41,4 +42,18 @@ internal sealed interface EditTransactionEvent {
     ) : EditTransactionEvent
 
     data object SaveRequested : EditTransactionEvent
+
+    data class ShortcutPicked(
+        val quickEntryId: QuickEntryId,
+    ) : EditTransactionEvent
+
+    data class ShortcutDeleted(
+        val quickEntryId: QuickEntryId,
+    ) : EditTransactionEvent
+
+    data object ShortcutRestored : EditTransactionEvent
+
+    data class ShortcutToggled(
+        val keep: Boolean,
+    ) : EditTransactionEvent
 }
