@@ -71,6 +71,11 @@ abstract class HomeViewModelTestBase {
         )
     }
 
+    // the fakes behind the view model; a test seeds them before it builds the view model
+    protected val settings = FakeSettingsRepository()
+    protected val quickEntries = FakeQuickEntryRepository()
+    protected val inboxItems = FakeInboxRepository()
+
     internal fun viewModel(
         wallets: FakeWalletRepository,
         transactions: FakeTransactionRepository,
@@ -81,9 +86,9 @@ abstract class HomeViewModelTestBase {
                     wallets = wallets,
                     transactions = transactions,
                     categories = FakeCategoryRepository(),
-                    settings = FakeSettingsRepository(),
-                    inboxItems = FakeInboxRepository(),
-                    quickEntries = FakeQuickEntryRepository(),
+                    settings = settings,
+                    inboxItems = inboxItems,
+                    quickEntries = quickEntries,
                 ),
             bills =
                 ObserveBillsCardUseCase(

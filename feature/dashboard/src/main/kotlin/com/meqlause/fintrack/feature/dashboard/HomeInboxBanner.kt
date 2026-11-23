@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import com.meqlause.fintrack.core.designsystem.theme.FintrackAppBadges
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
