@@ -19,7 +19,7 @@ import java.time.Instant
 
 /** Create investment use case tests. */
 class CreateInvestmentUseCaseTest {
-    private val now = Instant.parse("2026-11-23T02:00:00Z")
+    private val current = Instant.parse("2026-11-23T02:00:00Z")
     private val wallets = InMemoryWalletRepository()
     private val create = CreateInvestmentUseCase(wallets, WalletNameValidator())
 
@@ -27,7 +27,7 @@ class CreateInvestmentUseCaseTest {
     @Test
     fun givenValidNameWhenCreatedThenInvestmentWalletWithDefaultLookIsStored() {
         runBlocking {
-            val id = create("Reksa", InvestKind.MUTUAL_FUND, Money(500_000L), now)
+            val id = create("Reksa", InvestKind.MUTUAL_FUND, Money(500_000L), current)
             val stored = wallets.observeAll().first().single()
             assertThat(id).isEqualTo(stored.walletId)
             assertThat(stored.kind.type).isEqualTo(WalletType.INVESTMENT)
@@ -35,7 +35,7 @@ class CreateInvestmentUseCaseTest {
             assertThat(stored.terms.initialBalance).isEqualTo(Money(500_000L))
             assertThat(stored.profile.appearance.iconKey).isEqualTo("trend")
             assertThat(stored.profile.appearance.colorKey).isEqualTo("gray")
-            assertThat(stored.audit.createdAt).isEqualTo(now)
+            assertThat(stored.audit.createdAt).isEqualTo(current)
         }
     }
 
@@ -43,7 +43,7 @@ class CreateInvestmentUseCaseTest {
     @Test
     fun givenNameWithSpacesWhenCreatedThenStoredNameIsTrimmed() {
         runBlocking {
-            create("  Emas  ", InvestKind.GOLD, Money(0L), now)
+            create("  Emas  ", InvestKind.GOLD, Money(0L), current)
             assertThat(
                 wallets
                     .observeAll()
@@ -58,8 +58,8 @@ class CreateInvestmentUseCaseTest {
     @Test
     fun givenSecondWalletWhenCreatedThenSortOrderFollowsTheLastOne() {
         runBlocking {
-            create("Saham", InvestKind.STOCK, Money(0L), now)
-            create("Kripto", InvestKind.CRYPTO, Money(0L), now)
+            create("Saham", InvestKind.STOCK, Money(0L), current)
+            create("Kripto", InvestKind.CRYPTO, Money(0L), current)
             val orders = wallets.observeAll().first().map { it.profile.sortOrder }
             assertThat(orders).isEqualTo(listOf(0, 1))
         }
@@ -69,7 +69,7 @@ class CreateInvestmentUseCaseTest {
     @Test
     fun givenBlankNameWhenCreatedThenNothingIsStored() {
         runBlocking {
-            assertThat(create("   ", InvestKind.STOCK, Money(0L), now)).isNull()
+            assertThat(create("   ", InvestKind.STOCK, Money(0L), current)).isNull()
             assertThat(wallets.observeAll().first()).isEqualTo(emptyList<Wallet>())
         }
     }
@@ -78,7 +78,7 @@ class CreateInvestmentUseCaseTest {
     @Test
     fun givenNegativeAmountWhenCreatedThenNothingIsStored() {
         runBlocking {
-            assertThat(create("Saham", InvestKind.STOCK, Money(-1L), now)).isNull()
+            assertThat(create("Saham", InvestKind.STOCK, Money(-1L), current)).isNull()
             assertThat(wallets.observeAll().first()).isEqualTo(emptyList<Wallet>())
         }
     }
@@ -87,8 +87,8 @@ class CreateInvestmentUseCaseTest {
     @Test
     fun givenNameUsedByActiveWalletInOtherCaseWhenCreatedThenRejected() {
         runBlocking {
-            create("Saham", InvestKind.STOCK, Money(0L), now)
-            assertThat(create("SAHAM", InvestKind.STOCK, Money(0L), now)).isNull()
+            create("Saham", InvestKind.STOCK, Money(0L), current)
+            assertThat(create("SAHAM", InvestKind.STOCK, Money(0L), current)).isNull()
             assertThat(wallets.observeAll().first().size).isEqualTo(1)
         }
     }
@@ -97,10 +97,10 @@ class CreateInvestmentUseCaseTest {
     @Test
     fun givenNameUsedByArchivedWalletWhenCreatedThenAccepted() {
         runBlocking {
-            create("Saham", InvestKind.STOCK, Money(0L), now)
+            create("Saham", InvestKind.STOCK, Money(0L), current)
             val stored = wallets.observeAll().first().single()
             wallets.update(stored.copy(status = WalletStatus(isArchived = true)))
-            assertThat(create("Saham", InvestKind.STOCK, Money(0L), now)).isNotNull()
+            assertThat(create("Saham", InvestKind.STOCK, Money(0L), current)).isNotNull()
         }
     }
 }

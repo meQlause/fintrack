@@ -28,7 +28,7 @@ import java.time.temporal.ChronoUnit
 
 /** BR-001..BR-004, BR-006, BR-009, BR-039: the draft checks run before anything is stored. */
 class TransactionRulesTest {
-    private val now = Instant.parse("2026-11-23T10:00:00Z")
+    private val current = Instant.parse("2026-11-23T10:00:00Z")
     private val cash = WalletId(1L)
     private val bank = WalletId(2L)
     private val card = WalletId(3L)
@@ -66,14 +66,14 @@ class TransactionRulesTest {
     @Test
     fun `given a transfer fee above the bound when checked then the fee is invalid`() {
         val fee = 1_000_000_000_000L
-        val result = check(draft(TransactionType.TRANSFER, 10_000L, DraftRouting(bank, cash, null), fee = fee))
+        val result = check(draft(TransactionType.TRANSFER, 10_000L, DraftRouting(bank, cash, null), fees = fee))
         assertThat(result).containsOnly(TransactionError.FEE_INVALID)
     }
 
     /** BR-004: a fee on an expense is not checked, only a transfer uses it. */
     @Test
     fun `given a negative fee on an expense when checked then the fee is not checked`() {
-        val result = check(draft(TransactionType.EXPENSE, 10_000L, DraftRouting(cash, null, food), fee = -1L))
+        val result = check(draft(TransactionType.EXPENSE, 10_000L, DraftRouting(cash, null, food), fees = -1L))
         assertThat(result).isEmpty()
     }
 
@@ -129,7 +129,7 @@ class TransactionRulesTest {
     /** BR-009: a transaction dated more than one day ahead is refused. */
     @Test
     fun `given a date two days ahead when checked then the date is too far`() {
-        val later = now.plus(2L, ChronoUnit.DAYS)
+        val later = current.plus(2L, ChronoUnit.DAYS)
         val result = check(draft(TransactionType.EXPENSE, 10_000L, DraftRouting(cash, null, food), occurredAt = later))
         assertThat(result).containsOnly(TransactionError.DATE_TOO_FAR)
     }
@@ -137,7 +137,7 @@ class TransactionRulesTest {
     /** BR-009: a date exactly one day ahead is still accepted. */
     @Test
     fun `given a date one day ahead when checked then it is accepted`() {
-        val tomorrow = now.plus(1L, ChronoUnit.DAYS)
+        val tomorrow = current.plus(1L, ChronoUnit.DAYS)
         val draft = draft(TransactionType.EXPENSE, 10_000L, DraftRouting(cash, null, food), occurredAt = tomorrow)
         assertThat(check(draft)).isEmpty()
     }
@@ -150,15 +150,16 @@ class TransactionRulesTest {
     }
 
     private fun check(draft: TransactionDraft): Set<TransactionError> =
-        TransactionRules.check(draft, wallets, categories, now)
+        TransactionRules.check(draft, wallets, categories, current)
 
     private fun draft(
         type: TransactionType,
         amount: Long,
         routing: DraftRouting,
-        fee: Long = 0L,
-        occurredAt: Instant = now,
-    ): TransactionDraft = TransactionDraft(null, Movement(type, Money(amount), Money(fee)), routing, Memo(), occurredAt)
+        fees: Long = 0L,
+        occurredAt: Instant = current,
+    ): TransactionDraft =
+        TransactionDraft(null, Movement(type, Money(amount), Money(fees)), routing, Memo(), occurredAt)
 
     private fun wallet(
         walletId: WalletId,
@@ -170,7 +171,7 @@ class TransactionRulesTest {
             terms = WalletTerms(Money(0L), credit = creditOf(type)),
             profile = WalletProfile("Dompet", Appearance("wallet", "green"), 0),
             status = WalletStatus(),
-            audit = Audit(now, now),
+            audit = Audit(current, current),
         )
 
     private fun creditOf(type: WalletType): CreditTerms? =
@@ -184,6 +185,6 @@ class TransactionRulesTest {
             categoryId = categoryId,
             profile = CategoryProfile("Kategori", kind, Appearance("tag", "blue"), 0),
             state = CategoryState(isDefault = false, isArchived = false),
-            audit = Audit(now, now),
+            audit = Audit(current, current),
         )
 }
