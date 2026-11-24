@@ -58,6 +58,26 @@ class HomeCalculatorTest : HomeViewModelTestBase() {
         assertThat(wallets.map { it.isCredit }).containsExactly(false, true, true)
     }
 
+    // FR-040, BR-043, BR-053: only non-credit, non-investment wallets counted in the total share the Saldo bar
+    @Test
+    fun givenWalletTypesWhenCalculatedThenOnlySaldoWalletsCount() {
+        val snapshot =
+            snapshot(
+                wallets =
+                    listOf(
+                        walletOf(1L, "Tunai", WalletType.CASH),
+                        walletOf(2L, "Kartu", WalletType.CREDIT_CARD),
+                        walletOf(3L, "Paylater", WalletType.PAYLATER),
+                        walletOf(4L, "Saham", WalletType.INVESTMENT),
+                        walletOf(5L, "Dana", WalletType.BANK).copy(status = WalletStatus(isIncludedInTotal = false)),
+                    ),
+            )
+
+        val counted = calculate(snapshot).wallets.map { it.countsInSaldo }
+
+        assertThat(counted).containsExactly(true, false, false, false, false)
+    }
+
     // FR-040: a wallet without a computed balance shows its initial balance
     @Test
     fun givenWalletWithoutBalanceWhenCalculatedThenInitialBalanceIsShown() {

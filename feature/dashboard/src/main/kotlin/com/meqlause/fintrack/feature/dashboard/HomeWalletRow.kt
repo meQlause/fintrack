@@ -16,7 +16,7 @@ internal fun HomeWalletRow(
     callbacks: HomeCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    val positiveTotal = wallets.sumOf { it.balance.rupiah.coerceAtLeast(0L) }
+    val positiveTotal = wallets.filter { it.countsInSaldo }.sumOf { it.balance.rupiah.coerceAtLeast(0L) }
     LazyRow(
         modifier = modifier,
         contentPadding = PaddingValues(horizontal = FintrackTheme.spacing.gutter),
@@ -27,14 +27,14 @@ internal fun HomeWalletRow(
             HomeWalletChip(
                 wallet = wallet,
                 hidden = hidden,
-                percent = sharePercent(wallet.balance.rupiah, positiveTotal),
+                percent = if (wallet.countsInSaldo) sharePercent(wallet.balance.rupiah, positiveTotal) else null,
                 onClick = { open(wallet.walletId) },
             )
         }
     }
 }
 
-// FR-040: the wallet's share of the positive balances, rounded to a whole percent
+// FR-040, BR-043: the Saldo wallet's share of the positive Saldo balances, rounded to a whole percent
 private fun sharePercent(
     balance: Long,
     positiveTotal: Long,

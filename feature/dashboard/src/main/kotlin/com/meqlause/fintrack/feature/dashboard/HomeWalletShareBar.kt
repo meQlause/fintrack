@@ -12,13 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
-// FR-040: each wallet's share of the positive balances as slim rounded segments in the wallet colours
+// FR-040, BR-043: each Saldo wallet's share of the positive balances as slim rounded segments in the wallet colours
 @Composable
 internal fun HomeWalletShareBar(
     wallets: List<HomeWallet>,
     modifier: Modifier = Modifier,
 ) {
-    val positive = wallets.filter { it.balance.rupiah > 0L }
+    val positive = wallets.filter { it.countsInSaldo && it.balance.rupiah > 0L }
     if (positive.isEmpty()) return
     Row(
         modifier = modifier.fillMaxWidth().height(FintrackTheme.sizes.heroBarHeight),

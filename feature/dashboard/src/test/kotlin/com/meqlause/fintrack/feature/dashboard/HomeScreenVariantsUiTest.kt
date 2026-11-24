@@ -48,6 +48,20 @@ class HomeScreenVariantsUiTest : HomeComposeTestBase() {
         composeRule.onAllNodesWithText(label(R.string.home_balance_label)).onFirst().assertIsDisplayed()
     }
 
+    // FR-040, BR-043: credit wallets stay out of the shares, so the only Saldo wallet holds the whole of it
+    @Test
+    fun givenCreditBesideCashWhenShownThenShareCountsOnlySaldo() {
+        val wallets =
+            listOf(
+                HomeWallet(WalletId(1L), "Tunai", Money(100_000L)),
+                HomeWallet(WalletId(2L), "Kartu", Money(100_000L), isCredit = true),
+            )
+        setHome(HomeFixtures.rich().withWallets(wallets))
+
+        composeRule.onAllNodesWithText("100%").onFirst().assertIsDisplayed()
+        assertAbsent("50%")
+    }
+
     // FR-040: a credit wallet with a positive balance is shown as a credit chip
     @Test
     fun givenPositiveCreditWalletWhenShownThenChipIsRendered() {

@@ -28,7 +28,7 @@ import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 internal fun HomeWalletChip(
     wallet: HomeWallet,
     hidden: Boolean,
-    percent: Int,
+    percent: Int?,
     onClick: () -> Unit,
 ) {
     val shape = FintrackTheme.shapes.medium
@@ -59,7 +59,7 @@ internal fun HomeWalletChip(
 @Composable
 private fun WalletChipHeader(
     wallet: HomeWallet,
-    percent: Int,
+    percent: Int?,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -75,11 +75,14 @@ private fun WalletChipHeader(
                     shape = FintrackTheme.shapes.walletIcon,
                 ),
         )
-        Text(
-            text = stringResource(R.string.home_percent, percent),
-            style = FintrackTheme.typography.micro,
-            color = FintrackTheme.colors.texts.faint,
-        )
+        // BR-043: credit, paylater and investment wallets are not part of Saldo, so they carry no share
+        if (percent != null) {
+            Text(
+                text = stringResource(R.string.home_percent, percent),
+                style = FintrackTheme.typography.micro,
+                color = FintrackTheme.colors.texts.faint,
+            )
+        }
     }
 }
 

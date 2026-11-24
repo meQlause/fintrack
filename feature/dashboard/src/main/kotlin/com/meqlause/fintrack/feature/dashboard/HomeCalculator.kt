@@ -72,8 +72,13 @@ internal object HomeCalculator {
                     balance = balanceOf(it, snapshot.moneyByWallet),
                     isCredit = isCreditWallet(it),
                     appearance = it.profile.appearance,
+                    countsInSaldo = countsInSaldo(it),
                 )
             }
+
+    // BR-043, BR-053: Saldo holds the non-credit, non-investment wallets counted in the total
+    private fun countsInSaldo(wallet: Wallet): Boolean =
+        !isCreditWallet(wallet) && wallet.kind.type != WalletType.INVESTMENT && wallet.status.isIncludedInTotal
 
     private fun isCreditWallet(wallet: Wallet): Boolean =
         wallet.kind.type == WalletType.CREDIT_CARD || wallet.kind.type == WalletType.PAYLATER

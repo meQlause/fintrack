@@ -2,11 +2,8 @@ package com.meqlause.fintrack.feature.budget.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
 import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
@@ -23,10 +20,7 @@ internal fun BudgetPickerDrawer(
     callbacks: BudgetCallbacks,
 ) {
     PickerDrawer(title = stringResource(R.string.budget_pick_title), onClose = callbacks.editor.onDismissEditor) {
-        Column(
-            modifier = Modifier.verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-        ) {
+        Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
             PickerRow(label = stringResource(R.string.budget_overall)) {
                 callbacks.onPick(BudgetTarget(categoryId = null, categoryName = null))
             }
