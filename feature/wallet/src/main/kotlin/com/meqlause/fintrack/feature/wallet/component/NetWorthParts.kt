@@ -5,7 +5,7 @@ import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.wallet.R
 
-// BR-053, S-09: Aset counts a negative Saldo; the five parts of the net-worth card in bar order, with the compact totals of the prototype
+// BR-053, S-09: the five parts of the net-worth card in bar order; Aset counts a negative Saldo
 internal class NetWorthParts private constructor(
     val assets: List<NetWorthPart>,
     val debts: List<NetWorthPart>,

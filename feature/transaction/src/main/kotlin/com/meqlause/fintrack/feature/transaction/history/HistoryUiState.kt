@@ -44,7 +44,7 @@ internal data class HistoryLists(
     val groups: List<HistoryDayGroup> = emptyList(),
 )
 
-// FR-036: the totals of the month, whether it has records, whether it loaded, which months have records and where today falls
+// FR-036: the month totals, whether it has records or loaded, its active months and where today falls
 @Immutable
 internal data class HistoryStatus(
     val totals: HistoryTotals = HistoryTotals(),
