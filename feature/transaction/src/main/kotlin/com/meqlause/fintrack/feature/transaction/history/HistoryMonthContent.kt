@@ -22,15 +22,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import com.meqlause.fintrack.core.designsystem.component.EmptyState
-import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
+import com.meqlause.fintrack.core.designsystem.component.EmptyAction
+import com.meqlause.fintrack.core.designsystem.component.EmptyIllustrated
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.format.AmountSign
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.core.ui.transaction.TransactionRowGroup
 import com.meqlause.fintrack.feature.transaction.R
-import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // FR-036, FR-037, S-05: the list of the picked month; a horizontal swipe changes the month
 @Composable
@@ -38,6 +37,7 @@ internal fun ColumnScope.HistoryMonthContent(
     state: HistoryUiState,
     onEvent: (HistoryEvent) -> Unit,
     onOpenTransaction: (Long) -> Unit,
+    onAdd: () -> Unit,
 ) {
     val motion = FintrackTheme.motion.medium
     AnimatedContent(
@@ -53,7 +53,7 @@ internal fun ColumnScope.HistoryMonthContent(
         transitionSpec = { focusPull(motion.durationMillis, motion.easing) },
         label = "history-month-focus",
     ) { month ->
-        key(month) { HistoryDayList(state = state, onOpenTransaction = onOpenTransaction) }
+        key(month) { HistoryDayList(state = state, onOpenTransaction = onOpenTransaction, onAdd = onAdd) }
     }
 }
 
@@ -81,10 +81,11 @@ private const val TRANSACTION_ROW_TYPE = "transaction-row"
 private fun HistoryDayList(
     state: HistoryUiState,
     onOpenTransaction: (Long) -> Unit,
+    onAdd: () -> Unit,
 ) {
     if (!state.isLoaded) return
     if (state.groups.isEmpty()) {
-        HistoryEmptyState(isFiltered = state.filter.isActive)
+        HistoryEmptyState(isFiltered = state.filter.isActive, onAdd = onAdd)
         return
     }
     LazyColumn(contentPadding = PaddingValues(bottom = FintrackScreenSizes.screenBottom)) {
@@ -128,13 +129,15 @@ private fun DayHeader(group: HistoryDayGroup) {
     }
 }
 
+// S-05, DOC-08: the illustrated empty state; the title says "Tidak ditemukan" while a filter narrows the list
 @Composable
-private fun HistoryEmptyState(isFiltered: Boolean) {
-    val copy =
-        if (isFiltered) {
-            EmptyStateCopy(title = stringResource(R.string.history_search_empty_title), body = "")
-        } else {
-            EmptyStateCopy(title = stringResource(R.string.history_empty_title), body = "")
-        }
-    EmptyState(copy = copy, iconRes = DesignR.drawable.ic_history)
+private fun HistoryEmptyState(
+    isFiltered: Boolean,
+    onAdd: () -> Unit,
+) {
+    val title = if (isFiltered) R.string.history_search_empty_title else R.string.history_empty_title
+    EmptyIllustrated(
+        title = stringResource(title),
+        action = EmptyAction(label = stringResource(R.string.history_empty_action), onClick = onAdd),
+    )
 }

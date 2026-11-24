@@ -21,6 +21,7 @@
     <string name="sample_type_in">Masuk</string>
     <string name="sample_type_transfer">Transfer</string>
     <string name="sample_empty_title">Belum ada transaksi</string>
+    <string name="sample_empty_action">Catat</string>
     <string name="sample_empty_body">Tekan + untuk mencatat transaksi pertamamu</string>
     <string name="sample_drawer_title">Pilih dompet</string>
     <string name="sample_section_debit">Debit (bank &amp; e-wallet)</string>

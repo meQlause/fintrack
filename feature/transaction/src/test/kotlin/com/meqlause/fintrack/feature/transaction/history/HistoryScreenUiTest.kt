@@ -34,7 +34,7 @@ class HistoryScreenUiTest {
                 HistoryScreen(
                     state = sampleHistoryState(),
                     onEvent = {},
-                    onOpenTransaction = { opened += it },
+                    links = HistoryLinks(onOpenTransaction = { opened += it }, onAdd = {}),
                 )
             }
         }
@@ -47,7 +47,11 @@ class HistoryScreenUiTest {
     fun givenSampleListWhenRenderedThenDayHeaderAndTransferTabAreShown() {
         composeRule.setContent {
             FintrackTheme(darkTheme = false) {
-                HistoryScreen(state = sampleHistoryState(), onEvent = {}, onOpenTransaction = {})
+                HistoryScreen(
+                    state = sampleHistoryState(),
+                    onEvent = {},
+                    links = HistoryLinks(onOpenTransaction = {}, onAdd = {}),
+                )
             }
         }
         composeRule.onNodeWithText("Hari ini").performClick()

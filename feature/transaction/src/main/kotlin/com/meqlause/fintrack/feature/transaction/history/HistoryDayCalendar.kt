@@ -53,7 +53,7 @@ internal fun HistoryDayCalendar(
         cells.chunked(DAYS_PER_WEEK).forEach { week ->
             Row(modifier = Modifier.fillMaxWidth()) {
                 repeat(DAYS_PER_WEEK) { slot ->
-                    DayCell(day = week.getOrNull(slot) ?: BLANK, state = state, onEvent = onEvent)
+                    DayCell(dayOfMonth = week.getOrNull(slot) ?: BLANK, state = state, onEvent = onEvent)
                 }
             }
         }
@@ -77,29 +77,34 @@ private fun WeekdayHeader() {
 
 @Composable
 private fun RowScope.DayCell(
-    day: Int,
+    dayOfMonth: Int,
     state: HistoryUiState,
     onEvent: (HistoryEvent) -> Unit,
 ) {
     val cell = Modifier.weight(1f).height(FintrackCalendarSizes.dayCell)
-    if (day == BLANK) {
+    if (dayOfMonth == BLANK) {
         Column(modifier = cell) {}
         return
     }
-    val date = state.month.atDay(day)
+    val date = state.month.atDay(dayOfMonth)
     val mark =
         DayMark(
             isToday = date == state.today,
-            isPicked = state.filter.dayOfMonth == day,
+            isPicked = state.filter.dayOfMonth == dayOfMonth,
             hasData = date in state.activeDays,
             isFuture = state.isAfterToday(date),
         )
-    DayContent(day = day, mark = mark, onClick = { onEvent(HistoryEvent.DayPicked(day)) }, modifier = cell)
+    DayContent(
+        dayOfMonth = dayOfMonth,
+        mark = mark,
+        onClick = { onEvent(HistoryEvent.DayPicked(dayOfMonth)) },
+        modifier = cell,
+    )
 }
 
 @Composable
 private fun DayContent(
-    day: Int,
+    dayOfMonth: Int,
     mark: DayMark,
     onClick: () -> Unit,
     modifier: Modifier,
@@ -119,7 +124,7 @@ private fun DayContent(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = day.toString(),
+            text = dayOfMonth.toString(),
             style = FintrackScreenText.number(size = 14f, weight = 500),
             color = colors.texts.onSurface,
         )

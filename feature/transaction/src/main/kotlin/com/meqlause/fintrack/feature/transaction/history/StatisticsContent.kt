@@ -12,26 +12,26 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.EmptyState
-import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
+import com.meqlause.fintrack.core.designsystem.component.EmptyAction
+import com.meqlause.fintrack.core.designsystem.component.EmptyIllustrated
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.feature.transaction.R
-import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // FR-060..064, S-08: the statistics of the picked month, scrolled as one column below the month strip
 @Composable
 internal fun ColumnScope.StatisticsContent(
     state: HistoryUiState,
     onEvent: (HistoryEvent) -> Unit,
+    onAdd: () -> Unit,
 ) {
     Column(modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState())) {
         StatisticsTypeSwitch(state = state, onEvent = onEvent)
         val statistics = state.statistics
         if (statistics == null || statistics.categories.isEmpty()) {
-            StatisticsEmpty()
+            StatisticsEmpty(onAdd = onAdd)
         } else {
             FintrackCard(
                 modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.stack),
@@ -83,7 +83,9 @@ private fun StatisticsTypeSwitch(
 }
 
 @Composable
-private fun StatisticsEmpty() {
-    val copy = EmptyStateCopy(title = stringResource(R.string.history_empty_title), body = "")
-    EmptyState(copy = copy, iconRes = DesignR.drawable.ic_history)
+private fun StatisticsEmpty(onAdd: () -> Unit) {
+    EmptyIllustrated(
+        title = stringResource(R.string.history_empty_title),
+        action = EmptyAction(label = stringResource(R.string.history_empty_action), onClick = onAdd),
+    )
 }

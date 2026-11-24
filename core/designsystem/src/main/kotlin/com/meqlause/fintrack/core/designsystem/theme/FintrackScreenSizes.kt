@@ -107,4 +107,6 @@ object FintrackScreenSizes {
     val checkBox: Dp = Dp(value = 20f)
     val checkBoxBorder: Dp = Dp(value = 2f)
     val checkGlyph: Dp = Dp(value = 13f)
+    val emptyTop: Dp = Dp(value = 56f)
+    val emptyPill: Dp = Dp(value = 36f)
 }

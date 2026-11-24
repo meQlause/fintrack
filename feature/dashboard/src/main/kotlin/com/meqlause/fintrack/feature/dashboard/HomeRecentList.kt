@@ -13,11 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
-import com.meqlause.fintrack.core.designsystem.component.EmptyState
-import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
+import com.meqlause.fintrack.core.designsystem.component.EmptyIllustrated
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.transaction.TransactionRowGroup
-import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // FR-043, S-03: the five most recent transactions; a row opens its transaction and "Lihat semua" opens Riwayat
 @Composable
@@ -32,13 +30,9 @@ internal fun HomeRecentList(
     ) {
         RecentHeader(onOpenHistory = callbacks.onOpenHistory)
         if (state.recent.isEmpty()) {
-            EmptyState(
-                copy =
-                    EmptyStateCopy(
-                        title = stringResource(R.string.home_empty_title),
-                        body = stringResource(R.string.home_empty_body),
-                    ),
-                iconRes = DesignR.drawable.ic_history,
+            EmptyIllustrated(
+                title = stringResource(R.string.home_empty_title),
+                hint = stringResource(R.string.home_empty_body),
             )
         } else {
             TransactionRowGroup(

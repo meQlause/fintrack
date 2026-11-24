@@ -16,7 +16,7 @@ import com.meqlause.fintrack.core.model.HistoryView
 internal fun HistoryScreen(
     state: HistoryUiState,
     onEvent: (HistoryEvent) -> Unit,
-    onOpenTransaction: (Long) -> Unit,
+    links: HistoryLinks,
     modifier: Modifier = Modifier,
 ) {
     val gutter = Modifier.padding(horizontal = FintrackTheme.spacing.gutter)
@@ -35,7 +35,12 @@ internal fun HistoryScreen(
         )
         Column(modifier = gutter.weight(1f)) {
             HistoryViewSwitch(view = state.view, onPick = { onEvent(HistoryEvent.ViewPicked(it)) })
-            HistoryBody(state = state, onEvent = onEvent, onOpenTransaction = onOpenTransaction)
+            HistoryBody(
+                state = state,
+                onEvent = onEvent,
+                onOpenTransaction = links.onOpenTransaction,
+                onAdd = links.onAdd,
+            )
         }
     }
     HistorySheetHost(state = state, onEvent = onEvent)
@@ -68,15 +73,18 @@ private fun ColumnScope.HistoryBody(
     state: HistoryUiState,
     onEvent: (HistoryEvent) -> Unit,
     onOpenTransaction: (Long) -> Unit,
+    onAdd: () -> Unit,
 ) {
     if (state.view == HistoryView.STATISTICS) {
-        StatisticsContent(state = state, onEvent = onEvent)
+        StatisticsContent(state = state, onEvent = onEvent, onAdd = onAdd)
         return
     }
     HistoryTypeTabs(selected = state.filter.type, onPick = { onEvent(HistoryEvent.TypePicked(it)) })
     if (state.isSearchOpen || state.filter.hasEntryFilter) {
         HistoryFilterChips(state = state, onEvent = onEvent)
     }
-    HistoryTotalsStrip(totals = state.totals)
-    HistoryMonthContent(state = state, onEvent = onEvent, onOpenTransaction = onOpenTransaction)
+    if (state.hasRecords) {
+        HistoryTotalsStrip(totals = state.totals)
+    }
+    HistoryMonthContent(state = state, onEvent = onEvent, onOpenTransaction = onOpenTransaction, onAdd = onAdd)
 }

@@ -68,7 +68,8 @@
     <string name="history_stats_collapse">Ringkas</string>
     <string name="history_stats_uncategorized">Tanpa kategori</string>
     <string name="history_stats_new_change">baru</string>
-    <string name="history_empty_title">Tidak ada transaksi di periode ini</string>
+    <string name="history_empty_title">Belum ada transaksi</string>
+    <string name="history_empty_action">Catat</string>
     <string name="history_search_empty_title">Tidak ditemukan</string>
     <array name="history_weekday_names">
         <item>Sen</item>

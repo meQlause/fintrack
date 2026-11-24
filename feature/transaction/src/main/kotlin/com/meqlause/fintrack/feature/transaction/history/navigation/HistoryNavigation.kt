@@ -9,7 +9,8 @@ public object HistoryNavigation {
     public fun register(
         builder: NavGraphBuilder,
         onOpenTransaction: (Long) -> Unit,
+        onAdd: () -> Unit,
     ) {
-        builder.composable<HistoryDestination> { HistoryRoute(onOpenTransaction = onOpenTransaction) }
+        builder.composable<HistoryDestination> { HistoryRoute(onOpenTransaction = onOpenTransaction, onAdd = onAdd) }
     }
 }

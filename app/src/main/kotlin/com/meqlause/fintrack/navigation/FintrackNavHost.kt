@@ -128,9 +128,11 @@ private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
 
 private fun NavGraphBuilder.transactionGraph(navController: NavHostController) {
     // DOC-09, FR-036: Riwayat (S-05); a tapped row opens the S-06 detail for that transaction
-    HistoryNavigation.register(builder = this, onOpenTransaction = { id ->
-        navController.navigate(TransactionDetailDestination(transactionId = id))
-    })
+    HistoryNavigation.register(
+        builder = this,
+        onOpenTransaction = { id -> navController.navigate(TransactionDetailDestination(transactionId = id)) },
+        onAdd = { navController.navigate(EditTransactionDestination()) },
+    )
     // FR-034, S-06: the detail leaves on delete or duplicate; Ubah opens the S-04 sheet above it
     TransactionDetailNavigation.register(
         builder = this,

@@ -13,7 +13,11 @@ import java.time.YearMonth
 @Composable
 internal fun HistoryScreenLightPreview() {
     FintrackTheme(darkTheme = false) {
-        HistoryScreen(state = sampleHistoryState(), onEvent = {}, onOpenTransaction = {})
+        HistoryScreen(
+            state = sampleHistoryState(),
+            onEvent = {},
+            links = HistoryLinks(onOpenTransaction = {}, onAdd = {}),
+        )
     }
 }
 
@@ -21,7 +25,11 @@ internal fun HistoryScreenLightPreview() {
 @Composable
 internal fun HistoryScreenDarkPreview() {
     FintrackTheme(darkTheme = true) {
-        HistoryScreen(state = sampleHistoryState(), onEvent = {}, onOpenTransaction = {})
+        HistoryScreen(
+            state = sampleHistoryState(),
+            onEvent = {},
+            links = HistoryLinks(onOpenTransaction = {}, onAdd = {}),
+        )
     }
 }
 
@@ -126,6 +134,10 @@ private fun sampleRow(
 @Composable
 internal fun HistoryScreenFontScalePreview() {
     FintrackTheme(darkTheme = false) {
-        HistoryScreen(state = sampleHistoryState(), onEvent = {}, onOpenTransaction = {})
+        HistoryScreen(
+            state = sampleHistoryState(),
+            onEvent = {},
+            links = HistoryLinks(onOpenTransaction = {}, onAdd = {}),
+        )
     }
 }
