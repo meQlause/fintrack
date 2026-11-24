@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.meqlause.fintrack.core.ui.notification.NotificationAccessGate
 
 /**
  * S-01, FR-001..FR-004: stateful entry of onboarding. The only composable that touches the ViewModel.
@@ -31,14 +32,16 @@ internal fun OnboardingRoute(
     LaunchedEffect(state) {
         if (state == OnboardingUiState.Completed) currentOnFinished()
     }
-    OnboardingScreen(
-        state = state,
-        callbacks =
-            OnboardingCallbacks(
-                onAction = viewModel::onAction,
-                onEnableNotifications = { NotificationAccess.openSettings(context) },
-                onSetupPin = onSetupPin,
-            ),
-        modifier = modifier,
-    )
+    // DOC-10: "Aktifkan" shows the disclosure first; only "Setuju" opens the system settings
+    NotificationAccessGate(modifier = modifier) { requestAccess ->
+        OnboardingScreen(
+            state = state,
+            callbacks =
+                OnboardingCallbacks(
+                    onAction = viewModel::onAction,
+                    onEnableNotifications = requestAccess,
+                    onSetupPin = onSetupPin,
+                ),
+        )
+    }
 }

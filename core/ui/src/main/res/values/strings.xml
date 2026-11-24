@@ -33,6 +33,16 @@
     <string name="shortcut_deleted">Pintasan dihapus</string>
     <string name="shortcut_drawer_title">⚡ Pintasan</string>
     <string name="shortcut_manage_title">Atur pintasan</string>
+    <string name="shortcut_new">Pintasan baru</string>
+    <!-- DOC-10: prominent disclosure before notification access (shared, core:ui) -->
+    <string name="disclosure_title">Izinkan Fintrack membaca notifikasi?</string>
+    <string name="disclosure_what_is_read">Agar transaksi tercatat otomatis, Fintrack perlu membaca notifikasi dari aplikasi bank dan e-wallet yang kamu pilih (judul dan isi pesan: jumlah, pengirim atau penerima, waktu).</string>
+    <string name="disclosure_what_is_ignored">Notifikasi dari aplikasi lain tidak diproses.</string>
+    <string name="disclosure_stays_on_device">Semua dibaca dan diproses di ponselmu saja. Tidak ada yang dikirim ke internet, dan transaksi baru dicatat setelah kamu konfirmasi.</string>
+    <string name="disclosure_retention">Teks asli notifikasi yang sudah kamu proses dihapus otomatis setelah 30 hari.</string>
+    <string name="disclosure_turn_off">Kamu bisa mematikan akses ini kapan saja di Pengaturan Android.</string>
+    <string name="disclosure_agree">Setuju</string>
+    <string name="disclosure_decline">Tidak sekarang</string>
     <!-- NFR-010: spoken form of a signed amount for TalkBack -->
     <string name="money_spoken_minus">minus %1$s</string>
     <string name="money_spoken_plus">plus %1$s</string>

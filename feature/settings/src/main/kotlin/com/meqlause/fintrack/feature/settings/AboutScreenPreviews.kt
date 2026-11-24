@@ -9,7 +9,7 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 @Composable
 internal fun AboutLightPreview() {
     FintrackTheme(darkTheme = false) {
-        AboutScreen(version = "1.0", onBack = {})
+        AboutScreen(version = "1.0", onBack = {}, onOpenPrivacyPolicy = {})
     }
 }
 
@@ -17,6 +17,6 @@ internal fun AboutLightPreview() {
 @Composable
 internal fun AboutDarkPreview() {
     FintrackTheme(darkTheme = true) {
-        AboutScreen(version = "1.0", onBack = {})
+        AboutScreen(version = "1.0", onBack = {}, onOpenPrivacyPolicy = {})
     }
 }

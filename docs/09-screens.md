@@ -10,6 +10,7 @@ UI text shown here is the **Indonesian string** to put in `strings.xml`.
         └─► (PIN set & locked?) ─► Lock ─► Dashboard
 
 Bottom bar:  Beranda | Riwayat | (+) | Investasi | Dompet
+             The bar slides down and fades out (`medium`) when it hides (sub-screens, onboarding, an open sheet) and rises back the same way.
              (Statistics live inside Riwayat as the "Statistik" view; the Investasi tab is S-08.)
 Every tab header: 40px row, 32px icon tile + 20px/700 title (Beranda uses the Fintrack logo, others a soft-teal tile with the tab icon).
 
@@ -29,7 +30,8 @@ Horizontal pager, 4 pages, dot indicator, "Lewati" (skip) top-right, primary but
 
 1. **Welcome** — "Catat keuangan tanpa ribet" / "Semua data tersimpan hanya di HP kamu. Tanpa akun, tanpa internet."
 2. **First wallet** — form: name (default "Tunai"), type chips, initial balance (keypad). Button "Lanjut". Required step (cannot skip).
-3. **Notification detection** — explanation + illustration. "Aktifkan" → system settings; "Nanti saja".
+3. **Notification detection** — explanation + illustration. "Aktifkan" → prominent disclosure dialog (see
+   "Notification access disclosure" below) → system settings only after "Setuju"; "Nanti saja".
 4. **Security** — "Kunci dengan PIN?" → PIN setup flow; "Nanti saja". Button "Mulai".
 
 States: per page; returning from system settings re-checks access and shows ✓.
@@ -149,7 +151,21 @@ Grouped list:
 - **Deteksi otomatis:** status access (Aktif ✓ / Tidak aktif → Aktifkan), Aplikasi dipantau (S-13), Tampilkan notifikasi konfirmasi (switch), Bantuan optimasi baterai.
 - **Keamanan:** PIN (Atur/Ubah/Hapus), Biometrik, Kunci otomatis setelah…, Sembunyikan dari aplikasi terbaru.
 - **Cadangan & Ekspor:** Buat cadangan, Pulihkan, Pengingat cadangan (hari), Ekspor CSV. Shows "Cadangan terakhir: 3 hari lalu".
-- **Tentang:** versi, lisensi open source, pernyataan privasi.
+- **Tentang:** versi, lisensi open source, pernyataan privasi, baris "Kebijakan privasi" (opens
+  `https://github.com/meQlause/fintrack/blob/main/docs/play-store/privacy-policy.md` in the browser through an
+  `ACTION_VIEW` intent; the app itself has no INTERNET permission, NFR-001; when no browser exists a toast
+  says "Tidak ada aplikasi browser" and nothing else happens).
+
+## Notification access disclosure (shared, `core:ui`) — FR-003, FR-081, FR-084, Google Play User Data policy
+
+One dialog, shown **before every place that opens the system notification-listener settings**: onboarding page 3
+("Aktifkan"), S-13 ("Aktifkan" access button) and S-07 (inbox "Aktifkan akses" button). Title "Izinkan Fintrack
+membaca notifikasi?". It states what is read (title and text of notifications from the banking and e-wallet apps
+the user selects: amount, sender or receiver, time), what is ignored (all other apps), that nothing leaves the
+device (no internet permission) and that new transactions are recorded only after the user confirms, that raw
+notification text is kept at most 30 days (FR-092) and that access can be turned off any time in Android settings.
+Buttons "Setuju" (opens the system settings) and "Tidak sekarang" (closes the dialog, nothing opens; the user can
+try again later). Back or tapping outside counts as "Tidak sekarang".
 
 ## S-13 Monitored apps (`feature:settings`) — FR-081, FR-082, FR-090
 
@@ -170,6 +186,10 @@ Flows and examples: `18-credit-installments-loans.md`.
   Tap → **Kategori** drawer: every category (icon, %, number of transactions, amount); action "Buka statistik".
 
 ### Changes to existing screens
+- **S-03 Beranda:** each Tagihan row has a `large` (16 dp) vertical inset and a 4 dp gap between the amount and its status chip (T9.4d).
+- **Investasi baru sheet (S-08, FR-170):** laid out like the new wallet sheet: "Nama" label + field, one "Jenis ... Pilih jenis ›" value row
+  (opens the shared options drawer), "Modal awal" label + amount card row, the keypad and "Simpan". The sheet is a PickerDrawer, so the
+  body never holds its own scroll.
 - **S-03 Beranda:** hero label "Saldo" (BR-043). If non-zero, one line under it: "Utang kartu Rp3,5jt · Piutang Rp300rb · Hutang Rp500rb".
   New **"Tagihan"** card (FR-137) after the inbox row: nearest bill (card name, amount, "jatuh tempo 3 hari", status colour),
   "Cicilan bulan ini Rp1,5jt", and receivable/debt totals; tapping opens the relevant screen. Overdue → error colour (FR-136).
@@ -181,10 +201,10 @@ Flows and examples: `18-credit-installments-loans.md`.
   - **Pinjaman** has a "Jatuh tempo" row (FR-158) and a wallet row, both opening drawers.
 
 ### Shortcuts (FR-039)
-- **S-03 Beranda:** "Catat cepat" row under the hero — horizontal tiles (category icon, title, amount) + a dashed "Baru" tile; "Atur" opens the shortcut manager drawer.
+- **S-03 Beranda:** "Catat cepat" row under the hero — horizontal tiles (category icon, shortcut name, amount) + a dashed "Baru" tile that opens the dedicated **"Pintasan baru" form** (a sheet that only saves a shortcut, never a transaction): Keluar/Masuk switch, Nama (1–24), Jumlah, Kategori (kind of the type, BR-006), Dompet (Masuk: no credit wallet), Catatan (optional, 0–120). "Atur" opens the manager drawer: one card of rows (category icon, name, wallet, amount, trash), tapping a row edits it in the same form, a dashed "Pintasan baru" button under the card, delete shows the undo bar.
 - **S-04 Add sheet:** a "⚡ Pintasan" button in the sheet header opens the **shortcut drawer**: a 3-column grid of tiles (icon, title, amount, wallet);
   picking one fills the sheet and closes the drawer (still editable). "Atur pintasan" at the bottom switches the drawer to the manage/delete list.
-  A "Simpan sebagai pintasan" checkbox above "Simpan" (hidden when editing or when a shortcut was applied).
+  A "Simpan sebagai pintasan" checkbox above "Simpan" (hidden when editing or when a shortcut was applied); ticking it shows a Nama field, and the transaction note becomes the shortcut note. Applying a shortcut fills the sheet note from the shortcut note, not its name. The manage view here only deletes.
 
 ### S-20 Investment detail (`feature:investment`) — FR-173
 Push screen: header (name + kind badge); "Nilai sekarang" large; gain line "+Rp80.000 (+4,0%)" (income/expense colour);
@@ -199,7 +219,10 @@ for the period (today highlighted, future dimmed); "Terbaru" list (8 rows) with 
 in place (toggle "Ringkas") — it never navigates away to the Riwayat tab.
 
 ### S-18 Wallet picker drawer (shared component in `core:ui`)
-A second, smaller bottom sheet stacked above the current sheet. Sections in this order, each with an icon header:
+A second bottom sheet opened over the current sheet. Only the newest sheet is drawn (one drag handle, one scrim); the sheet
+under it stays composed but hidden, so its input survives, and it reappears when the drawer closes. Every sheet and drawer
+shares one panel (full width, screen gutter on both sides, large top radius) and a drawer is as tall as its content, at most
+75% of the screen height, scrolling only beyond that. Sections in this order, each with an icon header:
 **Tunai** · **Debit (bank & e-wallet)** · **Kartu kredit** · **Paylater** (credit sections hidden where not allowed).
 Rows: icon, name, balance (or "Sisa limit" for credit), radio indicator. Picking closes the drawer.
 The same drawer has two other modes: a **1–28 day grid** (statement/due day, FR-138) and an **options list** (loan due date, FR-158).
@@ -237,7 +260,15 @@ outstanding, progress bar, due date (red if overdue). Detail: timeline of transa
 
 ## Global UI behaviours
 
-- Snackbars for undoable actions (delete, dismiss) — 5 s.
+- Snackbars for undoable actions (delete, dismiss) — one shared `UndoSnackbar` for every flow (FR-035, FR-039, FR-087):
+  - The window is **3 s** (`UndoWindow.MILLIS`), never the long Material default. A thin line under the bar shrinks to
+    zero over the window so the user sees how long is left; a new delete restarts it.
+  - The bar grows in and fades in (`medium`) and shrinks away the same way when the window ends or Urungkan is tapped (`UndoSlot`).
+  - The deleted row leaves at once: it fades and shrinks (`AnimatedRows` in "Atur pintasan", `animateItem` for Kotak Masuk cards).
+    Urungkan brings it back with the reverse animation.
+  - The bar sits where the user is looking: under the list inside the shortcut drawer, under the form in the add sheet,
+    under the facts in the detail sheet, at the bottom of Kotak Masuk.
+  - "Remove animations" in system settings makes the motion instant; the countdown line still runs because it is information.
 - All destructive actions have confirmation dialogs except those with undo.
 - Back from the add sheet with unsaved amount asks "Buang perubahan?".
 - Pull-to-refresh is **not** used (data is live via Flow).

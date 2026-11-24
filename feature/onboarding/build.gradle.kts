@@ -47,7 +47,7 @@ dependencies {
     testImplementation(libs.assertk)
     testImplementation(libs.robolectric)
     testImplementation(libs.robolectric.annotations)
-    testImplementation(libs.robolectric.shadows.framework)
+    testRuntimeOnly(libs.robolectric.shadows.framework)
     testImplementation(libs.roborazzi)
     testImplementation(libs.roborazzi.core)
     testImplementation(libs.turbine)

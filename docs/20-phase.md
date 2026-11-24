@@ -539,9 +539,29 @@ Each screen task: UiState (all states from 09) → ViewModel + tests → statele
 - [x] done · Refs: DOC-08 (Logo) · adaptive icon from `design/assets/fintrack-logo.svg`.
 - Commit: `feat(app): add launcher icon [P9, DOC-08]`
 
+### T9.4a — Motion for the bottom bar and the undo flows
+- [x] done · Refs: DOC-08 (Motion), DOC-09, FR-035, FR-039, FR-087 · owner feedback 2026-11-24: animate the navbar, shorter and visible undo.
+- Commit: `feat(ui): animate the bottom bar and the undo flows [P9, DOC-08, DOC-09, FR-035, FR-039, FR-087]`
+
+### T9.4b — Shortcut form with its own name and note
+- [x] done · Refs: FR-039, BR-047, ADR-026, DOC-02, DOC-09, DOC-11 · owner feedback 2026-11-24: "Pintasan baru" form, separate note, Room v2, redesigned "Atur" drawer.
+- Commit: `feat(transaction): add a dedicated shortcut form with name and note [P9, FR-039, ADR-026]`
+
+### T9.4c — Saldo share bar and investment sheet fixes
+- [x] done · Refs: FR-040, BR-043, BR-053, FR-174 · owner feedback 2026-11-24: the share bar holds Saldo wallets only; the "Tambah investasi" sheet no longer nests a scroll and crashes.
+- Commit: `fix(dashboard): share Saldo only and stop the nested-scroll crash [P9, FR-040, BR-043]`
+
+### T9.4d — Drawer and sheet polish
+- [x] done · Refs: DOC-08, DOC-09, FR-170, FR-137 · owner feedback 2026-11-24: one drag handle (a sheet under a drawer is hidden), drawers sized to content up to 75% of the screen, "Investasi baru" like the new wallet sheet, more room around the bill status.
+- Commit: `fix(ui): show one drag handle and size drawers to content [P9, DOC-08, DOC-09, FR-170]`
+
 ### T9.5 — Signed release (**OWNER**)
-- [ ] done · Refs: DOC-12 (Releases), ADR-013 · owner creates the keystore; agent wires `keystore.properties` (git-ignored) and the release workflow; tag `v1.0.0`.
+- [x] agent part done · [ ] owner part: tag `v1.0.0` and create the four release secrets (12, Releases) · Refs: DOC-12 (Releases), ADR-013 · owner creates the keystore (done); agent wired `keystore.properties` (git-ignored) in `app/build.gradle.kts` and the release workflow `.github/workflows/release.yml`.
 - Commit: `build: add release signing [P9, DOC-12]`
+
+### T9.4e — Play compliance: disclosure and privacy link
+- [x] done · Refs: DOC-09, DOC-10 · one shared notification-access disclosure dialog (`core:ui`) before onboarding, S-13 and S-07 open the system settings; "Kebijakan privasi" row in About.
+- Commit: `feat(ui): add notification access disclosure and privacy link [P9, DOC-09, DOC-10]`
 
 ### T9.6 — Friends beta
 - [ ] done · Install on ≥ 3 friends' phones; collect feedback as GitHub issues (**OWNER**).

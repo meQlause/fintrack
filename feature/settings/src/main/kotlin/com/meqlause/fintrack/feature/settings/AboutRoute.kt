@@ -9,5 +9,5 @@ import androidx.compose.ui.platform.LocalContext
 internal fun AboutRoute(onBack: () -> Unit) {
     val context = LocalContext.current
     val version = remember(context) { readVersionName(context) }
-    AboutScreen(version = version, onBack = onBack)
+    AboutScreen(version = version, onBack = onBack, onOpenPrivacyPolicy = { openPrivacyPolicy(context) })
 }

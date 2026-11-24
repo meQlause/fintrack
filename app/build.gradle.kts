@@ -1,9 +1,44 @@
 // DOC-03: app, entry point and Hilt root; declares only the libraries its sources import
+import java.util.Properties
+
 plugins {
     id("fintrack.android.application")
     id("fintrack.android.hilt")
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.baselineprofile)
+}
+
+// DOC-12, ADR-013: release signing reads the ignored keystore.properties; without a complete file the release
+// stays unsigned and the build never fails (CI and other checkouts have no key)
+val signingKeys = listOf("storeFile", "storePassword", "keyAlias", "keyPassword")
+val keystoreProperties =
+    Properties().apply {
+        val file = rootProject.file("keystore.properties")
+        if (file.isFile) file.inputStream().use { stream -> load(stream) }
+    }
+val hasSigningKey = signingKeys.all { key -> keystoreProperties.getProperty(key).orEmpty().isNotBlank() }
+
+android {
+    defaultConfig {
+        // DOC-12: versionCode = major * 10000 + minor * 100 + patch, versionName = SemVer
+        versionCode = 10000
+        versionName = "1.0.0"
+    }
+    signingConfigs {
+        if (hasSigningKey) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.findByName("release")
+        }
+    }
 }
 
 dependencies {

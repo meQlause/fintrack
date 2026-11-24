@@ -23,6 +23,7 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 internal fun AboutScreen(
     version: String,
     onBack: () -> Unit,
+    onOpenPrivacyPolicy: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize().background(FintrackTheme.colors.surfaces.background)) {
@@ -40,15 +41,31 @@ internal fun AboutScreen(
             verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
         ) {
             AboutHeader(version = version)
-            SettingsSection(title = stringResource(R.string.about_section_privacy), padded = true) {
-                AboutBody(text = stringResource(R.string.about_privacy_statement))
-            }
+            AboutPrivacy(onOpenPrivacyPolicy = onOpenPrivacyPolicy)
             SettingsSection(title = stringResource(R.string.about_section_storage), padded = true) {
                 AboutStorage()
             }
             SettingsSection(title = stringResource(R.string.about_section_licenses), padded = true) {
                 AboutBody(text = stringResource(R.string.about_license_font))
             }
+        }
+    }
+}
+
+// DOC-10, FR-123: the privacy promise followed by the "Kebijakan privasi" row that opens the policy in the browser
+@Composable
+internal fun AboutPrivacy(onOpenPrivacyPolicy: () -> Unit) {
+    SettingsSection(title = stringResource(R.string.about_section_privacy)) {
+        Column {
+            Column(modifier = Modifier.padding(FintrackScreenSizes.rowPaddingHorizontal)) {
+                AboutBody(text = stringResource(R.string.about_privacy_statement))
+            }
+            SettingsRow(
+                label = stringResource(R.string.about_privacy_policy),
+                value = "",
+                onClick = onOpenPrivacyPolicy,
+                showDivider = true,
+            )
         }
     }
 }

@@ -24,9 +24,28 @@ This promise is **technically enforced**, not just a policy.
 | `POST_NOTIFICATIONS` (Android 13+) | Inbox prompts, budget alerts, backup reminder | Onboarding / first time needed |
 | `USE_BIOMETRIC` | Biometric unlock | Normal permission |
 | `RECEIVE_BOOT_COMPLETED` | WorkManager reschedule (added by WorkManager) | Normal permission |
+| `USE_FINGERPRINT` | Legacy fingerprint permission (added by the biometric library) | Normal permission |
+| `WAKE_LOCK` | Keeps WorkManager jobs running (added by WorkManager) | Normal permission |
+| `FOREGROUND_SERVICE` | Long WorkManager jobs (added by WorkManager); the app declares no foreground service of its own | Normal permission |
 
 `<queries>` entries list the supported bank/e-wallet package names so the app can check which are installed.
 No storage permission: files go through the Storage Access Framework (`ACTION_CREATE_DOCUMENT` / `ACTION_OPEN_DOCUMENT`).
+
+## Prominent disclosure for notification access (Google Play User Data policy)
+
+Before every entry point that opens the system notification-listener settings (onboarding, Settings monitored
+apps, Kotak Masuk) the app shows one shared disclosure dialog (09, "Notification access disclosure"): what is read,
+what is ignored, that nothing leaves the device, that raw text is purged after 30 days (FR-092) and that access can
+be revoked any time. Only "Setuju" opens the system settings; "Tidak sekarang" does not. The About screen links the
+privacy policy (`docs/play-store/privacy-policy.md`, opened in the browser; the app itself stays offline, NFR-001).
+
+## Release signing (ADR-013, 12)
+
+- The release is signed from `keystore.properties` in the repository root (keys `storeFile`, `storePassword`,
+  `keyAlias`, `keyPassword`; `storeFile` may be absolute). The file and `*.keystore` are git-ignored.
+- Without that file (CI quality gate, other checkouts) `assembleRelease` still builds an unsigned release.
+- The release workflow (`.github/workflows/release.yml`) rebuilds the key from GitHub Actions secrets in a temporary
+  file for the signed APK and AAB, and deletes it at the end of the job. No key or password is ever committed.
 
 ## Database encryption (NFR-003)
 

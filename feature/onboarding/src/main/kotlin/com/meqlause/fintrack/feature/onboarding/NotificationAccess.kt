@@ -2,10 +2,9 @@ package com.meqlause.fintrack.feature.onboarding
 
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.provider.Settings
 
-/** FR-003: reads and opens the system notification-access setting for this app. */
+/** FR-003: reads the system notification-access setting for this app (opening it goes through the disclosure). */
 internal object NotificationAccess {
     private const val ENABLED_LISTENERS = "enabled_notification_listeners"
     private const val LISTENER_SEPARATOR = ":"
@@ -16,12 +15,5 @@ internal object NotificationAccess {
         return enabled.split(LISTENER_SEPARATOR).any { entry ->
             ComponentName.unflattenFromString(entry)?.packageName == context.packageName
         }
-    }
-
-    /** FR-003: opens the system page where the user grants notification access. */
-    fun openSettings(context: Context) {
-        // FR-003: the caller may hold an application context, so the settings page opens in a new task
-        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-        context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 }

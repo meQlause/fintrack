@@ -121,3 +121,12 @@ On every push and PR:
 - Version: `versionName` = SemVer (`1.0.0`), `versionCode` = `major*10000 + minor*100 + patch`.
 - Tag: `v1.0.0` on `main`. Release notes in Indonesian (for friends) in GitHub Releases, with the signed APK attached
   (public repository, ADR-013).
+- Signing: locally `keystore.properties` (git-ignored; keys `storeFile`, `storePassword`, `keyAlias`, `keyPassword`)
+  (it is a Java properties file: write Windows paths with forward slashes, `D:/keys/fintrack.jks`, or doubled
+  backslashes, because a single `\` is an escape and silently corrupts the path)
+  makes `./gradlew assembleRelease` (APK) and `./gradlew bundleRelease` (AAB for Play) signed; without it they are
+  unsigned and still build.
+- `.github/workflows/release.yml` runs on a pushed tag `v*`, restores the key from secrets, builds the signed APK and
+  AAB and attaches both to the GitHub Release (created with generated notes if it does not exist yet; edit the notes
+  in Indonesian afterwards). Required repository secrets (Settings, Secrets and variables, Actions):
+  `KEYSTORE_BASE64` (the keystore file, base64 on one line), `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`.
