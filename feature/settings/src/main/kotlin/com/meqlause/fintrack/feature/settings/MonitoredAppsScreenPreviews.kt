@@ -35,28 +35,18 @@ internal val monitoredPreviewState =
         wallets = listOf(PickerOption(optionKey = "2", label = "BCA")),
     )
 
+@Preview(name = "Monitored apps light", showBackground = true)
 @Composable
-internal fun MonitoredAppsLightSample() {
+internal fun MonitoredAppsLightPreview() {
     FintrackTheme(darkTheme = false) {
         MonitoredAppsScreen(state = monitoredPreviewState, callbacks = MonitoredAppsCallbacks())
     }
 }
 
-@Composable
-internal fun MonitoredAppsDarkSample() {
-    FintrackTheme(darkTheme = true) {
-        MonitoredAppsScreen(state = monitoredPreviewState, callbacks = MonitoredAppsCallbacks())
-    }
-}
-
-@Preview(name = "Monitored apps light", showBackground = true)
-@Composable
-internal fun MonitoredAppsLightPreview() {
-    MonitoredAppsLightSample()
-}
-
 @Preview(name = "Monitored apps dark", showBackground = true)
 @Composable
 internal fun MonitoredAppsDarkPreview() {
-    MonitoredAppsDarkSample()
+    FintrackTheme(darkTheme = true) {
+        MonitoredAppsScreen(state = monitoredPreviewState, callbacks = MonitoredAppsCallbacks())
+    }
 }

@@ -41,4 +41,10 @@ class InvestmentScreenshotTest {
         composeRule.setContent { InvestmentDetailDarkPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/Investment_detail_dark.png")
     }
+
+    @Test
+    fun `given investasi without accounts when rendered then the empty tab matches the reference (FR-173)`() {
+        composeRule.setContent { InvestmentEmptyLightPreview() }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/Investment_empty_light.png")
+    }
 }

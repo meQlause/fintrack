@@ -36,13 +36,13 @@ class MonitoredAppsScreenScreenshotTest {
 
     @Test
     fun givenMonitoredAppsInLightThemeWhenRenderedThenItMatchesTheReference() {
-        composeRule.setContent { MonitoredAppsLightSample() }
+        composeRule.setContent { MonitoredAppsLightPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/MonitoredAppsScreen_light.png")
     }
 
     @Test
     fun givenMonitoredAppsInDarkThemeWhenRenderedThenItMatchesTheReference() {
-        composeRule.setContent { MonitoredAppsDarkSample() }
+        composeRule.setContent { MonitoredAppsDarkPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/MonitoredAppsScreen_dark.png")
     }
 

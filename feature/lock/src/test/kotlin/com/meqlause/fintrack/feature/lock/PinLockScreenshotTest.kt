@@ -20,13 +20,13 @@ class PinLockScreenshotTest {
     // S-02, FR-100: the lock screen is screenshot-tested in light and dark (DOC-06, DOC-08)
     @Test
     fun `given lock screen in light theme when rendered then it matches the reference (FR-100)`() {
-        composeRule.setContent { LockPreviewScreen(darkTheme = false) }
+        composeRule.setContent { LockLightPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/PinLock_light.png")
     }
 
     @Test
     fun `given lock screen in dark theme when rendered then it matches the reference (FR-100)`() {
-        composeRule.setContent { LockPreviewScreen(darkTheme = true) }
+        composeRule.setContent { LockDarkPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/PinLock_dark.png")
     }
 

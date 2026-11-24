@@ -1,7 +1,11 @@
 package com.meqlause.fintrack.feature.settings
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.unit.Density
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -20,13 +24,28 @@ class SettingsScreenScreenshotTest {
 
     @Test
     fun givenDefaultsInLightThemeWhenRenderedThenItMatchesTheReference() {
-        composeRule.setContent { SettingsLightSample() }
+        composeRule.setContent { SettingsLightPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/SettingsScreen_light.png")
     }
 
     @Test
     fun givenDefaultsInDarkThemeWhenRenderedThenItMatchesTheReference() {
-        composeRule.setContent { SettingsDarkSample() }
+        composeRule.setContent { SettingsDarkPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/SettingsScreen_dark.png")
+    }
+
+    // NFR-010: font scale 2.0 variant
+    @Test
+    fun `given font scale 2 when rendered then the settings screen matches the reference (NFR-010)`() {
+        composeRule.setContent { WithFontScaleTwo { SettingsLightPreview() } }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/SettingsScreen_fontScale2.png")
+    }
+
+    @Composable
+    private fun WithFontScaleTwo(content: @Composable () -> Unit) {
+        val density = LocalDensity.current.density
+        CompositionLocalProvider(LocalDensity provides Density(density = density, fontScale = 2f)) {
+            content()
+        }
     }
 }

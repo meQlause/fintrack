@@ -20,13 +20,13 @@ class BatteryHelpScreenScreenshotTest {
 
     @Test
     fun givenXiaomiInLightThemeWhenRenderedThenItMatchesTheReference() {
-        composeRule.setContent { BatteryHelpLightSample() }
+        composeRule.setContent { BatteryHelpLightPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/BatteryHelpScreen_light.png")
     }
 
     @Test
     fun givenSamsungInDarkThemeWhenRenderedThenItMatchesTheReference() {
-        composeRule.setContent { BatteryHelpDarkSample() }
+        composeRule.setContent { BatteryHelpDarkPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/BatteryHelpScreen_dark.png")
     }
 }

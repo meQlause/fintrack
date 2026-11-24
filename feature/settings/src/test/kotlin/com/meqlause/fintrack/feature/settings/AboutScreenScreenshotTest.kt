@@ -20,13 +20,13 @@ class AboutScreenScreenshotTest {
 
     @Test
     fun givenVersionInLightThemeWhenRenderedThenItMatchesTheReference() {
-        composeRule.setContent { AboutLightSample() }
+        composeRule.setContent { AboutLightPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/AboutScreen_light.png")
     }
 
     @Test
     fun givenVersionInDarkThemeWhenRenderedThenItMatchesTheReference() {
-        composeRule.setContent { AboutDarkSample() }
+        composeRule.setContent { AboutDarkPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/AboutScreen_dark.png")
     }
 }
