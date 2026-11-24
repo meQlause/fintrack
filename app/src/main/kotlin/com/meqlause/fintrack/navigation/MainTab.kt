@@ -48,4 +48,9 @@ enum class MainTab(
             WALLET -> controller.navigate(WalletDestination, options)
         }
     }
+
+    companion object {
+        // DOC-09: the bottom bar shows on the four main tabs only, never on sub-screens or onboarding
+        fun showsBarOn(destination: NavDestination?): Boolean = entries.any { it.isSelectedIn(destination) }
+    }
 }

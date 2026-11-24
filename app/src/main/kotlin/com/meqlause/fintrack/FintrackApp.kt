@@ -21,7 +21,6 @@ import com.meqlause.fintrack.core.designsystem.component.FintrackBarItem
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomBar
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomBarCallbacks
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.feature.onboarding.OnboardingDestination
 import com.meqlause.fintrack.feature.transaction.edit.navigation.EditTransactionDestination
 import com.meqlause.fintrack.lock.AppLockGate
 import com.meqlause.fintrack.lock.LockOverlay
@@ -46,7 +45,7 @@ fun FintrackApp(
     }
 }
 
-// DOC-09: the NavHost fills the screen and the floating bottom bar sits over it, hidden during onboarding
+// DOC-09: the NavHost fills the screen and the floating bottom bar sits over it, shown on the four main tabs only
 @Composable
 private fun FintrackShell(
     onboardingNeeded: Boolean,
@@ -56,7 +55,7 @@ private fun FintrackShell(
     val entry by navController.currentBackStackEntryAsState()
     val destination = entry?.destination
     val items = MainTab.entries.map { FintrackBarItem(stringResource(it.labelRes), it.iconRes) }
-    val isOnboardingShown = destination?.route == OnboardingDestination::class.java.name
+    val isTabShown = MainTab.showsBarOn(destination)
     Box(modifier = modifier.fillMaxSize()) {
         // NFR-010: Android 15+ draws edge to edge, so content starts below the status bar
         FintrackNavHost(
@@ -64,7 +63,7 @@ private fun FintrackShell(
             onboardingNeeded = onboardingNeeded,
             modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.statusBars),
         )
-        if (destination != null && !isOnboardingShown) {
+        if (isTabShown) {
             FintrackBottomBar(
                 items = items,
                 selectedIndex = MainTab.entries.indexOfFirst { it.isSelectedIn(destination) },

@@ -3,12 +3,15 @@ package com.meqlause.fintrack.feature.dashboard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
 // DOC-03, S-03: stateless Beranda; the header stays fixed while the body scrolls and the drawers sit above it
@@ -40,7 +43,7 @@ internal fun HomeScreen(
     }
 }
 
-// FR-040..043: the scrolling blocks in S-03 order: hero, quick entry, category card, recent transactions
+// FR-040..043: the scrolling blocks in S-03 order; the end clears the floating bar (DOC-09)
 @Composable
 private fun HomeBody(
     state: HomeUiState.Success,
@@ -69,6 +72,7 @@ private fun HomeBody(
             modifier = gutter.padding(top = FintrackTheme.spacing.block),
         )
         HomeShortcutUndo(state = state, callbacks = callbacks)
+        Spacer(modifier = Modifier.height(FintrackScreenSizes.screenBottom))
     }
 }
 
