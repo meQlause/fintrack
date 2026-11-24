@@ -39,6 +39,7 @@ dependencies {
     testImplementation(libs.robolectric.annotations)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.compose.ui.test)
+    testImplementation(libs.compose.ui.unit)
     testImplementation(libs.compose.ui.test.junit4)
     testImplementation(libs.roborazzi)
     testImplementation(libs.roborazzi.core)
