@@ -41,6 +41,17 @@ class BackupBranchTest {
             .isEqualTo(BackupFailure.UNSUPPORTED_VERSION)
     }
 
+    /** A payload written by a newer database version is refused, an equal one is read. */
+    @Test
+    fun newerDatabaseVersionIsUnsupported() {
+        val payload = BackupPayload().apply { databaseVersion = BackupFormat.DATABASE_VERSION + 1 }
+        assertThat(failureOf { BackupJson.decode(BackupJson.encode(payload)) })
+            .isEqualTo(BackupFailure.UNSUPPORTED_VERSION)
+        val current = BackupPayload().apply { databaseVersion = BackupFormat.DATABASE_VERSION }
+        val restored = BackupJson.decode(BackupJson.encode(current))
+        assertThat(restored.databaseVersion).isEqualTo(BackupFormat.DATABASE_VERSION)
+    }
+
     /** Text that is not JSON is corrupt. */
     @Test
     fun notJsonIsCorrupt() {

@@ -18,7 +18,12 @@ internal object BackupJson {
     fun decode(bytes: ByteArray): BackupPayload {
         val root = parseRoot(String(bytes, Charsets.UTF_8))
         if (schemaVersion(root) > BackupFormat.SCHEMA_VERSION) throw BackupException(BackupFailure.UNSUPPORTED_VERSION)
-        return decodePayload(root)
+        val payload = decodePayload(root)
+        // DOC-11: rows of a newer database version cannot be stored by this app, so the user must update it
+        if (payload.databaseVersion > BackupFormat.DATABASE_VERSION) {
+            throw BackupException(BackupFailure.UNSUPPORTED_VERSION)
+        }
+        return payload
     }
 
     private fun parseRoot(text: String): JsonObject =
