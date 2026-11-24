@@ -42,6 +42,14 @@
     <string name="wallet_editor_new">Dompet baru</string>
     <string name="wallet_editor_edit">Ubah dompet</string>
     <string name="wallet_field_name">Nama</string>
+    <string name="wallet_name_hint">OVO</string>
+    <string name="wallet_balance_hint">Rp0</string>
+    <string name="wallet_type_hint_cash">Uang fisik</string>
+    <string name="wallet_type_hint_bank">Rekening tabungan / debit</string>
+    <string name="wallet_type_hint_ewallet">GoPay, OVO, DANA, ShopeePay</string>
+    <string name="wallet_type_hint_credit_card">Limit &amp; tagihan bulanan</string>
+    <string name="wallet_type_hint_paylater">SPayLater, GoPayLater, Kredivo</string>
+    <string name="wallet_type_hint_investment">Reksa dana, saham, emas</string>
     <string name="wallet_field_type">Jenis</string>
     <string name="wallet_field_invest_kind">Jenis investasi</string>
     <string name="wallet_field_initial_balance">Saldo awal</string>
@@ -58,7 +66,6 @@
     <string name="wallet_name_too_long">Nama dompet maksimal 30 karakter</string>
     <string name="wallet_limit_invalid">Limit harus lebih dari nol</string>
     <string name="wallet_save">Simpan</string>
-    <string name="wallet_cancel">Batal</string>
     <string name="wallet_archive">Arsipkan</string>
     <string name="wallet_restore">Pulihkan</string>
 

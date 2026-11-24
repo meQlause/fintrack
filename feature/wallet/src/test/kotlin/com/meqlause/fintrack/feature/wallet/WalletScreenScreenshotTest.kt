@@ -58,6 +58,18 @@ class WalletScreenScreenshotTest {
         composeRule.onRoot().captureRoboImage("src/test/screenshots/WalletEditor_dark.png")
     }
 
+    @Test
+    fun givenTypePickerOpenInLightThemeWhenRenderedThenItMatchesReference() {
+        composeRule.setContent { WalletTypePickerLightPreview() }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/WalletTypePicker_light.png")
+    }
+
+    @Test
+    fun givenTypePickerOpenInDarkThemeWhenRenderedThenItMatchesReference() {
+        composeRule.setContent { WalletTypePickerDarkPreview() }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/WalletTypePicker_dark.png")
+    }
+
     // FR-010, NFR-010: font scale 2.0 variant rendered from its own preview
     @Test
     fun `given font scale 2 when rendered then the wallet screen matches the reference (NFR-010)`() {

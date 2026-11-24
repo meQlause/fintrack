@@ -28,6 +28,18 @@ internal object WalletLabels {
             WalletGroupKey.OTHER -> R.string.wallet_group_other
         }
 
+    // S-18: the grey description under a wallet type in the type picker, null when the mockup has none
+    fun typeHint(type: WalletType): Int? =
+        when (type) {
+            WalletType.CASH -> R.string.wallet_type_hint_cash
+            WalletType.BANK -> R.string.wallet_type_hint_bank
+            WalletType.EWALLET -> R.string.wallet_type_hint_ewallet
+            WalletType.CREDIT_CARD -> R.string.wallet_type_hint_credit_card
+            WalletType.PAYLATER -> R.string.wallet_type_hint_paylater
+            WalletType.INVESTMENT -> R.string.wallet_type_hint_investment
+            WalletType.OTHER -> null
+        }
+
     // FR-170: the label of an investment kind in the kind drawer
     fun investKind(kind: InvestKind): Int =
         when (kind) {

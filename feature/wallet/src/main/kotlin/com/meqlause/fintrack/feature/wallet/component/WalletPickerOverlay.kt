@@ -2,6 +2,7 @@ package com.meqlause.fintrack.feature.wallet.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.model.InvestKind
 import com.meqlause.fintrack.core.model.WalletType
 import com.meqlause.fintrack.core.ui.picker.DayGridDrawer
@@ -10,6 +11,7 @@ import com.meqlause.fintrack.core.ui.picker.OptionsDrawer
 import com.meqlause.fintrack.core.ui.picker.PickerActions
 import com.meqlause.fintrack.core.ui.picker.PickerOption
 import com.meqlause.fintrack.feature.wallet.R
+import com.meqlause.fintrack.feature.wallet.WalletAppearance
 import com.meqlause.fintrack.feature.wallet.WalletCallbacks
 import com.meqlause.fintrack.feature.wallet.WalletEditor
 import com.meqlause.fintrack.feature.wallet.WalletLabels
@@ -55,7 +57,7 @@ private fun TypeDrawer(
     draft: WalletEditor,
     callbacks: WalletCallbacks,
 ) {
-    val options = WalletType.entries.map { PickerOption(it.name, stringResource(WalletLabels.type(it))) }
+    val options = WalletType.entries.map { type -> typeOption(type) }
     OptionsDrawer(
         title = stringResource(R.string.wallet_picker_type_title),
         choices = OptionChoices(options = options, selectedKey = draft.type.name),
@@ -64,6 +66,18 @@ private fun TypeDrawer(
                 onPick = { callbacks.onPickType(WalletType.valueOf(it.optionKey)) },
                 onClose = callbacks.onDismissPicker,
             ),
+    )
+}
+
+// FR-010: a wallet type with its tinted icon and its grey description
+@Composable
+private fun typeOption(type: WalletType): PickerOption {
+    val appearance = WalletAppearance.forType(type)
+    return PickerOption(
+        optionKey = type.name,
+        label = stringResource(WalletLabels.type(type)),
+        hint = WalletLabels.typeHint(type)?.let { stringResource(it) },
+        look = IconLook(appearance.iconKey, appearance.colorKey),
     )
 }
 

@@ -2,52 +2,42 @@ package com.meqlause.fintrack.feature.wallet.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomSheet
-import com.meqlause.fintrack.core.designsystem.component.FintrackButton
-import com.meqlause.fintrack.core.designsystem.component.FintrackSwitch
-import com.meqlause.fintrack.core.designsystem.component.FormRow
+import com.meqlause.fintrack.core.designsystem.component.ScreenDashedButton
+import com.meqlause.fintrack.core.designsystem.component.ScreenPrimaryButton
+import com.meqlause.fintrack.core.designsystem.component.SheetFieldLabel
+import com.meqlause.fintrack.core.designsystem.component.SheetHeader
+import com.meqlause.fintrack.core.designsystem.component.SheetNumberField
+import com.meqlause.fintrack.core.designsystem.component.SheetTextField
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.domain.validation.WalletNameError
 import com.meqlause.fintrack.feature.wallet.R
 import com.meqlause.fintrack.feature.wallet.WalletCallbacks
 import com.meqlause.fintrack.feature.wallet.WalletEditor
-import com.meqlause.fintrack.feature.wallet.WalletLabels
-import com.meqlause.fintrack.feature.wallet.WalletPicker
 
-// FR-010, FR-011, FR-139, FR-170, S-09: the create and edit sheet; every choice opens a drawer
+// FR-010, FR-011, FR-139, FR-170, S-09: the create and edit sheet; every choice replaces it with a picker
 @Composable
 internal fun WalletEditorSheet(
     draft: WalletEditor,
     callbacks: WalletCallbacks,
 ) {
-    FintrackBottomSheet {
-        Text(
-            text =
-                stringResource(
-                    if (draft.walletId ==
-                        null
-                    ) {
-                        R.string.wallet_editor_new
-                    } else {
-                        R.string.wallet_editor_edit
-                    },
-                ),
-            style = FintrackTheme.typography.titleMedium,
-            color = FintrackTheme.colors.texts.onSurface,
-        )
+    FintrackBottomSheet(onDismiss = callbacks.onDismissEditor) {
+        val title = if (draft.walletId == null) R.string.wallet_editor_new else R.string.wallet_editor_edit
+        SheetHeader(title = stringResource(title), onClose = callbacks.onDismissEditor)
         WalletNameField(draft = draft, onNameChange = callbacks.onNameChange)
         WalletFormFields(draft = draft, callbacks = callbacks)
-        WalletEditorActions(draft = draft, callbacks = callbacks)
+        Column(
+            modifier = Modifier.padding(top = FintrackTheme.spacing.large),
+            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
+        ) {
+            ScreenPrimaryButton(text = stringResource(R.string.wallet_save), onClick = callbacks.onSave)
+            ArchiveButton(draft = draft, callbacks = callbacks)
+        }
     }
 }
 
@@ -57,69 +47,34 @@ private fun WalletNameField(
     draft: WalletEditor,
     onNameChange: (String) -> Unit,
 ) {
-    OutlinedTextField(
+    SheetFieldLabel(text = stringResource(R.string.wallet_field_name))
+    SheetTextField(
         value = draft.name,
         onValueChange = onNameChange,
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text(text = stringResource(R.string.wallet_field_name)) },
-        singleLine = true,
-        isError = draft.nameError != null,
+        placeholder = stringResource(R.string.wallet_name_hint),
     )
     draft.nameError?.let { reason ->
         ErrorText(text = stringResource(nameErrorRes(reason)))
     }
 }
 
-// FR-010, FR-139, FR-170: type, investment kind, opening balance, credit terms and the total switch
+// FR-012: archive or restore, offered when an existing wallet is edited
 @Composable
-private fun WalletFormFields(
+private fun ArchiveButton(
     draft: WalletEditor,
     callbacks: WalletCallbacks,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-        FormRow(
-            label = stringResource(R.string.wallet_field_type),
-            value = stringResource(WalletLabels.type(draft.type)),
-            onClick = { callbacks.onOpenPicker(WalletPicker.TYPE) },
-        )
-        if (draft.isInvestment) {
-            FormRow(
-                label = stringResource(R.string.wallet_field_invest_kind),
-                value = stringResource(WalletLabels.investKind(draft.investKind)),
-                onClick = { callbacks.onOpenPicker(WalletPicker.INVEST_KIND) },
-            )
-        }
-        BalanceField(draft = draft, onChange = callbacks.onInitialBalanceChange)
-        if (draft.isCredit) {
-            CreditFields(draft = draft, callbacks = callbacks)
-        }
-        IncludeInTotalRow(draft = draft, onChange = callbacks.onIncludeInTotalChange)
-    }
-}
-
-// FR-013: the switch that decides whether the wallet counts in the total
-@Composable
-private fun IncludeInTotalRow(
-    draft: WalletEditor,
-    onChange: (Boolean) -> Unit,
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = stringResource(R.string.wallet_include_total),
-            style = FintrackTheme.typography.bodyLarge,
-            color = FintrackTheme.colors.texts.onSurface,
-        )
-        FintrackSwitch(checked = draft.includeInTotal, onCheckedChange = onChange)
-    }
+    if (draft.walletId == null) return
+    val archiveRes = if (draft.isArchived) R.string.wallet_restore else R.string.wallet_archive
+    ScreenDashedButton(
+        text = stringResource(archiveRes),
+        onClick = { callbacks.onSetArchivedEditing(!draft.isArchived) },
+    )
 }
 
 // FR-010, FR-170: the label follows the wallet kind (Saldo awal, Modal awal or Utang saat ini)
 @Composable
-private fun BalanceField(
+internal fun BalanceField(
     draft: WalletEditor,
     onChange: (String) -> Unit,
 ) {
@@ -129,91 +84,22 @@ private fun BalanceField(
             draft.isInvestment -> R.string.wallet_field_invested
             else -> R.string.wallet_field_initial_balance
         }
-    OutlinedTextField(
+    SheetFieldLabel(text = stringResource(labelRes))
+    SheetNumberField(
         value = draft.initialBalance,
         onValueChange = onChange,
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text(text = stringResource(labelRes)) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        singleLine = true,
+        placeholder = stringResource(R.string.wallet_balance_hint),
     )
 }
 
-// FR-139: the credit limit, with its error underneath when the save found it empty
 @Composable
-private fun LimitField(
-    draft: WalletEditor,
-    onChange: (String) -> Unit,
-) {
-    OutlinedTextField(
-        value = draft.creditLimit,
-        onValueChange = onChange,
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text(text = stringResource(R.string.wallet_field_limit)) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        singleLine = true,
-        isError = draft.limitError,
+internal fun ErrorText(text: String) {
+    Text(
+        text = text,
+        style = FintrackTheme.typography.bodyMedium,
+        color = FintrackTheme.colors.semantics.error,
+        modifier = Modifier.padding(top = FintrackTheme.spacing.xSmall),
     )
-    if (draft.limitError) {
-        ErrorText(text = stringResource(R.string.wallet_limit_invalid))
-    }
-}
-
-// FR-139: limit, statement day and due day of a card or paylater wallet
-@Composable
-private fun CreditFields(
-    draft: WalletEditor,
-    callbacks: WalletCallbacks,
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-        LimitField(draft = draft, onChange = callbacks.onCreditLimitChange)
-        Text(
-            text = stringResource(R.string.wallet_cycle_title),
-            style = FintrackTheme.typography.labelLarge,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-        )
-        FormRow(
-            label = stringResource(R.string.wallet_field_statement_day),
-            value = stringResource(R.string.wallet_day_value, draft.statementDay),
-            onClick = { callbacks.onOpenPicker(WalletPicker.STATEMENT_DAY) },
-        )
-        if (draft.walletId == null) {
-            Text(
-                text = stringResource(R.string.wallet_not_issued),
-                style = FintrackTheme.typography.bodyMedium,
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-            )
-        }
-        FormRow(
-            label = stringResource(R.string.wallet_field_due_day),
-            value = stringResource(R.string.wallet_day_value, draft.dueDay),
-            onClick = { callbacks.onOpenPicker(WalletPicker.DUE_DAY) },
-        )
-    }
-}
-
-// FR-010, FR-012: save, archive or restore (edits only), and cancel
-@Composable
-private fun WalletEditorActions(
-    draft: WalletEditor,
-    callbacks: WalletCallbacks,
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-        FintrackButton(text = stringResource(R.string.wallet_save), onClick = callbacks.onSave)
-        if (draft.walletId != null) {
-            val archiveRes = if (draft.isArchived) R.string.wallet_restore else R.string.wallet_archive
-            FintrackButton(
-                text = stringResource(archiveRes),
-                onClick = { callbacks.onSetArchivedEditing(!draft.isArchived) },
-            )
-        }
-        FintrackButton(text = stringResource(R.string.wallet_cancel), onClick = callbacks.onDismissEditor)
-    }
-}
-
-@Composable
-private fun ErrorText(text: String) {
-    Text(text = text, style = FintrackTheme.typography.bodyMedium, color = FintrackTheme.colors.semantics.error)
 }
 
 private fun nameErrorRes(reason: WalletNameError): Int =

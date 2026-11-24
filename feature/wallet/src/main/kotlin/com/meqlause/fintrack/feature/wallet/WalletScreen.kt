@@ -55,8 +55,10 @@ internal fun WalletScreen(
         )
         WalletBody(state = state, callbacks = callbacks, modifier = Modifier.weight(1f))
         state.editorOrNull()?.let { draft ->
-            WalletEditorSheet(draft = draft, callbacks = callbacks)
-            state.pickerOrNull()?.let { open ->
+            val open = state.pickerOrNull()
+            if (open == null) {
+                WalletEditorSheet(draft = draft, callbacks = callbacks)
+            } else {
                 WalletPickerOverlay(picker = open, draft = draft, callbacks = callbacks)
             }
         }

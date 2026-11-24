@@ -113,7 +113,10 @@ private val SAMPLE_WALLETS =
     )
 
 // design/screens/wallets.png: the prototype seed on 2026-11-22
-private fun successState(editor: WalletEditor? = null): WalletUiState.Success {
+private fun successState(
+    editor: WalletEditor? = null,
+    picker: WalletPicker? = null,
+): WalletUiState.Success {
     val items = SAMPLE_WALLETS.map { previewItem(it.spec, it.balance) }
     return WalletUiState.Success(
         netWorth =
@@ -135,7 +138,7 @@ private fun successState(editor: WalletEditor? = null): WalletUiState.Success {
             ),
         archivedExpanded = false,
         editor = editor,
-        picker = null,
+        picker = picker,
     )
 }
 
@@ -178,6 +181,22 @@ internal fun WalletEditorLightPreview() {
 @Composable
 internal fun WalletEditorDarkPreview() {
     FintrackTheme(darkTheme = true) { ScreenSample(successState(editor = WalletEditor.forNew())) }
+}
+
+@Preview(name = "Dompet type picker light", showBackground = true, widthDp = 390, heightDp = 844)
+@Composable
+internal fun WalletTypePickerLightPreview() {
+    FintrackTheme(darkTheme = false) {
+        ScreenSample(successState(editor = WalletEditor.forNew(), picker = WalletPicker.TYPE))
+    }
+}
+
+@Preview(name = "Dompet type picker dark", showBackground = true, widthDp = 390, heightDp = 844)
+@Composable
+internal fun WalletTypePickerDarkPreview() {
+    FintrackTheme(darkTheme = true) {
+        ScreenSample(successState(editor = WalletEditor.forNew(), picker = WalletPicker.TYPE))
+    }
 }
 
 // NFR-010: font scale 2.0 variant for the screenshot tests
