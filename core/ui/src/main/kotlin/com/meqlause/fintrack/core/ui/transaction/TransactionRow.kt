@@ -20,12 +20,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
 import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.designsystem.theme.isLargeText
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.ui.R
 import com.meqlause.fintrack.core.ui.UiPreviewCanvas
 import com.meqlause.fintrack.core.ui.money.MoneyText
 import com.meqlause.fintrack.core.designsystem.R as DesignR
+
+private const val LARGE_TEXT_LINES = 3
 
 // DOC-08 / DOC-09: icon circle, title and wallet · time, then the signed amount; one tappable row in a list
 @Composable
@@ -34,23 +37,53 @@ fun TransactionRow(
     callbacks: TransactionRowCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .clickable(role = Role.Button, onClick = callbacks.onClick)
-                .padding(horizontal = FintrackTheme.sizes.rowInset, vertical = FintrackTheme.spacing.medium),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
-    ) {
-        IconCircle(look = params.look)
-        TransactionTitles(params = params, modifier = Modifier.weight(1f))
-        MoneyText(
-            money = params.amount,
-            type = params.type,
-            style = FintrackTheme.typography.numberRow,
-        )
+    val body =
+        modifier
+            .fillMaxWidth()
+            .clickable(role = Role.Button, onClick = callbacks.onClick)
+            .padding(horizontal = FintrackTheme.sizes.rowInset, vertical = FintrackTheme.spacing.medium)
+    if (isLargeText()) {
+        StackedTransaction(params = params, modifier = body)
+    } else {
+        Row(
+            modifier = body,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
+        ) {
+            IconCircle(look = params.look)
+            TransactionTitles(params = params, modifier = Modifier.weight(1f))
+            TransactionAmount(params = params)
+        }
     }
+}
+
+// NFR-010: at large font sizes the amount sits under the titles, so neither is cut
+@Composable
+private fun StackedTransaction(
+    params: TransactionRowParams,
+    modifier: Modifier,
+) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
+        ) {
+            IconCircle(look = params.look)
+            TransactionTitles(params = params, modifier = Modifier.weight(1f))
+        }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            TransactionAmount(params = params)
+        }
+    }
+}
+
+@Composable
+private fun TransactionAmount(params: TransactionRowParams) {
+    MoneyText(
+        money = params.amount,
+        type = params.type,
+        style = FintrackTheme.typography.numberRow,
+    )
 }
 
 @Composable
@@ -63,7 +96,7 @@ private fun TransactionTitles(
             text = params.title,
             style = FintrackTheme.typography.labelLarge,
             color = FintrackTheme.colors.texts.onSurface,
-            maxLines = 1,
+            maxLines = if (isLargeText()) LARGE_TEXT_LINES else 1,
             overflow = TextOverflow.Ellipsis,
         )
         TransactionSubtitle(params = params)
@@ -89,7 +122,7 @@ private fun TransactionSubtitle(params: TransactionRowParams) {
             text = params.subtitle,
             style = FintrackTheme.typography.labelMedium,
             color = FintrackTheme.colors.texts.onSurfaceVariant,
-            maxLines = 1,
+            maxLines = if (isLargeText()) LARGE_TEXT_LINES else 1,
             overflow = TextOverflow.Ellipsis,
         )
     }

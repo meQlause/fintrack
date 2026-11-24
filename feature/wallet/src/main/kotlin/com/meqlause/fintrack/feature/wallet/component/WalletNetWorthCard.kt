@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.designsystem.theme.isLargeText
 import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.feature.wallet.R
 
@@ -60,9 +62,19 @@ private fun NetWorthBar(parts: List<NetWorthPart>) {
     }
 }
 
-// BR-053: the Aset and the Utang column side by side, with a hairline between
+// BR-053, NFR-010: the Aset and the Utang column side by side, stacked at large font sizes
 @Composable
 private fun NetWorthColumns(parts: NetWorthParts) {
+    if (isLargeText()) {
+        StackedNetWorthColumns(parts = parts)
+    } else {
+        SideBySideNetWorthColumns(parts = parts)
+    }
+}
+
+// BR-053: the two columns share the width, with a hairline between
+@Composable
+private fun SideBySideNetWorthColumns(parts: NetWorthParts) {
     Row(
         modifier =
             Modifier
@@ -79,6 +91,20 @@ private fun NetWorthColumns(parts: NetWorthParts) {
             side = debtSide(parts),
             modifier = Modifier.weight(1f).padding(start = FintrackScreenSizes.rowPaddingHorizontal),
         )
+    }
+}
+
+// NFR-010: one column over the other, each with the full width, so no label is cut
+@Composable
+private fun StackedNetWorthColumns(parts: NetWorthParts) {
+    Column(modifier = Modifier.fillMaxWidth().padding(top = FintrackScreenSizes.rowPaddingHorizontal)) {
+        NetWorthColumn(side = assetSide(parts))
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = FintrackScreenSizes.rowPaddingHorizontal),
+            thickness = FintrackTheme.sizes.hairline,
+            color = FintrackTheme.colors.surfaces.outline,
+        )
+        NetWorthColumn(side = debtSide(parts))
     }
 }
 

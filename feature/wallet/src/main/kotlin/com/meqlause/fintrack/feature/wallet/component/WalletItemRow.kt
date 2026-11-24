@@ -11,6 +11,7 @@ import com.meqlause.fintrack.core.designsystem.icon.IconCircle
 import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.designsystem.theme.isLargeText
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.wallet.WalletItem
 
@@ -25,25 +26,37 @@ internal fun WalletItemRow(
     val appearance = item.wallet.profile.appearance
     ScreenRow(
         modifier = modifier,
-        style = RowStyle(showDivider = showDivider, onClick = actions.onOpen, onLongClick = actions.onEdit),
+        style =
+            RowStyle(
+                showDivider = showDivider,
+                stackAtLargeText = true,
+                onClick = actions.onOpen,
+                onLongClick = actions.onEdit,
+            ),
         slots =
             RowSlots(leading = {
                 IconCircle(look = IconLook(iconKey = appearance.iconKey, colorKey = appearance.colorKey))
-            }, trailing = {
-                Text(
-                    text = MoneyFormatter.format(item.balance),
-                    style = FintrackScreenText.rowAmount(),
-                    color = FintrackTheme.colors.texts.onSurface,
-                    maxLines = 1,
-                )
-            }),
+            }, trailing = { WalletBalance(item) }),
     ) {
         Text(
             text = item.wallet.profile.name,
             style = FintrackScreenText.rowTitle(),
             color = FintrackTheme.colors.texts.onSurface,
-            maxLines = 1,
+            maxLines = if (isLargeText()) LARGE_TEXT_LINES else 1,
             overflow = TextOverflow.Ellipsis,
         )
     }
 }
+
+// FR-014: the balance of a wallet, never cut
+@Composable
+private fun WalletBalance(item: WalletItem) {
+    Text(
+        text = MoneyFormatter.format(item.balance),
+        style = FintrackScreenText.rowAmount(),
+        color = FintrackTheme.colors.texts.onSurface,
+        maxLines = 1,
+    )
+}
+
+private const val LARGE_TEXT_LINES = 3

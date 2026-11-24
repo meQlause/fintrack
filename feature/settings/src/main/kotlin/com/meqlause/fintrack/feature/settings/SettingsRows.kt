@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.PillLook
 import com.meqlause.fintrack.core.designsystem.component.RowSlots
+import com.meqlause.fintrack.core.designsystem.component.RowStyle
 import com.meqlause.fintrack.core.designsystem.component.ScreenPill
 import com.meqlause.fintrack.core.designsystem.component.ScreenRow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
@@ -21,6 +22,7 @@ internal fun AppearanceRows(
     callbacks: SettingsCallbacks,
 ) {
     ScreenRow(
+        style = RowStyle(stackAtLargeText = true),
         slots =
             RowSlots(
                 leading = {},

@@ -19,10 +19,13 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackAppBadges
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.designsystem.theme.isLargeText
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.ui.format.AmountSign
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
+
+private const val LARGE_TEXT_LINES = 3
 
 // S-07: the top line of a card, the 36 px app badge, the merchant over "BCA · 09:42" and the amount at the right
 @Composable
@@ -31,6 +34,24 @@ internal fun InboxHeaderRow(
     title: String,
     subtitle: String,
     amount: @Composable () -> Unit,
+) {
+    if (isLargeText()) {
+        Column(verticalArrangement = Arrangement.spacedBy(FintrackScreenSizes.rowGap)) {
+            HeaderTitles(source = source, title = title, subtitle = subtitle)
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) { amount() }
+        }
+    } else {
+        HeaderTitles(source = source, title = title, subtitle = subtitle, trailing = amount)
+    }
+}
+
+// S-07: the badge and the two text lines, with the optional trailing content at the right
+@Composable
+private fun HeaderTitles(
+    source: String,
+    title: String,
+    subtitle: String,
+    trailing: @Composable () -> Unit = {},
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -43,18 +64,18 @@ internal fun InboxHeaderRow(
                 text = title,
                 style = FintrackScreenText.style(size = 14f, weight = 600),
                 color = FintrackTheme.colors.texts.onSurface,
-                maxLines = 1,
+                maxLines = if (isLargeText()) LARGE_TEXT_LINES else 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = subtitle,
                 style = FintrackScreenText.rowSub(),
                 color = FintrackTheme.colors.texts.onSurfaceVariant,
-                maxLines = 1,
+                maxLines = if (isLargeText()) LARGE_TEXT_LINES else 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        amount()
+        trailing()
     }
 }
 

@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +34,7 @@ import com.meqlause.fintrack.core.designsystem.component.ScreenCircleButton
 import com.meqlause.fintrack.core.designsystem.component.ScreenPill
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.designsystem.theme.isLargeText
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // FR-087, S-07: one pending item; swipe right = Catat, swipe left = Abaikan
@@ -123,23 +126,56 @@ private fun CardActions(
     actions: InboxItemActions,
     onPick: (InboxPicker) -> Unit,
 ) {
+    if (isLargeText()) {
+        StackedCardActions(card, actions, onPick)
+        return
+    }
     Row(
         modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium),
         horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ScreenPill(
-            label = card.category.name ?: stringResource(R.string.inbox_pick_category),
-            onClick = { onPick(InboxPicker(card.itemId, PickKind.CATEGORY)) },
-            look = PillLook(dotColor = if (card.category.name != null) FintrackTheme.colors.texts.faint else null),
-        )
-        ScreenPill(
-            label = card.wallet.name ?: stringResource(R.string.inbox_pick_wallet),
-            onClick = { onPick(InboxPicker(card.itemId, PickKind.WALLET)) },
-        )
+        CardPills(card, onPick)
         Spacer(modifier = Modifier.weight(1f))
         CardButtons(card, actions)
     }
+}
+
+// NFR-010: at large font sizes the chips wrap and the two buttons get a line of their own
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun StackedCardActions(
+    card: InboxCardUi,
+    actions: InboxItemActions,
+    onPick: (InboxPicker) -> Unit,
+) {
+    Column(modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium)) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap),
+            verticalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap),
+        ) { CardPills(card, onPick) }
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.medium),
+            horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.pillGap, Alignment.End),
+        ) { CardButtons(card, actions) }
+    }
+}
+
+// FR-087: the category chip and the wallet chip
+@Composable
+private fun CardPills(
+    card: InboxCardUi,
+    onPick: (InboxPicker) -> Unit,
+) {
+    ScreenPill(
+        label = card.category.name ?: stringResource(R.string.inbox_pick_category),
+        onClick = { onPick(InboxPicker(card.itemId, PickKind.CATEGORY)) },
+        look = PillLook(dotColor = if (card.category.name != null) FintrackTheme.colors.texts.faint else null),
+    )
+    ScreenPill(
+        label = card.wallet.name ?: stringResource(R.string.inbox_pick_wallet),
+        onClick = { onPick(InboxPicker(card.itemId, PickKind.WALLET)) },
+    )
 }
 
 // FR-087: Abaikan is the outlined cross, Catat the filled check that needs a wallet and a category

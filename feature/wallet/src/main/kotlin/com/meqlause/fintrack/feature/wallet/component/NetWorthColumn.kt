@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.designsystem.theme.isLargeText
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 
@@ -63,7 +64,7 @@ private fun NetWorthLegendRow(part: NetWorthPart) {
             text = stringResource(part.labelRes),
             style = FintrackScreenText.legend(weight = 500),
             color = FintrackTheme.colors.texts.onSurfaceVariant,
-            maxLines = 1,
+            maxLines = if (isLargeText()) LARGE_TEXT_LINES else 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f),
         )
@@ -75,3 +76,5 @@ private fun NetWorthLegendRow(part: NetWorthPart) {
         )
     }
 }
+
+private const val LARGE_TEXT_LINES = 2

@@ -3,6 +3,7 @@ package com.meqlause.fintrack.feature.transaction.history
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +27,9 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.designsystem.theme.isLargeText
+
+private const val LARGE_TAB_COUNT = 2.5f
 
 // FR-037, S-05: the Semua, Pengeluaran, Pemasukan and Transfer tabs; the underline slides to the selected one
 @Composable
@@ -41,15 +46,18 @@ internal fun HistoryTypeTabs(
                 .padding(top = FintrackTheme.spacing.small / 2 + FintrackTheme.spacing.xxSmall)
                 .height(FintrackTheme.sizes.typeTabHeight),
     ) {
-        val tabWidth = maxWidth / types.size
+        val tabWidth = if (isLargeText()) maxWidth / LARGE_TAB_COUNT else maxWidth / types.size
+        val trackWidth = tabWidth * types.size.toFloat()
         val indicatorOffset by animateDpAsState(
             targetValue =
                 tabWidth * types.indexOf(selected).toFloat() + (tabWidth - FintrackTheme.sizes.tabIndicatorWidth) / 2,
             animationSpec = tween(durationMillis = motion.durationMillis, easing = motion.easing),
             label = "history-type-indicator",
         )
-        TabRow(selected = selected, onPick = onPick)
-        TabUnderline(offset = indicatorOffset)
+        Box(modifier = if (isLargeText()) Modifier.horizontalScroll(rememberScrollState()) else Modifier) {
+            TabRow(selected = selected, onPick = onPick, modifier = Modifier.width(trackWidth))
+            TabUnderline(offset = indicatorOffset, modifier = Modifier.width(trackWidth))
+        }
     }
 }
 
@@ -58,8 +66,9 @@ internal fun HistoryTypeTabs(
 private fun TabRow(
     selected: HistoryTypeFilter,
     onPick: (HistoryTypeFilter) -> Unit,
+    modifier: Modifier,
 ) {
-    Row(modifier = Modifier.fillMaxWidth().height(FintrackTheme.sizes.typeTabHeight)) {
+    Row(modifier = modifier.height(FintrackTheme.sizes.typeTabHeight)) {
         HistoryTypeFilter.entries.forEach { type ->
             TypeTab(
                 type = type,
@@ -73,12 +82,14 @@ private fun TabRow(
 
 // S-05: the hairline under the tabs and the short indicator on the selected one
 @Composable
-private fun BoxScope.TabUnderline(offset: Dp) {
+private fun BoxScope.TabUnderline(
+    offset: Dp,
+    modifier: Modifier,
+) {
     Box(
         modifier =
-            Modifier
+            modifier
                 .align(Alignment.BottomStart)
-                .fillMaxWidth()
                 .height(FintrackTheme.sizes.hairline)
                 .background(FintrackTheme.colors.surfaces.outline),
     )
