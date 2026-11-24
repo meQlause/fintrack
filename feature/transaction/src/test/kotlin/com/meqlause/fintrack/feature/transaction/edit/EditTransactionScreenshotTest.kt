@@ -41,4 +41,16 @@ class EditTransactionScreenshotTest {
         composeRule.setContent { EditTransactionLightPreview(state = loanSample()) }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/EditTransactionLoan_light.png")
     }
+
+    @Test
+    fun givenCategoryListWhenRenderedThenItMatchesReference() {
+        composeRule.setContent { EditCategoryListPreview() }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/EditCategoryList_light.png")
+    }
+
+    @Test
+    fun givenCategoryFormWhenRenderedThenItMatchesReference() {
+        composeRule.setContent { EditCategoryFormPreview() }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/EditCategoryForm_light.png")
+    }
 }

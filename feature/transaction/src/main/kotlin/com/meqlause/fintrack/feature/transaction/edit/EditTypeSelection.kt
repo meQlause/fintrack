@@ -30,9 +30,9 @@ internal fun EditTransactionUiState.withPickedWallet(walletId: WalletId): EditTr
     return copy(form = edited).withStatus { copy(errors = emptySet(), openSheet = null) }
 }
 
-// S-04: the drawer that is open, or none
+// S-04: the drawer that is open, or none; a half-filled new category is dropped with it
 internal fun EditTransactionUiState.showing(sheet: EditSheet?): EditTransactionUiState =
-    withStatus { copy(openSheet = sheet) }
+    withStatus { copy(openSheet = sheet) }.withExtras { copy(newCategory = null) }
 
 // S-04: a change of the draft; the errors shown so far no longer apply
 internal fun EditTransactionUiState.withForm(change: (TransactionForm) -> TransactionForm): EditTransactionUiState =

@@ -35,6 +35,10 @@ internal sealed interface EditTransactionEvent {
         val categoryId: CategoryId,
     ) : EditTransactionEvent
 
+    data class CategoryEdited(
+        val change: CategoryChange,
+    ) : EditTransactionEvent
+
     data object WalletsSwapped : EditTransactionEvent
 
     data class NoteChanged(

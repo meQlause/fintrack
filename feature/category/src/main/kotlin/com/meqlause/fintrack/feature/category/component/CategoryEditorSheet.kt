@@ -1,7 +1,6 @@
 package com.meqlause.fintrack.feature.category.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -10,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomSheet
 import com.meqlause.fintrack.core.designsystem.component.FintrackButton
+import com.meqlause.fintrack.core.designsystem.icon.ChoiceGrid
 import com.meqlause.fintrack.core.designsystem.icon.ColorSwatch
 import com.meqlause.fintrack.core.designsystem.icon.IconChoice
 import com.meqlause.fintrack.core.designsystem.icon.IconLook
@@ -76,20 +76,3 @@ private fun CategoryEditorFields(
 // FR-021: the heading says whether the draft creates a new category or edits a stored one
 private fun titleRes(draft: CategoryEditor): Int =
     if (draft.categoryId == null) R.string.category_editor_new else R.string.category_editor_edit
-
-// FR-021: the choices in rows of eight, each cell drawn by the caller
-@Composable
-private fun ChoiceGrid(
-    keys: List<String>,
-    cell: @Composable (String) -> Unit,
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall)) {
-        keys.chunked(GRID_COLUMNS).forEach { line ->
-            Row(horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall)) {
-                line.forEach { key -> cell(key) }
-            }
-        }
-    }
-}
-
-private const val GRID_COLUMNS = 8

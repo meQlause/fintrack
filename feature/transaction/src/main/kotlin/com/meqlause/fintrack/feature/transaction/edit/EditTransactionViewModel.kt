@@ -3,6 +3,7 @@ package com.meqlause.fintrack.feature.transaction.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.meqlause.fintrack.core.domain.transaction.SaveTransactionResult
+import com.meqlause.fintrack.core.domain.usecase.CreateCategoryUseCase
 import com.meqlause.fintrack.core.model.LastUsed
 import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.WalletId
@@ -30,11 +31,13 @@ internal class EditTransactionViewModel
         private val instalments: EditInstalmentController,
         private val loans: EditLoanController,
         shortcutDeps: EditShortcutDeps,
+        createCategory: CreateCategoryUseCase,
         private val clock: Clock,
     ) : ViewModel() {
         private val mutableState = MutableStateFlow(EditTransactionUiState())
         private val shortcuts =
             EditShortcutController(shortcutDeps.quickEntries, shortcutDeps.saveQuickEntry, mutableState, viewModelScope)
+        private val categories = EditCategoryController(createCategory, mutableState, viewModelScope)
 
         // S-04: the form, the catalogs and the open drawer, emitted again after every change
         val state: StateFlow<EditTransactionUiState> = mutableState.asStateFlow()
@@ -122,7 +125,7 @@ internal class EditTransactionViewModel
                 }
 
                 is EditTransactionEvent.CategoryPicked -> {
-                    mutableState.update { it.withCategory(event.categoryId) }
+                    mutableState.update { it.withCategory(event.categoryId).showing(null) }
                 }
 
                 EditTransactionEvent.WalletsSwapped -> {
@@ -181,6 +184,10 @@ internal class EditTransactionViewModel
                     mutableState.update { loans.reduce(it, event.change) }
                 }
 
+                is EditTransactionEvent.CategoryEdited -> {
+                    categories.handle(event.change)
+                }
+
                 EditTransactionEvent.SaveRequested -> {
                     save()
                 }
@@ -226,7 +233,7 @@ internal class EditTransactionViewModel
                 if (!shortcuts.storeIfKept(current, Instant.now(clock))) return@launch
                 when (val result = if (current.loan != null) loans.store(current) else instalments.store(current)) {
                     is SaveTransactionResult.Saved -> {
-                        rememberLastUsed(current.form)
+                        sources.rememberLastUsed(current.form)
                         mutableState.update { it.withStatus { copy(isSaved = true) } }
                     }
 
@@ -234,13 +241,6 @@ internal class EditTransactionViewModel
                         mutableState.update { it.withStatus { copy(errors = result.errors) } }
                     }
                 }
-            }
-        }
-
-        // FR-033: the wallet and type of the saved transaction are preselected next time
-        private suspend fun rememberLastUsed(form: TransactionForm) {
-            sources.settings.update { settings ->
-                settings.copy(lastUsed = settings.lastUsed.copy(walletId = form.walletId, transactionType = form.type))
             }
         }
     }

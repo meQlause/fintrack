@@ -18,15 +18,24 @@ fun OptionsDrawer(
     modifier: Modifier = Modifier,
 ) {
     PickerDrawer(title = title, onClose = actions.onClose, modifier = modifier) {
-        ScreenCard {
-            choices.options.forEachIndexed { index, option ->
-                OptionRow(
-                    option = option,
-                    isSelected = option.optionKey == choices.selectedKey,
-                    showDivider = index > 0,
-                    onClick = { actions.onPick(option) },
-                )
-            }
+        OptionsCard(choices = choices, onPick = actions.onPick)
+    }
+}
+
+// DOC-08: the card of option rows with dividers, for a drawer that adds its own content around it
+@Composable
+fun OptionsCard(
+    choices: OptionChoices,
+    onPick: (PickerOption) -> Unit,
+) {
+    ScreenCard {
+        choices.options.forEachIndexed { index, option ->
+            OptionRow(
+                option = option,
+                isSelected = option.optionKey == choices.selectedKey,
+                showDivider = index > 0,
+                onClick = { onPick(option) },
+            )
         }
     }
 }

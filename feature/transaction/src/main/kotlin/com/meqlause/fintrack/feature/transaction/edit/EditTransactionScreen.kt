@@ -68,6 +68,10 @@ private fun EditTransactionSheetContent(
             EditTransactionWalletPicker(state = state, sheet = openSheet, onEvent = onEvent)
         }
 
+        EditSheet.CATEGORY -> {
+            EditCategoryDrawer(state = state, onEvent = onEvent)
+        }
+
         EditSheet.TENOR -> {
             EditInstalmentTenorDrawer(state = state, onEvent = onEvent)
         }

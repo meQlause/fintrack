@@ -6,6 +6,7 @@ import assertk.assertions.containsExactly
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import com.meqlause.fintrack.core.domain.transaction.TransactionError
+import com.meqlause.fintrack.core.domain.usecase.CreateCategoryUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveInstalmentPurchaseUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveLoanUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveQuickEntryUseCase
@@ -101,6 +102,7 @@ class EditTransactionViewModelTest {
                     clock,
                 ),
             shortcutDeps = EditShortcutDeps(quickEntries, SaveQuickEntryUseCase(quickEntries)),
+            createCategory = CreateCategoryUseCase(categories, clock),
             clock = clock,
         )
 

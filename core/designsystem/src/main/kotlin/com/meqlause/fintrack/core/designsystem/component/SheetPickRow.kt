@@ -69,11 +69,13 @@ private fun pickRowBox(): IconBox =
 @Composable
 private fun PickTrailing(balance: String) {
     val colors = FintrackTheme.colors
-    Text(
-        text = balance,
-        style = FintrackScreenText.number(size = 12f, weight = 600),
-        color = colors.texts.onSurfaceVariant,
-    )
+    if (balance.isNotEmpty()) {
+        Text(
+            text = balance,
+            style = FintrackScreenText.number(size = 12f, weight = 600),
+            color = colors.texts.onSurfaceVariant,
+        )
+    }
     Icon(
         painter = painterResource(R.drawable.ic_chev_d),
         contentDescription = null,

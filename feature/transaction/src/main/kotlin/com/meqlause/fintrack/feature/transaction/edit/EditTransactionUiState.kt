@@ -27,6 +27,7 @@ internal data class EditTransactionUiState(
     val shortcutErrors: Set<QuickEntryError> get() = shortcutState.shortcutErrors
     val instalment: InstalmentForm get() = extras.instalment
     val loan: LoanForm? get() = extras.loan
+    val newCategory: CategoryForm? get() = extras.newCategory
 
     // S-04: one change of the keypad, drawer, errors or saved flag
     fun withStatus(change: SheetStatus.() -> SheetStatus): EditTransactionUiState = copy(status = status.change())
@@ -94,8 +95,9 @@ internal data class ShortcutState(
     val shortcutErrors: Set<QuickEntryError> = emptySet(),
 )
 
-// FR-140, S-04: the Cicilan block and the Pinjaman block
+// FR-140, FR-021, S-04: the Cicilan block, the Pinjaman block and the open "Tambah kategori" form
 internal data class ExtraForms(
     val instalment: InstalmentForm = InstalmentForm(),
     val loan: LoanForm? = null,
+    val newCategory: CategoryForm? = null,
 )

@@ -4,8 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -29,7 +31,7 @@ class EditTransactionScreenUiTest {
     @get:Rule
     val composeRule = createComposeRule()
 
-    /** FR-033 AC: keypad digit, category chip and Simpan save an expense; the sheet reports three taps. */
+    /** FR-033 AC: keypad digit, category drawer and Simpan save an expense; the sheet reports four events. */
     @Test
     fun givenPreselectedWalletWhenDigitCategoryAndSaveTappedThenExpenseIsSaved() {
         val events = mutableListOf<EditTransactionEvent>()
@@ -47,9 +49,10 @@ class EditTransactionScreenUiTest {
             }
         }
         composeRule.onNodeWithText("5").performClick()
+        composeRule.onNodeWithText("Pilih kategori").performClick()
         composeRule.onNodeWithText("Makan").performClick()
         composeRule.onNodeWithText("Simpan").performScrollTo().performClick()
-        assertEquals(3, events.size)
+        assertEquals(4, events.size)
         assertTrue(events.last() == EditTransactionEvent.SaveRequested)
     }
 
@@ -65,7 +68,7 @@ class EditTransactionScreenUiTest {
                 )
             }
         }
-        composeRule.onNodeWithText("Pilih kategori").assertIsDisplayed()
+        composeRule.onAllNodesWithText("Pilih kategori").assertCountEquals(2)
     }
 
     /** BR-003: a transfer lays out Dari and Ke side by side, and the swap control is present. */
@@ -107,7 +110,11 @@ class EditTransactionScreenUiTest {
             }
 
             is EditTransactionEvent.CategoryPicked -> {
-                state.copy(form = form.withRoute { copy(categoryId = event.categoryId) })
+                state.withCategory(event.categoryId).showing(null)
+            }
+
+            is EditTransactionEvent.SheetOpened -> {
+                state.showing(event.sheet)
             }
 
             else -> {

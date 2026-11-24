@@ -8,6 +8,7 @@ import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.Movement
 import com.meqlause.fintrack.core.model.Transaction
 import com.meqlause.fintrack.core.model.TransactionType
+import com.meqlause.fintrack.feature.transaction.TransactionSources
 
 // FR-030..FR-034: the sheet state as the domain draft that SaveTransactionUseCase checks and stores
 internal fun EditTransactionUiState.toDraft(): TransactionDraft {
@@ -56,3 +57,10 @@ internal fun TransactionType.categoryKind(): CategoryKind? =
 
 // S-04: zero is shown as an empty field so the keypad starts clean
 private fun digitsOf(money: Money): String = if (money.isZero) "" else money.rupiah.toString()
+
+// FR-033: the wallet and type of the saved transaction are preselected next time
+internal suspend fun TransactionSources.rememberLastUsed(form: TransactionForm) {
+    settings.update { settings ->
+        settings.copy(lastUsed = settings.lastUsed.copy(walletId = form.walletId, transactionType = form.type))
+    }
+}

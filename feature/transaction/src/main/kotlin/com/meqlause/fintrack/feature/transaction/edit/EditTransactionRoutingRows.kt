@@ -10,12 +10,11 @@ import com.meqlause.fintrack.core.designsystem.component.FormRow
 import com.meqlause.fintrack.core.designsystem.component.PickRowText
 import com.meqlause.fintrack.core.designsystem.component.SheetPickRow
 import com.meqlause.fintrack.core.designsystem.icon.IconLook
-import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.transaction.R
 
-// FR-031, FR-032, S-04: the route of the transaction: category tiles and wallet card, or both sides of a transfer
+// FR-031, FR-032, S-04: the route of the transaction: category and wallet cards, or both sides of a transfer
 @Composable
 internal fun EditTransactionRoutingRows(
     state: EditTransactionUiState,
@@ -36,11 +35,7 @@ internal fun EditTransactionRoutingRows(
                 modifier = Modifier.padding(top = FintrackTheme.spacing.small),
             )
         } else {
-            EditCategoryTiles(
-                state = state,
-                onEvent = onEvent,
-                modifier = Modifier.padding(top = FintrackScreenSizes.pillGap),
-            )
+            EditCategoryCard(state = state, onEvent = onEvent)
             EditWalletCard(state = state, onEvent = onEvent)
             if (state.offersInstalment) {
                 EditInstalmentRows(state = state, onEvent = onEvent)

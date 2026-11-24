@@ -4,5 +4,5 @@ package com.meqlause.fintrack.core.designsystem.component
 data class PickRowText(
     val label: String,
     val name: String,
-    val fundsText: String,
+    val fundsText: String = "",
 )

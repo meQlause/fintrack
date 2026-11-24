@@ -8,6 +8,7 @@ import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import com.meqlause.fintrack.core.domain.loan.LoanDueOption
 import com.meqlause.fintrack.core.domain.transaction.TransactionError
+import com.meqlause.fintrack.core.domain.usecase.CreateCategoryUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveInstalmentPurchaseUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveLoanUseCase
 import com.meqlause.fintrack.core.domain.usecase.SaveQuickEntryUseCase
@@ -85,6 +86,7 @@ class EditTransactionEventsTest {
                     clock,
                 ),
             shortcutDeps = EditShortcutDeps(quick, SaveQuickEntryUseCase(quick)),
+            createCategory = CreateCategoryUseCase(categories, clock),
             clock = clock,
         )
 
