@@ -20,13 +20,14 @@ object MoneyFormatter {
     /** DOC-08: whole rupiah with a Rp prefix and dot grouping; a negative amount starts with U+2212. */
     fun format(money: Money): String = formatSigned(money, AmountSign.NONE)
 
-    /** DOC-08: the amount with the prefix of [sign]; a negative amount always shows U+2212. */
+    /** DOC-08: the amount with the prefix of [sign]; a negative amount always shows U+2212, zero has no sign. */
     fun formatSigned(
         money: Money,
         sign: AmountSign,
     ): String {
         val prefix =
             when {
+                money.rupiah == 0L -> ""
                 money.rupiah < 0L -> MINUS_SIGN
                 sign == AmountSign.MINUS -> MINUS_SIGN
                 sign == AmountSign.PLUS -> PLUS_SIGN
@@ -54,9 +55,9 @@ object MoneyFormatter {
         return sign + CURRENCY_PREFIX + formatCompact(Money(magnitude(money.rupiah)))
     }
 
-    /** DOC-08: compact form without prefix and with an explicit sign: +1,5jt, −500rb. */
+    /** DOC-08: compact form without prefix and with an explicit sign: +1,5jt, −500rb; zero stays 0. */
     fun formatCompactSigned(money: Money): String =
-        if (money.rupiah < 0L) formatCompact(money) else PLUS_SIGN + formatCompact(money)
+        if (money.rupiah <= 0L) formatCompact(money) else PLUS_SIGN + formatCompact(money)
 
     private fun magnitude(rupiah: Long): Long = if (rupiah < 0L) -rupiah else rupiah
 

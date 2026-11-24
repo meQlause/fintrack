@@ -30,6 +30,13 @@ class MoneyFormatterTest {
         }
     }
 
+    // DOC-08: zero carries no sign, also in the compact signed form
+    @Test
+    fun `given zero when formatted with a sign then no sign is shown (DOC-08)`() {
+        assertThat(MoneyFormatter.formatCompactSigned(Money(0L))).isEqualTo("0")
+        assertThat(MoneyFormatter.formatCompactSigned(Money(1_500_000L))).isEqualTo("+1,5jt")
+    }
+
     // DOC-08 formatting rules: compact amounts for charts and axes, rounded half up
     @Test
     fun `given large amounts when formatted compactly then rb and jt suffixes apply (DOC-08)`() {
@@ -70,6 +77,8 @@ class MoneyFormatterTest {
                 Triple(5_000_000L, AmountSign.PLUS, "+Rp5.000.000"),
                 Triple(150_000L, AmountSign.NONE, "Rp150.000"),
                 Triple(-1_000L, AmountSign.NONE, "−Rp1.000"),
+                Triple(0L, AmountSign.PLUS, "Rp0"),
+                Triple(0L, AmountSign.MINUS, "Rp0"),
             )
 
         val COMPACT =

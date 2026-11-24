@@ -3,6 +3,7 @@ package com.meqlause.fintrack.feature.dashboard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.model.Money
+import com.meqlause.fintrack.core.ui.format.AmountSign
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import java.time.format.TextStyle
 import java.util.Locale
@@ -189,7 +190,7 @@ private class Shown(
         plus: Boolean,
     ): String {
         if (hidden) return mask
-        val sign = if (plus && money.rupiah >= 0L) "+" else "−"
-        return sign + MoneyFormatter.format(Money(abs(money.rupiah)))
+        val sign = if (plus && money.rupiah >= 0L) AmountSign.PLUS else AmountSign.MINUS
+        return MoneyFormatter.formatSigned(Money(abs(money.rupiah)), sign)
     }
 }
