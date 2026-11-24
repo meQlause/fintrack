@@ -12,7 +12,6 @@ import com.meqlause.fintrack.core.designsystem.component.SheetPickRow
 import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.transaction.R
 
@@ -78,9 +77,3 @@ private fun EditWalletCard(
         modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
     )
 }
-
-// S-04: the name shown on a wallet row, empty while no wallet is chosen
-internal fun walletName(
-    state: EditTransactionUiState,
-    walletId: WalletId?,
-): String = EditWalletInfo.forWallet(state, walletId).name

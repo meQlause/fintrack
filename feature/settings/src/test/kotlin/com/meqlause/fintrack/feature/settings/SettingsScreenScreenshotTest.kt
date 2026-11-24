@@ -37,7 +37,7 @@ class SettingsScreenScreenshotTest {
     // NFR-010: font scale 2.0 variant
     @Test
     fun `given font scale 2 when rendered then the settings screen matches the reference (NFR-010)`() {
-        composeRule.setContent { WithFontScaleTwo { SettingsLightPreview() } }
+        composeRule.setContent { WithFontScaleTwo { SettingsFontScalePreview() } }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/SettingsScreen_fontScale2.png")
     }
 

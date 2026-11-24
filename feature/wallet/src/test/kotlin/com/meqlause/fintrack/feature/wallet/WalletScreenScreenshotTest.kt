@@ -1,7 +1,11 @@
 package com.meqlause.fintrack.feature.wallet
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.unit.Density
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -52,5 +56,20 @@ class WalletScreenScreenshotTest {
     fun givenEditorOpenInDarkThemeWhenRenderedThenItMatchesReference() {
         composeRule.setContent { WalletEditorDarkPreview() }
         composeRule.onRoot().captureRoboImage("src/test/screenshots/WalletEditor_dark.png")
+    }
+
+    // FR-010, NFR-010: font scale 2.0 variant rendered from its own preview
+    @Test
+    fun `given font scale 2 when rendered then the wallet screen matches the reference (NFR-010)`() {
+        composeRule.setContent { WithFontScaleTwo { WalletFontScalePreview() } }
+        composeRule.onRoot().captureRoboImage("src/test/screenshots/Wallet_fontScale2.png")
+    }
+
+    @Composable
+    private fun WithFontScaleTwo(content: @Composable () -> Unit) {
+        val density = LocalDensity.current.density
+        CompositionLocalProvider(LocalDensity provides Density(density = density, fontScale = 2f)) {
+            content()
+        }
     }
 }
