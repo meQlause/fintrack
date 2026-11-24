@@ -25,6 +25,7 @@ fun FintrackBottomSheet(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    ReportSheetOpen()
     Column(
         modifier =
             modifier
