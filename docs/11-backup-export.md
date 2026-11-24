@@ -69,6 +69,7 @@ offset  size  content
 4. Password dialog → decrypt (wrong password = GCM auth failure → "Kata sandi salah").
 5. Parse + **validate everything** before touching the database:
    - `schemaVersion` ≤ current supported version (older versions are migrated in memory by `BackupMigrator`).
+   - `databaseVersion` ≤ the app's Room schema version; a newer one aborts with "Versi cadangan tidak didukung, perbarui aplikasi" (`BackupFailure.UNSUPPORTED_VERSION`) + no data changed.
    - All BR rules (amount range, transfer rules, FK references exist, unique names, enum values valid).
    - On any violation: abort with "Cadangan rusak" + no data changed.
 6. Show summary: "12 dompet, 1.540 transaksi, dibuat 20 Nov 2026" + warning "Semua data saat ini akan diganti."
