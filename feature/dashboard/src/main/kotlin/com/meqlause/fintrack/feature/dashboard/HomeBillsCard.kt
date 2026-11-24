@@ -34,7 +34,12 @@ internal fun HomeBillsCard(
     FintrackCard(modifier = modifier.fillMaxWidth(), contentPadding = PaddingValues()) {
         Text(
             text = stringResource(R.string.home_bills_title),
-            modifier = Modifier.padding(start = FintrackTheme.spacing.large, top = FintrackTheme.spacing.stack),
+            modifier =
+                Modifier.padding(
+                    start = FintrackTheme.spacing.large,
+                    top = FintrackTheme.spacing.stack,
+                    bottom = FintrackTheme.spacing.small,
+                ),
             style = FintrackTheme.typography.caption,
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )

@@ -22,7 +22,7 @@ import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.StatementStatus
 
-// FR-137, S-03: one credit bill with its name, due line, amount and status; tap opens the credit wallet (S-14)
+// FR-137, S-03: one credit bill with name, due line, amount and status, clear of the dividers; tap opens S-14
 @Composable
 internal fun HomeBillRow(
     bill: HomeBill,
@@ -35,13 +35,16 @@ internal fun HomeBillRow(
             modifier
                 .fillMaxWidth()
                 .clickable(role = Role.Button, onClick = onClick)
-                .padding(horizontal = FintrackTheme.sizes.rowInset, vertical = FintrackTheme.spacing.medium),
+                .padding(horizontal = FintrackTheme.sizes.rowInset, vertical = FintrackTheme.spacing.large),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
     ) {
         IconCircle(look = IconLook(iconKey = bill.appearance.iconKey, colorKey = bill.appearance.colorKey))
         BillName(bill = bill, modifier = Modifier.weight(1f))
-        Column(horizontalAlignment = Alignment.End) {
+        Column(
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
+        ) {
             HomeAmountText(
                 money = bill.amount,
                 hidden = hidden,

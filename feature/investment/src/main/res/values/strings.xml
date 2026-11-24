@@ -26,10 +26,10 @@
     <!-- FR-170: creating an investment account -->
     <string name="investment_create_title">Investasi baru</string>
     <string name="investment_name_label">Nama</string>
+    <string name="investment_name_hint">mis. Reksa dana pasar uang</string>
     <string name="investment_kind_label">Jenis</string>
     <string name="investment_kind_pick">Pilih jenis</string>
     <string name="investment_kind_drawer_title">Jenis investasi</string>
-    <string name="investment_selected">Dipilih</string>
     <string name="investment_invested_label">Modal awal</string>
     <string name="investment_name_rejected">Nama kosong, lebih dari 30 karakter, atau sudah dipakai</string>
     <string name="investment_save">Simpan</string>

@@ -10,6 +10,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.R
@@ -19,7 +21,7 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
-// S-18: picker drawer shell with a fixed header and a scrollable body, capped at the drawer maximum height
+// S-18: picker drawer shell, a fixed header and a scrollable body, as tall as its content up to 75% of the screen
 @Composable
 fun PickerDrawer(
     title: String,
@@ -27,8 +29,14 @@ fun PickerDrawer(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    val screenHeight =
+        with(LocalDensity.current) {
+            LocalWindowInfo.current.containerSize.height
+                .toDp()
+        }
+    val maxHeight = screenHeight * FintrackTheme.sizes.drawerMaxFraction
     FintrackBottomSheet(
-        modifier = modifier.heightIn(max = FintrackTheme.sizes.drawerMaxHeight),
+        modifier = modifier.heightIn(max = maxHeight),
         onDismiss = onClose,
     ) {
         SheetHeader(title = title, onClose = onClose)

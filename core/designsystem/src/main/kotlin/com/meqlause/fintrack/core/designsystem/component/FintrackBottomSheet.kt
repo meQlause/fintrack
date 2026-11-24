@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.R
@@ -48,6 +49,9 @@ fun FintrackBottomSheet(
     }
 }
 
+internal const val SHEET_PANEL_TAG = "sheet_panel"
+internal const val SHEET_HANDLE_TAG = "sheet_drag_handle"
+
 // DOC-08: the panel itself, the drag handle over the body, on the background colour
 @Composable
 internal fun SheetPanel(
@@ -57,6 +61,7 @@ internal fun SheetPanel(
     Column(
         modifier =
             modifier
+                .testTag(SHEET_PANEL_TAG)
                 .fillMaxWidth()
                 .clip(FintrackTheme.shapes.sheet)
                 .background(FintrackTheme.colors.surfaces.background)
@@ -77,6 +82,7 @@ private fun ColumnScope.SheetDragHandle() {
     Box(
         modifier =
             Modifier
+                .testTag(SHEET_HANDLE_TAG)
                 .align(Alignment.CenterHorizontally)
                 .padding(bottom = FintrackScreenSizes.sheetHandleBottom)
                 .width(FintrackTheme.sizes.dragHandleWidth)

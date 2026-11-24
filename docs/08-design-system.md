@@ -118,6 +118,8 @@ in both light and dark mode. Bottom sheet and FAB: 3 dp.
 
 - Balance changes animate with a count-up (`slow`).
 - Saving a transaction: haptic `HapticFeedbackType.Confirm` (or `LongPress` fallback) + sheet dismiss + new row animates in.
+- The bottom bar slides down and fades out when it hides and rises back when it returns (`medium`).
+- Undo bars grow in and fade (`medium`), run a countdown line over `UndoWindow.MILLIS` (3 s) and shrink away; a deleted row fades and shrinks (`medium`).
 - Swipe on inbox items reveals green (confirm) / gray (dismiss) background with icon.
 - Respect system "remove animations" setting (durations → 0).
 
@@ -138,7 +140,7 @@ Material Symbols Rounded, bundled as vector drawables (offline). Icon catalog (`
 | `FintrackFab` | Circular primary add button |
 | `FintrackChip` | Filter / selection chip |
 | `FintrackTextField` | Filled rounded field with error text slot |
-| `FintrackBottomSheet` | Modal sheet with drag handle, `large` top radius |
+| `FintrackBottomSheet` | Modal sheet with one drag handle, `large` top radius; a sheet opened over another hides it (`PickerDrawer` caps at 75% of the screen, `FintrackSizes.drawerMaxFraction`) |
 | `FintrackDialog` | Confirmation dialog |
 | `IconCircle` | Icon on tinted circle (category/wallet) |
 | `ProgressBar` | Rounded budget bar with NORMAL/WARNING/EXCEEDED colors |
