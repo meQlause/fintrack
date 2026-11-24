@@ -38,6 +38,13 @@ class MoneyFormatterTest {
         }
     }
 
+    // DOC-08: a negative short amount puts the sign before Rp, like the full form
+    @Test
+    fun `given a negative amount when formatted short then the sign precedes Rp (DOC-08)`() {
+        assertThat(MoneyFormatter.formatShort(Money(-25_000L))).isEqualTo("−Rp25rb")
+        assertThat(MoneyFormatter.formatShort(Money(1_500_000L))).isEqualTo("Rp1,5jt")
+    }
+
     private companion object {
         val FULL_FORM =
             listOf(

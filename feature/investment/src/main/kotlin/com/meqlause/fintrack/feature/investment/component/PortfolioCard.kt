@@ -141,7 +141,7 @@ private fun AllocationRow(
             modifier = Modifier.weight(1f),
         )
         Text(
-            text = "Rp" + MoneyFormatter.formatCompact(value),
+            text = MoneyFormatter.formatShort(value),
             style = FintrackScreenText.legendNumber(),
             color = FintrackTheme.colors.texts.onSurface,
         )

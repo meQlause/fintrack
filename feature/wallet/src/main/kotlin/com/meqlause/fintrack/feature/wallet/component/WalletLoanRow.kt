@@ -42,8 +42,8 @@ internal fun WalletLoanRow(
                 text =
                     stringResource(
                         R.string.wallet_loans_summary,
-                        "Rp" + MoneyFormatter.formatCompact(netWorth.piutang),
-                        "Rp" + MoneyFormatter.formatCompact(netWorth.hutang),
+                        MoneyFormatter.formatShort(netWorth.piutang),
+                        MoneyFormatter.formatShort(netWorth.hutang),
                     ),
                 style = FintrackScreenText.rowSubNumber(),
                 color = FintrackTheme.colors.texts.onSurfaceVariant,

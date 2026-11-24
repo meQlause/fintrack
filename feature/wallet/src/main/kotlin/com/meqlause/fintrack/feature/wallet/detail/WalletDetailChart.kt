@@ -47,7 +47,7 @@ internal fun WalletDetailChart(
                     text =
                         stringResource(
                             R.string.wallet_detail_chart_average,
-                            "Rp" + MoneyFormatter.formatCompact(Money(average)),
+                            MoneyFormatter.formatShort(Money(average)),
                         ),
                     style = FintrackScreenText.number(size = 12f, weight = 600),
                     color = FintrackTheme.colors.texts.onSurface,

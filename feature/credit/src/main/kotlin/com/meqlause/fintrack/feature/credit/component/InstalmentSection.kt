@@ -94,7 +94,7 @@ private fun InstalmentProgress(item: InstalmentRow) {
             color = FintrackTheme.colors.texts.onSurface,
         )
         Text(
-            text = stringResource(R.string.instalment_remaining, "Rp" + MoneyFormatter.formatCompact(item.remaining)),
+            text = stringResource(R.string.instalment_remaining, MoneyFormatter.formatShort(item.remaining)),
             style = FintrackScreenText.rowSub(),
             color = FintrackTheme.colors.texts.onSurfaceVariant,
         )

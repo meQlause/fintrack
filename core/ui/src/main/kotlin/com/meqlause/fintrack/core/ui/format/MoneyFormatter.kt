@@ -49,7 +49,10 @@ object MoneyFormatter {
     }
 
     /** DOC-08: compact form with the Rp prefix, as the mockup short(): Rp223rb, Rp1,5jt. */
-    fun formatShort(money: Money): String = CURRENCY_PREFIX + formatCompact(money)
+    fun formatShort(money: Money): String {
+        val sign = if (money.rupiah < 0L) MINUS_SIGN else ""
+        return sign + CURRENCY_PREFIX + formatCompact(Money(magnitude(money.rupiah)))
+    }
 
     /** DOC-08: compact form without prefix and with an explicit sign: +1,5jt, −500rb. */
     fun formatCompactSigned(money: Money): String =
