@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ADR-025: Hilt calls these through generated code, so Qodana's unused-symbol check treats them as entry points -->
+<project version="4">
+  <component name="EntryPointsManager">
+    <list size="13">
+      <item index="0" class="java.lang.String" itemvalue="dagger.Module" />
+      <item index="1" class="java.lang.String" itemvalue="dagger.Provides" />
+      <item index="2" class="java.lang.String" itemvalue="dagger.Binds" />
+      <item index="3" class="java.lang.String" itemvalue="dagger.multibindings.IntoSet" />
+      <item index="4" class="java.lang.String" itemvalue="dagger.multibindings.IntoMap" />
+      <item index="5" class="java.lang.String" itemvalue="dagger.hilt.InstallIn" />
+      <item index="6" class="java.lang.String" itemvalue="dagger.hilt.EntryPoint" />
+      <item index="7" class="java.lang.String" itemvalue="dagger.hilt.android.HiltAndroidApp" />
+      <item index="8" class="java.lang.String" itemvalue="dagger.hilt.android.AndroidEntryPoint" />
+      <item index="9" class="java.lang.String" itemvalue="dagger.hilt.android.lifecycle.HiltViewModel" />
+      <item index="10" class="java.lang.String" itemvalue="dagger.assisted.AssistedInject" />
+      <item index="11" class="java.lang.String" itemvalue="androidx.hilt.work.HiltWorker" />
+      <item index="12" class="java.lang.String" itemvalue="javax.inject.Inject" />
+    </list>
+  </component>
+</project>

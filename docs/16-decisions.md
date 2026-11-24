@@ -201,3 +201,15 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
   Core module targets and the 75% overall target are unchanged.
 - **Consequences:** Composables are checked by UI tests and Roborazzi screenshots instead of the coverage number.
 
+### ADR-025 — Dagger/Hilt annotations are entry points for Qodana's unused-symbol check
+- **Status:** Accepted (2026-11-24), approved by the owner.
+- **Context:** Qodana (UnusedSymbol, `failThreshold: 0`) reported 240 functions in `app/di` (`@Provides`, `@Binds`,
+  `@Module` objects) as never used. Hilt calls them only from generated code, which Qodana does not analyse, so these
+  were false positives; the gate passed earlier only because `app/di` did not exist yet.
+- **Decision:** `.idea/misc.xml` (now tracked; `.gitignore` re-includes it and the shared `.idea/codeStyles`) lists the
+  Dagger/Hilt annotations (`@Module`, `@Provides`, `@Binds`, `@IntoSet`, `@IntoMap`, `@InstallIn`, `@EntryPoint`,
+  `@HiltAndroidApp`, `@AndroidEntryPoint`, `@HiltViewModel`, `@AssistedInject`, `@HiltWorker`, `@Inject`) as entry
+  points. No path is excluded and the inspection profile is unchanged.
+- **Consequences:** Real dead code is still reported everywhere, including in `app/di` for functions without those
+  annotations.
+

@@ -8,8 +8,10 @@ captures/
 *.aab
 
 # IDE
-.idea/
+.idea/*
 !.idea/codeStyles/
+# ADR-025: Qodana reads the Dagger/Hilt entry points from here
+!.idea/misc.xml
 *.iml
 .DS_Store
 
