@@ -12,7 +12,10 @@ internal data class InboxUiState(
     val resolved: List<InboxResolvedUi> = emptyList(),
     val options: InboxOptions = InboxOptions(),
     val undoItemId: Long? = null,
-)
+) {
+    // S-07: Abaikan semua needs detection on and at least one item waiting
+    val canDismissAll: Boolean get() = hasAccess && !pending.isEmpty
+}
 
 // S-07: the items waiting for a decision, the pairs first and the single cards after them
 internal data class InboxPending(

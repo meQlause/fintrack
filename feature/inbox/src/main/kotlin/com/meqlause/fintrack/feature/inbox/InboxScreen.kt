@@ -51,7 +51,10 @@ internal fun InboxScreen(
         snackbarHost = { SnackbarHost(snackbar) },
     ) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-            InboxHeader(onBack = actions.onBack, onDismissAll = actions.onDismissAll)
+            InboxHeader(
+                onBack = actions.onBack,
+                onDismissAll = actions.onDismissAll.takeIf { state.canDismissAll },
+            )
             InboxBody(state = state, actions = actions, panels = panels)
         }
     }
@@ -61,18 +64,21 @@ internal fun InboxScreen(
 @Composable
 private fun InboxHeader(
     onBack: () -> Unit,
-    onDismissAll: () -> Unit,
+    onDismissAll: (() -> Unit)?,
 ) {
     ScreenBackHeader(
         title = HeaderTitle(text = stringResource(R.string.inbox_title)),
         back = BackAction(label = stringResource(R.string.inbox_back_description), onBack = onBack),
         trailing = {
-            TextButton(onClick = onDismissAll) {
-                Text(
-                    text = stringResource(R.string.inbox_dismiss_all),
-                    style = FintrackScreenText.style(size = 12.5f, weight = 600),
-                    color = FintrackTheme.colors.brands.primary,
-                )
+            // S-07: Abaikan semua only shows while something waits to be dismissed
+            if (onDismissAll != null) {
+                TextButton(onClick = onDismissAll) {
+                    Text(
+                        text = stringResource(R.string.inbox_dismiss_all),
+                        style = FintrackScreenText.style(size = 12.5f, weight = 600),
+                        color = FintrackTheme.colors.brands.primary,
+                    )
+                }
             }
         },
     )
