@@ -5,18 +5,20 @@ import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.wallet.R
 
-// BR-053, S-09: the five parts of the net-worth card in bar order, with the compact totals of the prototype
+// BR-053, S-09: Aset counts a negative Saldo; the five parts of the net-worth card in bar order, with the compact totals of the prototype
 internal class NetWorthParts private constructor(
     val assets: List<NetWorthPart>,
     val debts: List<NetWorthPart>,
+    val assetTotal: String,
+    val debtTotal: String,
 ) {
     val every: List<NetWorthPart> = assets + debts
-    val assetTotal: String = "Rp" + MoneyFormatter.formatCompact(Money(positiveSum(assets)))
-    val debtTotal: String = "−" + MoneyFormatter.formatCompact(Money(positiveSum(debts)))
 
     companion object {
         fun from(netWorth: NetWorth): NetWorthParts =
             NetWorthParts(
+                assetTotal = MoneyFormatter.formatShort(netWorth.assets),
+                debtTotal = MoneyFormatter.formatShort(Money(-netWorth.debts.rupiah)),
                 assets =
                     listOf(
                         NetWorthPart(R.string.wallet_networth_saldo, netWorth.saldo.rupiah, "teal"),
@@ -29,7 +31,5 @@ internal class NetWorthParts private constructor(
                         NetWorthPart(R.string.wallet_networth_debt, netWorth.hutang.rupiah, "orange"),
                     ),
             )
-
-        private fun positiveSum(parts: List<NetWorthPart>): Long = parts.sumOf { it.amount.coerceAtLeast(0L) }
     }
 }

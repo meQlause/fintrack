@@ -36,7 +36,7 @@ internal fun WalletNetWorthCard(
     }
 }
 
-// BR-053: segments sized by their share, 2 px apart, in a 10 px pill; nothing to show leaves the bar empty
+// BR-053: segments sized by their share, 2 px apart, in a 10 px pill; an empty bar keeps its track
 @Composable
 private fun NetWorthBar(parts: List<NetWorthPart>) {
     Row(
@@ -44,7 +44,8 @@ private fun NetWorthBar(parts: List<NetWorthPart>) {
             Modifier
                 .fillMaxWidth()
                 .height(FintrackTheme.sizes.netWorthBarHeight)
-                .clip(RoundedCornerShape(FintrackScreenSizes.netWorthBarCorner)),
+                .clip(RoundedCornerShape(FintrackScreenSizes.netWorthBarCorner))
+                .background(FintrackTheme.colors.surfaces.surfaceVariant),
         horizontalArrangement = Arrangement.spacedBy(FintrackScreenSizes.netWorthBarGap),
     ) {
         parts.filter { it.amount > 0L }.forEach { part ->
@@ -69,8 +70,6 @@ private fun NetWorthColumns(parts: NetWorthParts) {
                 .height(IntrinsicSize.Min)
                 .padding(top = FintrackScreenSizes.rowPaddingHorizontal),
     ) {
-        val assets =
-            NetWorthSide(stringResource(R.string.wallet_networth_assets), parts.assetTotal, parts.assets, false)
         NetWorthColumn(
             side = assetSide(parts),
             modifier = Modifier.weight(1f).padding(end = FintrackScreenSizes.rowPaddingHorizontal),
