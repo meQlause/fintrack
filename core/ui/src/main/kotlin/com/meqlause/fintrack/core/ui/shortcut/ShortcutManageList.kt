@@ -1,87 +1,49 @@
 package com.meqlause.fintrack.core.ui.shortcut
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
+import com.meqlause.fintrack.core.designsystem.component.ScreenCard
+import com.meqlause.fintrack.core.designsystem.component.ScreenDashedButton
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.ui.R
-import com.meqlause.fintrack.core.ui.format.MoneyFormatter
-import com.meqlause.fintrack.core.designsystem.R as DesignR
+import com.meqlause.fintrack.core.ui.list.AnimatedRows
 
-// FR-039: the "Atur pintasan" list; every row can be deleted, and the host offers undo for the last delete
+// FR-039, DOC-08: the "Atur pintasan" body, one card of shortcut rows over the dashed "Pintasan baru";
+// a deleted row shrinks away at once and the host offers undo
 @Composable
 fun ShortcutManageList(
     items: List<ShortcutTileParams>,
-    onDelete: (QuickEntryId) -> Unit,
+    actions: ShortcutManageActions,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
-    ) {
+    Column(modifier = modifier.fillMaxWidth()) {
         if (items.isEmpty()) {
             Text(
                 text = stringResource(R.string.shortcut_empty),
-                style = FintrackTheme.typography.bodyMedium,
+                style = FintrackScreenText.style(size = 13f, weight = 400),
                 color = FintrackTheme.colors.texts.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = FintrackTheme.spacing.xSmall),
+            )
+        } else {
+            ScreenCard {
+                AnimatedRows(items = items, keyOf = { it.quickEntryId }) { params ->
+                    val first = params.quickEntryId == items.firstOrNull()?.quickEntryId
+                    ShortcutManageRow(params = params, actions = actions, showDivider = !first)
+                }
+            }
+        }
+        actions.onNew?.let { onNew ->
+            ScreenDashedButton(
+                text = stringResource(R.string.shortcut_new),
+                onClick = onNew,
+                modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
             )
         }
-        items.forEach { params -> ShortcutManageRow(params = params, onDelete = onDelete) }
-    }
-}
-
-@Composable
-private fun ShortcutManageRow(
-    params: ShortcutTileParams,
-    onDelete: (QuickEntryId) -> Unit,
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        ShortcutLabels(params = params, modifier = Modifier.weight(1f))
-        IconButton(onClick = { onDelete(params.quickEntryId) }) {
-            Icon(
-                painter = painterResource(DesignR.drawable.ic_close),
-                contentDescription = stringResource(R.string.shortcut_delete_description),
-                tint = FintrackTheme.colors.texts.onSurfaceVariant,
-                modifier = Modifier.padding(FintrackTheme.spacing.xxSmall),
-            )
-        }
-    }
-}
-
-@Composable
-private fun ShortcutLabels(
-    params: ShortcutTileParams,
-    modifier: Modifier,
-) {
-    Column(modifier = modifier) {
-        Text(
-            text = params.title,
-            style = FintrackTheme.typography.labelLarge,
-            color = FintrackTheme.colors.texts.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            text = "${params.walletName} · ${MoneyFormatter.format(params.amount)}",
-            style = FintrackTheme.typography.bodyMedium,
-            color = FintrackTheme.colors.texts.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
     }
 }

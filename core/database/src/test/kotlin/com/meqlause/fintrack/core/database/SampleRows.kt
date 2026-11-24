@@ -116,6 +116,7 @@ internal fun sampleQuickEntry(
 ): QuickEntryEntity =
     QuickEntryEntity(
         title = "Kopi pagi",
+        note = "",
         sortOrder = 0,
         target = QuickEntryEntity.Target(TransactionType.EXPENSE, 18_000L, categoryId, walletId),
         audit = AuditColumns(SAMPLE_TIME, SAMPLE_TIME),

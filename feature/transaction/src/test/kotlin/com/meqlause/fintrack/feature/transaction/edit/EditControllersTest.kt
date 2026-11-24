@@ -19,12 +19,15 @@ import com.meqlause.fintrack.core.model.QuickEntryId
 import com.meqlause.fintrack.core.model.QuickTemplate
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.WalletId
+import com.meqlause.fintrack.core.testing.repository.FakeCategoryRepository
 import com.meqlause.fintrack.core.testing.repository.FakeLoanRepository
 import com.meqlause.fintrack.core.testing.repository.FakeQuickEntryRepository
 import com.meqlause.fintrack.core.testing.repository.FakeTransactionRepository
+import com.meqlause.fintrack.core.testing.repository.FakeWalletRepository
 import com.meqlause.fintrack.core.testing.repository.PassthroughAtomicRunner
 import com.meqlause.fintrack.core.testing.time.FakeClock
 import com.meqlause.fintrack.feature.transaction.edit.navigation.EditTransactionDestination
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.advanceTimeBy
@@ -87,10 +90,27 @@ class EditControllersTest {
             ).isTrue()
         }
 
+    private fun shortcutController(
+        quick: FakeQuickEntryRepository,
+        state: MutableStateFlow<EditTransactionUiState>,
+        scope: CoroutineScope,
+    ) = EditShortcutController(
+        quick,
+        SaveQuickEntryUseCase(quick, FakeCategoryRepository(), FakeWalletRepository(transactions)),
+        state,
+        scope,
+    )
+
     private fun shortcut(title: String): QuickEntry =
         QuickEntry(
             quickEntryId = QuickEntryId(0L),
-            template = QuickTemplate(title = title, type = TransactionType.EXPENSE, amount = Money(25_000L)),
+            template =
+                QuickTemplate(
+                    title = title,
+                    type = TransactionType.EXPENSE,
+                    amount = Money(25_000L),
+                    note = "tanpa gula",
+                ),
             categoryId = CategoryId(1L),
             walletId = WalletId(2L),
             sortOrder = 0,
@@ -105,14 +125,14 @@ class EditControllersTest {
             val savedId = quick.insert(shortcut("Kopi"))
             val listed = listOf(shortcut("Kopi").copy(quickEntryId = savedId))
             val state = MutableStateFlow(EditTransactionUiState().withShortcuts { copy(shortcuts = listed) })
-            val controller = EditShortcutController(quick, SaveQuickEntryUseCase(quick), state, backgroundScope)
+            val controller = shortcutController(quick, state, backgroundScope)
             assertThat(controller.find(savedId.value)).isNotNull()
             controller.pick(QuickEntryId(999L))
             controller.delete(QuickEntryId(999L))
             controller.restore()
             controller.pick(savedId)
             assertThat(state.value.appliedShortcut).isTrue()
-            assertThat(state.value.form.note).isEqualTo("Kopi")
+            assertThat(state.value.form.note).isEqualTo("tanpa gula")
             controller.delete(savedId)
             runCurrent()
             assertThat(state.value.removedShortcut).isNotNull()
@@ -132,7 +152,7 @@ class EditControllersTest {
         runTest {
             val quick = FakeQuickEntryRepository()
             val state = MutableStateFlow(EditTransactionUiState())
-            val controller = EditShortcutController(quick, SaveQuickEntryUseCase(quick), state, backgroundScope)
+            val controller = shortcutController(quick, state, backgroundScope)
             assertThat(controller.storeIfKept(state.value, clock.instant())).isTrue()
             val form =
                 TransactionForm(rupiahDigits = "25000").withRoute {
@@ -141,6 +161,22 @@ class EditControllersTest {
             state.value = EditTransactionUiState(form = form).withShortcuts { copy(keepAsShortcut = true) }
             assertThat(controller.storeIfKept(state.value, clock.instant())).isFalse()
             assertThat(state.value.shortcutErrors.isNotEmpty()).isTrue()
+        }
+
+    /** FR-039: the checkbox and the typed Nama go through the shortcut controller; other events are not its own. */
+    @Test
+    fun `given the shortcut events when handled then the name and checkbox are kept (FR-039)`() =
+        runTest {
+            val quick = FakeQuickEntryRepository()
+            val state = MutableStateFlow(EditTransactionUiState())
+            val controller = shortcutController(quick, state, backgroundScope)
+
+            assertThat(controller.handle(EditTransactionEvent.ShortcutToggled(true))).isTrue()
+            assertThat(controller.handle(EditTransactionEvent.ShortcutNameChanged("Kopi pagi"))).isTrue()
+            assertThat(controller.handle(EditTransactionEvent.NoteChanged("x"))).isFalse()
+
+            assertThat(state.value.keepAsShortcut).isTrue()
+            assertThat(state.value.shortcutName).isEqualTo("Kopi pagi")
         }
 
     /** FR-140: destinations compare by their ids. */

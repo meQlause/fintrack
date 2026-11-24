@@ -19,5 +19,7 @@ public class LocalQuickEntryRepository(
     override suspend fun insert(quickEntry: QuickEntry): QuickEntryId =
         QuickEntryId(quickEntryDao.insert(quickEntry.toEntity()))
 
+    override suspend fun update(quickEntry: QuickEntry) = quickEntryDao.update(quickEntry.toEntity())
+
     override suspend fun delete(quickEntryId: QuickEntryId) = quickEntryDao.delete(quickEntryId.value)
 }

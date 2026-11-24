@@ -78,7 +78,7 @@ internal class EditTransactionViewModel
 
         fun onEvent(event: EditTransactionEvent) {
             if (handleKeypad(event) || handleForm(event)) return
-            if (handleShortcuts(event)) return
+            if (shortcuts.handle(event)) return
             handleExtras(event)
         }
 
@@ -134,32 +134,6 @@ internal class EditTransactionViewModel
 
                 is EditTransactionEvent.NoteChanged -> {
                     mutableState.update { it.withNote(event.note) }
-                }
-
-                else -> {
-                    return false
-                }
-            }
-            return true
-        }
-
-        // FR-039: the shortcut list, its undo and the "Simpan sebagai pintasan" checkbox
-        private fun handleShortcuts(event: EditTransactionEvent): Boolean {
-            when (event) {
-                is EditTransactionEvent.ShortcutPicked -> {
-                    shortcuts.pick(event.quickEntryId)
-                }
-
-                is EditTransactionEvent.ShortcutDeleted -> {
-                    shortcuts.delete(event.quickEntryId)
-                }
-
-                EditTransactionEvent.ShortcutRestored -> {
-                    shortcuts.restore()
-                }
-
-                is EditTransactionEvent.ShortcutToggled -> {
-                    mutableState.update { it.withShortcuts { copy(keepAsShortcut = event.keep) } }
                 }
 
                 else -> {

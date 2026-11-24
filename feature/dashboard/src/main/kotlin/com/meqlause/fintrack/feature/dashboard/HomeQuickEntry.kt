@@ -68,12 +68,12 @@ internal fun HomeQuickEntry(
                     modifier = Modifier.width(FintrackTheme.sizes.shortcutTileWidth),
                 )
             }
-            NewShortcutTile(onClick = callbacks.onQuickEntry)
+            NewShortcutTile(onClick = callbacks.onNewShortcut)
         }
     }
 }
 
-// FR-039: the dashed tile that opens a blank add sheet, as tall as the shortcut tiles beside it
+// FR-039: the dashed tile that opens the "Pintasan baru" form, as tall as the shortcut tiles beside it
 @Composable
 private fun NewShortcutTile(onClick: () -> Unit) {
     val dashColor = FintrackTheme.colors.surfaces.outline

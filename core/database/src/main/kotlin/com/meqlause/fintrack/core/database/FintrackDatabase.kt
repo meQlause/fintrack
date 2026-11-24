@@ -33,7 +33,7 @@ import com.meqlause.fintrack.core.database.entity.ValuationEntryEntity
 import com.meqlause.fintrack.core.database.entity.WalletEntity
 import com.meqlause.fintrack.core.model.DatabaseVersion
 
-/** DOC-02, NFR-009: the Fintrack database, schema version 1; every change needs a new version and a migration. */
+/** DOC-02, NFR-009: the Fintrack database, schema version 2; every change needs a new version and a migration. */
 @Database(
     entities = [
         WalletEntity::class,

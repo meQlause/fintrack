@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.feature.transaction.edit
 
+import com.meqlause.fintrack.core.designsystem.component.UndoWindow
 import com.meqlause.fintrack.core.domain.quickentry.QuickEntryResult
 import com.meqlause.fintrack.core.domain.repository.QuickEntryRepository
 import com.meqlause.fintrack.core.domain.usecase.SaveQuickEntryUseCase
@@ -15,8 +16,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Instant
 
-private const val UNDO_WINDOW_MS = 5_000L
-
 // FR-039, BR-047, S-04: the shortcut side of the add sheet; it fills the draft and never saves a transaction itself
 internal class EditShortcutController(
     private val quickEntries: QuickEntryRepository,
@@ -27,6 +26,36 @@ internal class EditShortcutController(
     private var undoJob: Job? = null
 
     fun observe(): Flow<List<QuickEntry>> = quickEntries.observeAll()
+
+    // FR-039: the shortcut list, its undo, the "Simpan sebagai pintasan" checkbox and its name; false for other events
+    fun handle(event: EditTransactionEvent): Boolean {
+        when (event) {
+            is EditTransactionEvent.ShortcutPicked -> {
+                pick(event.quickEntryId)
+            }
+
+            is EditTransactionEvent.ShortcutDeleted -> {
+                delete(event.quickEntryId)
+            }
+
+            EditTransactionEvent.ShortcutRestored -> {
+                restore()
+            }
+
+            is EditTransactionEvent.ShortcutToggled -> {
+                state.update { it.withShortcuts { copy(keepAsShortcut = event.keep) } }
+            }
+
+            is EditTransactionEvent.ShortcutNameChanged -> {
+                state.update { it.withShortcuts { copy(shortcutName = event.name, shortcutErrors = emptySet()) } }
+            }
+
+            else -> {
+                return false
+            }
+        }
+        return true
+    }
 
     // FR-039: the shortcut with [quickEntryId], or null when it was deleted before the sheet opened
     suspend fun find(quickEntryId: Long): QuickEntry? =
@@ -39,11 +68,11 @@ internal class EditShortcutController(
             it
                 .copy(form = entry.toForm())
                 .withStatus { copy(openSheet = null, errors = emptySet()) }
-                .withShortcuts { copy(appliedShortcut = true, keepAsShortcut = false) }
+                .withShortcuts { copy(appliedShortcut = true, keepAsShortcut = false, shortcutName = "") }
         }
     }
 
-    // FR-039: the manager deletes at once and keeps the shortcut restorable for five seconds
+    // FR-039: the manager deletes at once and keeps the shortcut restorable for the undo window
     fun delete(quickEntryId: QuickEntryId) {
         val entry = state.value.shortcuts.firstOrNull { it.quickEntryId == quickEntryId } ?: return
         scope.launch { quickEntries.delete(quickEntryId) }
@@ -51,7 +80,7 @@ internal class EditShortcutController(
         undoJob?.cancel()
         undoJob =
             scope.launch {
-                delay(UNDO_WINDOW_MS)
+                delay(UndoWindow.MILLIS)
                 state.update { it.withShortcuts { copy(removedShortcut = null) } }
             }
     }

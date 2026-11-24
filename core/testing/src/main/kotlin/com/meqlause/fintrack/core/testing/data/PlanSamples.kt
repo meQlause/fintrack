@@ -158,7 +158,13 @@ internal fun aQuickEntry(
 ): QuickEntry =
     QuickEntry(
         quickEntryId = QuickEntryId(0L),
-        template = QuickTemplate(title = "Kopi", type = TransactionType.EXPENSE, amount = Money(rupiah = 25_000L)),
+        template =
+            QuickTemplate(
+                title = "Kopi",
+                type = TransactionType.EXPENSE,
+                amount = Money(rupiah = 25_000L),
+                note = "tanpa gula",
+            ),
         categoryId = categoryId,
         walletId = walletId,
         sortOrder = sortOrder,

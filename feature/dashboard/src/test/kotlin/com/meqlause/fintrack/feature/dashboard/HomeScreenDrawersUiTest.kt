@@ -3,6 +3,13 @@ package com.meqlause.fintrack.feature.dashboard
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onLast
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import assertk.assertThat
+import assertk.assertions.containsExactly
+import assertk.assertions.isEqualTo
+import com.meqlause.fintrack.core.model.QuickEntryId
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -69,5 +76,34 @@ class HomeScreenDrawersUiTest : HomeComposeTestBase() {
         setHome(HomeFixtures.empty(drawer = HomeDrawer.SHORTCUTS))
 
         composeRule.onAllNodesWithText(label(UiR.string.shortcut_manage_title)).onFirst().assertIsDisplayed()
+    }
+
+    // FR-039: the dashed "Baru" tile opens the shortcut form, not the add sheet
+    @Test
+    fun givenQuickEntryRowWhenNewTileIsTappedThenTheShortcutFormIsRequested() {
+        var requested = 0
+        setHome(
+            HomeFixtures.rich(),
+            HomeCallbacks(entry = HomeEntryLinks(onNewShortcut = { requested += 1 })),
+        )
+
+        composeRule.onNodeWithText(label(R.string.home_quick_add)).performClick()
+
+        assertThat(requested).isEqualTo(1)
+    }
+
+    // FR-039: the manager's "Pintasan baru" button opens the form, a row edits that shortcut
+    @Test
+    fun givenShortcutDrawerWhenNewAndRowAreTappedThenTheFormOpensForNewAndForThatShortcut() {
+        var created = 0
+        val edited = mutableListOf<QuickEntryId>()
+        val links = HomeEntryLinks(onNewShortcut = { created += 1 }, onEditShortcut = { edited += it })
+        setHome(HomeFixtures.rich(drawer = HomeDrawer.SHORTCUTS), HomeCallbacks(entry = links))
+
+        composeRule.onNodeWithText(label(UiR.string.shortcut_new)).performClick()
+        composeRule.onAllNodesWithText("Kopi").onLast().performClick()
+
+        assertThat(created).isEqualTo(1)
+        assertThat(edited).containsExactly(QuickEntryId(1L))
     }
 }

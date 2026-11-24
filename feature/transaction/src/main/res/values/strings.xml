@@ -124,7 +124,24 @@
     <string name="transaction_detail_deleted">Transaksi dihapus</string>
     <!-- FR-039: shortcut copy that belongs to the add sheet -->
     <string name="shortcut_keep_label">Simpan sebagai pintasan</string>
-    <string name="shortcut_title_invalid">Judul pintasan 1–24 karakter, jumlah 1 sampai 999 miliar</string>
+    <string name="shortcut_name_hint">Nama pintasan</string>
+    <string name="shortcut_name_invalid">Nama pintasan 1–24 karakter, jumlah 1 sampai 999 miliar</string>
+    <!-- FR-039: the "Pintasan baru" form (S-03) -->
+    <string name="shortcut_form_title_new">Pintasan baru</string>
+    <string name="shortcut_form_title_edit">Ubah pintasan</string>
+    <string name="shortcut_form_name_label">Nama</string>
+    <string name="shortcut_form_name_hint">Contoh: Kopi pagi</string>
+    <string name="shortcut_form_amount_label">Jumlah</string>
+    <string name="shortcut_form_amount_hint">Rp0</string>
+    <string name="shortcut_form_note_label">Catatan (opsional)</string>
+    <string name="shortcut_form_note_hint">Ikut terisi ke catatan transaksi</string>
+    <string name="shortcut_error_name_required">Nama pintasan wajib diisi</string>
+    <string name="shortcut_error_name_long">Nama pintasan maksimal 24 karakter</string>
+    <string name="shortcut_error_note_long">Catatan maksimal 120 karakter</string>
+    <string name="shortcut_error_type">Pintasan hanya untuk pengeluaran atau pemasukan</string>
+    <string name="shortcut_error_amount">Jumlah harus 1 sampai 999 miliar</string>
+    <string name="shortcut_error_category">Kategori tidak sesuai dengan jenis</string>
+    <string name="shortcut_error_wallet">Pemasukan tidak bisa masuk ke dompet kredit</string>
     <string name="instalment_switch_label">Cicilan 0%</string>
     <string name="instalment_tenor_label">Tenor</string>
     <plurals name="instalment_tenor_value">

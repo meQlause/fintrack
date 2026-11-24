@@ -101,7 +101,7 @@ class EditTransactionViewModelTest {
                     SaveLoanUseCase(FakeLoanRepository(), transactions, PassthroughAtomicRunner(), clock),
                     clock,
                 ),
-            shortcutDeps = EditShortcutDeps(quickEntries, SaveQuickEntryUseCase(quickEntries)),
+            shortcutDeps = EditShortcutDeps(quickEntries, SaveQuickEntryUseCase(quickEntries, categories, wallets)),
             createCategory = CreateCategoryUseCase(categories, clock),
             clock = clock,
         )

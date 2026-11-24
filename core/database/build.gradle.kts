@@ -16,5 +16,15 @@ dependencies {
     testImplementation(libs.junit4)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.monitor)
     testImplementation(libs.assertk)
+    testImplementation(libs.room.testing)
+}
+
+// NFR-009: the migration test reads the exported schemas as assets
+extensions.configure<com.android.build.api.dsl.LibraryExtension>("android") {
+    sourceSets
+        .getByName("test")
+        .assets.directories
+        .add("$projectDir/schemas")
 }

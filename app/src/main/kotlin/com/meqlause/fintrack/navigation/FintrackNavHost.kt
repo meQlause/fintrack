@@ -46,6 +46,8 @@ import com.meqlause.fintrack.feature.transaction.detail.navigation.TransactionDe
 import com.meqlause.fintrack.feature.transaction.edit.navigation.EditTransactionDestination
 import com.meqlause.fintrack.feature.transaction.edit.navigation.EditTransactionNavigation
 import com.meqlause.fintrack.feature.transaction.history.navigation.HistoryNavigation
+import com.meqlause.fintrack.feature.transaction.shortcut.navigation.ShortcutFormDestination
+import com.meqlause.fintrack.feature.transaction.shortcut.navigation.ShortcutFormNavigation
 import com.meqlause.fintrack.feature.wallet.navigation.WalletDetailDestination
 import com.meqlause.fintrack.feature.wallet.navigation.WalletDetailNavigation
 import com.meqlause.fintrack.feature.wallet.navigation.WalletNavigation
@@ -102,7 +104,7 @@ private fun NavGraphBuilder.onboardingGraph(navController: NavHostController) {
     )
 }
 
-// DOC-09, FR-040..043: Beranda (S-03); Catat cepat opens the add sheet, a row opens its S-06 detail
+// DOC-09, FR-040..043: Beranda (S-03); Catat cepat opens the shortcut form, a row opens its S-06 detail
 private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
     HomeNavigation.register(
         builder = this,
@@ -120,7 +122,8 @@ private fun NavGraphBuilder.homeGraph(navController: NavHostController) {
                 onOpenHistory = { MainTab.HISTORY.navigateFrom(navController) },
                 onOpenInstalments = { navController.navigate(InstalmentListDestination) },
                 onOpenLoans = { navController.navigate(LoanListDestination) },
-                onQuickEntry = { navController.navigate(EditTransactionDestination()) },
+                onNewShortcut = { navController.navigate(ShortcutFormDestination()) },
+                onEditShortcut = { navController.navigate(ShortcutFormDestination(quickEntryId = it.value)) },
                 onApplyShortcut = { navController.navigate(EditTransactionDestination(quickEntryId = it.value)) },
             ),
     )
@@ -142,6 +145,8 @@ private fun NavGraphBuilder.transactionGraph(navController: NavHostController) {
     )
     // DOC-09, S-04: the add or edit sheet returns to the screen it was opened from
     EditTransactionNavigation.register(builder = this, onDismiss = { navController.popBackStack() })
+    // FR-039: the "Pintasan baru" form saves a shortcut and returns to the screen it was opened from
+    ShortcutFormNavigation.register(builder = this, onDismiss = { navController.popBackStack() })
 }
 
 private fun NavGraphBuilder.walletGraph(navController: NavHostController) {

@@ -53,11 +53,11 @@ AC FR-001..004:
 | FR-032 | M | Add a TRANSFER: amount, source wallet, target wallet, date-time, optional note, optional fee. |
 | FR-033 | M | The add sheet opens with a numeric keypad focused; the last-used wallet and type are preselected. |
 | FR-034 | M | Edit any field of an existing transaction. |
-| FR-035 | M | Delete a transaction with an "Undo" snackbar (5 seconds). |
+| FR-035 | M | Delete a transaction with an "Urungkan" snackbar (3 seconds, with a countdown line). |
 | FR-036 | M | Transaction history grouped by day, newest first, with daily totals. |
 | FR-037 | M | Filter history by: month, type, wallet, category. Search by note and merchant text. |
 | FR-038 | S | Duplicate a transaction ("Catat lagi") with today's date. |
-| FR-039 | M | **Shortcuts (pintasan):** saved EXPENSE/INCOME templates (title, amount, category, wallet). One tap on a shortcut (Home "Catat cepat" row or chips in the add sheet) opens the add sheet **pre-filled and still editable**; nothing is saved until "Simpan". Create via "Simpan sebagai pintasan" checkbox; delete in the "Atur" drawer (undo). |
+| FR-039 | M | **Shortcuts (pintasan):** saved EXPENSE/INCOME templates (own name 1–24 chars shown on the tile, amount, category, wallet, optional note 0–120 chars). One tap on a shortcut (Home "Catat cepat" row or chips in the add sheet) opens the add sheet **pre-filled and still editable**; nothing is saved until "Simpan". Applying one fills the draft note from the shortcut note (empty if none), never from its name. Create via the dedicated "Pintasan baru" form (dashed "Baru" tile or the "Atur" drawer; it only saves a shortcut, never a transaction) or via the "Simpan sebagai pintasan" checkbox (which asks for the name); edit and delete in the "Atur" drawer (undo). |
 
 AC FR-030..033:
 - Amount must be > 0 and ≤ 999,999,999,999 (BR-001).

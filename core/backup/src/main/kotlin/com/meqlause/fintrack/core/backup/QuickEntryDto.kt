@@ -33,7 +33,7 @@ internal data class QuickEntryDto(
         fun from(entry: QuickEntry): QuickEntryDto =
             QuickEntryDto(
                 quickEntryId = entry.quickEntryId.value,
-                template = TemplateDto(entry.template.title, entry.template.type.name, entry.template.amount.rupiah),
+                template = TemplateDto.from(entry.template),
                 categoryId = entry.categoryId.value,
                 walletId = entry.walletId.value,
                 sortOrder = entry.sortOrder,
@@ -46,8 +46,15 @@ internal data class QuickEntryDto(
         val title: String,
         val type: String,
         val amount: Long,
+        // FR-039: backups written before database version 2 have no note, which reads as empty
+        val note: String = "",
     ) {
         fun toModel(): QuickTemplate =
-            QuickTemplate(title, BackupValues.enumNamed<TransactionType>(type), Money(amount))
+            QuickTemplate(title, BackupValues.enumNamed<TransactionType>(type), Money(amount), note)
+
+        companion object {
+            fun from(template: QuickTemplate): TemplateDto =
+                TemplateDto(template.title, template.type.name, template.amount.rupiah, template.note)
+        }
     }
 }

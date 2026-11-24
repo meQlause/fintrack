@@ -1,5 +1,6 @@
 package com.meqlause.fintrack.core.database.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -32,6 +33,7 @@ import com.meqlause.fintrack.core.model.TransactionType
 data class QuickEntryEntity(
     @PrimaryKey(autoGenerate = true) val quickEntryId: Long = 0,
     val title: String,
+    @ColumnInfo(defaultValue = "") val note: String,
     val sortOrder: Int,
     @Embedded val target: Target,
     @Embedded val audit: AuditColumns,

@@ -22,6 +22,7 @@ object FintrackDatabaseFactory {
         return Room
             .databaseBuilder(context, FintrackDatabase::class.java, DATABASE_NAME)
             .openHelperFactory(SupportOpenHelperFactory(passphrase))
+            .addMigrations(FintrackMigrations.FROM_1_TO_2)
             .build()
     }
 }

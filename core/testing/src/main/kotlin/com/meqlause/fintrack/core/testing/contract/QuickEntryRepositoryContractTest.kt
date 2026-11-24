@@ -46,6 +46,26 @@ abstract class QuickEntryRepositoryContractTest {
             ).isEqualTo(listOf(entry.copy(quickEntryId = quickEntryId)))
         }
 
+    /** FR-039: updating replaces the stored fields, including the note, and leaves the others alone. */
+    @Test
+    fun givenShortcutWhenUpdatedThenOnlyThatRowChanges() =
+        runTest {
+            val categoryId = fixture.categories.insert(aCategory())
+            val walletId = fixture.wallets.insert(aWallet())
+            val keptId = fixture.quickEntries.insert(aQuickEntry(categoryId, walletId, sortOrder = 0))
+            val editedId = fixture.quickEntries.insert(aQuickEntry(categoryId, walletId, sortOrder = 1))
+            val template = aQuickEntry(categoryId, walletId).template.copy(title = "Teh", note = "manis")
+
+            fixture.quickEntries.update(
+                aQuickEntry(categoryId, walletId, sortOrder = 1).copy(quickEntryId = editedId, template = template),
+            )
+
+            val stored = fixture.quickEntries.observeAll().first()
+            assertThat(stored.map { it.quickEntryId }).isEqualTo(listOf(keptId, editedId))
+            assertThat(stored.map { it.template.title }).isEqualTo(listOf("Kopi", "Teh"))
+            assertThat(stored.map { it.template.note }).isEqualTo(listOf("tanpa gula", "manis"))
+        }
+
     /** DOC-02: shortcuts come back in the user's chosen order. */
     @Test
     fun givenShortcutsInsertedOutOfOrderWhenObservedThenSortOrderDecides() =

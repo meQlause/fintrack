@@ -70,7 +70,7 @@ class EditCategoryDrawerTest {
                     SaveLoanUseCase(FakeLoanRepository(), transactions, PassthroughAtomicRunner(), clock),
                     clock,
                 ),
-            shortcutDeps = EditShortcutDeps(quick, SaveQuickEntryUseCase(quick)),
+            shortcutDeps = EditShortcutDeps(quick, SaveQuickEntryUseCase(quick, categories, wallets)),
             createCategory = CreateCategoryUseCase(categories, clock),
             clock = clock,
         )

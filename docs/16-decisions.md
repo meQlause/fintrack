@@ -213,3 +213,9 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
 - **Consequences:** Real dead code is still reported everywhere, including in `app/di` for functions without those
   annotations.
 
+
+### ADR-026 — Shortcuts have their own form, name and note
+- **Status:** Accepted (2026-11-24), decided by the owner.
+- **Context:** The dashed "Baru" tile opened the add sheet and a shortcut's title was also copied into the transaction note.
+- **Decision:** The "Baru" tile and the "Atur" drawer open a dedicated "Pintasan baru" form that only saves a shortcut. A shortcut has its own name (1-24 chars, the tile label) and an optional note (0-120 chars) that alone fills the draft note when applied. "Simpan sebagai pintasan" stays in the add sheet and asks for the name. Room version 2 adds `quick_entry.note` (default empty) with a tested migration; older backups without the field restore with an empty note.
+- **Consequences:** `SaveQuickEntryUseCase` also edits (keeps position and creation time) and enforces BR-006 and the no-credit-wallet rule for income. `core:database` tests use `room-testing` (verification metadata extended).

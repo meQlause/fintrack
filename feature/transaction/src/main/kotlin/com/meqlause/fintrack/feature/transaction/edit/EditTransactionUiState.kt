@@ -23,6 +23,7 @@ internal data class EditTransactionUiState(
     val shortcuts: List<QuickEntry> get() = shortcutState.shortcuts
     val removedShortcut: QuickEntry? get() = shortcutState.removedShortcut
     val keepAsShortcut: Boolean get() = shortcutState.keepAsShortcut
+    val shortcutName: String get() = shortcutState.shortcutName
     val appliedShortcut: Boolean get() = shortcutState.appliedShortcut
     val shortcutErrors: Set<QuickEntryError> get() = shortcutState.shortcutErrors
     val instalment: InstalmentForm get() = extras.instalment
@@ -86,11 +87,12 @@ internal data class SheetStatus(
     val isSaved: Boolean = false,
 )
 
-// FR-039, BR-047: the shortcut list, the removed one that can be undone, the checkbox and the errors
+// FR-039, BR-047: the shortcut list, the removed one that can be undone, the checkbox, its name and the errors
 internal data class ShortcutState(
     val shortcuts: List<QuickEntry> = emptyList(),
     val removedShortcut: QuickEntry? = null,
     val keepAsShortcut: Boolean = false,
+    val shortcutName: String = "",
     val appliedShortcut: Boolean = false,
     val shortcutErrors: Set<QuickEntryError> = emptySet(),
 )

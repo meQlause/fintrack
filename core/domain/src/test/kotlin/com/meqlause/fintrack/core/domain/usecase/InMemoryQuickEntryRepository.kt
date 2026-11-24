@@ -21,6 +21,10 @@ class InMemoryQuickEntryRepository : QuickEntryRepository {
         return newId
     }
 
+    override suspend fun update(quickEntry: QuickEntry) {
+        rows.value = rows.value.map { if (it.quickEntryId == quickEntry.quickEntryId) quickEntry else it }
+    }
+
     override suspend fun delete(quickEntryId: QuickEntryId) {
         rows.value = rows.value.filterNot { it.quickEntryId == quickEntryId }
     }

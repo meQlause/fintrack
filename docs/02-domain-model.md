@@ -239,7 +239,8 @@ The opening transaction (LEND or BORROW) and all repayments (COLLECT or REPAY) a
 | Field | Type | Rules |
 |-------|------|-------|
 | quickEntryId | Long PK | auto |
-| title | String | 1–24 chars; becomes the transaction note when applied |
+| title | String | 1–24 chars; the shortcut's own name ("Nama"), only a label, never the transaction note |
+| note | String | 0–120 chars, default "" (added in database version 2); fills the draft note when applied |
 | type | TransactionType | EXPENSE or INCOME only |
 | amount | Long | 1 … 999_999_999_999 (BR-001) |
 | categoryId | Long FK → Category | kind must match type (BR-006) |
@@ -247,7 +248,7 @@ The opening transaction (LEND or BORROW) and all repayments (COLLECT or REPAY) a
 | sortOrder | Int | |
 | createdAt / updatedAt | Long | |
 
-Applying a QuickEntry only fills a draft (BR-047). Archived categories/wallets referenced by a QuickEntry fall back to the defaults when applied.
+Applying a QuickEntry only fills a draft (BR-047): its note becomes the draft note, its title is not copied. Archived categories/wallets referenced by a QuickEntry fall back to the defaults when applied.
 
 ### Settings (DataStore, not Room)
 
@@ -313,7 +314,7 @@ Applying a QuickEntry only fills a draft (BR-047). Archived categories/wallets r
 | BR-053 | Saldo (BR-043) excludes INVESTMENT wallets. Kekayaan bersih = Saldo + Investasi (Σ currentValue) + Piutang − Utang kartu − Hutang. |
 | BR-054 | A valuation dated today replaces another valuation of the same wallet on the same day. |
 | BR-055 | Optional monthly reminder on day 1 at 09:00 when at least one INVESTMENT wallet exists (setting, default off). |
-| BR-047 | A QuickEntry never creates a transaction by itself: it pre-fills the add sheet, the user may edit every field, and only "Simpan" persists the transaction. |
+| BR-047 | A QuickEntry never creates a transaction by itself (not even from its own "Pintasan baru" form, which only saves a shortcut): it pre-fills the add sheet (note from its note field, never its name), the user may edit every field, and only "Simpan" persists the transaction. |
 
 ## Default categories (seeded, FR-004)
 
@@ -370,5 +371,5 @@ Foreign keys use `onDelete = RESTRICT` (deletion is guarded by BR-008), except `
 ## Database
 
 - Name: `fintrack.db`, Room, encrypted with SQLCipher.
-- Schema version starts at 1. Room `exportSchema = true`; schemas committed under `core/database/schemas/`.
+- Schema version 2 (v2: `quick_entry.note`, migration 1→2). Room `exportSchema = true`; schemas committed under `core/database/schemas/`.
 - Every schema change: new version + `Migration` + migration test (NFR-009).

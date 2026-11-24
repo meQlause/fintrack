@@ -8,6 +8,7 @@ import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutGrid
+import com.meqlause.fintrack.core.ui.shortcut.ShortcutManageActions
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutManageList
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutTileMapping
 import com.meqlause.fintrack.core.ui.shortcut.ShortcutTileParams
@@ -36,7 +37,7 @@ internal fun EditShortcutDrawer(
         if (manage) {
             ShortcutManageList(
                 items = items,
-                onDelete = { onEvent(EditTransactionEvent.ShortcutDeleted(it)) },
+                actions = ShortcutManageActions(onDelete = { onEvent(EditTransactionEvent.ShortcutDeleted(it)) }),
             )
         } else {
             ShortcutGrid(items = items, onPick = { onEvent(EditTransactionEvent.ShortcutPicked(it)) })

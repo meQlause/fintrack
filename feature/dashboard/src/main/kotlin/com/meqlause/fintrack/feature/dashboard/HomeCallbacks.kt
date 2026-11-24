@@ -20,7 +20,8 @@ internal data class HomeCallbacks(
     val onOpenHistory: () -> Unit get() = entry.onOpenHistory
     val onOpenInstalments: () -> Unit get() = entry.onOpenInstalments
     val onOpenLoans: () -> Unit get() = entry.onOpenLoans
-    val onQuickEntry: () -> Unit get() = entry.onQuickEntry
+    val onNewShortcut: () -> Unit get() = entry.onNewShortcut
+    val onEditShortcut: (QuickEntryId) -> Unit get() = entry.onEditShortcut
     val onApplyShortcut: (QuickEntryId) -> Unit get() = entry.onApplyShortcut
     val onToggleTheme: (Boolean) -> Unit get() = screen.onToggleTheme
     val onToggleHidden: () -> Unit get() = screen.onToggleHidden

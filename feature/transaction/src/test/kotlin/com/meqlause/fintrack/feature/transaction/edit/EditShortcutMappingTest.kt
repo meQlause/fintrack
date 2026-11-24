@@ -19,18 +19,18 @@ class EditShortcutMappingTest {
     private val fixedNow = Instant.parse("2026-11-23T10:00:00Z")
 
     @Test
-    fun `a shortcut fills the form with its type, amount, wallet, category and title`() {
+    fun `a shortcut fills the form with its type, amount, wallet, category and note, not its name`() {
         val form = entry().toForm()
 
         assertThat(form.type).isEqualTo(TransactionType.EXPENSE)
         assertThat(form.rupiahDigits).isEqualTo("25000")
         assertThat(form.walletId).isEqualTo(WalletId(2L))
         assertThat(form.categoryId).isEqualTo(CategoryId(3L))
-        assertThat(form.note).isEqualTo("Kopi")
+        assertThat(form.note).isEqualTo("tanpa gula")
     }
 
     @Test
-    fun `a kept checkbox on a new expense builds the shortcut with the trimmed note as title`() {
+    fun `a kept checkbox on a new expense builds the shortcut from its typed name and the note of the draft`() {
         val state =
             EditTransactionUiState(
                 form =
@@ -38,14 +38,15 @@ class EditShortcutMappingTest {
                         type = TransactionType.EXPENSE,
                         rupiahDigits = "25000",
                         route = FormRoute(walletId = WalletId(2L), categoryId = CategoryId(3L)),
-                        note = "  Kopi  ",
+                        note = "  tanpa gula ",
                     ),
-                shortcutState = ShortcutState(keepAsShortcut = true),
+                shortcutState = ShortcutState(keepAsShortcut = true, shortcutName = "Kopi pagi"),
             )
 
         val shortcut = state.toShortcut(fixedNow)
 
-        assertThat(shortcut?.template?.title).isEqualTo("Kopi")
+        assertThat(shortcut?.template?.title).isEqualTo("Kopi pagi")
+        assertThat(shortcut?.template?.note).isEqualTo("  tanpa gula ")
         assertThat(shortcut?.template?.amount).isEqualTo(Money(25_000L))
     }
 
@@ -63,7 +64,13 @@ class EditShortcutMappingTest {
     private fun entry(): QuickEntry =
         QuickEntry(
             quickEntryId = QuickEntryId(1L),
-            template = QuickTemplate(title = "Kopi", type = TransactionType.EXPENSE, amount = Money(25_000L)),
+            template =
+                QuickTemplate(
+                    title = "Kopi",
+                    type = TransactionType.EXPENSE,
+                    amount = Money(25_000L),
+                    note = "tanpa gula",
+                ),
             categoryId = CategoryId(3L),
             walletId = WalletId(2L),
             sortOrder = 0,

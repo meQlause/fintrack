@@ -12,7 +12,7 @@ import com.meqlause.fintrack.core.model.WalletId
 internal fun QuickEntryEntity.toQuickEntry(): QuickEntry =
     QuickEntry(
         quickEntryId = QuickEntryId(quickEntryId),
-        template = QuickTemplate(title = title, type = target.type, amount = Money(target.amount)),
+        template = QuickTemplate(title = title, type = target.type, amount = Money(target.amount), note = note),
         categoryId = CategoryId(target.categoryId),
         walletId = WalletId(target.walletId),
         sortOrder = sortOrder,
@@ -24,6 +24,7 @@ internal fun QuickEntry.toEntity(): QuickEntryEntity =
     QuickEntryEntity(
         quickEntryId = quickEntryId.value,
         title = template.title,
+        note = template.note,
         sortOrder = sortOrder,
         target =
             QuickEntryEntity.Target(

@@ -18,5 +18,7 @@ public class FakeQuickEntryRepository : QuickEntryRepository {
 
     override suspend fun insert(quickEntry: QuickEntry): QuickEntryId = QuickEntryId(store.append(quickEntry))
 
+    override suspend fun update(quickEntry: QuickEntry) = store.replace(quickEntry)
+
     override suspend fun delete(quickEntryId: QuickEntryId) = store.remove(quickEntryId.value)
 }

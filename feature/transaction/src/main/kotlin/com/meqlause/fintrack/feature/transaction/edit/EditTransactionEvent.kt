@@ -57,6 +57,10 @@ internal sealed interface EditTransactionEvent {
 
     data object ShortcutRestored : EditTransactionEvent
 
+    data class ShortcutNameChanged(
+        val name: String,
+    ) : EditTransactionEvent
+
     data class ShortcutToggled(
         val keep: Boolean,
     ) : EditTransactionEvent

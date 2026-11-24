@@ -104,7 +104,7 @@ internal object SampleSnapshot {
     private fun quick(): QuickEntry =
         QuickEntry(
             QuickEntryId(1),
-            QuickTemplate("Kopi", TransactionType.EXPENSE, Money(20_000)),
+            QuickTemplate("Kopi", TransactionType.EXPENSE, Money(20_000), "tanpa gula"),
             CategoryId(1),
             WalletId(1),
             0,
