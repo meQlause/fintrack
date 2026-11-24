@@ -31,6 +31,7 @@ import com.meqlause.fintrack.core.database.entity.QuickEntryEntity
 import com.meqlause.fintrack.core.database.entity.TransactionEntity
 import com.meqlause.fintrack.core.database.entity.ValuationEntryEntity
 import com.meqlause.fintrack.core.database.entity.WalletEntity
+import com.meqlause.fintrack.core.model.DatabaseVersion
 
 /** DOC-02, NFR-009: the Fintrack database, schema version 1; every change needs a new version and a migration. */
 @Database(
@@ -48,7 +49,7 @@ import com.meqlause.fintrack.core.database.entity.WalletEntity
         ValuationEntryEntity::class,
         QuickEntryEntity::class,
     ],
-    version = 1,
+    version = DatabaseVersion.CURRENT,
     exportSchema = true,
 )
 @TypeConverters(CoreEnumConverters::class, PlanEnumConverters::class)

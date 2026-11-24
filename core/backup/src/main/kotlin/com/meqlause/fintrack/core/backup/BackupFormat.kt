@@ -1,11 +1,13 @@
 package com.meqlause.fintrack.core.backup
 
+import com.meqlause.fintrack.core.model.DatabaseVersion
+
 // DOC-11: fixed parts of the .fintrack file: magic, versions, key derivation, cipher and size limits
 internal object BackupFormat {
     const val MAGIC = "FINTRACK"
     const val CONTAINER_VERSION = 1
     const val SCHEMA_VERSION = 1
-    const val DATABASE_VERSION = 1
+    const val DATABASE_VERSION = DatabaseVersion.CURRENT
     const val ITERATIONS = 310_000
     const val MAX_ITERATIONS = 10_000_000
     const val SALT_BYTES = 16
