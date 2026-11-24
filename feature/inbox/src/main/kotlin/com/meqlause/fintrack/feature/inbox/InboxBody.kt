@@ -100,17 +100,17 @@ private fun InboxList(
     }
 }
 
-// S-07: the pair cards first, then the single cards, both newest first
+// S-07: pair cards, then single cards, newest first; a dismissed card fades out and the rest close up
 private fun LazyListScope.pendingItems(
     pending: InboxPending,
     actions: InboxItemActions,
     onPick: (InboxPicker) -> Unit,
 ) {
     items(pending.pairs, key = { "pair-${it.fromItemId}" }) { pair ->
-        InboxPairCard(pair = pair, actions = actions, onPick = onPick)
+        InboxPairCard(pair = pair, actions = actions, onPick = onPick, modifier = Modifier.animateItem())
     }
     items(pending.cards, key = { "card-${it.itemId}" }) { card ->
-        InboxCard(card = card, actions = actions, onPick = onPick)
+        InboxCard(card = card, actions = actions, onPick = onPick, modifier = Modifier.animateItem())
     }
 }
 

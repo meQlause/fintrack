@@ -1,7 +1,7 @@
 package com.meqlause.fintrack.core.designsystem.theme
 
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Immutable
 
@@ -13,4 +13,4 @@ data class MotionToken(
 )
 
 // DOC-08: components animate with the token, so the system "remove animations" setting shortens them too
-internal fun <T> MotionToken.toSpec(): AnimationSpec<T> = tween(durationMillis = durationMillis, easing = easing)
+internal fun <T> MotionToken.toSpec(): FiniteAnimationSpec<T> = tween(durationMillis = durationMillis, easing = easing)

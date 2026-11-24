@@ -43,6 +43,7 @@ dependencies {
     testImplementation(libs.roborazzi.core)
     debugRuntimeOnly(libs.compose.ui.test.manifest)
     implementation(libs.compose.animation)
+    implementation(libs.compose.animation.core)
     implementation(libs.compose.runtime.saveable)
     api(libs.compose.runtime)
     implementation(libs.compose.ui.unit)

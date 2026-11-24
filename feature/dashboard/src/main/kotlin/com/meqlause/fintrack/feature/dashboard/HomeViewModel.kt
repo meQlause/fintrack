@@ -2,6 +2,7 @@ package com.meqlause.fintrack.feature.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.meqlause.fintrack.core.designsystem.component.UndoWindow
 import com.meqlause.fintrack.core.domain.bills.BillsCard
 import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.core.domain.usecase.ObserveBillsCardUseCase
@@ -122,7 +123,7 @@ internal class HomeViewModel
             drawer.value = null
         }
 
-        // FR-039: deletes at once; the removed shortcut can be put back for five seconds
+        // FR-039: deletes at once; the removed shortcut can be put back for the undo window
         fun deleteShortcut(quickEntryId: QuickEntryId) {
             viewModelScope.launch {
                 val entry =
@@ -133,7 +134,7 @@ internal class HomeViewModel
                 undoJob?.cancel()
                 undoJob =
                     viewModelScope.launch {
-                        delay(UNDO_WINDOW_MS)
+                        delay(UndoWindow.MILLIS)
                         removedShortcut.value = null
                     }
             }
@@ -149,6 +150,5 @@ internal class HomeViewModel
 
         private companion object {
             const val STOP_TIMEOUT_MS = 5_000L
-            const val UNDO_WINDOW_MS = 5_000L
         }
     }

@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomSheet
 import com.meqlause.fintrack.core.designsystem.component.LocalSheetPortal
-import com.meqlause.fintrack.core.designsystem.component.UndoSnackbar
+import com.meqlause.fintrack.core.designsystem.component.UndoSlot
 import com.meqlause.fintrack.core.ui.R as UiR
 
 // FR-030..FR-034, S-04: the add or edit sheet; stateless, so previews and UI tests drive it with plain values
@@ -36,12 +36,11 @@ internal fun EditTransactionScreen(
             FintrackBottomSheet(modifier = modifier) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     EditTransactionSheetContent(state = state, onEvent = onEvent, onClose = onDismiss)
-                    state.removedShortcut?.let {
-                        UndoSnackbar(
-                            message = stringResource(UiR.string.shortcut_deleted),
-                            onUndo = { onEvent(EditTransactionEvent.ShortcutRestored) },
-                        )
-                    }
+                    UndoSlot(
+                        removed = state.removedShortcut,
+                        message = stringResource(UiR.string.shortcut_deleted),
+                        onUndo = { onEvent(EditTransactionEvent.ShortcutRestored) },
+                    )
                 }
             }
         }

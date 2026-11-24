@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.meqlause.fintrack.core.designsystem.component.FintrackBarItem
+import com.meqlause.fintrack.core.designsystem.component.FintrackBarVisibility
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomBar
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomBarCallbacks
 import com.meqlause.fintrack.core.designsystem.component.LocalSheetCover
@@ -76,7 +78,7 @@ private fun FintrackShell(
     }
 }
 
-// DOC-09: the bottom bar, hidden on other screens and while a sheet covers the tab it floats over
+// DOC-09: the bottom bar slides away on other screens and while a sheet covers the tab it floats over
 @Composable
 private fun BoxScope.ShellBar(
     navController: NavHostController,
@@ -84,12 +86,18 @@ private fun BoxScope.ShellBar(
 ) {
     val entry by navController.currentBackStackEntryAsState()
     val destination = entry?.destination
-    if (MainTab.showsBarOn(destination) && !isCovered) {
+    // DOC-09: while the bar slides out the destination has no tab, so the bubble keeps the last tab it sat on
+    val lastTab = remember { mutableIntStateOf(0) }
+    val tabIndex = MainTab.entries.indexOfFirst { it.isSelectedIn(destination) }
+    if (tabIndex >= 0) lastTab.intValue = tabIndex
+    FintrackBarVisibility(
+        visible = MainTab.showsBarOn(destination) && !isCovered,
+        modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding(),
+    ) {
         FintrackBottomBar(
             items = MainTab.entries.map { FintrackBarItem(stringResource(it.labelRes), it.iconRes) },
-            selectedIndex = MainTab.entries.indexOfFirst { it.isSelectedIn(destination) },
+            selectedIndex = lastTab.intValue,
             callbacks = barCallbacks(navController),
-            modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding(),
         )
     }
 }

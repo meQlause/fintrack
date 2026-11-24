@@ -4,9 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -21,8 +18,12 @@ import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.BackAction
 import com.meqlause.fintrack.core.designsystem.component.HeaderTitle
 import com.meqlause.fintrack.core.designsystem.component.ScreenBackHeader
+import com.meqlause.fintrack.core.designsystem.component.UndoSlot
+import com.meqlause.fintrack.core.designsystem.component.UndoWindow
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import kotlinx.coroutines.delay
 
 // S-07: Kotak Masuk; the list, the Selesai section and the undo bar are drawn from one state
 @Composable
@@ -32,11 +33,10 @@ internal fun InboxScreen(
     modifier: Modifier = Modifier,
     showInfo: Boolean = true,
 ) {
-    val snackbar = remember { SnackbarHostState() }
     var picker by remember { mutableStateOf<InboxPicker?>(null) }
     var infoShown by rememberSaveable { mutableStateOf(showInfo) }
     var resolvedOpen by rememberSaveable { mutableStateOf(false) }
-    UndoEffect(state.undoItemId, snackbar, actions)
+    UndoEffect(state.undoItemId, actions)
     val panels =
         InboxPanels(
             infoShown = infoShown,
@@ -48,7 +48,7 @@ internal fun InboxScreen(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = FintrackTheme.colors.surfaces.background,
-        snackbarHost = { SnackbarHost(snackbar) },
+        snackbarHost = { InboxUndo(undoItemId = state.undoItemId, actions = actions) },
     ) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
             InboxHeader(
@@ -59,6 +59,20 @@ internal fun InboxScreen(
         }
     }
     picker?.let { InboxPickerDrawer(picker = it, state = state, actions = actions, onClose = { picker = null }) }
+}
+
+// FR-087: the undo bar under the list; a new dismissal restarts its countdown
+@Composable
+private fun InboxUndo(
+    undoItemId: Long?,
+    actions: InboxActions,
+) {
+    UndoSlot(
+        removed = undoItemId,
+        message = stringResource(R.string.inbox_undo_message),
+        onUndo = actions.onUndo,
+        modifier = Modifier.padding(horizontal = FintrackScreenSizes.screenGutter),
+    )
 }
 
 @Composable
@@ -84,18 +98,15 @@ private fun InboxHeader(
     )
 }
 
-// FR-087: the undo bar stays for the snackbar's time; Batalkan restores the dismissed item
+// FR-087: the undo window ends by itself; a new dismissal restarts it, and Urungkan restores the item
 @Composable
 private fun UndoEffect(
     undoItemId: Long?,
-    snackbar: SnackbarHostState,
     actions: InboxActions,
 ) {
-    val message = stringResource(R.string.inbox_undo_message)
-    val label = stringResource(R.string.inbox_undo_action)
     LaunchedEffect(undoItemId) {
         if (undoItemId == null) return@LaunchedEffect
-        val result = snackbar.showSnackbar(message = message, actionLabel = label, withDismissAction = false)
-        if (result == SnackbarResult.ActionPerformed) actions.onUndo() else actions.onUndoShown()
+        delay(UndoWindow.MILLIS)
+        actions.onUndoShown()
     }
 }

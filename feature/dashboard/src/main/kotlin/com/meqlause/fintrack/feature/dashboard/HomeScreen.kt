@@ -71,7 +71,6 @@ private fun HomeBody(
             callbacks = callbacks,
             modifier = gutter.padding(top = FintrackTheme.spacing.block),
         )
-        HomeShortcutUndo(state = state, callbacks = callbacks)
         Spacer(modifier = Modifier.height(FintrackScreenSizes.screenBottom))
     }
 }

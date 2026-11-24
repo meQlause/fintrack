@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.meqlause.fintrack.core.designsystem.component.UndoWindow
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
 import com.meqlause.fintrack.core.domain.repository.WalletRepository
@@ -24,10 +25,9 @@ import java.time.Clock
 import java.time.Instant
 import javax.inject.Inject
 
-private const val UNDO_WINDOW_MILLIS = 5_000L
 private const val STOP_TIMEOUT_MILLIS = 5_000L
 
-// FR-034, FR-035, FR-038, S-06: drives the detail; a delete is stored only after the 5 s undo window passes
+// FR-034, FR-035, FR-038, S-06: drives the detail; a delete is stored only after the undo window passes
 @HiltViewModel
 internal class TransactionDetailViewModel
     @Inject
@@ -75,7 +75,7 @@ internal class TransactionDetailViewModel
             deletePending.value = true
             deleteJob =
                 viewModelScope.launch {
-                    delay(UNDO_WINDOW_MILLIS)
+                    delay(UndoWindow.MILLIS)
                     transactions.delete(transactionId)
                     closed.value = true
                 }

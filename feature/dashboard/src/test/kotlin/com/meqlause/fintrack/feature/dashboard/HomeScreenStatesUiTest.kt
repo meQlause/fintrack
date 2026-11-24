@@ -66,10 +66,10 @@ class HomeScreenStatesUiTest : HomeComposeTestBase() {
         composeRule.onNodeWithContentDescription(label(R.string.home_summary_open)).assertIsDisplayed()
     }
 
-    // FR-039: a deleted shortcut shows the undo strip until its window passes
+    // FR-039: a deleted shortcut shows the undo strip under the manager list until its window passes
     @Test
     fun givenRemovedShortcutWhenShownThenUndoStripIsRendered() {
-        setHome(HomeFixtures.rich().withRemoved(HomeFixtures.quickEntry()))
+        setHome(HomeFixtures.rich(drawer = HomeDrawer.SHORTCUTS).withRemoved(HomeFixtures.quickEntry()))
 
         composeRule.onAllNodesWithText(label(UiR.string.shortcut_deleted)).assertCountEquals(1)
     }

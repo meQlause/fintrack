@@ -19,7 +19,6 @@
     <string name="inbox_pair_confirm">Catat sebagai Transfer</string>
     <string name="inbox_pair_split">Pisah</string>
     <string name="inbox_undo_message">Transaksi diabaikan</string>
-    <string name="inbox_undo_action">Batalkan</string>
     <string name="inbox_back_description">Kembali</string>
     <string name="inbox_picker_wallet">Pilih dompet</string>
     <string name="inbox_picker_target">Pilih dompet tujuan</string>

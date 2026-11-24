@@ -5,6 +5,7 @@ import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNull
+import com.meqlause.fintrack.core.designsystem.component.UndoWindow
 import com.meqlause.fintrack.core.model.Audit
 import com.meqlause.fintrack.core.model.CategoryId
 import com.meqlause.fintrack.core.model.Money
@@ -134,7 +135,7 @@ class HomeViewModelActionsTest : HomeViewModelTestBase() {
             collector.cancel()
         }
 
-    // FR-039: the undo offer lapses after five seconds
+    // FR-039: the undo offer lapses after the shared undo window
     @Test
     fun givenShortcutDeletedWhenWindowPassesThenUndoIsGone() =
         runTest {
@@ -144,7 +145,7 @@ class HomeViewModelActionsTest : HomeViewModelTestBase() {
             advanceUntilIdle()
 
             viewModel.deleteShortcut(itemKey)
-            advanceTimeBy(UNDO_WINDOW_MS)
+            advanceTimeBy(UndoWindow.MILLIS)
             advanceUntilIdle()
             assertThat((viewModel.state.value as HomeUiState.Success).removedShortcut).isNull()
             collector.cancel()
@@ -190,8 +191,4 @@ class HomeViewModelActionsTest : HomeViewModelTestBase() {
             sortOrder = sortOrder,
             audit = Audit(createdAt = fixedNow, updatedAt = fixedNow),
         )
-
-    private companion object {
-        const val UNDO_WINDOW_MS = 5_000L
-    }
 }

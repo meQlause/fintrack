@@ -20,7 +20,7 @@ import com.meqlause.fintrack.core.designsystem.component.FintrackBottomSheet
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
 import com.meqlause.fintrack.core.designsystem.component.LocalSheetPortal
 import com.meqlause.fintrack.core.designsystem.component.SheetHeader
-import com.meqlause.fintrack.core.designsystem.component.UndoSnackbar
+import com.meqlause.fintrack.core.designsystem.component.UndoSlot
 import com.meqlause.fintrack.core.designsystem.icon.IconBox
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
 import com.meqlause.fintrack.core.designsystem.icon.IconLook
@@ -78,13 +78,12 @@ private fun DetailContent(
             TransactionDetailBody(detail = detail, actions = actions)
         }
     }
-    if (state.isDeletePending) {
-        UndoSnackbar(
-            message = stringResource(R.string.transaction_detail_deleted),
-            onUndo = actions.onUndo,
-            modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
-        )
-    }
+    UndoSlot(
+        removed = state.isDeletePending.takeIf { it },
+        message = stringResource(R.string.transaction_detail_deleted),
+        onUndo = actions.onUndo,
+        modifier = Modifier.padding(top = FintrackTheme.spacing.medium),
+    )
 }
 
 // FR-034, S-06: the amount and the facts of one transaction, with its three actions underneath
