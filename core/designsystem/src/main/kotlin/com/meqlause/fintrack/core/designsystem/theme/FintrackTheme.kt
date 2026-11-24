@@ -23,6 +23,13 @@ object FintrackTheme {
     internal val localMotion = staticCompositionLocalOf { FintrackMotion() }
     internal val localSizes = staticCompositionLocalOf { FintrackSizes() }
     internal val localAlphas = staticCompositionLocalOf { FintrackAlphas() }
+    internal val localDark = staticCompositionLocalOf { false }
+
+    // FR-120: whether the theme being shown is the dark one, whatever the night mode of the device says
+    val isDark: Boolean
+        @Composable
+        @ReadOnlyComposable
+        get() = localDark.current
 
     val colors: FintrackColors
         @Composable
@@ -81,6 +88,7 @@ object FintrackTheme {
             localMotion provides motion,
             localSizes provides sizes,
             localAlphas provides alphas,
+            localDark provides darkTheme,
         ) {
             MaterialTheme(
                 colorScheme = colors.toColorScheme(isDark = darkTheme),

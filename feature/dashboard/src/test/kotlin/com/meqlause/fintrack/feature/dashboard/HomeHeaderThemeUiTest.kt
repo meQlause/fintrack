@@ -9,17 +9,29 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-// FR-120: with the system in night mode the header offers the sun, and its tap reports the dark state
+// FR-120: the header toggle follows the theme the app shows, not the night mode of the device
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(qualifiers = "w411dp-h720dp-night")
 class HomeHeaderThemeUiTest : HomeComposeTestBase() {
-    // FR-120: the theme button in night mode reports that the screen is dark
+    // FR-120: the device is in night mode but the app shows the light theme, so the button reports light
     @Test
-    fun givenNightModeWhenThemeTappedThenCallbackReportsDark() {
+    fun givenNightDeviceWithLightAppThemeWhenThemeTappedThenCallbackReportsLight() {
         var reported: Boolean? = null
         val callbacks = HomeCallbacks(screen = HomeCallbacks.Screen(onToggleTheme = { reported = it }))
-        setHome(HomeFixtures.rich(), callbacks)
+        setHome(HomeFixtures.rich(), callbacks, darkTheme = false)
+
+        composeRule.onNodeWithContentDescription(label(R.string.home_theme_description)).performClick()
+
+        assertEquals(false, reported)
+    }
+
+    // FR-120: the app shows the dark theme, so the button reports dark
+    @Test
+    fun givenDarkAppThemeWhenThemeTappedThenCallbackReportsDark() {
+        var reported: Boolean? = null
+        val callbacks = HomeCallbacks(screen = HomeCallbacks.Screen(onToggleTheme = { reported = it }))
+        setHome(HomeFixtures.rich(), callbacks, darkTheme = true)
 
         composeRule.onNodeWithContentDescription(label(R.string.home_theme_description)).performClick()
 
