@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,13 +22,38 @@ import com.meqlause.fintrack.core.designsystem.R
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 
-// DOC-08: modal sheet panel with a drag handle and the large top radius; the host owns the scrim and dismissal
+// DOC-08: modal sheet with a drag handle and the large top radius; under a SheetPortal it is drawn over the whole
+// screen with a scrim and tapping the scrim calls onDismiss, otherwise it stays where it is declared
 @Composable
 fun FintrackBottomSheet(
     modifier: Modifier = Modifier,
+    onDismiss: () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ReportSheetOpen()
+    val portal = LocalSheetPortal.current
+    if (portal == null) {
+        SheetPanel(modifier = modifier, content = content)
+        return
+    }
+    val entry = remember { SheetEntry(modifier, onDismiss, content) }
+    SideEffect {
+        entry.modifier = modifier
+        entry.dismiss = onDismiss
+        entry.content = content
+    }
+    DisposableEffect(portal) {
+        portal.open(entry)
+        onDispose { portal.close(entry) }
+    }
+}
+
+// DOC-08: the panel itself, the drag handle over the body, on the background colour
+@Composable
+internal fun SheetPanel(
+    modifier: Modifier,
+    content: @Composable ColumnScope.() -> Unit,
+) {
     Column(
         modifier =
             modifier

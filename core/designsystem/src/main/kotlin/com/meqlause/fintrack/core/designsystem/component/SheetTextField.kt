@@ -22,9 +22,20 @@ fun SheetTextField(
     placeholder: String,
     modifier: Modifier = Modifier,
 ) {
+    val style = FintrackScreenText.style(size = 15f, weight = 400)
+    SheetInput(value = value, onValueChange = onValueChange, look = InputLook(placeholder, style), modifier = modifier)
+}
+
+// DOC-08: the shared body of the sheet inputs; the look carries the placeholder, the text style and the keyboard
+@Composable
+internal fun SheetInput(
+    value: String,
+    onValueChange: (String) -> Unit,
+    look: InputLook,
+    modifier: Modifier = Modifier,
+) {
     val colors = FintrackTheme.colors
     val shape = FintrackScreenSizes.buttonCorner
-    val style = FintrackScreenText.style(size = 15f, weight = 400)
     Box(
         modifier =
             modifier
@@ -36,11 +47,6 @@ fun SheetTextField(
                 .padding(horizontal = FintrackScreenSizes.fieldPadding),
         contentAlignment = Alignment.CenterStart,
     ) {
-        ScreenInput(
-            value = value,
-            onValueChange = onValueChange,
-            look = InputLook(placeholder = placeholder, style = style),
-            modifier = Modifier.fillMaxWidth(),
-        )
+        ScreenInput(value = value, onValueChange = onValueChange, look = look, modifier = Modifier.fillMaxWidth())
     }
 }

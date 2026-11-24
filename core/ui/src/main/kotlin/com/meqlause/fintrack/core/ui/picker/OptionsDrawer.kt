@@ -1,26 +1,15 @@
 package com.meqlause.fintrack.core.ui.picker
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
-import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
+import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.ui.R
 import com.meqlause.fintrack.core.ui.UiPreviewCanvas
 
-// S-18: single-choice options drawer (loan due date, FR-158); picking closes it via the caller
+// S-18, DOC-08: single-choice options drawer, one card of option rows; picking closes it via the caller
 @Composable
 fun OptionsDrawer(
     title: String,
@@ -29,48 +18,16 @@ fun OptionsDrawer(
     modifier: Modifier = Modifier,
 ) {
     PickerDrawer(title = title, onClose = actions.onClose, modifier = modifier) {
-        choices.options.forEach { option ->
-            OptionItem(
-                option = option,
-                isSelected = option.optionKey == choices.selectedKey,
-                onClick = { actions.onPick(option) },
-            )
-        }
-    }
-}
-
-@Composable
-private fun OptionItem(
-    option: PickerOption,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-) {
-    val colors = FintrackTheme.colors
-    Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .heightIn(min = FintrackTheme.sizes.formRowHeight)
-                .selectable(selected = isSelected, role = Role.RadioButton, onClick = onClick)
-                .padding(vertical = FintrackTheme.spacing.xSmall),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = option.label,
-                style = FintrackTheme.typography.titleMedium,
-                color = colors.texts.onSurface,
-            )
-            option.hint?.let { hint ->
-                Text(
-                    text = hint,
-                    style = FintrackTheme.typography.bodyMedium,
-                    color = colors.texts.onSurfaceVariant,
+        ScreenCard {
+            choices.options.forEachIndexed { index, option ->
+                OptionRow(
+                    option = option,
+                    isSelected = option.optionKey == choices.selectedKey,
+                    showDivider = index > 0,
+                    onClick = { actions.onPick(option) },
                 )
             }
         }
-        RadioButton(selected = isSelected, onClick = null)
     }
 }
 

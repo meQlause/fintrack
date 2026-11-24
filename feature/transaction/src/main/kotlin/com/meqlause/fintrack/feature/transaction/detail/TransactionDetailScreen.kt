@@ -10,6 +10,7 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomSheet
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
+import com.meqlause.fintrack.core.designsystem.component.LocalSheetPortal
 import com.meqlause.fintrack.core.designsystem.component.SheetHeader
 import com.meqlause.fintrack.core.designsystem.component.UndoSnackbar
 import com.meqlause.fintrack.core.designsystem.icon.IconBox
@@ -35,20 +37,23 @@ internal fun TransactionDetailScreen(
     actions: TransactionDetailCallbacks,
     modifier: Modifier = Modifier,
 ) {
-    ModalBottomSheet(
-        onDismissRequest = actions.onBack,
-        sheetState = rememberBottomSheetState(SheetValue.Hidden, setOf(SheetValue.Hidden, SheetValue.Expanded)),
-        dragHandle = null,
-        containerColor = Color.Transparent,
-    ) {
-        FintrackBottomSheet(modifier = modifier) {
-            SheetHeader(title = stringResource(R.string.transaction_detail_title), onClose = actions.onBack) {
-                ShortcutChip(
-                    onClick = actions.onShortcuts,
-                    modifier = Modifier.padding(end = FintrackTheme.spacing.xxSmall),
-                )
+    // DOC-08: this screen is its own modal window, so its sheets and drawers stay inside it
+    CompositionLocalProvider(LocalSheetPortal provides null) {
+        ModalBottomSheet(
+            onDismissRequest = actions.onBack,
+            sheetState = rememberBottomSheetState(SheetValue.Hidden, setOf(SheetValue.Hidden, SheetValue.Expanded)),
+            dragHandle = null,
+            containerColor = Color.Transparent,
+        ) {
+            FintrackBottomSheet(modifier = modifier) {
+                SheetHeader(title = stringResource(R.string.transaction_detail_title), onClose = actions.onBack) {
+                    ShortcutChip(
+                        onClick = actions.onShortcuts,
+                        modifier = Modifier.padding(end = FintrackTheme.spacing.xxSmall),
+                    )
+                }
+                DetailContent(state = state, actions = actions)
             }
-            DetailContent(state = state, actions = actions)
         }
     }
 }

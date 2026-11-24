@@ -7,10 +7,12 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomSheet
+import com.meqlause.fintrack.core.designsystem.component.LocalSheetPortal
 import com.meqlause.fintrack.core.designsystem.component.UndoSnackbar
 import com.meqlause.fintrack.core.ui.R as UiR
 
@@ -23,20 +25,23 @@ internal fun EditTransactionScreen(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = rememberBottomSheetState(SheetValue.Hidden, setOf(SheetValue.Hidden, SheetValue.Expanded)),
-        dragHandle = null,
-        containerColor = Color.Transparent,
-    ) {
-        FintrackBottomSheet(modifier = modifier) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                EditTransactionSheetContent(state = state, onEvent = onEvent, onClose = onDismiss)
-                state.removedShortcut?.let {
-                    UndoSnackbar(
-                        message = stringResource(UiR.string.shortcut_deleted),
-                        onUndo = { onEvent(EditTransactionEvent.ShortcutRestored) },
-                    )
+    // DOC-08: these screens are their own modal window, so their sheets and drawers stay inside it
+    CompositionLocalProvider(LocalSheetPortal provides null) {
+        ModalBottomSheet(
+            onDismissRequest = onDismiss,
+            sheetState = rememberBottomSheetState(SheetValue.Hidden, setOf(SheetValue.Hidden, SheetValue.Expanded)),
+            dragHandle = null,
+            containerColor = Color.Transparent,
+        ) {
+            FintrackBottomSheet(modifier = modifier) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    EditTransactionSheetContent(state = state, onEvent = onEvent, onClose = onDismiss)
+                    state.removedShortcut?.let {
+                        UndoSnackbar(
+                            message = stringResource(UiR.string.shortcut_deleted),
+                            onUndo = { onEvent(EditTransactionEvent.ShortcutRestored) },
+                        )
+                    }
                 }
             }
         }

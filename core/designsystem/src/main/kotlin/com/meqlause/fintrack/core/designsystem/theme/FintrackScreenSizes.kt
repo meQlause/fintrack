@@ -107,6 +107,8 @@ object FintrackScreenSizes {
     val checkBox: Dp = Dp(value = 20f)
     val checkBoxBorder: Dp = Dp(value = 2f)
     val checkGlyph: Dp = Dp(value = 13f)
+    val radioOuter: Dp = Dp(value = 22f)
+    val radioDot: Dp = Dp(value = 10f)
     val emptyTop: Dp = Dp(value = 56f)
     val emptyPill: Dp = Dp(value = 36f)
 }

@@ -12,9 +12,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.FintrackBottomSheet
+import com.meqlause.fintrack.core.designsystem.component.LocalSheetPortal
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.loan.R
 
@@ -55,11 +57,14 @@ private fun LoanSheetHost(
     onEvent: (LoanDetailEvent) -> Unit,
 ) {
     val sheet = state.overlay.sheet ?: return
-    ModalBottomSheet(onDismissRequest = { onEvent(LoanDetailEvent.DismissSheet) }) {
-        FintrackBottomSheet {
-            when (sheet) {
-                LoanDetailSheet.REPAYMENT -> LoanRepaymentSheet(state = state, onEvent = onEvent)
-                LoanDetailSheet.DUE_DATE -> LoanDueSheet(onEvent = onEvent)
+    // DOC-08: the modal window holds this sheet itself, so it is not drawn through the sheet portal
+    CompositionLocalProvider(LocalSheetPortal provides null) {
+        ModalBottomSheet(onDismissRequest = { onEvent(LoanDetailEvent.DismissSheet) }) {
+            FintrackBottomSheet {
+                when (sheet) {
+                    LoanDetailSheet.REPAYMENT -> LoanRepaymentSheet(state = state, onEvent = onEvent)
+                    LoanDetailSheet.DUE_DATE -> LoanDueSheet(onEvent = onEvent)
+                }
             }
         }
     }

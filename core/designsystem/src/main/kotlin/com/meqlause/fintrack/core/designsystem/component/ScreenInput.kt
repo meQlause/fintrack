@@ -37,6 +37,7 @@ fun ScreenInput(
     }
     BasicTextField(
         state = state,
+        keyboardOptions = look.keyboardOptions,
         textStyle = look.style.copy(color = colors.texts.onSurface),
         cursorBrush = SolidColor(colors.brands.primary),
         modifier = modifier,

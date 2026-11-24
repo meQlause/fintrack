@@ -22,7 +22,10 @@ fun PickerDrawer(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    FintrackBottomSheet(modifier = modifier.heightIn(max = FintrackTheme.sizes.drawerMaxHeight)) {
+    FintrackBottomSheet(
+        modifier = modifier.heightIn(max = FintrackTheme.sizes.drawerMaxHeight),
+        onDismiss = onClose,
+    ) {
         SheetHeader(title = title, onClose = onClose)
         Column(
             modifier = Modifier.weight(1f, fill = false).fillMaxWidth().verticalScroll(rememberScrollState()),
