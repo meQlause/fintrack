@@ -7,6 +7,7 @@ import com.meqlause.fintrack.core.model.Category
 import com.meqlause.fintrack.core.model.HistoryView
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.model.Wallet
+import java.time.LocalDate
 import java.time.YearMonth
 
 // FR-036, FR-037, S-05: everything the Riwayat screen draws; the screen holds no state of its own
@@ -33,6 +34,8 @@ internal data class HistoryUiState(
     val hasRecords: Boolean get() = status.hasRecords
     val isLoaded: Boolean get() = status.isLoaded
     val activeMonths: Set<YearMonth> get() = status.activeMonths
+    val activeDays: Set<LocalDate> get() = status.days.activeDays
+    val today: LocalDate? get() = status.days.today
     val todayIndex: Int? get() = status.todayIndex
 }
 
@@ -44,12 +47,20 @@ internal data class HistoryLists(
     val groups: List<HistoryDayGroup> = emptyList(),
 )
 
-// FR-036: the month totals, whether it has records or loaded, its active months and where today falls
+// S-05: the calendar days that have transactions and the day it is today, for the period picker
+@Immutable
+internal data class HistoryDays(
+    val activeDays: Set<LocalDate> = emptySet(),
+    val today: LocalDate? = null,
+)
+
+// FR-036: the month totals, whether it has records or loaded, its active months and days, today and where it falls
 @Immutable
 internal data class HistoryStatus(
     val totals: HistoryTotals = HistoryTotals(),
     val hasRecords: Boolean = false,
     val isLoaded: Boolean = false,
     val activeMonths: Set<YearMonth> = emptySet(),
+    val days: HistoryDays = HistoryDays(),
     val todayIndex: Int? = null,
 )

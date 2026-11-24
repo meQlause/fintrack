@@ -102,6 +102,7 @@ internal class HistoryViewModel
                 hasRecords = content.hasRecords,
                 isLoaded = true,
                 activeMonths = data.transactions.map { monthOf(it) }.toSet(),
+                days = HistoryDays(activeDays = data.transactions.map { it.dateIn(clock.zone) }.toSet(), today = today),
                 todayIndex = if (today in period.startDate..period.endDate) daysSince(period, today) else null,
             )
         }

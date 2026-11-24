@@ -28,6 +28,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.time.Clock
 import java.time.Instant
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
 
@@ -126,6 +127,16 @@ class HistoryViewModelTest {
         assertEquals(18, picked.filter.dayOfMonth)
         assertEquals(null, cleared.filter.dayOfMonth)
     }
+
+    // S-05: the period picker marks the days that have transactions and knows today
+    @Test
+    fun givenExpenseOn18thWhenLoadedThenActiveDaysAndTodayAreExposed() =
+        runTest {
+            transactions.insert(expense(note = "Makan", merchant = "", dayOfMonth = 18))
+            val state = viewModel().state.first { it.isLoaded }
+            assertEquals(setOf(LocalDate.of(2026, 11, 18)), state.activeDays)
+            assertEquals(LocalDate.of(2026, 11, 20), state.today)
+        }
 
     // FR-060: the statistics view totals the picked month for the picked kind of money
     @Test

@@ -59,7 +59,7 @@ class FintrackSizes {
     val dragHandleWidth: Dp = Dp(value = 36f)
     val dragHandleHeight: Dp = Dp(value = 4f)
     val snackbarHeight: Dp = Dp(value = 44f)
-    val drawerMaxHeight: Dp = Dp(value = 640f)
+    val drawerMaxHeight: Dp = Dp(value = 720f)
     val shortcutTileWidth: Dp = Dp(value = 98f)
     val monthPillHeight: Dp = Dp(value = 36f)
     val monthSwipeThreshold: Dp = Dp(value = 64f)

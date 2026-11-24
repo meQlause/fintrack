@@ -6,6 +6,7 @@ import com.meqlause.fintrack.core.model.HistoryView
 internal fun HistorySelection.reduce(event: HistoryEvent): HistorySelection =
     when (event) {
         is HistoryEvent.MonthPicked,
+        is HistoryEvent.MonthShown,
         HistoryEvent.PreviousMonth,
         HistoryEvent.NextMonth,
         is HistoryEvent.YearShifted,
@@ -15,6 +16,7 @@ internal fun HistorySelection.reduce(event: HistoryEvent): HistorySelection =
         is HistoryEvent.WalletPicked,
         is HistoryEvent.CategoryPicked,
         is HistoryEvent.DayPicked,
+        HistoryEvent.AllDaysPicked,
         is HistoryEvent.QueryChanged,
         -> reduceFilter(event)
 
@@ -29,11 +31,30 @@ internal fun HistorySelection.reduce(event: HistoryEvent): HistorySelection =
 // FR-036: the month in view, chosen or stepped, and the year the month picker shows
 private fun HistorySelection.reduceMonth(event: HistoryEvent): HistorySelection =
     when (event) {
-        is HistoryEvent.MonthPicked -> copy(month = event.month).withSheet { copy(sheet = null) }
-        HistoryEvent.PreviousMonth -> copy(month = month.minusMonths(1L))
-        HistoryEvent.NextMonth -> copy(month = month.plusMonths(1L))
-        is HistoryEvent.YearShifted -> withSheet { copy(pickerYear = pickerYear + event.delta) }
-        else -> this
+        is HistoryEvent.MonthPicked -> {
+            copy(month = event.month).withSheet { copy(sheet = null) }
+        }
+
+        is HistoryEvent.MonthShown -> {
+            copy(month = event.month, filter = filter.copy(dayOfMonth = null))
+                .withSheet { copy(pickerYear = event.month.year) }
+        }
+
+        HistoryEvent.PreviousMonth -> {
+            copy(month = month.minusMonths(1L))
+        }
+
+        HistoryEvent.NextMonth -> {
+            copy(month = month.plusMonths(1L))
+        }
+
+        is HistoryEvent.YearShifted -> {
+            withSheet { copy(pickerYear = pickerYear + event.delta) }
+        }
+
+        else -> {
+            this
+        }
     }
 
 // FR-037: the type, wallet, category, day and text filters; picking from a sheet closes it
@@ -54,6 +75,10 @@ private fun HistorySelection.reduceFilter(event: HistoryEvent): HistorySelection
         is HistoryEvent.DayPicked -> {
             val picked = event.dayOfMonth.takeIf { it != filter.dayOfMonth }
             copy(filter = filter.copy(dayOfMonth = picked)).withSheet { copy(sheet = null) }
+        }
+
+        HistoryEvent.AllDaysPicked -> {
+            copy(filter = filter.copy(dayOfMonth = null)).withSheet { copy(sheet = null) }
         }
 
         is HistoryEvent.QueryChanged -> {

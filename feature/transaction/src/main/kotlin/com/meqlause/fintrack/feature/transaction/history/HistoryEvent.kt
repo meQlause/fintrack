@@ -12,6 +12,14 @@ internal sealed interface HistoryEvent {
         val month: YearMonth,
     ) : HistoryEvent
 
+    // S-05: a month tile of the period picker; the sheet stays open to show the days of that month
+    data class MonthShown(
+        val month: YearMonth,
+    ) : HistoryEvent
+
+    // S-05: "Semua tanggal" of the period picker: the whole month, no day filter
+    data object AllDaysPicked : HistoryEvent
+
     data object PreviousMonth : HistoryEvent
 
     data object NextMonth : HistoryEvent

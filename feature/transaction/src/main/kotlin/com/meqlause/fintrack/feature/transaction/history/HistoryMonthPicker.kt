@@ -1,75 +1,103 @@
 package com.meqlause.fintrack.feature.transaction.history
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import com.meqlause.fintrack.core.designsystem.component.FintrackChip
+import androidx.compose.ui.semantics.Role
 import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
+import com.meqlause.fintrack.core.designsystem.component.ScreenPrimaryButton
+import com.meqlause.fintrack.core.designsystem.theme.FintrackCalendarSizes
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.feature.transaction.R
-import java.time.YearMonth
+import com.meqlause.fintrack.core.designsystem.R as DesignR
 
-private const val MONTHS_PER_ROW = 4
+private const val HALF_TURN = 180f
 
-// BR-010, FR-036, S-05: the month and year picker; the day of the month is picked from the Tanggal chip
+// BR-010, FR-036, S-05: the period picker, a year row, the month tiles, the day grid and "Semua tanggal"
 @Composable
 internal fun HistoryMonthPicker(
     state: HistoryUiState,
     onEvent: (HistoryEvent) -> Unit,
 ) {
-    val names = stringArrayResource(R.array.history_month_names).toList()
+    val monthName = stringArrayResource(R.array.history_month_names)[state.month.monthValue - 1]
     PickerDrawer(
         title = stringResource(R.string.history_month_picker_title),
         onClose = { onEvent(HistoryEvent.SheetDismissed) },
     ) {
-        YearRow(year = state.pickerYear, onShift = { onEvent(HistoryEvent.YearShifted(it)) })
-        names.chunked(MONTHS_PER_ROW).forEachIndexed { row, labels ->
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top = FintrackTheme.spacing.small),
-                horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-            ) {
-                labels.forEachIndexed { column, label ->
-                    val candidate = YearMonth.of(state.pickerYear, row * MONTHS_PER_ROW + column + 1)
-                    FintrackChip(
-                        label = label,
-                        selected = candidate == state.month,
-                        onClick = { onEvent(HistoryEvent.MonthPicked(candidate)) },
-                        modifier = Modifier.weight(1f),
-                    )
-                }
-            }
-        }
+        YearRow(
+            year = state.pickerYear,
+            canAdvance = state.today?.let { state.pickerYear < it.year } ?: true,
+            onShift = { onEvent(HistoryEvent.YearShifted(it)) },
+        )
+        HistoryMonthTiles(state = state, onEvent = onEvent)
+        HistoryDayCalendar(state = state, onEvent = onEvent)
+        ScreenPrimaryButton(
+            text = stringResource(R.string.history_all_days, monthName, state.month.year),
+            onClick = { onEvent(HistoryEvent.AllDaysPicked) },
+            modifier = Modifier.padding(top = FintrackTheme.spacing.large),
+        )
+    }
+}
+
+// S-05: the chosen year between two chevrons; the next one is disabled once the year is the current one
+@Composable
+private fun YearRow(
+    year: Int,
+    canAdvance: Boolean,
+    onShift: (Int) -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = FintrackTheme.spacing.small),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        YearChevron(description = R.string.history_year_previous, turn = HALF_TURN, enabled = true) { onShift(-1) }
+        Text(
+            text = year.toString(),
+            style = FintrackScreenText.style(size = 16f, weight = 700),
+            color = FintrackTheme.colors.texts.onSurface,
+        )
+        YearChevron(description = R.string.history_year_next, turn = 0f, enabled = canAdvance) { onShift(1) }
     }
 }
 
 @Composable
-private fun YearRow(
-    year: Int,
-    onShift: (Int) -> Unit,
+private fun YearChevron(
+    description: Int,
+    turn: Float,
+    enabled: Boolean,
+    onClick: () -> Unit,
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+    Box(
+        modifier =
+            Modifier
+                .size(FintrackCalendarSizes.chevronTarget)
+                .clip(FintrackTheme.shapes.full)
+                .alpha(if (enabled) 1f else FintrackCalendarSizes.disabledAlpha)
+                .clickable(enabled = enabled, role = Role.Button, onClick = onClick),
+        contentAlignment = Alignment.Center,
     ) {
-        TextButton(onClick = { onShift(-1) }) {
-            Text(text = stringResource(R.string.history_year_previous))
-        }
-        Text(
-            text = year.toString(),
-            style = FintrackTheme.typography.titleMedium,
-            color = FintrackTheme.colors.texts.onSurface,
+        Icon(
+            painter = painterResource(DesignR.drawable.ic_chevron_right),
+            contentDescription = stringResource(description),
+            tint = FintrackTheme.colors.texts.onSurface,
+            modifier = Modifier.size(FintrackTheme.sizes.iconSmall).rotate(turn),
         )
-        TextButton(onClick = { onShift(1) }) {
-            Text(text = stringResource(R.string.history_year_next))
-        }
     }
 }

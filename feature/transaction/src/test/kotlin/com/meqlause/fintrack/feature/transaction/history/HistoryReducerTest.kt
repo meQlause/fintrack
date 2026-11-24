@@ -32,6 +32,20 @@ class HistoryReducerTest {
         assertThat(start.reduce(HistoryEvent.YearShifted(-1)).pickerYear).isEqualTo(2025)
     }
 
+    /** S-05: a month tile keeps the picker open on that month and drops the day filter; Semua tanggal closes it. */
+    @Test
+    fun `given the period picker when a month and all days are picked then the filter and sheet follow (S-05)`() {
+        val open = start.reduce(HistoryEvent.DayPicked(18)).reduce(HistoryEvent.SheetOpened(HistorySheet.MONTH))
+        val shown = open.reduce(HistoryEvent.MonthShown(YearMonth.parse("2025-03")))
+        assertThat(shown.month).isEqualTo(YearMonth.parse("2025-03"))
+        assertThat(shown.pickerYear).isEqualTo(2025)
+        assertThat(shown.sheet).isEqualTo(HistorySheet.MONTH)
+        assertThat(shown.filter.dayOfMonth).isNull()
+        val closed = open.reduce(HistoryEvent.AllDaysPicked)
+        assertThat(closed.filter.dayOfMonth).isNull()
+        assertThat(closed.sheet).isNull()
+    }
+
     /** FR-037: each filter event sets its own field and closes a sheet that picked it. */
     @Test
     fun `given filter events when reduced then each sets its own field (FR-037)`() {
