@@ -34,7 +34,7 @@ import com.meqlause.fintrack.core.designsystem.component.ScreenCircleButton
 import com.meqlause.fintrack.core.designsystem.component.ScreenPill
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.designsystem.theme.isLargeText
+import com.meqlause.fintrack.core.designsystem.theme.LargeText
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
 // FR-087, S-07: one pending item; swipe right = Catat, swipe left = Abaikan
@@ -126,7 +126,7 @@ private fun CardActions(
     actions: InboxItemActions,
     onPick: (InboxPicker) -> Unit,
 ) {
-    if (isLargeText()) {
+    if (LargeText.isOn) {
         StackedCardActions(card, actions, onPick)
         return
     }

@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.designsystem.theme.isLargeText
+import com.meqlause.fintrack.core.designsystem.theme.LargeText
 
 // DOC-08: prototype .row, leading mark, a growing text column and trailing content; the divider is its border-top
 @OptIn(ExperimentalFoundationApi::class)
@@ -35,7 +35,7 @@ fun ScreenRow(
         val press =
             style.onClick?.let { Modifier.combinedClickable(onClick = it, onLongClick = style.onLongClick) } ?: Modifier
         val body = Modifier.fillMaxWidth().then(press).padding(style.contentPadding)
-        if (style.stackAtLargeText && isLargeText()) {
+        if (style.stackAtLargeText && LargeText.isOn) {
             StackedRowBody(slots = slots, modifier = body, content = content)
         } else {
             Row(

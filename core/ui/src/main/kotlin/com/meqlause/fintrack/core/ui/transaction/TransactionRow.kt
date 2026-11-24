@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.icon.IconCircle
 import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.designsystem.theme.isLargeText
+import com.meqlause.fintrack.core.designsystem.theme.LargeText
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.ui.R
@@ -42,7 +42,7 @@ fun TransactionRow(
             .fillMaxWidth()
             .clickable(role = Role.Button, onClick = callbacks.onClick)
             .padding(horizontal = FintrackTheme.sizes.rowInset, vertical = FintrackTheme.spacing.medium)
-    if (isLargeText()) {
+    if (LargeText.isOn) {
         StackedTransaction(params = params, modifier = body)
     } else {
         Row(
@@ -96,7 +96,7 @@ private fun TransactionTitles(
             text = params.title,
             style = FintrackTheme.typography.labelLarge,
             color = FintrackTheme.colors.texts.onSurface,
-            maxLines = if (isLargeText()) LARGE_TEXT_LINES else 1,
+            maxLines = if (LargeText.isOn) LARGE_TEXT_LINES else 1,
             overflow = TextOverflow.Ellipsis,
         )
         TransactionSubtitle(params = params)
@@ -122,7 +122,7 @@ private fun TransactionSubtitle(params: TransactionRowParams) {
             text = params.subtitle,
             style = FintrackTheme.typography.labelMedium,
             color = FintrackTheme.colors.texts.onSurfaceVariant,
-            maxLines = if (isLargeText()) LARGE_TEXT_LINES else 1,
+            maxLines = if (LargeText.isOn) LARGE_TEXT_LINES else 1,
             overflow = TextOverflow.Ellipsis,
         )
     }

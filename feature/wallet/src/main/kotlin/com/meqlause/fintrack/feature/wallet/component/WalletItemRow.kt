@@ -11,7 +11,7 @@ import com.meqlause.fintrack.core.designsystem.icon.IconCircle
 import com.meqlause.fintrack.core.designsystem.icon.IconLook
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.designsystem.theme.isLargeText
+import com.meqlause.fintrack.core.designsystem.theme.LargeText
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
 import com.meqlause.fintrack.feature.wallet.WalletItem
 
@@ -42,7 +42,7 @@ internal fun WalletItemRow(
             text = item.wallet.profile.name,
             style = FintrackScreenText.rowTitle(),
             color = FintrackTheme.colors.texts.onSurface,
-            maxLines = if (isLargeText()) LARGE_TEXT_LINES else 1,
+            maxLines = if (LargeText.isOn) LARGE_TEXT_LINES else 1,
             overflow = TextOverflow.Ellipsis,
         )
     }

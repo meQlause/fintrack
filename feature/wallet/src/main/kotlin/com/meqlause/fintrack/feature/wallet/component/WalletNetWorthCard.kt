@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.designsystem.theme.isLargeText
+import com.meqlause.fintrack.core.designsystem.theme.LargeText
 import com.meqlause.fintrack.core.domain.networth.NetWorth
 import com.meqlause.fintrack.feature.wallet.R
 
@@ -65,7 +65,7 @@ private fun NetWorthBar(parts: List<NetWorthPart>) {
 // BR-053, NFR-010: the Aset and the Utang column side by side, stacked at large font sizes
 @Composable
 private fun NetWorthColumns(parts: NetWorthParts) {
-    if (isLargeText()) {
+    if (LargeText.isOn) {
         StackedNetWorthColumns(parts = parts)
     } else {
         SideBySideNetWorthColumns(parts = parts)

@@ -27,7 +27,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.designsystem.theme.isLargeText
+import com.meqlause.fintrack.core.designsystem.theme.LargeText
 
 private const val LARGE_TAB_COUNT = 2.5f
 
@@ -46,7 +46,7 @@ internal fun HistoryTypeTabs(
                 .padding(top = FintrackTheme.spacing.small / 2 + FintrackTheme.spacing.xxSmall)
                 .height(FintrackTheme.sizes.typeTabHeight),
     ) {
-        val tabWidth = if (isLargeText()) maxWidth / LARGE_TAB_COUNT else maxWidth / types.size
+        val tabWidth = if (LargeText.isOn) maxWidth / LARGE_TAB_COUNT else maxWidth / types.size
         val trackWidth = tabWidth * types.size.toFloat()
         val indicatorOffset by animateDpAsState(
             targetValue =
@@ -54,7 +54,7 @@ internal fun HistoryTypeTabs(
             animationSpec = tween(durationMillis = motion.durationMillis, easing = motion.easing),
             label = "history-type-indicator",
         )
-        Box(modifier = if (isLargeText()) Modifier.horizontalScroll(rememberScrollState()) else Modifier) {
+        Box(modifier = if (LargeText.isOn) Modifier.horizontalScroll(rememberScrollState()) else Modifier) {
             TabRow(selected = selected, onPick = onPick, modifier = Modifier.width(trackWidth))
             TabUnderline(offset = indicatorOffset, modifier = Modifier.width(trackWidth))
         }

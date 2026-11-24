@@ -19,7 +19,7 @@ import com.meqlause.fintrack.core.designsystem.theme.FintrackAppBadges
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.designsystem.theme.isLargeText
+import com.meqlause.fintrack.core.designsystem.theme.LargeText
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.ui.format.AmountSign
@@ -35,7 +35,7 @@ internal fun InboxHeaderRow(
     subtitle: String,
     amount: @Composable () -> Unit,
 ) {
-    if (isLargeText()) {
+    if (LargeText.isOn) {
         Column(verticalArrangement = Arrangement.spacedBy(FintrackScreenSizes.rowGap)) {
             HeaderTitles(source = source, title = title, subtitle = subtitle)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) { amount() }
@@ -64,14 +64,14 @@ private fun HeaderTitles(
                 text = title,
                 style = FintrackScreenText.style(size = 14f, weight = 600),
                 color = FintrackTheme.colors.texts.onSurface,
-                maxLines = if (isLargeText()) LARGE_TEXT_LINES else 1,
+                maxLines = if (LargeText.isOn) LARGE_TEXT_LINES else 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = subtitle,
                 style = FintrackScreenText.rowSub(),
                 color = FintrackTheme.colors.texts.onSurfaceVariant,
-                maxLines = if (isLargeText()) LARGE_TEXT_LINES else 1,
+                maxLines = if (LargeText.isOn) LARGE_TEXT_LINES else 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }

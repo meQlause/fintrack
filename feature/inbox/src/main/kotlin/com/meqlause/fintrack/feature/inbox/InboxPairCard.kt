@@ -27,7 +27,7 @@ import com.meqlause.fintrack.core.designsystem.component.ScreenPill
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
-import com.meqlause.fintrack.core.designsystem.theme.isLargeText
+import com.meqlause.fintrack.core.designsystem.theme.LargeText
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.core.designsystem.R as DesignR
 
@@ -61,7 +61,7 @@ private fun PairActions(
     actions: InboxItemActions,
     onPick: (InboxPicker) -> Unit,
 ) {
-    if (isLargeText()) {
+    if (LargeText.isOn) {
         StackedPairActions(pair, actions, onPick)
         return
     }
