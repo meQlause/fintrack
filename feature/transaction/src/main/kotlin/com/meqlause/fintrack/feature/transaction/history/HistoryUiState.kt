@@ -33,6 +33,7 @@ internal data class HistoryUiState(
     val hasRecords: Boolean get() = status.hasRecords
     val isLoaded: Boolean get() = status.isLoaded
     val activeMonths: Set<YearMonth> get() = status.activeMonths
+    val todayIndex: Int? get() = status.todayIndex
 }
 
 // FR-036: the wallets and categories the filters offer and the day groups of the list
@@ -43,11 +44,12 @@ internal data class HistoryLists(
     val groups: List<HistoryDayGroup> = emptyList(),
 )
 
-// FR-036: the totals of the month, whether it has records, whether it loaded and which months have records
+// FR-036: the totals of the month, whether it has records, whether it loaded, which months have records and where today falls
 @Immutable
 internal data class HistoryStatus(
     val totals: HistoryTotals = HistoryTotals(),
     val hasRecords: Boolean = false,
     val isLoaded: Boolean = false,
     val activeMonths: Set<YearMonth> = emptySet(),
+    val todayIndex: Int? = null,
 )

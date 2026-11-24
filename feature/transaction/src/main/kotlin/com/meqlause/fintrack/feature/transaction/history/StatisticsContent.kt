@@ -3,7 +3,9 @@ package com.meqlause.fintrack.feature.transaction.history
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
 import com.meqlause.fintrack.core.designsystem.component.FintrackCard
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.TransactionType
 import com.meqlause.fintrack.feature.transaction.R
@@ -46,7 +49,8 @@ internal fun ColumnScope.StatisticsContent(
                 )
                 StatisticsCategoryList(statistics = statistics, state = state, onEvent = onEvent)
             }
-            StatisticsDailyBars(statistics = statistics)
+            StatisticsDailyBars(statistics = statistics, todayIndex = state.todayIndex)
+            Spacer(modifier = Modifier.height(FintrackScreenSizes.screenBottom))
         }
     }
 }

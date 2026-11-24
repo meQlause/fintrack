@@ -139,6 +139,24 @@ class HistoryViewModelTest {
             assertEquals(1, state.statistics?.categories?.size)
         }
 
+    // FR-061: the daily bar of today is the highlighted one; on 20 Nov that is the zero-based index 19
+    @Test
+    fun givenCurrentMonthWhenLoadedThenTodayIndexIsZeroBasedDayOfMonth() =
+        runTest {
+            val state = viewModel().state.first { it.isLoaded }
+            assertEquals(19, state.todayIndex)
+        }
+
+    // FR-061: another month has no today, so no daily bar is highlighted
+    @Test
+    fun givenPastMonthWhenLoadedThenNoTodayIndex() =
+        runTest {
+            val model = viewModel()
+            model.onEvent(HistoryEvent.MonthPicked(YearMonth.of(2026, 10)))
+            val state = model.state.first { it.isLoaded && it.month == YearMonth.of(2026, 10) }
+            assertEquals(null, state.todayIndex)
+        }
+
     // FR-064: a tapped category opens the list filtered to that category only
     @Test
     fun givenCategoryDrilledThenListOpensFilteredToThatCategory() {

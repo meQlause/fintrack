@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.meqlause.fintrack.core.designsystem.component.EmptyState
 import com.meqlause.fintrack.core.designsystem.component.EmptyStateCopy
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.ui.format.AmountSign
 import com.meqlause.fintrack.core.ui.format.MoneyFormatter
@@ -86,7 +87,7 @@ private fun HistoryDayList(
         HistoryEmptyState(isFiltered = state.filter.isActive)
         return
     }
-    LazyColumn(contentPadding = PaddingValues(bottom = FintrackTheme.sizes.navBarHeight)) {
+    LazyColumn(contentPadding = PaddingValues(bottom = FintrackScreenSizes.screenBottom)) {
         state.groups.forEach { group ->
             item(key = "day-${group.label}", contentType = DAY_HEADER_TYPE) { DayHeader(group = group) }
             item(key = "rows-${group.label}", contentType = TRANSACTION_ROW_TYPE) {

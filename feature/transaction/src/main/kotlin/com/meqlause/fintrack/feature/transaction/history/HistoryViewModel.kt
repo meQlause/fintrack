@@ -2,6 +2,7 @@ package com.meqlause.fintrack.feature.transaction.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.meqlause.fintrack.core.domain.period.Period
 import com.meqlause.fintrack.core.domain.repository.CategoryRepository
 import com.meqlause.fintrack.core.domain.repository.SettingsRepository
 import com.meqlause.fintrack.core.domain.repository.TransactionRepository
@@ -19,7 +20,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import java.time.Clock
+import java.time.LocalDate
 import java.time.YearMonth
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 private const val STOP_TIMEOUT_MILLIS = 5_000L
@@ -82,16 +85,31 @@ internal class HistoryViewModel
                                 }.sortedBy { it.profile.sortOrder },
                         groups = content.groups,
                     ),
-                status =
-                    HistoryStatus(
-                        totals = content.totals,
-                        hasRecords = content.hasRecords,
-                        isLoaded = true,
-                        activeMonths = data.transactions.map { monthOf(it) }.toSet(),
-                    ),
+                status = statusOf(content, data, period),
                 statistics = buildStatistics(data.transactions, request),
             )
         }
+
+        // FR-061: the status carries the index of today within the period, null when today is outside it
+        private fun statusOf(
+            content: HistoryContent,
+            data: HistoryData,
+            period: Period,
+        ): HistoryStatus {
+            val today = LocalDate.now(clock)
+            return HistoryStatus(
+                totals = content.totals,
+                hasRecords = content.hasRecords,
+                isLoaded = true,
+                activeMonths = data.transactions.map { monthOf(it) }.toSet(),
+                todayIndex = if (today in period.startDate..period.endDate) daysSince(period, today) else null,
+            )
+        }
+
+        private fun daysSince(
+            period: Period,
+            date: LocalDate,
+        ): Int = ChronoUnit.DAYS.between(period.startDate, date).toInt()
 
         // FR-036: the month a transaction falls in, in the device's zone
         private fun monthOf(transaction: Transaction): YearMonth =
