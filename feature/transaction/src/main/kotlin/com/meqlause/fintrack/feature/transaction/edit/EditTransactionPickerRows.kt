@@ -63,7 +63,7 @@ internal fun pickerRows(
             walletId = wallet.walletId,
             name = wallet.profile.name,
             type = wallet.kind.type,
-            shownBalanceText = MoneyFormatter.format(state.catalog.moneyByWallet[wallet.walletId] ?: Money(0L)),
+            shownBalanceText = MoneyFormatter.formatShort(state.catalog.moneyByWallet[wallet.walletId] ?: Money(0L)),
             mark = PickerMark(isSelected = wallet.walletId == selected, isBlocked = wallet.walletId == blocked),
             appearance = wallet.profile.appearance,
         )

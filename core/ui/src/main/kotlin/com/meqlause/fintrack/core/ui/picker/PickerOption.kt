@@ -2,10 +2,12 @@ package com.meqlause.fintrack.core.ui.picker
 
 import com.meqlause.fintrack.core.designsystem.icon.IconLook
 
-// S-18: one line of the options drawer; key is what the caller maps back to its own value, look is its tinted tile
+// S-18: one line of the options drawer; key is what the caller maps back to its own value,
+// look is its tinted tile and isEnabled false fades the row
 data class PickerOption(
     val optionKey: String,
     val label: String,
     val hint: String? = null,
     val look: IconLook? = null,
+    val isEnabled: Boolean = true,
 )

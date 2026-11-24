@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.meqlause.fintrack.core.designsystem.component.PickerDrawer
+import com.meqlause.fintrack.core.model.Appearance
 import com.meqlause.fintrack.core.model.Money
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.model.WalletType
@@ -36,7 +37,7 @@ fun WalletPickerDrawer(
 
 @Composable
 internal fun WalletPickerDrawerSample() {
-    val limit = MoneyFormatter.format(Money(rupiah = 2_000_000L))
+    val limit = MoneyFormatter.formatShort(Money(rupiah = 5_800_000L))
     WalletPickerDrawer(
         title = stringResource(R.string.picker_sample_title_pay),
         choices = WalletChoices(rows = sampleRows(limit), allowCredit = true, allowInvestment = true),
@@ -47,22 +48,51 @@ internal fun WalletPickerDrawerSample() {
 @Composable
 private fun sampleRows(limit: String): List<WalletPickerRow> {
     val limitLabel = stringResource(R.string.picker_limit_format, limit)
-    val samples =
-        listOf(
-            SampleWallet(R.string.picker_sample_cash, WalletType.CASH, "Rp250.000", isSelected = true),
-            SampleWallet(R.string.picker_sample_bca, WalletType.BANK, "Rp4.800.000"),
-            SampleWallet(R.string.picker_sample_gopay, WalletType.EWALLET, "Rp120.000"),
-            SampleWallet(R.string.picker_sample_card, WalletType.CREDIT_CARD, limitLabel, isBlocked = true),
-            SampleWallet(R.string.picker_sample_paylater, WalletType.PAYLATER, limitLabel),
-            SampleWallet(R.string.picker_sample_invest, WalletType.INVESTMENT, "Rp1.500.000"),
-        )
+    val samples = sampleWallets() + creditSamples(limitLabel)
     return samples.mapIndexed { index, sample -> sample.toRow(rowId = index + 1L) }
 }
+
+private fun sampleWallets(): List<SampleWallet> =
+    listOf(
+        SampleWallet(R.string.picker_sample_cash, WalletType.CASH, "Rp250rb", Appearance("cash", "green")),
+        SampleWallet(
+            R.string.picker_sample_bca,
+            WalletType.BANK,
+            "Rp10jt",
+            Appearance("bank", "blue"),
+            isSelected = true,
+        ),
+        SampleWallet(R.string.picker_sample_gopay, WalletType.EWALLET, "Rp222rb", Appearance("ewallet", "teal")),
+        SampleWallet(
+            R.string.picker_sample_invest,
+            WalletType.INVESTMENT,
+            "Rp1,5jt",
+            Appearance("trend", "indigo"),
+        ),
+    )
+
+private fun creditSamples(limitLabel: String): List<SampleWallet> =
+    listOf(
+        SampleWallet(
+            R.string.picker_sample_card,
+            WalletType.CREDIT_CARD,
+            limitLabel,
+            Appearance("card", "slate"),
+            isBlocked = true,
+        ),
+        SampleWallet(
+            R.string.picker_sample_paylater,
+            WalletType.PAYLATER,
+            limitLabel,
+            Appearance("clock", "orange"),
+        ),
+    )
 
 private data class SampleWallet(
     val nameRes: Int,
     val type: WalletType,
     val shownText: String,
+    val appearance: Appearance,
     val isSelected: Boolean = false,
     val isBlocked: Boolean = false,
 )
@@ -75,6 +105,7 @@ private fun SampleWallet.toRow(rowId: Long): WalletPickerRow =
         type = type,
         shownBalanceText = shownText,
         mark = PickerMark(isSelected = isSelected, isBlocked = isBlocked),
+        appearance = appearance,
     )
 
 @Preview(name = "WalletPickerDrawer light", showBackground = true)

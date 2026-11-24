@@ -12,10 +12,10 @@ internal enum class WalletPickerGroup(
     @param:DrawableRes val iconRes: Int,
     val types: List<WalletType>,
 ) {
-    CASH(R.string.picker_group_cash, DesignR.drawable.ic_wallet, listOf(WalletType.CASH)),
-    DEBIT(R.string.picker_group_debit, DesignR.drawable.ic_wallet, listOf(WalletType.BANK, WalletType.EWALLET)),
-    CREDIT_CARD(R.string.picker_group_credit, DesignR.drawable.ic_wallet, listOf(WalletType.CREDIT_CARD)),
-    PAYLATER(R.string.picker_group_paylater, DesignR.drawable.ic_wallet, listOf(WalletType.PAYLATER)),
+    CASH(R.string.picker_group_cash, DesignR.drawable.ic_cash, listOf(WalletType.CASH)),
+    DEBIT(R.string.picker_group_debit, DesignR.drawable.ic_bank, listOf(WalletType.BANK, WalletType.EWALLET)),
+    CREDIT_CARD(R.string.picker_group_credit, DesignR.drawable.ic_card, listOf(WalletType.CREDIT_CARD)),
+    PAYLATER(R.string.picker_group_paylater, DesignR.drawable.ic_clock, listOf(WalletType.PAYLATER)),
     INVESTMENT(R.string.picker_group_invest, DesignR.drawable.ic_trend, listOf(WalletType.INVESTMENT)),
     ;
 

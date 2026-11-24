@@ -8,7 +8,7 @@
     <string name="sample_row_income_subtitle">BCA  ·  08:03</string>
     <!-- S-18: picker drawers (shared, core:ui) -->
     <string name="picker_group_cash">Tunai</string>
-    <string name="picker_group_debit">Debit (bank &amp; e-wallet)</string>
+    <string name="picker_group_debit">Debit · bank &amp; e-wallet</string>
     <string name="picker_group_credit">Kartu kredit</string>
     <string name="picker_group_paylater">Paylater</string>
     <string name="picker_group_invest">Investasi</string>

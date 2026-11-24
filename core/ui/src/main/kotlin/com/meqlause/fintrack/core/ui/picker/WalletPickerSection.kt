@@ -1,99 +1,80 @@
 package com.meqlause.fintrack.core.ui.picker
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
-import com.meqlause.fintrack.core.designsystem.icon.IconCircle
+import com.meqlause.fintrack.core.designsystem.component.ScreenCard
 import com.meqlause.fintrack.core.designsystem.icon.IconLook
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenSizes
+import com.meqlause.fintrack.core.designsystem.theme.FintrackScreenText
 import com.meqlause.fintrack.core.designsystem.theme.FintrackTheme
 import com.meqlause.fintrack.core.model.WalletId
 import com.meqlause.fintrack.core.ui.R
 
-// S-18: one section of the wallet picker, an icon header followed by its radio rows
+// S-18, DOC-08: one section of the wallet picker, a small icon and grey label over one card of option rows
 @Composable
 internal fun WalletPickerSection(
     group: WalletPickerGroup,
     rows: List<WalletPickerRow>,
     onPick: (WalletId) -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small)) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.small),
-        ) {
-            Icon(
-                painter = painterResource(group.iconRes),
-                contentDescription = null,
-                tint = FintrackTheme.colors.texts.onSurfaceVariant,
-                modifier = Modifier.size(FintrackTheme.sizes.iconSmall),
-            )
-            Text(
-                text = stringResource(group.titleRes),
-                style = FintrackTheme.typography.labelLarge,
-                color = FintrackTheme.colors.texts.onSurfaceVariant,
-            )
+    Column(modifier = Modifier.padding(top = FintrackScreenSizes.groupGap)) {
+        SectionHeader(group)
+        ScreenCard {
+            rows.forEachIndexed { index, row ->
+                OptionRow(
+                    option = row.toOption(),
+                    isSelected = row.mark.isSelected,
+                    showDivider = index > 0,
+                    onClick = { onPick(row.walletId) },
+                )
+            }
         }
-        rows.forEach { row -> WalletPickerItem(pickerRow = row, onPick = onPick) }
     }
 }
 
+// S-18: a wallet row wears the wallet's own icon and colour; a blocked one says why and fades
 @Composable
-private fun WalletPickerItem(
-    pickerRow: WalletPickerRow,
-    onPick: (WalletId) -> Unit,
-) {
+private fun WalletPickerRow.toOption(): PickerOption =
+    PickerOption(
+        optionKey = walletId.value.toString(),
+        label = name,
+        hint = if (mark.isBlocked) stringResource(R.string.picker_already_selected) else shownBalanceText,
+        look = IconLook(iconKey = appearance.iconKey, colorKey = appearance.colorKey),
+        isEnabled = !mark.isBlocked,
+    )
+
+// DOC-08: the small icon and grey label above a section card
+@Composable
+private fun SectionHeader(group: WalletPickerGroup) {
     Row(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .heightIn(min = FintrackTheme.sizes.formRowHeight)
-                .clickable(enabled = !pickerRow.mark.isBlocked, role = Role.RadioButton) { onPick(pickerRow.walletId) }
-                .padding(vertical = FintrackTheme.spacing.xSmall),
+            Modifier.padding(
+                start = FintrackScreenSizes.groupLabelInset,
+                bottom = FintrackScreenSizes.groupLabelBottom,
+            ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.medium),
+        horizontalArrangement = Arrangement.spacedBy(FintrackTheme.spacing.xSmall),
     ) {
-        IconCircle(
-            look = IconLook(iconKey = pickerRow.appearance.iconKey, colorKey = pickerRow.appearance.colorKey),
-        )
-        WalletPickerTexts(pickerRow = pickerRow, modifier = Modifier.weight(1f))
-        RadioButton(selected = pickerRow.mark.isSelected, onClick = null, enabled = !pickerRow.mark.isBlocked)
-    }
-}
-
-@Composable
-private fun WalletPickerTexts(
-    pickerRow: WalletPickerRow,
-    modifier: Modifier = Modifier,
-) {
-    val colors = FintrackTheme.colors
-    Column(modifier = modifier) {
-        Text(
-            text = pickerRow.name,
-            style = FintrackTheme.typography.titleMedium,
-            color = if (pickerRow.mark.isBlocked) colors.texts.faint else colors.texts.onSurface,
+        Icon(
+            painter = painterResource(group.iconRes),
+            contentDescription = null,
+            tint = FintrackTheme.colors.texts.onSurfaceVariant,
+            modifier = Modifier.size(FintrackTheme.sizes.iconSmall),
         )
         Text(
-            text = blockedOrBalance(pickerRow),
-            style = FintrackTheme.typography.bodyMedium,
-            color = colors.texts.onSurfaceVariant,
+            text = stringResource(group.titleRes),
+            style = FintrackScreenText.label(),
+            color = FintrackTheme.colors.texts.onSurfaceVariant,
         )
     }
 }
-
-@Composable
-private fun blockedOrBalance(pickerRow: WalletPickerRow): String =
-    if (pickerRow.mark.isBlocked) stringResource(R.string.picker_already_selected) else pickerRow.shownBalanceText

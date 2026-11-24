@@ -5,6 +5,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
@@ -30,14 +31,16 @@ internal fun OptionRow(
 ) {
     ScreenRow(
         modifier =
-            Modifier.semantics {
-                role = Role.RadioButton
-                selected = isSelected
-            },
+            Modifier
+                .alpha(if (option.isEnabled) 1f else FintrackScreenSizes.DISABLED_ALPHA)
+                .semantics {
+                    role = Role.RadioButton
+                    selected = isSelected
+                },
         style =
             RowStyle(
                 showDivider = showDivider,
-                onClick = onClick,
+                onClick = onClick.takeIf { option.isEnabled },
                 contentPadding =
                     PaddingValues(
                         horizontal = FintrackScreenSizes.rowPaddingHorizontal,
