@@ -160,6 +160,8 @@ Changing a decision = add a new ADR that supersedes the old one (owner approval 
   with `failThreshold: 0`, so any unused-symbol finding fails CI.
 - **Consequences:** One known version lag. Upgrade AGP in a dedicated `build:` commit once a Qodana image supports
   AGP 9.5.
+- **Addendum (2026-11-24):** the `:baselineprofile` module (T9.1) uses the `com.android.test` plugin, also on 9.4.1, so
+  the lint exception now covers `com.android.test` too. Approved by the owner.
 
 ### ADR-022 — Sources and javadoc jars are trusted in dependency verification
 - **Status:** Accepted (2026-11-23), owner's standing instruction to follow the recommendation.
