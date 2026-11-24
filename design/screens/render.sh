@@ -1,7 +1,7 @@
 #!/bin/sh
 # DOC-08: renders mockup screens of design/project/Main.dc.html to PNG with headless Chrome (390x844, light/dark).
 # Usage: design/screens/render.sh <name> "<steps>" [theme]
-#   steps: '|'-separated aria-labels or exact texts to tap, or scroll:<px>; e.g. "Riwayat|Statistik"
+#   steps: '|'-separated aria-labels or exact texts to tap, sel:<css selector>, or scroll:<px>; e.g. "Riwayat|Statistik"
 # Example: design/screens/render.sh stats "Riwayat|Statistik" dark
 name="$1"; steps="$2"; theme="${3:-light}"
 chrome="${CHROME:-/c/Program Files/Google/Chrome/Application/chrome.exe}"

@@ -130,7 +130,10 @@
     let delay = 1300;
     for (const step of steps) {
       setTimeout(() => {
-        if (step.startsWith('scroll:')) {
+        if (step.startsWith('sel:')) {
+          const node = host.querySelector(step.slice(4));
+          if (node) node.click(); else console.log('NOT FOUND: ' + step);
+        } else if (step.startsWith('scroll:')) {
           const amount = Number(step.slice(7));
           host.querySelectorAll('.scroll').forEach((s) => { s.scrollTop = amount; });
         } else clickByText(step);
