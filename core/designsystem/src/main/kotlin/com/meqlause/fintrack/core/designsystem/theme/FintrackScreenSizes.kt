@@ -25,7 +25,6 @@ object FintrackScreenSizes {
     val legendGap: Dp = Dp(value = 7f)
     val legendRowTop: Dp = Dp(value = 9f)
     val dashedHeight: Dp = Dp(value = 50f)
-    val primaryButtonHeight: Dp = Dp(value = 44f)
     val chevron: Dp = Dp(value = 16f)
     val thinBar: Dp = Dp(value = 3f)
     val actionTallGap: Dp = Dp(value = 5f)
@@ -48,8 +47,6 @@ object FintrackScreenSizes {
     val footerGlyph: Dp = Dp(value = 14f)
     val roundAction: Dp = Dp(value = 34f)
     val roundActionGlyph: Dp = Dp(value = 15f)
-    val appBadgeSmall: Dp = Dp(value = 30f)
-    val appBadgeSmallCorner: Dp = Dp(value = 9f)
     val footerTop: Dp = Dp(value = 28f)
 
     // the switch already has a 48 px touch target, so the 50 px prototype row only needs a hairline of inset

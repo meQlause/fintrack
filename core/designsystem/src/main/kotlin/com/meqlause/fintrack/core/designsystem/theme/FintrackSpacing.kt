@@ -19,7 +19,6 @@ class FintrackSpacing {
     val gutter: Dp = Dp(value = 20f)
     val section: Dp = Dp(value = 18f)
     val stack: Dp = Dp(value = 14f)
-    val chipInset: Dp = Dp(value = 7f)
     val block: Dp = Dp(value = 22f)
     val hero: Dp = Dp(value = 26f)
 }
