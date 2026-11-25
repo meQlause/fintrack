@@ -16,7 +16,13 @@ public class FakeTransactionRepository : TransactionRepository {
 
     override fun observeAll(): Flow<List<Transaction>> = store.observe()
 
-    override suspend fun insert(transaction: Transaction): TransactionId = TransactionId(store.append(transaction))
+    // DOC-02: like Room's @Insert, a non-zero id that already exists is rejected
+    override suspend fun insert(transaction: Transaction): TransactionId =
+        TransactionId(
+            store.append(transaction) { stored ->
+                transaction.transactionId.value != 0L && stored.transactionId == transaction.transactionId
+            },
+        )
 
     override suspend fun update(transaction: Transaction) {
         store.replace(transaction)
