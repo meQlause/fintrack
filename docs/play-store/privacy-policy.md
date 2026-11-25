@@ -4,8 +4,7 @@
 > The repository is public, so this file can serve as the Play Console privacy policy URL as-is, for example
 > `https://github.com/meQlause/fintrack/blob/main/docs/play-store/privacy-policy.md`
 > (or the `raw` / GitHub Pages equivalent). The URL must be publicly reachable, must not be a PDF, and must
-> not be editable by others. Replace `[EMAIL]` below before publishing. Put the same URL inside the app
-> (see the gap list in `play-console-declarations.md`).
+> not be editable by others. The app's About screen links to this URL.
 
 **Tanggal berlaku / Effective date: 24 November 2026**
 
@@ -90,7 +89,7 @@ diumumkan di dalam aplikasi sebelum berlaku.
 
 ### 10. Kontak
 
-Pertanyaan tentang privasi: **[EMAIL]**
+Pertanyaan tentang privasi: **ardialbrian@gmail.com**
 
 ---
 
@@ -173,4 +172,4 @@ before they take effect.
 
 ### 10. Contact
 
-Privacy questions: **[EMAIL]**
+Privacy questions: **ardialbrian@gmail.com**

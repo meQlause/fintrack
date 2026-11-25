@@ -8,7 +8,7 @@ be confirmed against a live console. Sources fetched on 2026-11-24 (summaries, r
 - Target API level requirements: https://support.google.com/googleplay/android-developer/answer/11926878
 
 Privacy policy URL to enter: `https://github.com/meQlause/fintrack/blob/main/docs/play-store/privacy-policy.md`
-(works only once the file is pushed to the public repo; `[EMAIL]` in it must be filled first).
+(works only once the file is pushed to the public repo; `ardialbrian@gmail.com` in it must be filled first).
 
 ## 1. Data safety form
 
@@ -118,7 +118,7 @@ Confidence = how sure the finding is about the current repo state, not about the
 |---|---|---|---|
 | 1 | **No dedicated prominent-disclosure screen with consent before opening notification-access settings.** Onboarding page 3 shows only a short body ("Fintrack bisa membaca notifikasi transaksi dari aplikasi bank dan e-wallet, lalu menunggu konfirmasimu...") and buttons "Aktifkan" / "Nanti saja". It does not say what data is read (title/text), that other apps are ignored, that nothing leaves the device, or that raw text is kept 30 days; the button is "Aktifkan", not an explicit consent. Two other entry points open the system settings directly with no disclosure: `feature/settings/.../MonitoredAppsRoute.kt` (`onOpenAccessSettings`) and `feature/inbox/.../InboxRoute.kt` (`Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS`). Strings: `feature/onboarding/src/main/res/values/strings.xml` lines 20-24. Fix: one shared disclosure dialog (text in section 7), shown before all three entry points, with "Setuju" and "Tidak sekarang". | `feature/onboarding/.../NotificationPage.kt`, `NotificationAccess.kt`, `OnboardingRoute.kt` | High that it is missing; medium-high that current wording would be judged insufficient |
 | 2 | **No link to the privacy policy inside the app.** The About screen shows `about_privacy_statement` text only; no URL or link action exists (no `ACTION_VIEW` anywhere in `feature`, `app`, `core`). Add a "Kebijakan Privasi" row opening the URL via browser intent (opening a browser needs no INTERNET permission in this app). | `feature/settings/.../AboutScreen.kt`, `feature/settings/src/main/res/values/strings.xml` | High |
-| 3 | **Privacy policy not yet published and `[EMAIL]` is empty.** Play requires a reachable URL and a contact. File must be pushed to the public repo main branch. | `docs/play-store/privacy-policy.md` | High |
+| 3 | **Privacy policy not yet published and `ardialbrian@gmail.com` is empty.** Play requires a reachable URL and a contact. File must be pushed to the public repo main branch. | `docs/play-store/privacy-policy.md` | High |
 | 4 | **Target SDK:** merged release manifest shows `targetSdkVersion=37`, `minSdkVersion=26`. Google requires API 36+ for new apps and updates (deadline 31 Aug 2026, per fetched page). Compliant. No explicit `targetSdk` was found in the Gradle sources I grepped, so it is set indirectly (probably the compileSdk default); confirm it stays 36+ in the signed AAB. | `build-logic/convention/.../FintrackConfig.kt`, `app/build/intermediates/merged_manifest/benchmarkRelease/...` | Medium-high (read from a benchmark variant manifest, not the release AAB) |
 | 5 | **Docs still say "not Play Store".** `docs/00-vision.md` lists distribution as signed APK only. Update (with an ADR) if Play distribution is decided. | `docs/00-vision.md`, `docs/16-decisions.md` | High |
 | 6 | **`docs/10-security-privacy.md` permission table is incomplete** versus the merged manifest (`USE_FINGERPRINT`, `WAKE_LOCK`, `FOREGROUND_SERVICE` are not listed). Keep the Data safety answers and docs consistent. | `docs/10-security-privacy.md` | High |
@@ -129,7 +129,7 @@ Confidence = how sure the finding is about the current repo state, not about the
 
 ## 10. Open questions for the owner
 
-1. Contact email to put in `[EMAIL]` and in the Play listing (not guessed here).
+1. Contact email to put in `ardialbrian@gmail.com` and in the Play listing (not guessed here).
 2. Will the app be distributed on Play at all, or stay APK-only (`docs/00-vision.md`)? If Play, add an ADR.
 3. Preferred target age (13+ or 18+).
 4. Developer name/address: Play shows a public address for some account types (**verify in Play Console**).
